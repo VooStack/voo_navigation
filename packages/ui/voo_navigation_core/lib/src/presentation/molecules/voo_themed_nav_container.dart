@@ -46,6 +46,9 @@ class VooThemedNavContainer extends StatelessWidget {
   /// When true and width/height are not set, container fills parent constraints
   final bool expand;
 
+  /// Override background color (ignores theme preset's background)
+  final Color? backgroundColor;
+
   const VooThemedNavContainer({
     super.key,
     required this.theme,
@@ -57,6 +60,7 @@ class VooThemedNavContainer extends StatelessWidget {
     this.height,
     this.clipContent = true,
     this.expand = false,
+    this.backgroundColor,
   });
 
   /// Effective width considering expand parameter
@@ -79,6 +83,7 @@ class VooThemedNavContainer extends StatelessWidget {
           padding: padding,
           margin: margin,
           clipContent: clipContent,
+          backgroundColor: backgroundColor,
           child: child,
         ),
       VooNavigationPreset.liquidGlass => _LiquidGlassContainer(
@@ -88,6 +93,7 @@ class VooThemedNavContainer extends StatelessWidget {
           height: _effectiveHeight,
           padding: padding,
           margin: margin,
+          backgroundColor: backgroundColor,
           child: child,
         ),
       VooNavigationPreset.blurry => _BlurryContainer(
@@ -97,6 +103,7 @@ class VooThemedNavContainer extends StatelessWidget {
           height: _effectiveHeight,
           padding: padding,
           margin: margin,
+          backgroundColor: backgroundColor,
           child: child,
         ),
       VooNavigationPreset.neomorphism => _NeomorphismContainer(
@@ -107,6 +114,7 @@ class VooThemedNavContainer extends StatelessWidget {
           padding: padding,
           margin: margin,
           clipContent: clipContent,
+          backgroundColor: backgroundColor,
           child: child,
         ),
       VooNavigationPreset.material3Enhanced => _Material3EnhancedContainer(
@@ -117,6 +125,7 @@ class VooThemedNavContainer extends StatelessWidget {
           padding: padding,
           margin: margin,
           clipContent: clipContent,
+          backgroundColor: backgroundColor,
           child: child,
         ),
       VooNavigationPreset.minimalModern => _MinimalModernContainer(
@@ -127,6 +136,7 @@ class VooThemedNavContainer extends StatelessWidget {
           padding: padding,
           margin: margin,
           clipContent: clipContent,
+          backgroundColor: backgroundColor,
           child: child,
         ),
     };
@@ -141,6 +151,7 @@ class _GlassmorphismContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final bool clipContent;
+  final Color? backgroundColor;
   final Widget child;
 
   const _GlassmorphismContainer({
@@ -152,6 +163,7 @@ class _GlassmorphismContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.clipContent = true,
+    this.backgroundColor,
   });
 
   @override
@@ -159,7 +171,7 @@ class _GlassmorphismContainer extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final surfaceColor = theme.surfaceTintColor ??
+    final surfaceColor = backgroundColor ?? theme.surfaceTintColor ??
         (isDark
             ? colorScheme.surfaceContainerHigh
             : colorScheme.surface);
@@ -236,6 +248,7 @@ class _LiquidGlassContainer extends StatelessWidget {
   final double? height;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  final Color? backgroundColor;
   final Widget child;
 
   const _LiquidGlassContainer({
@@ -246,6 +259,7 @@ class _LiquidGlassContainer extends StatelessWidget {
     this.height,
     this.padding,
     this.margin,
+    this.backgroundColor,
   });
 
   @override
@@ -254,7 +268,7 @@ class _LiquidGlassContainer extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = colorScheme.primary;
 
-    final surfaceColor = theme.surfaceTintColor ??
+    final surfaceColor = backgroundColor ?? theme.surfaceTintColor ??
         (isDark
             ? colorScheme.surfaceContainerHighest
             : colorScheme.surface);
@@ -390,6 +404,7 @@ class _BlurryContainer extends StatelessWidget {
   final double? height;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
+  final Color? backgroundColor;
   final Widget child;
 
   const _BlurryContainer({
@@ -400,6 +415,7 @@ class _BlurryContainer extends StatelessWidget {
     this.height,
     this.padding,
     this.margin,
+    this.backgroundColor,
   });
 
   @override
@@ -407,7 +423,7 @@ class _BlurryContainer extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final surfaceColor = theme.surfaceTintColor ??
+    final surfaceColor = backgroundColor ?? theme.surfaceTintColor ??
         (isDark
             ? colorScheme.surfaceContainerHighest
             : colorScheme.surface);
@@ -460,6 +476,7 @@ class _NeomorphismContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final bool clipContent;
+  final Color? backgroundColor;
   final Widget child;
 
   const _NeomorphismContainer({
@@ -471,6 +488,7 @@ class _NeomorphismContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.clipContent = true,
+    this.backgroundColor,
   });
 
   @override
@@ -478,7 +496,7 @@ class _NeomorphismContainer extends StatelessWidget {
     final themeData = Theme.of(context);
     final isDark = themeData.brightness == Brightness.dark;
 
-    final surfaceColor = theme.surfaceTintColor ?? themeData.colorScheme.surface;
+    final surfaceColor = backgroundColor ?? theme.surfaceTintColor ?? themeData.colorScheme.surface;
 
     // Neomorphism shadow colors
     final lightShadowOpacity = isDark ? 0.05 : theme.shadowLightOpacity;
@@ -539,6 +557,7 @@ class _Material3EnhancedContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final bool clipContent;
+  final Color? backgroundColor;
   final Widget child;
 
   const _Material3EnhancedContainer({
@@ -550,6 +569,7 @@ class _Material3EnhancedContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.clipContent = true,
+    this.backgroundColor,
   });
 
   @override
@@ -557,7 +577,7 @@ class _Material3EnhancedContainer extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final surfaceColor = theme.surfaceTintColor ??
+    final surfaceColor = backgroundColor ?? theme.surfaceTintColor ??
         (isDark
             ? colorScheme.surfaceContainerHigh
             : colorScheme.surfaceContainer);
@@ -605,6 +625,7 @@ class _MinimalModernContainer extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
   final bool clipContent;
+  final Color? backgroundColor;
   final Widget child;
 
   const _MinimalModernContainer({
@@ -616,13 +637,14 @@ class _MinimalModernContainer extends StatelessWidget {
     this.padding,
     this.margin,
     this.clipContent = true,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final surfaceColor = theme.surfaceTintColor ?? colorScheme.surface;
+    final surfaceColor = backgroundColor ?? theme.surfaceTintColor ?? colorScheme.surface;
     final borderColor = theme.borderColor ?? colorScheme.outlineVariant;
 
     Widget content = Container(

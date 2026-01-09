@@ -243,6 +243,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
                 margin: effectiveContentMargin,
                 borderRadius: effectiveContentBorderRadius,
                 clipContent: true,
+                backgroundColor: widget.config.contentAreaBackgroundColor,
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
                   appBar: effectiveAppBar,
@@ -286,6 +287,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
               margin: effectiveContentMargin,
               borderRadius: effectiveContentBorderRadius,
               clipContent: true,
+              backgroundColor: widget.config.contentAreaBackgroundColor,
               child: widget.body,
             ),
           ),

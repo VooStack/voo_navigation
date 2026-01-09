@@ -139,6 +139,11 @@ class VooNavigationConfig {
   /// When null, uses the navigation theme's containerBorderRadius
   final BorderRadius? contentAreaBorderRadius;
 
+  /// Background color for the content area
+  /// When set, overrides the themed container's surface color
+  /// Useful for creating contrast in inset layouts (e.g., light content on dark scaffold)
+  final Color? contentAreaBackgroundColor;
+
   /// Custom extended navigation rail width
   final double? extendedNavigationRailWidth;
 
@@ -306,6 +311,7 @@ class VooNavigationConfig {
     this.drawerMargin,
     this.contentAreaMargin,
     this.contentAreaBorderRadius,
+    this.contentAreaBackgroundColor,
   }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints,
        animationDuration = animationDuration ?? _animationTokens.durationNormal,
        animationCurve = animationCurve ?? _animationTokens.curveEaseInOut,
@@ -385,6 +391,7 @@ class VooNavigationConfig {
     EdgeInsets? drawerMargin,
     EdgeInsets? contentAreaMargin,
     BorderRadius? contentAreaBorderRadius,
+    Color? contentAreaBackgroundColor,
   }) => VooNavigationConfig(
     items: items ?? this.items,
     selectedId: selectedId ?? this.selectedId,
@@ -467,6 +474,7 @@ class VooNavigationConfig {
     drawerMargin: drawerMargin ?? this.drawerMargin,
     contentAreaMargin: contentAreaMargin ?? this.contentAreaMargin,
     contentAreaBorderRadius: contentAreaBorderRadius ?? this.contentAreaBorderRadius,
+    contentAreaBackgroundColor: contentAreaBackgroundColor ?? this.contentAreaBackgroundColor,
   );
 
   /// Gets the current navigation type based on screen width
@@ -836,6 +844,7 @@ class VooNavigationConfig {
     EdgeInsets? drawerMargin,
     EdgeInsets? contentAreaMargin,
     BorderRadius? contentAreaBorderRadius,
+    Color? contentAreaBackgroundColor,
   }) {
     return VooNavigationConfig(
       items: items,
@@ -887,6 +896,7 @@ class VooNavigationConfig {
       drawerMargin: drawerMargin,
       contentAreaMargin: contentAreaMargin,
       contentAreaBorderRadius: contentAreaBorderRadius,
+      contentAreaBackgroundColor: contentAreaBackgroundColor,
       navigationTheme: VooNavigationTheme.material3Enhanced(
         indicatorColor: indicatorColor,
       ),
