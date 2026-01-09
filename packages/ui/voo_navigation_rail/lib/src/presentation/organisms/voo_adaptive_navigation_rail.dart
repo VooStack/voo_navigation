@@ -6,6 +6,7 @@ import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
 import 'package:voo_navigation_rail/src/presentation/molecules/voo_rail_default_header.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
 import 'package:voo_navigation_rail/src/presentation/organisms/voo_rail_navigation_items.dart';
+import 'package:voo_navigation_rail/voo_navigation_rail.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Adaptive navigation rail for tablet and desktop layouts with Material 3 design
@@ -157,10 +158,14 @@ class _ThemedRailContainer extends StatelessWidget {
       color: Colors.transparent,
       child: Column(
         children: [
-          // Custom header or default header
+          // Header - full when extended, compact with branding when collapsed
           if (extended)
             config.drawerHeader ??
-                const VooRailDefaultHeader(showTitle: true),
+                const VooRailDefaultHeader(showTitle: true)
+          else
+            _CompactRailHeader(
+              trailing: config.drawerHeaderTrailing,
+            ),
 
           // Navigation items
           Expanded(
@@ -189,6 +194,16 @@ class _ThemedRailContainer extends StatelessWidget {
             Padding(
               padding: EdgeInsets.all(context.vooSpacing.md),
               child: config.floatingActionButton,
+            ),
+
+          // Footer items (Settings, Integrations, Help, etc.)
+          if (config.visibleFooterItems.isNotEmpty)
+            _FooterItems(
+              config: config,
+              selectedId: selectedId,
+              extended: extended,
+              onItemSelected: onNavigationItemSelected,
+              itemAnimationControllers: itemAnimationControllers,
             ),
 
           // User profile footer when enabled
@@ -585,5 +600,101 @@ class _ThemedRailContainer extends StatelessWidget {
           ),
         );
     }
+  }
+}
+
+/// Footer items widget for static routes like Settings, Integrations, Help
+class _FooterItems extends StatelessWidget {
+  final VooNavigationConfig config;
+  final String selectedId;
+  final bool extended;
+  final void Function(String itemId) onItemSelected;
+  final Map<String, AnimationController> itemAnimationControllers;
+
+  const _FooterItems({
+    required this.config,
+    required this.selectedId,
+    required this.extended,
+    required this.onItemSelected,
+    required this.itemAnimationControllers,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final footerItems = config.visibleFooterItems;
+
+    if (footerItems.isEmpty) return const SizedBox.shrink();
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: context.vooSpacing.xs,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Divider above footer items
+          Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: context.vooSpacing.sm,
+              horizontal: context.vooSpacing.xs,
+            ),
+            child: Divider(
+              height: 1,
+              thickness: 1,
+              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            ),
+          ),
+          // Footer navigation items
+          ...footerItems.map((item) => VooRailNavigationItem(
+            item: item,
+            isSelected: item.id == selectedId,
+            extended: extended,
+            onTap: () => onItemSelected(item.id),
+            animationController: itemAnimationControllers[item.id],
+            selectedItemColor: config.selectedItemColor,
+            unselectedItemColor: config.unselectedItemColor,
+          )),
+        ],
+      ),
+    );
+  }
+}
+
+/// Compact header for collapsed rail showing branding and expand toggle
+class _CompactRailHeader extends StatelessWidget {
+  /// Trailing widget (expand toggle)
+  final Widget? trailing;
+
+  const _CompactRailHeader({
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+      child: Column(
+        children: [
+          // Compact branding - just the logo icon
+          Container(
+            width: 36,
+            height: 36,
+            decoration: BoxDecoration(
+              color: const Color(0xFF1F2937),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(
+              Icons.person_outline,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
+          const SizedBox(height: 12),
+          // Expand toggle
+          if (trailing != null) trailing!,
+        ],
+      ),
+    );
   }
 }

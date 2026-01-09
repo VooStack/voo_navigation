@@ -40,36 +40,33 @@ class VooDrawerNavigationItem extends StatelessWidget {
     final isSelected = item.id == selectedId;
 
     // Resolve colors from item, config, or theme (in that priority order)
+    final unselectedColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
+    final selectedColor = config.selectedItemColor ?? theme.colorScheme.primary;
+
     final iconColor = isSelected
-        ? (item.selectedIconColor ?? config.selectedItemColor ?? theme.colorScheme.primary)
-        : (item.iconColor ?? config.unselectedItemColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.8));
+        ? (item.selectedIconColor ?? selectedColor)
+        : (item.iconColor ?? unselectedColor.withValues(alpha: 0.7));
 
-    // Resolve label style from item or theme, using config colors when provided
-    final selectedLabelColor = config.selectedItemColor ?? theme.colorScheme.primary;
-    final unselectedLabelColor = config.unselectedItemColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.85);
-
-    final defaultLabelStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: isSelected ? selectedLabelColor : unselectedLabelColor,
-      fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+    // Resolve label style
+    final labelStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: isSelected ? unselectedColor : unselectedColor,
+      fontWeight: isSelected ? FontWeight.w500 : FontWeight.w500,
       fontSize: 13,
     );
-    final labelStyle = isSelected
-        ? (item.selectedLabelStyle ?? defaultLabelStyle)
-        : (item.labelStyle ?? defaultLabelStyle);
 
     Widget itemContent = AnimatedContainer(
       duration: context.vooAnimation.durationFast,
-      padding: EdgeInsets.symmetric(
-        horizontal: context.vooSpacing.xs + 2,
-        vertical: context.vooSpacing.xxs + 2,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 8,
       ),
       decoration: BoxDecoration(
         color: isSelected
-            ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
+            ? selectedColor.withValues(alpha: 0.1)
             : isHovered
-            ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
-            : Colors.transparent,
-        borderRadius: BorderRadius.circular(context.vooRadius.md),
+                ? unselectedColor.withValues(alpha: 0.04)
+                : Colors.transparent,
+        borderRadius: BorderRadius.circular(6),
       ),
       child: Row(
         children: [
@@ -87,7 +84,7 @@ class VooDrawerNavigationItem extends StatelessWidget {
               ),
             ),
 
-          SizedBox(width: context.vooSpacing.xs),
+          const SizedBox(width: 10),
 
           // Label
           Expanded(
@@ -100,13 +97,13 @@ class VooDrawerNavigationItem extends StatelessWidget {
 
           // Modern badge
           if (item.hasBadge) ...[
-            SizedBox(width: context.vooSpacing.sm),
+            const SizedBox(width: 8),
             VooDrawerModernBadge(item: item, isSelected: isSelected),
           ],
 
           // Trailing widget
           if (item.trailingWidget != null) ...[
-            SizedBox(width: context.vooSpacing.sm),
+            const SizedBox(width: 8),
             item.trailingWidget!,
           ],
         ],
@@ -130,14 +127,11 @@ class VooDrawerNavigationItem extends StatelessWidget {
       child: MouseRegion(
         onEnter: (_) => onHoverChanged(true),
         onExit: (_) => onHoverChanged(false),
-        child: Padding(
+        child: InkWell(
           key: item.key,
-          padding: EdgeInsets.only(bottom: 1),
-          child: InkWell(
-            onTap: item.isEnabled ? () => onItemTap(item) : null,
-            borderRadius: BorderRadius.circular(context.vooRadius.lg),
-            child: itemContent,
-          ),
+          onTap: item.isEnabled ? () => onItemTap(item) : null,
+          borderRadius: BorderRadius.circular(6),
+          child: itemContent,
         ),
       ),
     );

@@ -13,11 +13,27 @@ class VooRailSectionHeader extends StatelessWidget {
   /// Whether the rail is in extended mode
   final bool extended;
 
+  /// Whether a child of this section is currently selected
+  final bool hasSelectedChild;
+
+  /// Callback when section is tapped (compact mode)
+  final VoidCallback? onTap;
+
+  /// Selected item color (from config)
+  final Color? selectedItemColor;
+
+  /// Unselected item color (from config)
+  final Color? unselectedItemColor;
+
   const VooRailSectionHeader({
     super.key,
     required this.item,
     required this.children,
     this.extended = false,
+    this.hasSelectedChild = false,
+    this.onTap,
+    this.selectedItemColor,
+    this.unselectedItemColor,
   });
 
   @override
@@ -57,28 +73,45 @@ class VooRailSectionHeader extends StatelessWidget {
         ),
       );
     } else {
-      // Compact mode: Icon-only with tooltip
+      // Compact mode: Icon-only with tooltip - NO children shown
+      // Children are only visible when the drawer is expanded
+      final effectiveSelectedColor = selectedItemColor ?? theme.colorScheme.primary;
+      final effectiveUnselectedColor = unselectedItemColor ?? theme.colorScheme.onSurfaceVariant;
+      final isDark = theme.brightness == Brightness.dark;
+
       return Padding(
         padding: EdgeInsets.symmetric(
-          vertical: spacing.xs,
+          vertical: spacing.xxs,
           horizontal: spacing.sm,
         ),
-        child: Column(
-          children: [
-            // Icon-only header with tooltip
-            Tooltip(
-              message: item.label,
-              child: Icon(
-                item.isExpanded ? item.selectedIcon ?? item.icon : item.icon,
-                color: theme.colorScheme.onSurfaceVariant,
-                size: 24,
+        child: Tooltip(
+          message: item.label,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(context.vooRadius.md),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(context.vooRadius.md),
+                color: hasSelectedChild
+                    ? effectiveSelectedColor.withValues(alpha: isDark ? 0.2 : 0.12)
+                    : Colors.transparent,
+              ),
+              child: Center(
+                child: Icon(
+                  hasSelectedChild || item.isExpanded
+                      ? item.selectedIcon ?? item.icon
+                      : item.icon,
+                  color: hasSelectedChild
+                      ? effectiveSelectedColor
+                      : effectiveUnselectedColor,
+                  size: 24,
+                ),
               ),
             ),
-            if (item.isExpanded) ...[
-              SizedBox(height: spacing.xs),
-              ...children,
-            ],
-          ],
+          ),
         ),
       );
     }

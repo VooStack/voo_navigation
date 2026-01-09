@@ -78,7 +78,10 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         VooNavigationItem(id: 'payment-info', label: 'Payment information', icon: Icons.credit_card_outlined, onTap: () => _onNavigationItemSelected('payment-info')),
       ],
     ),
-    VooNavigationItem.divider(id: 'divider1'),
+  ];
+
+  // Footer items (static routes at bottom of nav)
+  List<VooNavigationItem> get _footerItems => [
     VooNavigationItem(
       id: 'settings',
       label: 'Settings',
@@ -161,8 +164,12 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       containerBorderRadius: 0, // Flat design
     );
 
+    // Light gray scaffold background (same as nav bar area in the screenshot)
+    const scaffoldBgColor = Color(0xFFF9FAFB);
+
     final config = VooNavigationConfig(
       items: _navigationItems,
+      footerItems: _footerItems,
       selectedId: _selectedId,
       onNavigationItemSelected: _onNavigationItemSelected,
       navigationTheme: navTheme,
@@ -171,11 +178,14 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       // Flat edge-to-edge layout
       drawerMargin: EdgeInsets.zero,
       navigationRailMargin: 0,
-      contentAreaMargin: EdgeInsets.zero,
-      contentAreaBorderRadius: BorderRadius.zero,
+      contentAreaMargin: const EdgeInsets.only(top: 8, right: 8, bottom: 8),
+      contentAreaBorderRadius: BorderRadius.circular(12),
 
-      // White sidebar
-      navigationBackgroundColor: Colors.white,
+      // White sidebar with same color as scaffold
+      navigationBackgroundColor: scaffoldBgColor,
+
+      // White content area background for contrast
+      contentAreaBackgroundColor: Colors.white,
 
       // App bar with custom builder
       appBarAlongsideRail: true,
@@ -220,13 +230,16 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         ),
       ],
 
-      // Sizing - compact like reference
-      navigationDrawerWidth: 200,
+      // Sizing - needs enough width for text
+      navigationDrawerWidth: 220,
       navigationRailWidth: 64,
-      extendedNavigationRailWidth: 200,
+      extendedNavigationRailWidth: 220,
 
       // Enable collapsible rail
       enableCollapsibleRail: true,
+
+      // Custom collapse toggle matching reference design
+      collapseToggleBuilder: (isExpanded, onToggle) => _buildCollapseToggle(isExpanded, onToggle),
 
       // User profile at bottom
       showUserProfile: true,
@@ -248,94 +261,145 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
 
     return VooAdaptiveScaffold(
       config: config,
-      backgroundColor: Colors.white,
+      backgroundColor: scaffoldBgColor,
       body: _buildPageContent(),
+    );
+  }
+
+  Widget _buildCollapseToggle(bool isExpanded, VoidCallback onToggle) {
+    return GestureDetector(
+      onTap: onToggle,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: Container(
+          width: 28,
+          height: 28,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: const Color(0xFFE5E7EB)),
+          ),
+          child: Center(
+            child: Container(
+              width: 14,
+              height: 12,
+              decoration: BoxDecoration(
+                border: Border.all(color: const Color(0xFF9CA3AF), width: 1.5),
+                borderRadius: BorderRadius.circular(2),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    width: 4,
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        right: BorderSide(color: Color(0xFF9CA3AF), width: 1.5),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
   Widget _buildDrawerHeader(BuildContext context) {
     final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Logo and title (collapse toggle is handled by the scaffold)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 12, 0, 8),
-          child: Row(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 20, 12, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Logo and title row (collapse toggle comes from drawerHeaderTrailing)
+          Row(
             children: [
+              // Logo
               Container(
-                width: 24,
-                height: 24,
+                width: 36,
+                height: 36,
                 decoration: BoxDecoration(
                   color: const Color(0xFF1F2937),
-                  borderRadius: BorderRadius.circular(5),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Icon(
-                  Icons.hexagon_outlined,
+                  Icons.person_outline,
                   color: Colors.white,
-                  size: 14,
+                  size: 20,
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(
-                'HRISELINK',
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: const Color(0xFF1F2937),
-                  fontSize: 13,
+              const SizedBox(width: 12),
+              // Title
+              const Expanded(
+                child: Text(
+                  'HRISELINK',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1F2937),
+                    fontSize: 16,
+                    letterSpacing: 0.5,
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-        // Search bar
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-          child: Container(
-            height: 32,
+          const SizedBox(height: 16),
+          // Search bar - same horizontal padding as nav items (12px from drawer edges)
+          Container(
+            height: 36,
             decoration: BoxDecoration(
-              color: const Color(0xFFF9FAFB),
-              borderRadius: BorderRadius.circular(6),
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(color: const Color(0xFFE5E7EB)),
             ),
             child: Row(
               children: [
-                const SizedBox(width: 8),
+                const SizedBox(width: 12),
                 Icon(
                   Icons.search,
-                  size: 14,
+                  size: 18,
                   color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
                 ),
-                const SizedBox(width: 6),
+                const SizedBox(width: 8),
                 Expanded(
                   child: Text(
                     'Search...',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
-                      fontSize: 12,
+                    style: TextStyle(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                      fontSize: 14,
                     ),
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(right: 4),
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                  margin: const EdgeInsets.only(right: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(3),
+                    color: const Color(0xFFF9FAFB),
+                    borderRadius: BorderRadius.circular(4),
                     border: Border.all(color: const Color(0xFFE5E7EB)),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.keyboard_command_key, size: 9, color: theme.colorScheme.onSurface.withValues(alpha: 0.35)),
-                      const SizedBox(width: 1),
+                      Text(
+                        '⌘',
+                        style: TextStyle(
+                          color: Color(0xFF9CA3AF),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(width: 2),
                       Text(
                         'F',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.35),
-                          fontSize: 9,
+                        style: TextStyle(
+                          color: Color(0xFF9CA3AF),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ],
@@ -344,28 +408,27 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildUserProfile(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      margin: const EdgeInsets.fromLTRB(12, 8, 12, 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF0FDF4),
+        color: const Color(0xFF1E293B), // Dark blue/slate
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         children: [
+          // Avatar with initials
           Container(
-            width: 28,
-            height: 28,
+            width: 32,
+            height: 32,
             decoration: BoxDecoration(
-              color: const Color(0xFF10B981),
+              color: const Color(0xFF6366F1), // Indigo
               borderRadius: BorderRadius.circular(6),
             ),
             child: const Center(
@@ -374,39 +437,41 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 10,
+                  fontSize: 11,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 10),
+          // Name and members
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   'Wishbone',
-                  style: theme.textTheme.bodySmall?.copyWith(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    color: const Color(0xFF1F2937),
-                    fontSize: 12,
+                    color: Colors.white,
+                    fontSize: 13,
                   ),
                 ),
                 Text(
                   '61 members',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                    fontSize: 10,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontSize: 11,
                   ),
                 ),
               ],
             ),
           ),
+          // Dropdown arrow
           Icon(
             Icons.keyboard_arrow_down,
-            size: 16,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.4),
+            size: 18,
+            color: Colors.white.withValues(alpha: 0.6),
           ),
         ],
       ),

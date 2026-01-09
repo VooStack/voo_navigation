@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_child_navigation_item.dart';
-import 'package:voo_tokens/voo_tokens.dart';
 
 /// Expandable section widget for drawer navigation with children
 class VooDrawerExpandableSection extends StatelessWidget {
@@ -51,81 +50,51 @@ class VooDrawerExpandableSection extends StatelessWidget {
     final sectionColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         MouseRegion(
           onEnter: (_) => onHoverChanged(item.id, true),
           onExit: (_) => onHoverChanged(item.id, false),
           child: InkWell(
             onTap: () => onItemTap(item),
-            borderRadius: BorderRadius.circular(context.vooRadius.md),
+            borderRadius: BorderRadius.circular(6),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
-              margin: EdgeInsets.only(bottom: 1),
-              padding: EdgeInsets.symmetric(
-                horizontal: context.vooSpacing.xs + 2,
-                vertical: context.vooSpacing.xxs + 2,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8,
+                vertical: 8,
               ),
               decoration: BoxDecoration(
                 color: isHovered
                     ? sectionColor.withValues(alpha: 0.04)
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(context.vooRadius.md),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Row(
                 children: [
-                  // Animate icon change with the expansion
-                  if (expansionController != null)
-                    AnimatedBuilder(
-                      animation: expansionController!,
-                      builder: (context, child) {
-                        final isExpanded = expansionController!.value > 0.5;
-                        return Icon(
-                          isExpanded
-                              ? item.selectedIcon ?? item.icon
-                              : item.icon,
-                          color: sectionColor,
-                          size: 18,
-                        );
-                      },
-                    )
-                  else
-                    Icon(
-                      item.icon,
-                      color: sectionColor,
-                      size: 18,
-                    ),
-                  SizedBox(width: context.vooSpacing.xs),
+                  // Section icon
+                  Icon(
+                    item.icon,
+                    color: sectionColor.withValues(alpha: 0.7),
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       item.label,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: sectionColor,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
                     ),
                   ),
-                  // Smoothly animate the chevron rotation with expansion
-                  if (expansionController != null)
-                    AnimatedBuilder(
-                      animation: expansionController!,
-                      builder: (context, child) {
-                        return Transform.rotate(
-                          angle: expansionController!.value * 1.5708, // 90 degrees in radians
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: sectionColor.withValues(alpha: 0.5),
-                            size: 16,
-                          ),
-                        );
-                      },
-                    )
-                  else
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: sectionColor.withValues(alpha: 0.5),
-                      size: 16,
-                    ),
+                  // Dropdown arrow
+                  Icon(
+                    Icons.arrow_drop_down,
+                    color: sectionColor.withValues(alpha: 0.4),
+                    size: 18,
+                  ),
                 ],
               ),
             ),
@@ -147,6 +116,7 @@ class VooDrawerExpandableSection extends StatelessWidget {
                       isHovered: hoveredItems[child.id] == true,
                       onHoverChanged: (isHovered) =>
                           onHoverChanged(child.id, isHovered),
+                      showVerticalLine: true,
                     ),
                   )
                   .toList(),

@@ -194,6 +194,12 @@ class VooNavigationConfig {
   /// When provided, sections are rendered in addition to [items].
   final List<VooNavigationSection>? sections;
 
+  /// Footer items displayed at the bottom of the navigation rail/drawer
+  ///
+  /// These items appear above the user profile section (if enabled) and are
+  /// typically used for static routes like Settings, Integrations, Help, etc.
+  final List<VooNavigationItem>? footerItems;
+
   /// Callback when the navigation collapse state changes
   ///
   /// Called when [enableCollapsibleRail] is true and user toggles collapse.
@@ -299,6 +305,7 @@ class VooNavigationConfig {
     Duration? badgeAnimationDuration,
     this.groupItemsBySections = false,
     this.sections,
+    this.footerItems,
     this.onCollapseChanged,
     this.emptyStateWidget,
     this.errorBuilder,
@@ -379,6 +386,7 @@ class VooNavigationConfig {
     Duration? badgeAnimationDuration,
     bool? groupItemsBySections,
     List<VooNavigationSection>? sections,
+    List<VooNavigationItem>? footerItems,
     void Function(bool isCollapsed)? onCollapseChanged,
     Widget? emptyStateWidget,
     Widget Function(Object error)? errorBuilder,
@@ -462,6 +470,7 @@ class VooNavigationConfig {
         badgeAnimationDuration ?? this.badgeAnimationDuration,
     groupItemsBySections: groupItemsBySections ?? this.groupItemsBySections,
     sections: sections ?? this.sections,
+    footerItems: footerItems ?? this.footerItems,
     onCollapseChanged: onCollapseChanged ?? this.onCollapseChanged,
     emptyStateWidget: emptyStateWidget ?? this.emptyStateWidget,
     errorBuilder: errorBuilder ?? this.errorBuilder,
@@ -558,6 +567,15 @@ class VooNavigationConfig {
     if (sections == null) return [];
     return sections!
         .where((section) => section.isVisible)
+        .toList()
+      ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+  }
+
+  /// Gets visible footer items sorted by sortOrder
+  List<VooNavigationItem> get visibleFooterItems {
+    if (footerItems == null) return [];
+    return footerItems!
+        .where((item) => item.isVisible)
         .toList()
       ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
   }
