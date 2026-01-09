@@ -11,4 +11,5 @@ workspace:
   - packages/ui/voo_navigation_bar
   - packages/ui/voo_navigation
   - packages/ui/voo_navigation/example
+  - apps/example
 melos:

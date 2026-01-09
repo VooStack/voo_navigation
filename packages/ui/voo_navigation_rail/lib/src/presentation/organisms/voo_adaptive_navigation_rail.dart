@@ -96,9 +96,7 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final navTheme = widget.config.effectiveTheme;
-    final isDark = theme.brightness == Brightness.dark;
 
     final effectiveWidth =
         widget.width ??
@@ -117,23 +115,42 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
       curve: navTheme.animationCurve,
       width: effectiveWidth,
       margin: EdgeInsets.all(widget.config.navigationRailMargin),
-      child: _buildThemedContainer(
-        context,
-        theme,
-        navTheme,
-        isDark,
-        effectiveBackgroundColor,
+      child: _ThemedRailContainer(
+        config: widget.config,
+        navTheme: navTheme,
+        backgroundColor: effectiveBackgroundColor,
+        extended: widget.extended,
+        selectedId: widget.selectedId,
+        onNavigationItemSelected: widget.onNavigationItemSelected,
+        itemAnimationControllers: _itemAnimationControllers,
       ),
     );
   }
+}
 
-  Widget _buildThemedContainer(
-    BuildContext context,
-    ThemeData theme,
-    VooNavigationTheme navTheme,
-    bool isDark,
-    Color backgroundColor,
-  ) {
+class _ThemedRailContainer extends StatelessWidget {
+  final VooNavigationConfig config;
+  final VooNavigationTheme navTheme;
+  final Color backgroundColor;
+  final bool extended;
+  final String selectedId;
+  final void Function(String itemId) onNavigationItemSelected;
+  final Map<String, AnimationController> itemAnimationControllers;
+
+  const _ThemedRailContainer({
+    required this.config,
+    required this.navTheme,
+    required this.backgroundColor,
+    required this.extended,
+    required this.selectedId,
+    required this.onNavigationItemSelected,
+    required this.itemAnimationControllers,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     final borderRadius = BorderRadius.circular(navTheme.containerBorderRadius);
 
     Widget content = Material(
@@ -141,14 +158,14 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
       child: Column(
         children: [
           // Custom header or default header
-          if (widget.extended)
-            widget.config.drawerHeader ??
+          if (extended)
+            config.drawerHeader ??
                 const VooRailDefaultHeader(showTitle: true),
 
           // Navigation items
           Expanded(
             child: ListView(
-              controller: widget.config.drawerScrollController,
+              controller: config.drawerScrollController,
               padding: EdgeInsets.symmetric(
                 vertical: context.vooSpacing.sm,
                 horizontal: context.vooSpacing.xs,
@@ -156,31 +173,31 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
               physics: const ClampingScrollPhysics(),
               children: [
                 VooRailNavigationItems(
-                  config: widget.config,
-                  selectedId: widget.selectedId,
-                  extended: widget.extended,
-                  onItemSelected: widget.onNavigationItemSelected,
-                  itemAnimationControllers: _itemAnimationControllers,
+                  config: config,
+                  selectedId: selectedId,
+                  extended: extended,
+                  onItemSelected: onNavigationItemSelected,
+                  itemAnimationControllers: itemAnimationControllers,
                 ),
               ],
             ),
           ),
 
           // Leading widget for FAB or other actions
-          if (widget.config.floatingActionButton != null &&
-              widget.config.showFloatingActionButton)
+          if (config.floatingActionButton != null &&
+              config.showFloatingActionButton)
             Padding(
               padding: EdgeInsets.all(context.vooSpacing.md),
-              child: widget.config.floatingActionButton,
+              child: config.floatingActionButton,
             ),
 
           // User profile footer when enabled
-          if (widget.config.showUserProfile)
-            widget.config.userProfileWidget ??
-                VooUserProfileFooter(compact: !widget.extended),
+          if (config.showUserProfile)
+            config.userProfileWidget ??
+                VooUserProfileFooter(compact: !extended),
 
           // Custom footer if provided
-          if (widget.config.drawerFooter != null) widget.config.drawerFooter!,
+          if (config.drawerFooter != null) config.drawerFooter!,
         ],
       ),
     );

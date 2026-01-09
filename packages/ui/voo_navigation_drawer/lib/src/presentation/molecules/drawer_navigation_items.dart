@@ -51,7 +51,7 @@ class VooDrawerNavigationItems extends StatelessWidget {
 
     // Show empty state if no items
     if (visibleItems.isEmpty) {
-      return config.emptyStateWidget ?? _buildDefaultEmptyState(context, theme);
+      return config.emptyStateWidget ?? _DefaultEmptyState();
     }
 
     final widgets = <Widget>[];
@@ -103,8 +103,13 @@ class VooDrawerNavigationItems extends StatelessWidget {
 
     return Column(children: widgets);
   }
+}
 
-  Widget _buildDefaultEmptyState(BuildContext context, ThemeData theme) {
+class _DefaultEmptyState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: EdgeInsets.all(context.vooSpacing.xl),
       child: Column(

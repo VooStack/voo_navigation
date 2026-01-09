@@ -60,18 +60,59 @@ class VooThemedIndicator extends StatelessWidget {
     final indicatorColor = color ?? theme.resolveIndicatorColor(context);
 
     return switch (theme.indicatorStyle) {
-      VooThemeIndicatorStyle.pill => _buildPillIndicator(context, indicatorColor),
-      VooThemeIndicatorStyle.glow => _buildGlowIndicator(context, indicatorColor),
-      VooThemeIndicatorStyle.line => _buildLineIndicator(context, indicatorColor),
-      VooThemeIndicatorStyle.embossed =>
-        _buildEmbossedIndicator(context, indicatorColor),
-      VooThemeIndicatorStyle.background =>
-        _buildBackgroundIndicator(context, indicatorColor),
+      VooThemeIndicatorStyle.pill => _PillIndicator(
+          theme: theme,
+          isSelected: isSelected,
+          indicatorColor: indicatorColor,
+          child: child,
+        ),
+      VooThemeIndicatorStyle.glow => _GlowIndicator(
+          theme: theme,
+          isSelected: isSelected,
+          indicatorColor: indicatorColor,
+          child: child,
+        ),
+      VooThemeIndicatorStyle.line => _LineIndicator(
+          theme: theme,
+          isSelected: isSelected,
+          indicatorColor: indicatorColor,
+          linePosition: linePosition,
+          child: child,
+        ),
+      VooThemeIndicatorStyle.embossed => _EmbossedIndicator(
+          theme: theme,
+          isSelected: isSelected,
+          indicatorColor: indicatorColor,
+          child: child,
+        ),
+      VooThemeIndicatorStyle.background => _BackgroundIndicator(
+          theme: theme,
+          isSelected: isSelected,
+          indicatorColor: indicatorColor,
+          width: width,
+          height: height,
+          child: child,
+        ),
       VooThemeIndicatorStyle.none => child,
     };
   }
+}
 
-  Widget _buildPillIndicator(BuildContext context, Color indicatorColor) {
+class _PillIndicator extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final bool isSelected;
+  final Color indicatorColor;
+  final Widget child;
+
+  const _PillIndicator({
+    required this.theme,
+    required this.isSelected,
+    required this.indicatorColor,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: theme.animationDuration,
       curve: theme.animationCurve,
@@ -85,8 +126,23 @@ class VooThemedIndicator extends StatelessWidget {
       child: child,
     );
   }
+}
 
-  Widget _buildGlowIndicator(BuildContext context, Color indicatorColor) {
+class _GlowIndicator extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final bool isSelected;
+  final Color indicatorColor;
+  final Widget child;
+
+  const _GlowIndicator({
+    required this.theme,
+    required this.isSelected,
+    required this.indicatorColor,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: theme.animationDuration,
       curve: theme.animationCurve,
@@ -114,8 +170,25 @@ class VooThemedIndicator extends StatelessWidget {
       child: child,
     );
   }
+}
 
-  Widget _buildLineIndicator(BuildContext context, Color indicatorColor) {
+class _LineIndicator extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final bool isSelected;
+  final Color indicatorColor;
+  final VooLineIndicatorPosition linePosition;
+  final Widget child;
+
+  const _LineIndicator({
+    required this.theme,
+    required this.isSelected,
+    required this.indicatorColor,
+    required this.linePosition,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final isHorizontal = linePosition == VooLineIndicatorPosition.bottom ||
         linePosition == VooLineIndicatorPosition.top;
 
@@ -144,11 +217,25 @@ class VooThemedIndicator extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _buildEmbossedIndicator(BuildContext context, Color indicatorColor) {
+class _EmbossedIndicator extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final bool isSelected;
+  final Color indicatorColor;
+  final Widget child;
+
+  const _EmbossedIndicator({
+    required this.theme,
+    required this.isSelected,
+    required this.indicatorColor,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final isDark = themeData.brightness == Brightness.dark;
-
     final shadowOpacity = isDark ? 0.3 : 0.12;
 
     return AnimatedContainer(
@@ -180,8 +267,27 @@ class VooThemedIndicator extends StatelessWidget {
       child: child,
     );
   }
+}
 
-  Widget _buildBackgroundIndicator(BuildContext context, Color indicatorColor) {
+class _BackgroundIndicator extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final bool isSelected;
+  final Color indicatorColor;
+  final double? width;
+  final double? height;
+  final Widget child;
+
+  const _BackgroundIndicator({
+    required this.theme,
+    required this.isSelected,
+    required this.indicatorColor,
+    required this.child,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: theme.animationDuration,
       curve: theme.animationCurve,
@@ -194,145 +300,6 @@ class VooThemedIndicator extends StatelessWidget {
         borderRadius: BorderRadius.circular(theme.indicatorBorderRadius),
       ),
       child: child,
-    );
-  }
-}
-
-/// A sliding pill indicator for bottom navigation
-///
-/// Smoothly animates position when selection changes
-class VooSlidingPillIndicator extends StatelessWidget {
-  /// The navigation theme configuration
-  final VooNavigationTheme theme;
-
-  /// Total number of items
-  final int itemCount;
-
-  /// Currently selected index
-  final int selectedIndex;
-
-  /// Height of the indicator
-  final double height;
-
-  /// Vertical offset from top
-  final double topOffset;
-
-  /// Custom indicator color (overrides theme)
-  final Color? color;
-
-  const VooSlidingPillIndicator({
-    super.key,
-    required this.theme,
-    required this.itemCount,
-    required this.selectedIndex,
-    this.height = 4,
-    this.topOffset = 8,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (itemCount == 0) return const SizedBox.shrink();
-
-    final indicatorColor = color ?? theme.resolveIndicatorColor(context);
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final itemWidth = constraints.maxWidth / itemCount;
-        final pillWidth = itemWidth * 0.65;
-        final leftPosition =
-            (itemWidth * selectedIndex) + (itemWidth - pillWidth) / 2;
-
-        return AnimatedPositioned(
-          duration: theme.animationDuration,
-          curve: theme.animationCurve,
-          left: leftPosition,
-          top: topOffset,
-          child: _buildPill(indicatorColor, pillWidth),
-        );
-      },
-    );
-  }
-
-  Widget _buildPill(Color indicatorColor, double pillWidth) {
-    final showGlow = theme.indicatorStyle == VooThemeIndicatorStyle.glow ||
-        theme.preset == VooNavigationPreset.glassmorphism;
-
-    return Container(
-      width: pillWidth,
-      height: height,
-      decoration: BoxDecoration(
-        color: indicatorColor,
-        borderRadius: BorderRadius.circular(height / 2),
-        boxShadow: showGlow
-            ? [
-                BoxShadow(
-                  color: indicatorColor.withValues(alpha: 0.4),
-                  blurRadius: theme.indicatorGlowBlur,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
-    );
-  }
-}
-
-/// A vertical edge indicator for navigation rails
-///
-/// Displays a colored bar on the left edge of selected items
-class VooEdgeBarIndicator extends StatelessWidget {
-  /// The navigation theme configuration
-  final VooNavigationTheme theme;
-
-  /// Whether the indicator is active
-  final bool isSelected;
-
-  /// Height of the indicator
-  final double height;
-
-  /// Width of the indicator bar
-  final double width;
-
-  /// Custom indicator color (overrides theme)
-  final Color? color;
-
-  const VooEdgeBarIndicator({
-    super.key,
-    required this.theme,
-    required this.isSelected,
-    this.height = 32,
-    this.width = 3,
-    this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final indicatorColor = color ?? theme.resolveIndicatorColor(context);
-    final showGlow = theme.indicatorStyle == VooThemeIndicatorStyle.glow ||
-        theme.preset == VooNavigationPreset.glassmorphism;
-
-    return AnimatedContainer(
-      duration: theme.animationDuration,
-      curve: theme.animationCurve,
-      width: width,
-      height: isSelected ? height : 0,
-      decoration: BoxDecoration(
-        color: indicatorColor,
-        borderRadius: BorderRadius.only(
-          topRight: Radius.circular(width),
-          bottomRight: Radius.circular(width),
-        ),
-        boxShadow: isSelected && showGlow
-            ? [
-                BoxShadow(
-                  color: indicatorColor.withValues(alpha: 0.5),
-                  blurRadius: 8,
-                  offset: const Offset(2, 0),
-                ),
-              ]
-            : null,
-      ),
     );
   }
 }

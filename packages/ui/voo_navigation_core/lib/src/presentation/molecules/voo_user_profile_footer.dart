@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/domain/entities/voo_profile_menu_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/voo_user_status.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Modern user profile footer for navigation drawer/rail
@@ -61,6 +63,57 @@ class VooUserProfileFooter extends StatefulWidget {
 }
 
 class _VooUserProfileFooterState extends State<VooUserProfileFooter> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.compact) {
+      return _CompactProfile(
+        userName: widget.userName,
+        avatarWidget: widget.avatarWidget,
+        avatarUrl: widget.avatarUrl,
+        initials: widget.initials,
+        status: widget.status,
+        onTap: widget.onTap,
+      );
+    }
+
+    return _ExpandedProfile(
+      userName: widget.userName,
+      userEmail: widget.userEmail,
+      avatarWidget: widget.avatarWidget,
+      avatarUrl: widget.avatarUrl,
+      initials: widget.initials,
+      status: widget.status,
+      showDropdownIndicator: widget.showDropdownIndicator,
+      onTap: widget.onTap,
+      onSettingsTap: widget.onSettingsTap,
+      onLogout: widget.onLogout,
+      menuItems: widget.menuItems,
+    );
+  }
+}
+
+class _CompactProfile extends StatefulWidget {
+  final String? userName;
+  final Widget? avatarWidget;
+  final String? avatarUrl;
+  final String? initials;
+  final VooUserStatus? status;
+  final VoidCallback? onTap;
+
+  const _CompactProfile({
+    this.userName,
+    this.avatarWidget,
+    this.avatarUrl,
+    this.initials,
+    this.status,
+    this.onTap,
+  });
+
+  @override
+  State<_CompactProfile> createState() => _CompactProfileState();
+}
+
+class _CompactProfileState extends State<_CompactProfile> {
   bool _isHovered = false;
 
   @override
@@ -68,22 +121,7 @@ class _VooUserProfileFooterState extends State<VooUserProfileFooter> {
     final theme = Theme.of(context);
     final spacing = context.vooSpacing;
     final radius = context.vooRadius;
-    final isDark = theme.brightness == Brightness.dark;
 
-    if (widget.compact) {
-      return _buildCompactProfile(context, theme, spacing, radius, isDark);
-    }
-
-    return _buildExpandedProfile(context, theme, spacing, radius, isDark);
-  }
-
-  Widget _buildCompactProfile(
-    BuildContext context,
-    ThemeData theme,
-    VooSpacingTokens spacing,
-    VooRadiusTokens radius,
-    bool isDark,
-  ) {
     return Padding(
       padding: EdgeInsets.all(spacing.sm),
       child: MouseRegion(
@@ -102,100 +140,13 @@ class _VooUserProfileFooterState extends State<VooUserProfileFooter> {
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(radius.md),
               ),
-              child: _buildAvatar(context, theme, 36),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildExpandedProfile(
-    BuildContext context,
-    ThemeData theme,
-    VooSpacingTokens spacing,
-    VooRadiusTokens radius,
-    bool isDark,
-  ) {
-    return Container(
-      padding: EdgeInsets.all(spacing.sm),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: theme.dividerColor.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ),
-      ),
-      child: MouseRegion(
-        onEnter: (_) => setState(() => _isHovered = true),
-        onExit: (_) => setState(() => _isHovered = false),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: widget.onTap ?? () => _showProfileMenu(context),
-            borderRadius: BorderRadius.circular(radius.md),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              padding: EdgeInsets.symmetric(
-                horizontal: spacing.sm,
-                vertical: spacing.sm,
-              ),
-              decoration: BoxDecoration(
-                color: _isHovered
-                    ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(radius.md),
-                border: _isHovered
-                    ? Border.all(
-                        color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                        width: 1,
-                      )
-                    : null,
-              ),
-              child: Row(
-                children: [
-                  _buildAvatar(context, theme, 40),
-                  SizedBox(width: spacing.sm),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          widget.userName ?? 'User',
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: theme.colorScheme.onSurface,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        if (widget.userEmail != null) ...[
-                          const SizedBox(height: 2),
-                          Text(
-                            widget.userEmail!,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  if (widget.showDropdownIndicator)
-                    AnimatedRotation(
-                      turns: _isHovered ? 0.5 : 0,
-                      duration: const Duration(milliseconds: 200),
-                      child: Icon(
-                        Icons.keyboard_arrow_down_rounded,
-                        color: theme.colorScheme.onSurfaceVariant,
-                        size: 20,
-                      ),
-                    ),
-                ],
+              child: _ProfileAvatar(
+                avatarWidget: widget.avatarWidget,
+                avatarUrl: widget.avatarUrl,
+                userName: widget.userName,
+                initials: widget.initials,
+                status: widget.status,
+                size: 36,
               ),
             ),
           ),
@@ -203,119 +154,41 @@ class _VooUserProfileFooterState extends State<VooUserProfileFooter> {
       ),
     );
   }
+}
 
-  Widget _buildAvatar(BuildContext context, ThemeData theme, double size) {
-    final radius = context.vooRadius;
+class _ExpandedProfile extends StatefulWidget {
+  final String? userName;
+  final String? userEmail;
+  final Widget? avatarWidget;
+  final String? avatarUrl;
+  final String? initials;
+  final VooUserStatus? status;
+  final bool showDropdownIndicator;
+  final VoidCallback? onTap;
+  final VoidCallback? onSettingsTap;
+  final VoidCallback? onLogout;
+  final List<VooProfileMenuItem>? menuItems;
 
-    Widget avatarContent;
+  const _ExpandedProfile({
+    this.userName,
+    this.userEmail,
+    this.avatarWidget,
+    this.avatarUrl,
+    this.initials,
+    this.status,
+    this.showDropdownIndicator = true,
+    this.onTap,
+    this.onSettingsTap,
+    this.onLogout,
+    this.menuItems,
+  });
 
-    if (widget.avatarWidget != null) {
-      avatarContent = widget.avatarWidget!;
-    } else if (widget.avatarUrl != null) {
-      avatarContent = ClipRRect(
-        borderRadius: BorderRadius.circular(radius.md),
-        child: Image.network(
-          widget.avatarUrl!,
-          width: size,
-          height: size,
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) =>
-              _buildInitialsAvatar(context, theme, size),
-        ),
-      );
-    } else {
-      avatarContent = _buildInitialsAvatar(context, theme, size);
-    }
+  @override
+  State<_ExpandedProfile> createState() => _ExpandedProfileState();
+}
 
-    return Stack(
-      children: [
-        avatarContent,
-        if (widget.status != null)
-          Positioned(
-            right: 0,
-            bottom: 0,
-            child: _buildStatusIndicator(theme),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildInitialsAvatar(
-      BuildContext context, ThemeData theme, double size) {
-    final radius = context.vooRadius;
-    final initials = widget.initials ??
-        (widget.userName?.isNotEmpty == true
-            ? widget.userName!
-                .split(' ')
-                .take(2)
-                .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
-                .join()
-            : '?');
-
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primary.withValues(alpha: 0.7),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(radius.md),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.primary.withValues(alpha: 0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Center(
-        child: Text(
-          initials,
-          style: theme.textTheme.titleSmall?.copyWith(
-            color: theme.colorScheme.onPrimary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatusIndicator(ThemeData theme) {
-    final color = switch (widget.status) {
-      VooUserStatus.online => const Color(0xFF22C55E),
-      VooUserStatus.away => const Color(0xFFF59E0B),
-      VooUserStatus.busy => const Color(0xFFEF4444),
-      VooUserStatus.offline => theme.colorScheme.outline,
-      null => Colors.transparent,
-    };
-
-    return Container(
-      width: 12,
-      height: 12,
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: theme.colorScheme.surface,
-          width: 2,
-        ),
-        boxShadow: widget.status == VooUserStatus.online
-            ? [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.5),
-                  blurRadius: 4,
-                  spreadRadius: 1,
-                ),
-              ]
-            : null,
-      ),
-    );
-  }
+class _ExpandedProfileState extends State<_ExpandedProfile> {
+  bool _isHovered = false;
 
   void _showProfileMenu(BuildContext context) {
     final theme = Theme.of(context);
@@ -387,27 +260,263 @@ class _VooUserProfileFooterState extends State<VooUserProfileFooter> {
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final spacing = context.vooSpacing;
+    final radius = context.vooRadius;
+
+    return Container(
+      padding: EdgeInsets.all(spacing.sm),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: theme.dividerColor.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ),
+      ),
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _isHovered = true),
+        onExit: (_) => setState(() => _isHovered = false),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: widget.onTap ?? () => _showProfileMenu(context),
+            borderRadius: BorderRadius.circular(radius.md),
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: EdgeInsets.symmetric(
+                horizontal: spacing.sm,
+                vertical: spacing.sm,
+              ),
+              decoration: BoxDecoration(
+                color: _isHovered
+                    ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(radius.md),
+                border: _isHovered
+                    ? Border.all(
+                        color: theme.colorScheme.outline.withValues(alpha: 0.1),
+                        width: 1,
+                      )
+                    : null,
+              ),
+              child: Row(
+                children: [
+                  _ProfileAvatar(
+                    avatarWidget: widget.avatarWidget,
+                    avatarUrl: widget.avatarUrl,
+                    userName: widget.userName,
+                    initials: widget.initials,
+                    status: widget.status,
+                    size: 40,
+                  ),
+                  SizedBox(width: spacing.sm),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          widget.userName ?? 'User',
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        if (widget.userEmail != null) ...[
+                          const SizedBox(height: 2),
+                          Text(
+                            widget.userEmail!,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  if (widget.showDropdownIndicator)
+                    AnimatedRotation(
+                      turns: _isHovered ? 0.5 : 0,
+                      duration: const Duration(milliseconds: 200),
+                      child: Icon(
+                        Icons.keyboard_arrow_down_rounded,
+                        color: theme.colorScheme.onSurfaceVariant,
+                        size: 20,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
-/// User status options
-enum VooUserStatus {
-  online,
-  away,
-  busy,
-  offline,
-}
+class _ProfileAvatar extends StatelessWidget {
+  final Widget? avatarWidget;
+  final String? avatarUrl;
+  final String? userName;
+  final String? initials;
+  final VooUserStatus? status;
+  final double size;
 
-/// Menu item for profile dropdown
-class VooProfileMenuItem {
-  final IconData icon;
-  final String label;
-  final VoidCallback? onTap;
-  final bool isDestructive;
-
-  const VooProfileMenuItem({
-    required this.icon,
-    required this.label,
-    this.onTap,
-    this.isDestructive = false,
+  const _ProfileAvatar({
+    this.avatarWidget,
+    this.avatarUrl,
+    this.userName,
+    this.initials,
+    this.status,
+    required this.size,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    final radius = context.vooRadius;
+
+    Widget avatarContent;
+
+    if (avatarWidget != null) {
+      avatarContent = avatarWidget!;
+    } else if (avatarUrl != null) {
+      avatarContent = ClipRRect(
+        borderRadius: BorderRadius.circular(radius.md),
+        child: Image.network(
+          avatarUrl!,
+          width: size,
+          height: size,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) => _InitialsAvatar(
+            userName: userName,
+            initials: initials,
+            size: size,
+          ),
+        ),
+      );
+    } else {
+      avatarContent = _InitialsAvatar(
+        userName: userName,
+        initials: initials,
+        size: size,
+      );
+    }
+
+    return Stack(
+      children: [
+        avatarContent,
+        if (status != null)
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: _StatusIndicator(status: status!),
+          ),
+      ],
+    );
+  }
+}
+
+class _InitialsAvatar extends StatelessWidget {
+  final String? userName;
+  final String? initials;
+  final double size;
+
+  const _InitialsAvatar({
+    this.userName,
+    this.initials,
+    required this.size,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final radius = context.vooRadius;
+    final displayInitials = initials ??
+        (userName?.isNotEmpty == true
+            ? userName!
+                .split(' ')
+                .take(2)
+                .map((e) => e.isNotEmpty ? e[0].toUpperCase() : '')
+                .join()
+            : '?');
+
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.primary,
+            theme.colorScheme.primary.withValues(alpha: 0.7),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(radius.md),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Center(
+        child: Text(
+          displayInitials,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: theme.colorScheme.onPrimary,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusIndicator extends StatelessWidget {
+  final VooUserStatus status;
+
+  const _StatusIndicator({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = switch (status) {
+      VooUserStatus.online => const Color(0xFF22C55E),
+      VooUserStatus.away => const Color(0xFFF59E0B),
+      VooUserStatus.busy => const Color(0xFFEF4444),
+      VooUserStatus.offline => theme.colorScheme.outline,
+    };
+
+    return Container(
+      width: 12,
+      height: 12,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: theme.colorScheme.surface,
+          width: 2,
+        ),
+        boxShadow: status == VooUserStatus.online
+            ? [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.5),
+                  blurRadius: 4,
+                  spreadRadius: 1,
+                ),
+              ]
+            : null,
+      ),
+    );
+  }
 }

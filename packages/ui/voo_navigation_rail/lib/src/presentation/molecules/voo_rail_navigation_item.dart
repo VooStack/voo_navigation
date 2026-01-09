@@ -133,8 +133,16 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
             : null,
       ),
       child: widget.extended
-          ? _buildExtendedContent(theme, spacing, iconColor)
-          : _buildCompactContent(theme, iconColor),
+          ? _ExtendedItemContent(
+              item: widget.item,
+              isSelected: widget.isSelected,
+              iconColor: iconColor,
+            )
+          : _CompactItemContent(
+              item: widget.item,
+              isSelected: widget.isSelected,
+              iconColor: iconColor,
+            ),
     );
 
     // Wrap with tooltip
@@ -179,36 +187,49 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
     );
   }
 
-  Widget _buildExtendedContent(
-    ThemeData theme,
-    VooSpacingTokens spacing,
-    Color iconColor,
-  ) {
+}
+
+class _ExtendedItemContent extends StatelessWidget {
+  final VooNavigationItem item;
+  final bool isSelected;
+  final Color iconColor;
+
+  const _ExtendedItemContent({
+    required this.item,
+    required this.isSelected,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final spacing = context.vooSpacing;
+
     // Resolve label style from item or theme
     final defaultLabelStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: widget.isSelected
+      color: isSelected
           ? theme.colorScheme.primary
           : theme.colorScheme.onSurface,
-      fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
       fontSize: 14,
     );
-    final labelStyle = widget.isSelected
-        ? (widget.item.selectedLabelStyle ?? defaultLabelStyle)
-        : (widget.item.labelStyle ?? defaultLabelStyle);
+    final labelStyle = isSelected
+        ? (item.selectedLabelStyle ?? defaultLabelStyle)
+        : (item.labelStyle ?? defaultLabelStyle);
 
     return Row(
       children: [
         // Leading widget or Icon
-        if (widget.item.leadingWidget != null)
-          widget.item.leadingWidget!
+        if (item.leadingWidget != null)
+          item.leadingWidget!
         else
           AnimatedSwitcher(
             duration: context.vooAnimation.durationFast,
             child: Icon(
-              widget.isSelected
-                  ? widget.item.effectiveSelectedIcon
-                  : widget.item.icon,
-              key: ValueKey(widget.isSelected),
+              isSelected
+                  ? item.effectiveSelectedIcon
+                  : item.icon,
+              key: ValueKey(isSelected),
               color: iconColor,
               size: 22,
             ),
@@ -219,23 +240,23 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
             children: [
               Flexible(
                 child: Text(
-                  widget.item.label,
+                  item.label,
                   style: labelStyle,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              if (widget.item.hasBadge) ...[
+              if (item.hasBadge) ...[
                 SizedBox(width: spacing.xs),
                 VooRailModernBadge(
-                  item: widget.item,
-                  isSelected: widget.isSelected,
-                  extended: widget.extended,
+                  item: item,
+                  isSelected: isSelected,
+                  extended: true,
                 ),
               ],
               // Trailing widget
-              if (widget.item.trailingWidget != null) ...[
+              if (item.trailingWidget != null) ...[
                 SizedBox(width: spacing.xs),
-                widget.item.trailingWidget!,
+                item.trailingWidget!,
               ],
             ],
           ),
@@ -243,8 +264,21 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
       ],
     );
   }
+}
 
-  Widget _buildCompactContent(ThemeData theme, Color iconColor) {
+class _CompactItemContent extends StatelessWidget {
+  final VooNavigationItem item;
+  final bool isSelected;
+  final Color iconColor;
+
+  const _CompactItemContent({
+    required this.item,
+    required this.isSelected,
+    required this.iconColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -253,28 +287,28 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
             clipBehavior: Clip.none,
             children: [
               // Leading widget or Icon
-              if (widget.item.leadingWidget != null)
-                widget.item.leadingWidget!
+              if (item.leadingWidget != null)
+                item.leadingWidget!
               else
                 AnimatedSwitcher(
                   duration: context.vooAnimation.durationFast,
                   child: Icon(
-                    widget.isSelected
-                        ? widget.item.effectiveSelectedIcon
-                        : widget.item.icon,
-                    key: ValueKey(widget.isSelected),
+                    isSelected
+                        ? item.effectiveSelectedIcon
+                        : item.icon,
+                    key: ValueKey(isSelected),
                     color: iconColor,
                     size: 24,
                   ),
                 ),
-              if (widget.item.hasBadge)
+              if (item.hasBadge)
                 Positioned(
                   top: -4,
                   right: -8,
                   child: VooRailModernBadge(
-                    item: widget.item,
-                    isSelected: widget.isSelected,
-                    extended: widget.extended,
+                    item: item,
+                    isSelected: isSelected,
+                    extended: false,
                   ),
                 ),
             ],

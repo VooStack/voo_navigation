@@ -134,30 +134,18 @@ class _VooAdaptiveNavigationDrawerState
         widget.config.navigationBackgroundColor ??
         navTheme.resolveSurfaceColor(context);
 
-    // Build the container based on theme preset
-    return AnimatedContainer(
-      duration: navTheme.animationDuration,
-      curve: navTheme.animationCurve,
-      width: effectiveWidth,
-      margin: EdgeInsets.all(widget.config.navigationRailMargin),
-      child: _buildThemedContainer(
-        context,
-        theme,
-        navTheme,
-        isDark,
-        effectiveBackgroundColor,
-      ),
-    );
-  }
+    // Determine drawer margin - use drawerMargin if set, otherwise use navigationRailMargin
+    final effectiveDrawerMargin = widget.config.drawerMargin ??
+        EdgeInsets.all(widget.config.navigationRailMargin);
 
-  Widget _buildThemedContainer(
-    BuildContext context,
-    ThemeData theme,
-    VooNavigationTheme navTheme,
-    bool isDark,
-    Color backgroundColor,
-  ) {
-    final borderRadius = BorderRadius.circular(navTheme.containerBorderRadius);
+    // If drawer has no margin (full-height), only round the right side
+    final isFullHeight = effectiveDrawerMargin == EdgeInsets.zero;
+    final borderRadius = isFullHeight
+        ? BorderRadius.only(
+            topRight: Radius.circular(navTheme.containerBorderRadius),
+            bottomRight: Radius.circular(navTheme.containerBorderRadius),
+          )
+        : BorderRadius.circular(navTheme.containerBorderRadius);
 
     Widget content = Material(
       color: Colors.transparent,
@@ -208,407 +196,525 @@ class _VooAdaptiveNavigationDrawerState
     );
 
     // Apply theme-specific styling based on preset
-    switch (navTheme.preset) {
-      case VooNavigationPreset.glassmorphism:
-        // Enhanced Glassmorphism: premium frosted glass effect
-        final primaryColor = theme.colorScheme.primary;
-        // Use provided backgroundColor or fall back to theme surface
-        final surfaceColor = backgroundColor.withValues(alpha: 1.0);
+    final themedContainer = switch (navTheme.preset) {
+      VooNavigationPreset.glassmorphism => _GlassmorphismDrawerContainer(
+          navTheme: navTheme,
+          isDark: isDark,
+          backgroundColor: effectiveBackgroundColor,
+          borderRadius: borderRadius,
+          child: content,
+        ),
+      VooNavigationPreset.liquidGlass => _LiquidGlassDrawerContainer(
+          navTheme: navTheme,
+          isDark: isDark,
+          backgroundColor: effectiveBackgroundColor,
+          borderRadius: borderRadius,
+          child: content,
+        ),
+      VooNavigationPreset.blurry => _BlurryDrawerContainer(
+          navTheme: navTheme,
+          isDark: isDark,
+          backgroundColor: effectiveBackgroundColor,
+          borderRadius: borderRadius,
+          child: content,
+        ),
+      VooNavigationPreset.neomorphism => _NeomorphismDrawerContainer(
+          navTheme: navTheme,
+          isDark: isDark,
+          backgroundColor: effectiveBackgroundColor,
+          borderRadius: borderRadius,
+          child: content,
+        ),
+      VooNavigationPreset.material3Enhanced => _Material3DrawerContainer(
+          isDark: isDark,
+          backgroundColor: effectiveBackgroundColor,
+          borderRadius: borderRadius,
+          child: content,
+        ),
+      VooNavigationPreset.minimalModern => _MinimalDrawerContainer(
+          navTheme: navTheme,
+          backgroundColor: effectiveBackgroundColor,
+          child: content,
+        ),
+    };
 
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            boxShadow: [
-              // Outer glow with primary color
-              BoxShadow(
-                color: primaryColor.withValues(alpha: isDark ? 0.25 : 0.15),
-                blurRadius: 32,
-                spreadRadius: 0,
-              ),
-              // Soft ambient shadow
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
+    // Build the container based on theme preset
+    return AnimatedContainer(
+      duration: navTheme.animationDuration,
+      curve: navTheme.animationCurve,
+      width: effectiveWidth,
+      margin: effectiveDrawerMargin,
+      child: themedContainer,
+    );
+  }
+}
+
+class _GlassmorphismDrawerContainer extends StatelessWidget {
+  final VooNavigationTheme navTheme;
+  final bool isDark;
+  final Color backgroundColor;
+  final BorderRadius borderRadius;
+  final Widget child;
+
+  const _GlassmorphismDrawerContainer({
+    required this.navTheme,
+    required this.isDark,
+    required this.backgroundColor,
+    required this.borderRadius,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    final surfaceColor = backgroundColor.withValues(alpha: 1.0);
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: primaryColor.withValues(alpha: isDark ? 0.25 : 0.15),
+            blurRadius: 32,
+            spreadRadius: 0,
           ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: navTheme.blurSigma,
-                sigmaY: navTheme.blurSigma,
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: navTheme.blurSigma,
+            sigmaY: navTheme.blurSigma,
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: borderRadius,
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                stops: const [0.0, 0.3, 1.0],
+                colors: isDark
+                    ? [
+                        surfaceColor.withValues(alpha: 0.85),
+                        surfaceColor.withValues(alpha: 0.75),
+                        surfaceColor.withValues(alpha: 0.65),
+                      ]
+                    : [
+                        surfaceColor.withValues(alpha: 0.9),
+                        surfaceColor.withValues(alpha: 0.8),
+                        surfaceColor.withValues(alpha: 0.7),
+                      ],
               ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius,
-                  // Multi-stop gradient for depth
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: const [0.0, 0.3, 1.0],
-                    colors: isDark
-                        ? [
-                            surfaceColor.withValues(alpha: 0.85),
-                            surfaceColor.withValues(alpha: 0.75),
-                            surfaceColor.withValues(alpha: 0.65),
-                          ]
-                        : [
-                            surfaceColor.withValues(alpha: 0.9),
-                            surfaceColor.withValues(alpha: 0.8),
-                            surfaceColor.withValues(alpha: 0.7),
-                          ],
-                  ),
-                  // Gradient border effect
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.12)
-                        : Colors.white.withValues(alpha: 0.6),
-                    width: 1.5,
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    // Top highlight shine
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: 80,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(navTheme.containerBorderRadius),
-                            topRight: Radius.circular(navTheme.containerBorderRadius),
-                          ),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.white.withValues(alpha: isDark ? 0.08 : 0.3),
-                              Colors.white.withValues(alpha: 0.0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Inner border highlight (left edge)
-                    Positioned(
-                      top: 20,
-                      left: 0,
-                      bottom: 20,
-                      width: 1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.white.withValues(alpha: 0.0),
-                              Colors.white.withValues(alpha: isDark ? 0.1 : 0.4),
-                              Colors.white.withValues(alpha: 0.0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Content
-                    content,
-                  ],
-                ),
+              border: Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.12)
+                    : Colors.white.withValues(alpha: 0.6),
+                width: 1.5,
               ),
             ),
-          ),
-        );
-
-      case VooNavigationPreset.liquidGlass:
-        // Liquid Glass: deep blur with layered effects and refraction
-        final primaryColor = theme.colorScheme.primary;
-        // Use provided backgroundColor or fall back to theme surface
-        final surfaceColor = backgroundColor.withValues(alpha: 1.0);
-
-        // Apply tint if specified
-        final tintedSurface = navTheme.tintIntensity > 0
-            ? Color.lerp(surfaceColor, primaryColor, navTheme.tintIntensity * 0.3)!
-            : surfaceColor;
-
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            boxShadow: [
-              // Primary ambient glow
-              BoxShadow(
-                color: primaryColor.withValues(alpha: isDark ? 0.2 : 0.12),
-                blurRadius: 44,
-                spreadRadius: 0,
-              ),
-              // Deep shadow for depth
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.18),
-                blurRadius: 36,
-                offset: const Offset(6, 10),
-              ),
-              // Soft close shadow
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
-                blurRadius: 12,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
             child: Stack(
               children: [
-                // Layer 1: Primary deep blur
-                Positioned.fill(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: navTheme.blurSigma,
-                      sigmaY: navTheme.blurSigma,
-                    ),
-                    child: const SizedBox.expand(),
-                  ),
-                ),
-
-                // Layer 2: Secondary blur for extra depth
-                if (navTheme.secondaryBlurSigma > 0)
-                  Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: navTheme.secondaryBlurSigma,
-                        sigmaY: navTheme.secondaryBlurSigma,
-                      ),
-                      child: const SizedBox.expand(),
-                    ),
-                  ),
-
-                // Layer 3: Glass surface with gradient
-                Positioned.fill(
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 80,
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: borderRadius,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(navTheme.containerBorderRadius),
+                        topRight: Radius.circular(navTheme.containerBorderRadius),
+                      ),
                       gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: const [0.0, 0.25, 0.75, 1.0],
-                        colors: isDark
-                            ? [
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.1),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.05),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.1),
-                              ]
-                            : [
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.2),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.08),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.12),
-                              ],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.white.withValues(alpha: isDark ? 0.08 : 0.3),
+                          Colors.white.withValues(alpha: 0.0),
+                        ],
                       ),
                     ),
                   ),
                 ),
-
-                // Layer 4: Inner glow effect
-                if (navTheme.innerGlowIntensity > 0)
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: borderRadius,
-                        gradient: RadialGradient(
-                          center: const Alignment(-0.3, -0.6),
-                          radius: 2.0,
-                          colors: [
-                            primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.08),
-                            primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.02),
-                            Colors.transparent,
-                          ],
-                          stops: const [0.0, 0.3, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                // Layer 5: Top edge highlight (refraction)
-                if (navTheme.edgeHighlightIntensity > 0)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 100,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(navTheme.containerBorderRadius),
-                          topRight: Radius.circular(navTheme.containerBorderRadius),
-                        ),
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withValues(
-                              alpha: isDark
-                                  ? navTheme.edgeHighlightIntensity * 0.1
-                                  : navTheme.edgeHighlightIntensity * 0.35,
-                            ),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                // Layer 6: Left edge highlight
-                if (navTheme.edgeHighlightIntensity > 0)
-                  Positioned(
-                    top: 20,
-                    left: 0,
-                    bottom: 20,
-                    width: 1.5,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withValues(alpha: 0.0),
-                            Colors.white.withValues(
-                              alpha: isDark
-                                  ? navTheme.edgeHighlightIntensity * 0.15
-                                  : navTheme.edgeHighlightIntensity * 0.45,
-                            ),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                // Layer 7: Border
-                Positioned.fill(
+                Positioned(
+                  top: 20,
+                  left: 0,
+                  bottom: 20,
+                  width: 1,
                   child: Container(
                     decoration: BoxDecoration(
-                      borderRadius: borderRadius,
-                      border: Border.all(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: navTheme.borderOpacity)
-                            : Colors.white.withValues(alpha: navTheme.borderOpacity * 2.2),
-                        width: navTheme.borderWidth,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          Colors.white.withValues(alpha: 0.0),
+                          Colors.white.withValues(alpha: isDark ? 0.1 : 0.4),
+                          Colors.white.withValues(alpha: 0.0),
+                        ],
                       ),
                     ),
                   ),
                 ),
-
-                // Layer 8: Content
-                content,
+                child,
               ],
             ),
           ),
-        );
+        ),
+      ),
+    );
+  }
+}
 
-      case VooNavigationPreset.blurry:
-        // Blurry: clean frosted blur with minimal styling
-        // Use provided backgroundColor or fall back to theme surface
-        final surfaceColor = backgroundColor.withValues(alpha: 1.0);
+class _LiquidGlassDrawerContainer extends StatelessWidget {
+  final VooNavigationTheme navTheme;
+  final bool isDark;
+  final Color backgroundColor;
+  final BorderRadius borderRadius;
+  final Widget child;
 
-        return ClipRRect(
-          borderRadius: borderRadius,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: navTheme.blurSigma,
-              sigmaY: navTheme.blurSigma,
+  const _LiquidGlassDrawerContainer({
+    required this.navTheme,
+    required this.isDark,
+    required this.backgroundColor,
+    required this.borderRadius,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.colorScheme.primary;
+    final surfaceColor = backgroundColor.withValues(alpha: 1.0);
+    final tintedSurface = navTheme.tintIntensity > 0
+        ? Color.lerp(surfaceColor, primaryColor, navTheme.tintIntensity * 0.3)!
+        : surfaceColor;
+
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: borderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: primaryColor.withValues(alpha: isDark ? 0.2 : 0.12),
+            blurRadius: 44,
+            spreadRadius: 0,
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.18),
+            blurRadius: 36,
+            offset: const Offset(6, 10),
+          ),
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: navTheme.blurSigma,
+                  sigmaY: navTheme.blurSigma,
+                ),
+                child: const SizedBox.expand(),
+              ),
             ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: borderRadius,
-                color: surfaceColor.withValues(alpha: navTheme.surfaceOpacity),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: navTheme.borderOpacity)
-                      : Colors.black.withValues(alpha: navTheme.borderOpacity * 0.5),
-                  width: navTheme.borderWidth,
+            if (navTheme.secondaryBlurSigma > 0)
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(
+                    sigmaX: navTheme.secondaryBlurSigma,
+                    sigmaY: navTheme.secondaryBlurSigma,
+                  ),
+                  child: const SizedBox.expand(),
                 ),
               ),
-              child: content,
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: borderRadius,
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    stops: const [0.0, 0.25, 0.75, 1.0],
+                    colors: isDark
+                        ? [
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.1),
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity),
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.05),
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.1),
+                          ]
+                        : [
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.2),
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.08),
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity),
+                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.12),
+                          ],
+                  ),
+                ),
+              ),
             ),
-          ),
-        );
+            if (navTheme.innerGlowIntensity > 0)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: borderRadius,
+                    gradient: RadialGradient(
+                      center: const Alignment(-0.3, -0.6),
+                      radius: 2.0,
+                      colors: [
+                        primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.08),
+                        primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.02),
+                        Colors.transparent,
+                      ],
+                      stops: const [0.0, 0.3, 1.0],
+                    ),
+                  ),
+                ),
+              ),
+            if (navTheme.edgeHighlightIntensity > 0)
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 100,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(navTheme.containerBorderRadius),
+                      topRight: Radius.circular(navTheme.containerBorderRadius),
+                    ),
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withValues(
+                          alpha: isDark
+                              ? navTheme.edgeHighlightIntensity * 0.1
+                              : navTheme.edgeHighlightIntensity * 0.35,
+                        ),
+                        Colors.white.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            if (navTheme.edgeHighlightIntensity > 0)
+              Positioned(
+                top: 20,
+                left: 0,
+                bottom: 20,
+                width: 1.5,
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.0),
+                        Colors.white.withValues(
+                          alpha: isDark
+                              ? navTheme.edgeHighlightIntensity * 0.15
+                              : navTheme.edgeHighlightIntensity * 0.45,
+                        ),
+                        Colors.white.withValues(alpha: 0.0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            Positioned.fill(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: borderRadius,
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withValues(alpha: navTheme.borderOpacity)
+                        : Colors.white.withValues(alpha: navTheme.borderOpacity * 2.2),
+                    width: navTheme.borderWidth,
+                  ),
+                ),
+              ),
+            ),
+            child,
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-      case VooNavigationPreset.neomorphism:
-        // Neomorphism: embossed with pronounced dual shadows
-        // Use provided backgroundColor
-        return Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: borderRadius,
-            boxShadow: [
-              // Light shadow (top-left) - more pronounced
-              BoxShadow(
-                color: (isDark ? Colors.white : Colors.white)
-                    .withValues(alpha: isDark ? 0.05 : 0.8),
-                blurRadius: navTheme.shadowBlur * 1.5,
-                offset: navTheme.shadowLightOffset * 1.2,
-                spreadRadius: isDark ? 0 : 2,
-              ),
-              // Dark shadow (bottom-right) - more pronounced
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.2),
-                blurRadius: navTheme.shadowBlur * 1.5,
-                offset: navTheme.shadowDarkOffset * 1.2,
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: content,
-          ),
-        );
+class _BlurryDrawerContainer extends StatelessWidget {
+  final VooNavigationTheme navTheme;
+  final bool isDark;
+  final Color backgroundColor;
+  final BorderRadius borderRadius;
+  final Widget child;
 
-      case VooNavigationPreset.material3Enhanced:
-        // Material 3: polished with elevation and subtle surface tint
-        return Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: borderRadius,
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withValues(alpha: isDark ? 0.4 : 0.15),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-                spreadRadius: 1,
-              ),
-              BoxShadow(
-                color: theme.shadowColor.withValues(alpha: isDark ? 0.2 : 0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: content,
-          ),
-        );
+  const _BlurryDrawerContainer({
+    required this.navTheme,
+    required this.isDark,
+    required this.backgroundColor,
+    required this.borderRadius,
+    required this.child,
+  });
 
-      case VooNavigationPreset.minimalModern:
-        // Minimal: completely flat with thin visible border
-        // Use provided backgroundColor
-        return Container(
+  @override
+  Widget build(BuildContext context) {
+    final surfaceColor = backgroundColor.withValues(alpha: 1.0);
+
+    return ClipRRect(
+      borderRadius: borderRadius,
+      child: BackdropFilter(
+        filter: ImageFilter.blur(
+          sigmaX: navTheme.blurSigma,
+          sigmaY: navTheme.blurSigma,
+        ),
+        child: Container(
           decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(navTheme.containerBorderRadius * 0.5),
+            borderRadius: borderRadius,
+            color: surfaceColor.withValues(alpha: navTheme.surfaceOpacity),
             border: Border.all(
-              color: theme.colorScheme.outlineVariant,
-              width: 1,
+              color: isDark
+                  ? Colors.white.withValues(alpha: navTheme.borderOpacity)
+                  : Colors.black.withValues(alpha: navTheme.borderOpacity * 0.5),
+              width: navTheme.borderWidth,
             ),
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(navTheme.containerBorderRadius * 0.5),
-            child: content,
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+class _NeomorphismDrawerContainer extends StatelessWidget {
+  final VooNavigationTheme navTheme;
+  final bool isDark;
+  final Color backgroundColor;
+  final BorderRadius borderRadius;
+  final Widget child;
+
+  const _NeomorphismDrawerContainer({
+    required this.navTheme,
+    required this.isDark,
+    required this.backgroundColor,
+    required this.borderRadius,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: borderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: (isDark ? Colors.white : Colors.white)
+                .withValues(alpha: isDark ? 0.05 : 0.8),
+            blurRadius: navTheme.shadowBlur * 1.5,
+            offset: navTheme.shadowLightOffset * 1.2,
+            spreadRadius: isDark ? 0 : 2,
           ),
-        );
-    }
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.2),
+            blurRadius: navTheme.shadowBlur * 1.5,
+            offset: navTheme.shadowDarkOffset * 1.2,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _Material3DrawerContainer extends StatelessWidget {
+  final bool isDark;
+  final Color backgroundColor;
+  final BorderRadius borderRadius;
+  final Widget child;
+
+  const _Material3DrawerContainer({
+    required this.isDark,
+    required this.backgroundColor,
+    required this.borderRadius,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: borderRadius,
+        boxShadow: [
+          BoxShadow(
+            color: theme.shadowColor.withValues(alpha: isDark ? 0.4 : 0.15),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+            spreadRadius: 1,
+          ),
+          BoxShadow(
+            color: theme.shadowColor.withValues(alpha: isDark ? 0.2 : 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _MinimalDrawerContainer extends StatelessWidget {
+  final VooNavigationTheme navTheme;
+  final Color backgroundColor;
+  final Widget child;
+
+  const _MinimalDrawerContainer({
+    required this.navTheme,
+    required this.backgroundColor,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final smallerRadius = BorderRadius.circular(navTheme.containerBorderRadius * 0.5);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: smallerRadius,
+        border: Border.all(
+          color: theme.colorScheme.outlineVariant,
+          width: 1,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: smallerRadius,
+        child: child,
+      ),
+    );
   }
 }

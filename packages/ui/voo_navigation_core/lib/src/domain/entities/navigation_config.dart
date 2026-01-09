@@ -127,6 +127,18 @@ class VooNavigationConfig {
 
   final double navigationRailMargin;
 
+  /// Margin around the navigation drawer
+  /// When null, uses navigationRailMargin. Set to EdgeInsets.zero for full-height drawer.
+  final EdgeInsets? drawerMargin;
+
+  /// Margin around the content area
+  /// When null, uses navigationRailMargin on top, bottom, and right
+  final EdgeInsets? contentAreaMargin;
+
+  /// Border radius for the content area container
+  /// When null, uses the navigation theme's containerBorderRadius
+  final BorderRadius? contentAreaBorderRadius;
+
   /// Custom extended navigation rail width
   final double? extendedNavigationRailWidth;
 
@@ -291,6 +303,9 @@ class VooNavigationConfig {
     this.collapseToggleBuilder,
     this.navigationTheme,
     double? navigationRailMargin,
+    this.drawerMargin,
+    this.contentAreaMargin,
+    this.contentAreaBorderRadius,
   }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints,
        animationDuration = animationDuration ?? _animationTokens.durationNormal,
        animationCurve = animationCurve ?? _animationTokens.curveEaseInOut,
@@ -367,6 +382,9 @@ class VooNavigationConfig {
         collapseToggleBuilder,
     VooNavigationTheme? navigationTheme,
     double? navigationRailMargin,
+    EdgeInsets? drawerMargin,
+    EdgeInsets? contentAreaMargin,
+    BorderRadius? contentAreaBorderRadius,
   }) => VooNavigationConfig(
     items: items ?? this.items,
     selectedId: selectedId ?? this.selectedId,
@@ -446,6 +464,9 @@ class VooNavigationConfig {
     collapseToggleBuilder: collapseToggleBuilder ?? this.collapseToggleBuilder,
     navigationTheme: navigationTheme ?? this.navigationTheme,
     navigationRailMargin: navigationRailMargin ?? this.navigationRailMargin,
+    drawerMargin: drawerMargin ?? this.drawerMargin,
+    contentAreaMargin: contentAreaMargin ?? this.contentAreaMargin,
+    contentAreaBorderRadius: contentAreaBorderRadius ?? this.contentAreaBorderRadius,
   );
 
   /// Gets the current navigation type based on screen width
@@ -786,6 +807,7 @@ class VooNavigationConfig {
     Widget? Function(String? selectedId)? appBarTitleBuilder,
     bool centerAppBarTitle = false,
     bool appBarAlongsideRail = true,
+    bool showAppBar = true,
     Widget? floatingActionButton,
     FloatingActionButtonLocation? floatingActionButtonLocation,
     bool showFloatingActionButton = true,
@@ -811,6 +833,9 @@ class VooNavigationConfig {
     Widget? userProfileWidget,
     bool enableCollapsibleRail = false,
     double? navigationRailMargin,
+    EdgeInsets? drawerMargin,
+    EdgeInsets? contentAreaMargin,
+    BorderRadius? contentAreaBorderRadius,
   }) {
     return VooNavigationConfig(
       items: items,
@@ -829,6 +854,7 @@ class VooNavigationConfig {
       appBarTitleBuilder: appBarTitleBuilder,
       centerAppBarTitle: centerAppBarTitle,
       appBarAlongsideRail: appBarAlongsideRail,
+      showAppBar: showAppBar,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       showFloatingActionButton: showFloatingActionButton,
@@ -858,6 +884,9 @@ class VooNavigationConfig {
       userProfileWidget: userProfileWidget,
       enableCollapsibleRail: enableCollapsibleRail,
       navigationRailMargin: navigationRailMargin,
+      drawerMargin: drawerMargin,
+      contentAreaMargin: contentAreaMargin,
+      contentAreaBorderRadius: contentAreaBorderRadius,
       navigationTheme: VooNavigationTheme.material3Enhanced(
         indicatorColor: indicatorColor,
       ),

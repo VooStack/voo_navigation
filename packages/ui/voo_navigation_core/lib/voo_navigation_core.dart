@@ -13,6 +13,8 @@ export 'src/domain/entities/navigation_section.dart';
 export 'src/domain/entities/navigation_theme.dart';
 export 'src/domain/entities/navigation_type.dart';
 export 'src/domain/entities/page_config.dart';
+export 'src/domain/entities/voo_profile_menu_item.dart';
+export 'src/domain/entities/voo_user_status.dart';
 
 // Presentation - Atoms
 export 'src/presentation/atoms/voo_animated_badge.dart';
@@ -21,18 +23,25 @@ export 'src/presentation/atoms/voo_background_indicator.dart';
 export 'src/presentation/atoms/voo_collapse_toggle.dart';
 export 'src/presentation/atoms/voo_custom_indicator.dart';
 export 'src/presentation/atoms/voo_dot_badge.dart';
+export 'src/presentation/atoms/voo_edge_bar_indicator.dart';
+export 'src/presentation/atoms/voo_edge_indicator.dart';
 export 'src/presentation/atoms/voo_glass_surface.dart';
+export 'src/presentation/atoms/voo_glass_surface_interactive.dart';
 export 'src/presentation/atoms/voo_glow_indicator.dart';
 export 'src/presentation/atoms/voo_icon_with_badge.dart';
 export 'src/presentation/atoms/voo_line_indicator.dart';
 export 'src/presentation/atoms/voo_liquid_glass_surface.dart';
+export 'src/presentation/atoms/voo_liquid_glass_surface_interactive.dart';
 export 'src/presentation/atoms/voo_modern_badge.dart';
 export 'src/presentation/atoms/voo_modern_icon.dart';
 export 'src/presentation/atoms/voo_navigation_icon.dart';
 export 'src/presentation/atoms/voo_navigation_indicator.dart';
 export 'src/presentation/atoms/voo_navigation_label.dart';
+export 'src/presentation/atoms/voo_neomorph_inset.dart';
 export 'src/presentation/atoms/voo_neomorph_surface.dart';
+export 'src/presentation/atoms/voo_neomorph_surface_interactive.dart';
 export 'src/presentation/atoms/voo_pill_indicator.dart';
+export 'src/presentation/atoms/voo_sliding_pill_indicator.dart';
 export 'src/presentation/atoms/voo_text_badge.dart';
 export 'src/presentation/atoms/voo_themed_indicator.dart';
 
@@ -46,8 +55,13 @@ export 'src/presentation/molecules/voo_dropdown_header.dart';
 export 'src/presentation/molecules/voo_mobile_app_bar.dart';
 export 'src/presentation/molecules/voo_navigation_badge.dart';
 export 'src/presentation/molecules/voo_navigation_item_widget.dart';
+export 'src/presentation/molecules/voo_themed_bottom_nav_container.dart';
+export 'src/presentation/molecules/voo_themed_drawer_container.dart';
+export 'src/presentation/molecules/voo_themed_drawer_item.dart';
 export 'src/presentation/molecules/voo_themed_nav_container.dart';
 export 'src/presentation/molecules/voo_themed_nav_item.dart';
+export 'src/presentation/molecules/voo_themed_rail_container.dart';
+export 'src/presentation/molecules/voo_themed_rail_item.dart';
 export 'src/presentation/molecules/voo_user_profile_footer.dart';
 
 // Presentation - Utils

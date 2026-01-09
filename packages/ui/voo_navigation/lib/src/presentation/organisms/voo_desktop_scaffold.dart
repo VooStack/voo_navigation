@@ -107,7 +107,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     widget.config.onCollapseChanged?.call(_isCollapsed);
   }
 
-  Widget _buildCollapseToggle() {
+  Widget _getCollapseToggle() {
     if (widget.config.collapseToggleBuilder != null) {
       return widget.config.collapseToggleBuilder!(
         !_isCollapsed,
@@ -121,7 +121,9 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     );
   }
 
-  Widget _buildNavigation() {
+  Widget _getNavigation() {
+    final collapseToggle = _getCollapseToggle();
+
     // If collapsible rail is not enabled, just show the drawer
     if (!widget.config.enableCollapsibleRail) {
       return VooAdaptiveNavigationDrawer(
@@ -141,7 +143,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
             children: [
               if (widget.config.drawerFooter != null)
                 widget.config.drawerFooter!,
-              _buildCollapseToggle(),
+              collapseToggle,
             ],
           ),
         ),
@@ -158,7 +160,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
           children: [
             if (widget.config.drawerFooter != null)
               widget.config.drawerFooter!,
-            _buildCollapseToggle(),
+            collapseToggle,
           ],
         ),
       ),
@@ -169,7 +171,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    final navigation = _buildNavigation();
+    final navigation = _getNavigation();
 
     // Determine FAB visibility and widget based on page config overrides
     final showFab = widget.pageConfig?.showFloatingActionButton ??
@@ -180,6 +182,20 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
         widget.config.floatingActionButtonLocation;
     final fabAnimator = widget.pageConfig?.floatingActionButtonAnimator ??
         widget.config.floatingActionButtonAnimator;
+
+    final navTheme = widget.config.effectiveTheme;
+
+    // Calculate content area margin - use contentAreaMargin if set, otherwise default to navigationRailMargin
+    final effectiveContentMargin = widget.config.contentAreaMargin ??
+        EdgeInsets.only(
+          top: widget.config.navigationRailMargin,
+          bottom: widget.config.navigationRailMargin,
+          right: widget.config.navigationRailMargin,
+        );
+
+    // Calculate content area border radius
+    final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ??
+        BorderRadius.circular(navTheme.containerBorderRadius);
 
     // When app bar is alongside drawer/rail, wrap the content area with its own scaffold
     if (widget.config.appBarAlongsideRail) {
@@ -214,8 +230,6 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
         }
       }
 
-      final navTheme = widget.config.effectiveTheme;
-
       return Scaffold(
         key: widget.scaffoldKey,
         backgroundColor: widget.backgroundColor,
@@ -226,12 +240,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
               child: VooThemedNavContainer(
                 theme: navTheme,
                 expand: true,
-                margin: EdgeInsets.only(
-                  top: widget.config.navigationRailMargin,
-                  bottom: widget.config.navigationRailMargin,
-                  right: widget.config.navigationRailMargin,
-                ),
-                borderRadius: BorderRadius.circular(navTheme.containerBorderRadius),
+                margin: effectiveContentMargin,
+                borderRadius: effectiveContentBorderRadius,
                 clipContent: true,
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
@@ -260,9 +270,6 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
 
     // All themes use Row layout - navigation beside content
     // Apply consistent body margins and themed styling for visual alignment with drawer
-    // Body always gets margins on top, bottom, right to match drawer styling (default behavior)
-    final navTheme = widget.config.effectiveTheme;
-
     return Scaffold(
       key: widget.scaffoldKey,
       backgroundColor: widget.backgroundColor,
@@ -276,12 +283,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
             child: VooThemedNavContainer(
               theme: navTheme,
               expand: true,
-              margin: EdgeInsets.only(
-                top: widget.config.navigationRailMargin,
-                bottom: widget.config.navigationRailMargin,
-                right: widget.config.navigationRailMargin,
-              ),
-              borderRadius: BorderRadius.circular(navTheme.containerBorderRadius),
+              margin: effectiveContentMargin,
+              borderRadius: effectiveContentBorderRadius,
               clipContent: true,
               child: widget.body,
             ),

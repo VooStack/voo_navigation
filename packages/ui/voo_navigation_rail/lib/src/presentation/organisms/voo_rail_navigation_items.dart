@@ -32,7 +32,6 @@ class VooRailNavigationItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final visibleItems = config.visibleItems;
 
     // Show loading widget if provided and config indicates loading
@@ -42,7 +41,7 @@ class VooRailNavigationItems extends StatelessWidget {
 
     // Show empty state if no items
     if (visibleItems.isEmpty) {
-      return config.emptyStateWidget ?? _buildDefaultEmptyState(context, theme);
+      return config.emptyStateWidget ?? _RailDefaultEmptyState(extended: extended);
     }
 
     final widgets = <Widget>[];
@@ -92,8 +91,17 @@ class VooRailNavigationItems extends StatelessWidget {
 
     return Column(children: widgets);
   }
+}
 
-  Widget _buildDefaultEmptyState(BuildContext context, ThemeData theme) {
+class _RailDefaultEmptyState extends StatelessWidget {
+  final bool extended;
+
+  const _RailDefaultEmptyState({required this.extended});
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Padding(
       padding: EdgeInsets.all(context.vooSpacing.md),
       child: Column(

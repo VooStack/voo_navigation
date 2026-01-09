@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
-import 'package:voo_tokens/voo_tokens.dart';
 
 /// A themed container for navigation components
 ///
@@ -72,22 +71,91 @@ class VooThemedNavContainer extends StatelessWidget {
         BorderRadius.circular(theme.containerBorderRadius);
 
     return switch (theme.preset) {
-      VooNavigationPreset.glassmorphism =>
-        _buildGlassmorphism(context, effectiveBorderRadius),
-      VooNavigationPreset.liquidGlass =>
-        _buildLiquidGlass(context, effectiveBorderRadius),
-      VooNavigationPreset.blurry =>
-        _buildBlurry(context, effectiveBorderRadius),
-      VooNavigationPreset.neomorphism =>
-        _buildNeomorphism(context, effectiveBorderRadius),
-      VooNavigationPreset.material3Enhanced =>
-        _buildMaterial3Enhanced(context, effectiveBorderRadius),
-      VooNavigationPreset.minimalModern =>
-        _buildMinimalModern(context, effectiveBorderRadius),
+      VooNavigationPreset.glassmorphism => _GlassmorphismContainer(
+          theme: theme,
+          radius: effectiveBorderRadius,
+          width: _effectiveWidth,
+          height: _effectiveHeight,
+          padding: padding,
+          margin: margin,
+          clipContent: clipContent,
+          child: child,
+        ),
+      VooNavigationPreset.liquidGlass => _LiquidGlassContainer(
+          theme: theme,
+          radius: effectiveBorderRadius,
+          width: _effectiveWidth,
+          height: _effectiveHeight,
+          padding: padding,
+          margin: margin,
+          child: child,
+        ),
+      VooNavigationPreset.blurry => _BlurryContainer(
+          theme: theme,
+          radius: effectiveBorderRadius,
+          width: _effectiveWidth,
+          height: _effectiveHeight,
+          padding: padding,
+          margin: margin,
+          child: child,
+        ),
+      VooNavigationPreset.neomorphism => _NeomorphismContainer(
+          theme: theme,
+          radius: effectiveBorderRadius,
+          width: _effectiveWidth,
+          height: _effectiveHeight,
+          padding: padding,
+          margin: margin,
+          clipContent: clipContent,
+          child: child,
+        ),
+      VooNavigationPreset.material3Enhanced => _Material3EnhancedContainer(
+          theme: theme,
+          radius: effectiveBorderRadius,
+          width: _effectiveWidth,
+          height: _effectiveHeight,
+          padding: padding,
+          margin: margin,
+          clipContent: clipContent,
+          child: child,
+        ),
+      VooNavigationPreset.minimalModern => _MinimalModernContainer(
+          theme: theme,
+          radius: effectiveBorderRadius,
+          width: _effectiveWidth,
+          height: _effectiveHeight,
+          padding: padding,
+          margin: margin,
+          clipContent: clipContent,
+          child: child,
+        ),
     };
   }
+}
 
-  Widget _buildGlassmorphism(BuildContext context, BorderRadius radius) {
+class _GlassmorphismContainer extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final BorderRadius radius;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final bool clipContent;
+  final Widget child;
+
+  const _GlassmorphismContainer({
+    required this.theme,
+    required this.radius,
+    required this.child,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+    this.clipContent = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -101,8 +169,8 @@ class VooThemedNavContainer extends StatelessWidget {
 
     // Inner container with background and border (no shadows - they go on outer)
     Widget innerContent = Container(
-      width: _effectiveWidth,
-      height: _effectiveHeight,
+      width: width,
+      height: height,
       padding: padding,
       decoration: BoxDecoration(
         color: surfaceColor.withValues(alpha: theme.surfaceOpacity),
@@ -121,8 +189,8 @@ class VooThemedNavContainer extends StatelessWidget {
     Widget content;
     if (theme.blurSigma > 0) {
       content = Container(
-        width: _effectiveWidth,
-        height: _effectiveHeight,
+        width: width,
+        height: height,
         decoration: BoxDecoration(
           borderRadius: radius,
           boxShadow: theme.resolveShadows(context),
@@ -141,8 +209,8 @@ class VooThemedNavContainer extends StatelessWidget {
     } else {
       // No blur - shadows on outer container, clip content inside
       content = Container(
-        width: _effectiveWidth,
-        height: _effectiveHeight,
+        width: width,
+        height: height,
         decoration: BoxDecoration(
           borderRadius: radius,
           boxShadow: theme.resolveShadows(context),
@@ -159,8 +227,29 @@ class VooThemedNavContainer extends StatelessWidget {
 
     return content;
   }
+}
 
-  Widget _buildLiquidGlass(BuildContext context, BorderRadius radius) {
+class _LiquidGlassContainer extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final BorderRadius radius;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Widget child;
+
+  const _LiquidGlassContainer({
+    required this.theme,
+    required this.radius,
+    required this.child,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final primaryColor = colorScheme.primary;
@@ -178,8 +267,8 @@ class VooThemedNavContainer extends StatelessWidget {
     final borderColor = theme.borderColor ?? (isDark ? Colors.white : Colors.black);
 
     Widget content = Container(
-      width: _effectiveWidth,
-      height: _effectiveHeight,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         borderRadius: radius,
         boxShadow: theme.resolveShadows(context),
@@ -292,8 +381,29 @@ class VooThemedNavContainer extends StatelessWidget {
 
     return content;
   }
+}
 
-  Widget _buildBlurry(BuildContext context, BorderRadius radius) {
+class _BlurryContainer extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final BorderRadius radius;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Widget child;
+
+  const _BlurryContainer({
+    required this.theme,
+    required this.radius,
+    required this.child,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -312,8 +422,8 @@ class VooThemedNavContainer extends StatelessWidget {
           sigmaY: theme.blurSigma,
         ),
         child: Container(
-          width: _effectiveWidth,
-          height: _effectiveHeight,
+          width: width,
+          height: height,
           padding: padding,
           decoration: BoxDecoration(
             borderRadius: radius,
@@ -340,8 +450,31 @@ class VooThemedNavContainer extends StatelessWidget {
 
     return content;
   }
+}
 
-  Widget _buildNeomorphism(BuildContext context, BorderRadius radius) {
+class _NeomorphismContainer extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final BorderRadius radius;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final bool clipContent;
+  final Widget child;
+
+  const _NeomorphismContainer({
+    required this.theme,
+    required this.radius,
+    required this.child,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+    this.clipContent = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     final isDark = themeData.brightness == Brightness.dark;
 
@@ -353,8 +486,8 @@ class VooThemedNavContainer extends StatelessWidget {
 
     // Inner container with background (no shadows - they go on outer)
     Widget innerContent = Container(
-      width: _effectiveWidth,
-      height: _effectiveHeight,
+      width: width,
+      height: height,
       padding: padding,
       decoration: BoxDecoration(
         color: surfaceColor,
@@ -365,8 +498,8 @@ class VooThemedNavContainer extends StatelessWidget {
 
     // Outer container with shadows, ClipRRect inside
     Widget content = Container(
-      width: _effectiveWidth,
-      height: _effectiveHeight,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         borderRadius: radius,
         boxShadow: theme.showContainerShadow
@@ -396,8 +529,31 @@ class VooThemedNavContainer extends StatelessWidget {
 
     return content;
   }
+}
 
-  Widget _buildMaterial3Enhanced(BuildContext context, BorderRadius radius) {
+class _Material3EnhancedContainer extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final BorderRadius radius;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final bool clipContent;
+  final Widget child;
+
+  const _Material3EnhancedContainer({
+    required this.theme,
+    required this.radius,
+    required this.child,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+    this.clipContent = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -408,8 +564,8 @@ class VooThemedNavContainer extends StatelessWidget {
 
     // Inner container with background (no shadows - they go on outer)
     Widget innerContent = Container(
-      width: _effectiveWidth,
-      height: _effectiveHeight,
+      width: width,
+      height: height,
       padding: padding,
       decoration: BoxDecoration(
         color: surfaceColor,
@@ -420,8 +576,8 @@ class VooThemedNavContainer extends StatelessWidget {
 
     // Outer container with shadows, ClipRRect inside
     Widget content = Container(
-      width: _effectiveWidth,
-      height: _effectiveHeight,
+      width: width,
+      height: height,
       decoration: BoxDecoration(
         borderRadius: radius,
         boxShadow: theme.showContainerShadow
@@ -439,16 +595,39 @@ class VooThemedNavContainer extends StatelessWidget {
 
     return content;
   }
+}
 
-  Widget _buildMinimalModern(BuildContext context, BorderRadius radius) {
+class _MinimalModernContainer extends StatelessWidget {
+  final VooNavigationTheme theme;
+  final BorderRadius radius;
+  final double? width;
+  final double? height;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final bool clipContent;
+  final Widget child;
+
+  const _MinimalModernContainer({
+    required this.theme,
+    required this.radius,
+    required this.child,
+    this.width,
+    this.height,
+    this.padding,
+    this.margin,
+    this.clipContent = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
     final surfaceColor = theme.surfaceTintColor ?? colorScheme.surface;
     final borderColor = theme.borderColor ?? colorScheme.outlineVariant;
 
     Widget content = Container(
-      width: _effectiveWidth,
-      height: _effectiveHeight,
+      width: width,
+      height: height,
       padding: padding,
       decoration: BoxDecoration(
         color: surfaceColor,
@@ -473,153 +652,5 @@ class VooThemedNavContainer extends StatelessWidget {
     }
 
     return content;
-  }
-}
-
-/// A themed bottom navigation bar container
-///
-/// Specialized container for bottom navigation with floating support
-class VooThemedBottomNavContainer extends StatelessWidget {
-  /// The navigation theme configuration
-  final VooNavigationTheme theme;
-
-  /// The navigation content
-  final Widget child;
-
-  /// Height of the navigation bar
-  final double height;
-
-  /// Whether this is a floating navigation bar
-  final bool isFloating;
-
-  /// Horizontal margin (for floating style)
-  final double? horizontalMargin;
-
-  /// Bottom margin (for floating style)
-  final double? bottomMargin;
-
-  const VooThemedBottomNavContainer({
-    super.key,
-    required this.theme,
-    required this.child,
-    this.height = 72,
-    this.isFloating = false,
-    this.horizontalMargin,
-    this.bottomMargin,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final spacing = context.vooSpacing;
-    final effectiveHMargin = horizontalMargin ?? spacing.md;
-    final effectiveBMargin = bottomMargin ?? spacing.lg;
-
-    if (isFloating) {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(
-          effectiveHMargin,
-          0,
-          effectiveHMargin,
-          effectiveBMargin,
-        ),
-        child: VooThemedNavContainer(
-          theme: theme,
-          height: height,
-          borderRadius: BorderRadius.circular(theme.containerBorderRadius),
-          child: child,
-        ),
-      );
-    }
-
-    // Non-floating: full width with optional top border radius
-    return VooThemedNavContainer(
-      theme: theme,
-      height: height,
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(theme.containerBorderRadius * 0.5),
-      ),
-      child: child,
-    );
-  }
-}
-
-/// A themed navigation rail container
-///
-/// Specialized container for navigation rail with proper sizing
-class VooThemedRailContainer extends StatelessWidget {
-  /// The navigation theme configuration
-  final VooNavigationTheme theme;
-
-  /// The rail content
-  final Widget child;
-
-  /// Width of the rail
-  final double width;
-
-  /// Whether the rail is extended (wider with labels)
-  final bool isExtended;
-
-  /// Margin around the rail
-  final double? margin;
-
-  const VooThemedRailContainer({
-    super.key,
-    required this.theme,
-    required this.child,
-    this.width = 80,
-    this.isExtended = false,
-    this.margin,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final spacing = context.vooSpacing;
-    final effectiveMargin = margin ?? spacing.sm;
-
-    return Padding(
-      padding: EdgeInsets.all(effectiveMargin),
-      child: VooThemedNavContainer(
-        theme: theme,
-        width: width,
-        borderRadius: BorderRadius.circular(theme.containerBorderRadius),
-        child: child,
-      ),
-    );
-  }
-}
-
-/// A themed navigation drawer container
-///
-/// Specialized container for navigation drawer
-class VooThemedDrawerContainer extends StatelessWidget {
-  /// The navigation theme configuration
-  final VooNavigationTheme theme;
-
-  /// The drawer content
-  final Widget child;
-
-  /// Width of the drawer
-  final double width;
-
-  const VooThemedDrawerContainer({
-    super.key,
-    required this.theme,
-    required this.child,
-    this.width = 280,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Drawer typically doesn't have outer margin or rounded corners
-    // on the left edge
-    return VooThemedNavContainer(
-      theme: theme,
-      width: width,
-      borderRadius: BorderRadius.only(
-        topRight: Radius.circular(theme.containerBorderRadius),
-        bottomRight: Radius.circular(theme.containerBorderRadius),
-      ),
-      child: child,
-    );
   }
 }
