@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_bar/voo_navigation_bar.dart';
-import 'package:voo_navigation_core/voo_navigation_core.dart';
 
 /// Mobile scaffold with bottom navigation
 class VooMobileScaffold extends StatelessWidget {

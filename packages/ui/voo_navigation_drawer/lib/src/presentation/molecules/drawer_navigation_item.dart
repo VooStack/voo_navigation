@@ -39,18 +39,19 @@ class VooDrawerNavigationItem extends StatelessWidget {
     final theme = Theme.of(context);
     final isSelected = item.id == selectedId;
 
-    // Resolve colors from item or theme
+    // Resolve colors from item, config, or theme (in that priority order)
     final iconColor = isSelected
-        ? (item.selectedIconColor ?? theme.colorScheme.primary)
-        : (item.iconColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.8));
+        ? (item.selectedIconColor ?? config.selectedItemColor ?? theme.colorScheme.primary)
+        : (item.iconColor ?? config.unselectedItemColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.8));
 
-    // Resolve label style from item or theme
+    // Resolve label style from item or theme, using config colors when provided
+    final selectedLabelColor = config.selectedItemColor ?? theme.colorScheme.primary;
+    final unselectedLabelColor = config.unselectedItemColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.85);
+
     final defaultLabelStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: isSelected
-          ? theme.colorScheme.primary
-          : theme.colorScheme.onSurface.withValues(alpha: 0.85),
-      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-      fontSize: context.vooTypography.bodyMedium.fontSize,
+      color: isSelected ? selectedLabelColor : unselectedLabelColor,
+      fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
+      fontSize: 13,
     );
     final labelStyle = isSelected
         ? (item.selectedLabelStyle ?? defaultLabelStyle)
@@ -59,31 +60,16 @@ class VooDrawerNavigationItem extends StatelessWidget {
     Widget itemContent = AnimatedContainer(
       duration: context.vooAnimation.durationFast,
       padding: EdgeInsets.symmetric(
-        horizontal: context.vooSpacing.md,
-        vertical: context.vooSpacing.sm + context.vooSpacing.xs,
+        horizontal: context.vooSpacing.xs + 2,
+        vertical: context.vooSpacing.xxs + 2,
       ),
       decoration: BoxDecoration(
         color: isSelected
-            ? theme.colorScheme.primary.withValues(alpha: 0.12)
+            ? theme.colorScheme.onSurface.withValues(alpha: 0.08)
             : isHovered
-            ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+            ? theme.colorScheme.onSurface.withValues(alpha: 0.04)
             : Colors.transparent,
-        border: isSelected
-            ? Border.all(
-                color: theme.colorScheme.primary.withValues(alpha: 0.2),
-                width: context.vooSize.borderThin,
-              )
-            : null,
-        borderRadius: BorderRadius.circular(context.vooRadius.lg),
-        boxShadow: isSelected
-            ? [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.06),
-                  blurRadius: 3,
-                  offset: const Offset(0, 1),
-                ),
-              ]
-            : null,
+        borderRadius: BorderRadius.circular(context.vooRadius.md),
       ),
       child: Row(
         children: [
@@ -97,11 +83,11 @@ class VooDrawerNavigationItem extends StatelessWidget {
                 isSelected ? item.effectiveSelectedIcon : item.icon,
                 key: ValueKey(isSelected),
                 color: iconColor,
-                size: context.vooSize.checkboxSize,
+                size: 18,
               ),
             ),
 
-          SizedBox(width: context.vooSpacing.sm + context.vooSpacing.xs),
+          SizedBox(width: context.vooSpacing.xs),
 
           // Label
           Expanded(
@@ -146,7 +132,7 @@ class VooDrawerNavigationItem extends StatelessWidget {
         onExit: (_) => onHoverChanged(false),
         child: Padding(
           key: item.key,
-          padding: EdgeInsets.only(bottom: context.vooSpacing.xs),
+          padding: EdgeInsets.only(bottom: 1),
           child: InkWell(
             onTap: item.isEnabled ? () => onItemTap(item) : null,
             borderRadius: BorderRadius.circular(context.vooRadius.lg),

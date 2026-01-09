@@ -119,6 +119,28 @@ class _VooAdaptiveNavigationDrawerState
     }
   }
 
+  Widget _buildHeader(BuildContext context) {
+    final headerContent = widget.config.drawerHeader ?? const VooDrawerDefaultHeader();
+    final trailing = widget.config.drawerHeaderTrailing;
+
+    if (trailing == null) {
+      return headerContent;
+    }
+
+    // Wrap header with trailing widget (e.g., collapse toggle) in a compact row
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: headerContent),
+          const SizedBox(width: 4),
+          trailing,
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -126,7 +148,7 @@ class _VooAdaptiveNavigationDrawerState
     final isDark = theme.brightness == Brightness.dark;
 
     final effectiveWidth =
-        widget.width ?? widget.config.navigationDrawerWidth ?? 300;
+        widget.width ?? widget.config.navigationDrawerWidth ?? 220;
 
     // Use theme-based surface color
     final effectiveBackgroundColor =
@@ -139,7 +161,11 @@ class _VooAdaptiveNavigationDrawerState
         EdgeInsets.all(widget.config.navigationRailMargin);
 
     // If drawer has no margin (full-height), only round the right side
-    final isFullHeight = effectiveDrawerMargin == EdgeInsets.zero;
+    // Check all sides explicitly to handle different EdgeInsets instances
+    final isFullHeight = effectiveDrawerMargin.left == 0 &&
+        effectiveDrawerMargin.top == 0 &&
+        effectiveDrawerMargin.right == 0 &&
+        effectiveDrawerMargin.bottom == 0;
     final borderRadius = isFullHeight
         ? BorderRadius.only(
             topRight: Radius.circular(navTheme.containerBorderRadius),
@@ -152,16 +178,16 @@ class _VooAdaptiveNavigationDrawerState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Custom header or default modern header
-          widget.config.drawerHeader ?? const VooDrawerDefaultHeader(),
+          // Custom header or default modern header with optional trailing widget
+          _buildHeader(context),
 
           // Navigation items
           Expanded(
             child: ListView(
               controller: _scrollController,
               padding: EdgeInsets.symmetric(
-                horizontal: context.vooSpacing.sm + context.vooSpacing.xs,
-                vertical: context.vooSpacing.sm,
+                horizontal: context.vooSpacing.sm,
+                vertical: context.vooSpacing.xs,
               ),
               children: [
                 VooDrawerNavigationItems(
@@ -234,6 +260,7 @@ class _VooAdaptiveNavigationDrawerState
       VooNavigationPreset.minimalModern => _MinimalDrawerContainer(
           navTheme: navTheme,
           backgroundColor: effectiveBackgroundColor,
+          borderRadius: borderRadius,
           child: content,
         ),
     };
@@ -689,30 +716,38 @@ class _Material3DrawerContainer extends StatelessWidget {
 class _MinimalDrawerContainer extends StatelessWidget {
   final VooNavigationTheme navTheme;
   final Color backgroundColor;
+  final BorderRadius borderRadius;
   final Widget child;
 
   const _MinimalDrawerContainer({
     required this.navTheme,
     required this.backgroundColor,
+    required this.borderRadius,
     required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final smallerRadius = BorderRadius.circular(navTheme.containerBorderRadius * 0.5);
+    final borderColor = theme.colorScheme.outlineVariant.withValues(alpha: 0.3);
+
+    // Check if this is full-height mode (no left rounding = flush to edge)
+    final isFullHeight = borderRadius.topLeft == Radius.zero &&
+        borderRadius.bottomLeft == Radius.zero;
+
+    // Use right-only border for full-height mode (HRISELINK style)
+    final border = isFullHeight
+        ? Border(right: BorderSide(color: borderColor, width: 1))
+        : Border.all(color: borderColor, width: 1);
 
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: smallerRadius,
-        border: Border.all(
-          color: theme.colorScheme.outlineVariant,
-          width: 1,
-        ),
+        borderRadius: borderRadius,
+        border: border,
       ),
       child: ClipRRect(
-        borderRadius: smallerRadius,
+        borderRadius: borderRadius,
         child: child,
       ),
     );

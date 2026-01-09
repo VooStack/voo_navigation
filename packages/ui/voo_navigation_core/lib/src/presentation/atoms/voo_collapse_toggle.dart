@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:voo_tokens/voo_tokens.dart';
 
-/// Animated collapse/expand toggle button for navigation drawer/rail.
+/// Minimal collapse/expand toggle button for navigation drawer/rail.
 ///
-/// Shows `<<` when expanded (click to collapse) and `>>` when collapsed (click to expand).
+/// A small bordered square button with a sidebar panel icon.
 class VooCollapseToggle extends StatefulWidget {
   /// Whether the navigation is currently expanded (showing drawer)
   final bool isExpanded;
@@ -11,10 +10,10 @@ class VooCollapseToggle extends StatefulWidget {
   /// Callback when toggle is pressed
   final VoidCallback onToggle;
 
-  /// Custom icon for expanded state (default: left arrows to indicate "collapse")
+  /// Custom icon for expanded state
   final IconData? expandedIcon;
 
-  /// Custom icon for collapsed state (default: right arrows to indicate "expand")
+  /// Custom icon for collapsed state
   final IconData? collapsedIcon;
 
   /// Tooltip for expanded state
@@ -22,6 +21,12 @@ class VooCollapseToggle extends StatefulWidget {
 
   /// Tooltip for collapsed state
   final String? collapsedTooltip;
+
+  /// Custom icon color (uses theme if null)
+  final Color? iconColor;
+
+  /// Custom icon color when hovered (uses theme primary if null)
+  final Color? hoverColor;
 
   const VooCollapseToggle({
     super.key,
@@ -31,6 +36,8 @@ class VooCollapseToggle extends StatefulWidget {
     this.collapsedIcon,
     this.expandedTooltip,
     this.collapsedTooltip,
+    this.iconColor,
+    this.hoverColor,
   });
 
   @override
@@ -43,71 +50,50 @@ class _VooCollapseToggleState extends State<VooCollapseToggle> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = context.vooSpacing;
-    final radius = context.vooRadius;
 
     final tooltip = widget.isExpanded
         ? (widget.expandedTooltip ?? 'Collapse sidebar')
         : (widget.collapsedTooltip ?? 'Expand sidebar');
 
-    // Expanded = show left arrows (<<) meaning "click to collapse"
-    // Collapsed = show right arrows (>>) meaning "click to expand"
+    // Use sidebar panel icon - same icon for both states
     final icon = widget.isExpanded
-        ? (widget.expandedIcon ?? Icons.keyboard_double_arrow_left_rounded)
-        : (widget.collapsedIcon ?? Icons.keyboard_double_arrow_right_rounded);
+        ? (widget.expandedIcon ?? Icons.view_sidebar_outlined)
+        : (widget.collapsedIcon ?? Icons.view_sidebar_outlined);
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Subtle divider above the toggle
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: spacing.md),
-          child: Divider(
-            height: 1,
-            thickness: 1,
-            color: theme.dividerColor.withValues(alpha: 0.1),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.all(spacing.sm),
-          child: MouseRegion(
-            onEnter: (_) => setState(() => _isHovered = true),
-            onExit: (_) => setState(() => _isHovered = false),
-            child: Tooltip(
-              message: tooltip,
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: widget.onToggle,
-                  borderRadius: BorderRadius.circular(radius.md),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    width: 36,
-                    height: 36,
-                    decoration: BoxDecoration(
-                      color: _isHovered
-                          ? theme.colorScheme.primary.withValues(alpha: 0.1)
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(radius.md),
-                    ),
-                    child: AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 200),
-                      child: Icon(
-                        icon,
-                        key: ValueKey(widget.isExpanded),
-                        color: _isHovered
-                            ? theme.colorScheme.primary
-                            : theme.colorScheme.onSurfaceVariant,
-                        size: 18,
-                      ),
-                    ),
-                  ),
-                ),
+    final borderColor = _isHovered
+        ? theme.colorScheme.outline.withValues(alpha: 0.3)
+        : theme.colorScheme.outline.withValues(alpha: 0.2);
+
+    final iconColor = _isHovered
+        ? (widget.hoverColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.7))
+        : (widget.iconColor ?? theme.colorScheme.onSurface.withValues(alpha: 0.4));
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Tooltip(
+        message: tooltip,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: widget.onToggle,
+            borderRadius: BorderRadius.circular(6),
+            child: Container(
+              width: 28,
+              height: 28,
+              decoration: BoxDecoration(
+                border: Border.all(color: borderColor, width: 1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Icon(
+                icon,
+                color: iconColor,
+                size: 16,
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

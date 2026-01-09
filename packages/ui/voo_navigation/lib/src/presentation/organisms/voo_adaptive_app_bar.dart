@@ -112,15 +112,27 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         (theme.brightness == Brightness.light ? theme.colorScheme.surface.withValues(alpha: 0.95) : theme.colorScheme.surfaceContainerLow);
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSurface;
 
+    // Determine if we should use rounded corners based on content area border radius
+    final contentBorderRadius = effectiveConfig?.contentAreaBorderRadius ?? BorderRadius.zero;
+    final useRoundedCorners = contentBorderRadius != BorderRadius.zero;
+    final appBarRadius = useRoundedCorners
+        ? BorderRadius.only(
+            topLeft: Radius.circular(context.vooRadius.lg),
+            topRight: Radius.circular(context.vooRadius.lg),
+          )
+        : BorderRadius.zero;
+
     return Container(
       margin: margin,
       decoration: BoxDecoration(
         color: effectiveBackgroundColor,
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(context.vooRadius.lg), topRight: Radius.circular(context.vooRadius.lg)),
-        boxShadow: [BoxShadow(color: theme.shadowColor.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2))],
+        borderRadius: appBarRadius,
+        boxShadow: useRoundedCorners
+            ? [BoxShadow(color: theme.shadowColor.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2))]
+            : null,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(topLeft: Radius.circular(context.vooRadius.lg), topRight: Radius.circular(context.vooRadius.lg)),
+        borderRadius: appBarRadius,
         child: AppBar(
           title: Padding(
             padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.xs),

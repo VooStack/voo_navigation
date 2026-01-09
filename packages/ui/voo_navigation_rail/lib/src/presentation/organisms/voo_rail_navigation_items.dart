@@ -61,6 +61,8 @@ class VooRailNavigationItems extends StatelessWidget {
                 extended: extended,
                 onTap: () => onItemSelected(child.id),
                 animationController: itemAnimationControllers[child.id],
+                selectedItemColor: config.selectedItemColor,
+                unselectedItemColor: config.unselectedItemColor,
               ),
             );
           }
@@ -79,6 +81,8 @@ class VooRailNavigationItems extends StatelessWidget {
             extended: extended,
             onTap: () => onItemSelected(item.id),
             animationController: itemAnimationControllers[item.id],
+            selectedItemColor: config.selectedItemColor,
+            unselectedItemColor: config.unselectedItemColor,
           ),
         );
       }

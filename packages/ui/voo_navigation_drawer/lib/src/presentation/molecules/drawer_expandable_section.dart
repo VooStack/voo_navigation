@@ -47,6 +47,9 @@ class VooDrawerExpandableSection extends StatelessWidget {
     final theme = Theme.of(context);
     final isHovered = hoveredItems[item.id] == true;
 
+    // Use config colors if provided, otherwise fall back to theme
+    final sectionColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
+
     return Column(
       children: [
         MouseRegion(
@@ -54,19 +57,19 @@ class VooDrawerExpandableSection extends StatelessWidget {
           onExit: (_) => onHoverChanged(item.id, false),
           child: InkWell(
             onTap: () => onItemTap(item),
-            borderRadius: BorderRadius.circular(context.vooRadius.lg),
+            borderRadius: BorderRadius.circular(context.vooRadius.md),
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              margin: EdgeInsets.only(bottom: context.vooSpacing.xs),
+              duration: const Duration(milliseconds: 150),
+              margin: EdgeInsets.only(bottom: 1),
               padding: EdgeInsets.symmetric(
-                horizontal: context.vooSpacing.md,
-                vertical: context.vooSpacing.sm + context.vooSpacing.xs,
+                horizontal: context.vooSpacing.xs + 2,
+                vertical: context.vooSpacing.xxs + 2,
               ),
               decoration: BoxDecoration(
                 color: isHovered
-                    ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+                    ? sectionColor.withValues(alpha: 0.04)
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(context.vooRadius.lg),
+                borderRadius: BorderRadius.circular(context.vooRadius.md),
               ),
               child: Row(
                 children: [
@@ -80,26 +83,25 @@ class VooDrawerExpandableSection extends StatelessWidget {
                           isExpanded
                               ? item.selectedIcon ?? item.icon
                               : item.icon,
-                          color: theme.colorScheme.onSurface,
-                          size: context.vooSize.checkboxSize,
+                          color: sectionColor,
+                          size: 18,
                         );
                       },
                     )
                   else
                     Icon(
                       item.icon,
-                      color: theme.colorScheme.onSurface,
-                      size: context.vooSize.checkboxSize,
+                      color: sectionColor,
+                      size: 18,
                     ),
-                  SizedBox(
-                    width: context.vooSpacing.sm + context.vooSpacing.xs,
-                  ),
+                  SizedBox(width: context.vooSpacing.xs),
                   Expanded(
                     child: Text(
                       item.label,
-                      style: theme.textTheme.bodyLarge?.copyWith(
-                        color: theme.colorScheme.onSurface,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: sectionColor,
                         fontWeight: FontWeight.w500,
+                        fontSize: 13,
                       ),
                     ),
                   ),
@@ -111,18 +113,18 @@ class VooDrawerExpandableSection extends StatelessWidget {
                         return Transform.rotate(
                           angle: expansionController!.value * 1.5708, // 90 degrees in radians
                           child: Icon(
-                            Icons.chevron_right,
-                            color: theme.colorScheme.onSurface,
-                            size: context.vooSize.checkboxSize,
+                            Icons.keyboard_arrow_down,
+                            color: sectionColor.withValues(alpha: 0.5),
+                            size: 16,
                           ),
                         );
                       },
                     )
                   else
                     Icon(
-                      Icons.chevron_right,
-                      color: theme.colorScheme.onSurface,
-                      size: context.vooSize.checkboxSize,
+                      Icons.keyboard_arrow_down,
+                      color: sectionColor.withValues(alpha: 0.5),
+                      size: 16,
                     ),
                 ],
               ),

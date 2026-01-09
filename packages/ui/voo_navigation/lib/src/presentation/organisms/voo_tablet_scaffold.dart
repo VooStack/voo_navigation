@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation_rail/voo_navigation_rail.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_adaptive_app_bar.dart';
 import 'package:voo_tokens/voo_tokens.dart';

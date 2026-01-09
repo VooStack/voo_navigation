@@ -20,6 +20,12 @@ class VooRailNavigationItem extends StatefulWidget {
   /// Optional animation controller
   final AnimationController? animationController;
 
+  /// Optional selected item color (from config)
+  final Color? selectedItemColor;
+
+  /// Optional unselected item color (from config)
+  final Color? unselectedItemColor;
+
   const VooRailNavigationItem({
     super.key,
     required this.item,
@@ -27,6 +33,8 @@ class VooRailNavigationItem extends StatefulWidget {
     required this.extended,
     this.onTap,
     this.animationController,
+    this.selectedItemColor,
+    this.unselectedItemColor,
   });
 
   @override
@@ -80,10 +88,10 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
     final VooSpacingTokens spacing = context.vooSpacing;
     final VooRadiusTokens radius = context.vooRadius;
 
-    // Resolve icon color from item or theme
+    // Resolve icon color from item, widget (config), or theme
     final iconColor = widget.isSelected
-        ? (widget.item.selectedIconColor ?? theme.colorScheme.primary)
-        : (widget.item.iconColor ?? theme.colorScheme.onSurfaceVariant);
+        ? (widget.item.selectedIconColor ?? widget.selectedItemColor ?? theme.colorScheme.primary)
+        : (widget.item.iconColor ?? widget.unselectedItemColor ?? theme.colorScheme.onSurfaceVariant);
 
     Widget itemContent = AnimatedContainer(
       duration: context.vooAnimation.durationFast,
@@ -137,6 +145,8 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
               item: widget.item,
               isSelected: widget.isSelected,
               iconColor: iconColor,
+              selectedItemColor: widget.selectedItemColor,
+              unselectedItemColor: widget.unselectedItemColor,
             )
           : _CompactItemContent(
               item: widget.item,
@@ -193,11 +203,15 @@ class _ExtendedItemContent extends StatelessWidget {
   final VooNavigationItem item;
   final bool isSelected;
   final Color iconColor;
+  final Color? selectedItemColor;
+  final Color? unselectedItemColor;
 
   const _ExtendedItemContent({
     required this.item,
     required this.isSelected,
     required this.iconColor,
+    this.selectedItemColor,
+    this.unselectedItemColor,
   });
 
   @override
@@ -205,11 +219,13 @@ class _ExtendedItemContent extends StatelessWidget {
     final theme = Theme.of(context);
     final spacing = context.vooSpacing;
 
+    // Resolve label color from config or theme
+    final selectedLabelColor = selectedItemColor ?? theme.colorScheme.primary;
+    final unselectedLabelColor = unselectedItemColor ?? theme.colorScheme.onSurface;
+
     // Resolve label style from item or theme
     final defaultLabelStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: isSelected
-          ? theme.colorScheme.primary
-          : theme.colorScheme.onSurface,
+      color: isSelected ? selectedLabelColor : unselectedLabelColor,
       fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
       fontSize: 14,
     );

@@ -39,6 +39,10 @@ class VooNavigationConfig {
   /// Custom header widget for navigation drawer
   final Widget? drawerHeader;
 
+  /// Trailing widget for drawer header (e.g., collapse toggle)
+  /// Positioned to the right of the header content
+  final Widget? drawerHeaderTrailing;
+
   /// Custom footer widget for navigation drawer
   final Widget? drawerFooter;
 
@@ -252,6 +256,7 @@ class VooNavigationConfig {
     this.railLabelType = NavigationRailLabelType.selected,
     this.useExtendedRail = true,
     this.drawerHeader,
+    this.drawerHeaderTrailing,
     this.drawerFooter,
     this.appBarLeadingBuilder,
     this.appBarActionsBuilder,
@@ -330,6 +335,7 @@ class VooNavigationConfig {
     NavigationRailLabelType? railLabelType,
     bool? useExtendedRail,
     Widget? drawerHeader,
+    Widget? drawerHeaderTrailing,
     Widget? drawerFooter,
     Widget? Function(String? selectedId)? appBarLeadingBuilder,
     List<Widget>? Function(String? selectedId)? appBarActionsBuilder,
@@ -402,6 +408,7 @@ class VooNavigationConfig {
     railLabelType: railLabelType ?? this.railLabelType,
     useExtendedRail: useExtendedRail ?? this.useExtendedRail,
     drawerHeader: drawerHeader ?? this.drawerHeader,
+    drawerHeaderTrailing: drawerHeaderTrailing ?? this.drawerHeaderTrailing,
     drawerFooter: drawerFooter ?? this.drawerFooter,
     appBarLeadingBuilder: appBarLeadingBuilder ?? this.appBarLeadingBuilder,
     appBarActionsBuilder: appBarActionsBuilder ?? this.appBarActionsBuilder,

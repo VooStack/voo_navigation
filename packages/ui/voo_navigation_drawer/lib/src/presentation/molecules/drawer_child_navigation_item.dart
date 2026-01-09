@@ -39,60 +39,48 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
     final theme = Theme.of(context);
     final isSelected = item.id == selectedId;
 
+    // Resolve colors from config or theme
+    final unselectedColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
+
     return MouseRegion(
       onEnter: (_) => onHoverChanged(true),
       onExit: (_) => onHoverChanged(false),
       child: Padding(
         padding: EdgeInsets.only(
-          left: context.vooSpacing.xl,
-          bottom: context.vooSpacing.xxs,
+          left: context.vooSpacing.lg + 4,
+          bottom: 0,
         ),
         child: InkWell(
           onTap: item.isEnabled ? () => onItemTap(item) : null,
-          borderRadius: BorderRadius.circular(context.vooRadius.md),
+          borderRadius: BorderRadius.circular(context.vooRadius.xs),
           child: AnimatedContainer(
             duration: context.vooAnimation.durationFast,
             padding: EdgeInsets.symmetric(
-              horizontal: context.vooSpacing.sm + context.vooSpacing.xs,
-              vertical: context.vooSpacing.sm,
+              horizontal: context.vooSpacing.xs,
+              vertical: 3,
             ),
             decoration: BoxDecoration(
               color: isSelected
-                  ? theme.colorScheme.onSurface.withValues(alpha: 0.12)
+                  ? unselectedColor.withValues(alpha: 0.06)
                   : isHovered
-                  ? theme.colorScheme.onSurface.withValues(alpha: 0.06)
+                  ? unselectedColor.withValues(alpha: 0.03)
                   : Colors.transparent,
-              borderRadius: BorderRadius.circular(context.vooRadius.md),
+              borderRadius: BorderRadius.circular(context.vooRadius.xs),
             ),
             child: Row(
               children: [
-                // Animated dot indicator for child items
-                AnimatedContainer(
-                  duration: context.vooAnimation.durationFast,
-                  width: context.vooSize.badgeSmall,
-                  height: context.vooSize.badgeSmall,
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? config.selectedItemColor ?? theme.colorScheme.primary
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.6),
-                    shape: BoxShape.circle,
-                  ),
-                ),
-
-                SizedBox(width: context.vooSpacing.sm + context.vooSpacing.xs),
-
-                // Label
+                // Label - just text, no dot or icon
                 Expanded(
                   child: Text(
                     item.label,
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: isSelected
-                          ? config.selectedItemColor ??
-                                theme.colorScheme.primary
-                          : theme.colorScheme.onSurface.withValues(alpha: 0.9),
+                          ? unselectedColor
+                          : unselectedColor.withValues(alpha: 0.65),
                       fontWeight: isSelected
-                          ? FontWeight.w600
+                          ? FontWeight.w500
                           : FontWeight.w400,
+                      fontSize: 12,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -100,7 +88,7 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
 
                 // Badge
                 if (item.hasBadge) ...[
-                  SizedBox(width: context.vooSpacing.sm),
+                  SizedBox(width: context.vooSpacing.xs),
                   VooDrawerModernBadge(item: item, isSelected: isSelected),
                 ],
               ],

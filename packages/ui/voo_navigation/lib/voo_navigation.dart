@@ -6,7 +6,7 @@
 /// - voo_navigation_rail: Navigation rail components
 /// - voo_navigation_drawer: Navigation drawer components
 /// - voo_navigation_bar: Bottom navigation bar components
-library voo_navigation;
+library;
 
 // Re-export all sub-packages for convenience
 export 'package:voo_navigation_core/voo_navigation_core.dart';

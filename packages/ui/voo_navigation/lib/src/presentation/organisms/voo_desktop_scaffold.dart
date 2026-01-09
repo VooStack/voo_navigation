@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation_drawer/voo_navigation_drawer.dart';
 import 'package:voo_navigation_rail/voo_navigation_rail.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_adaptive_app_bar.dart';
@@ -118,6 +117,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     return VooCollapseToggle(
       isExpanded: !_isCollapsed,
       onToggle: _toggleCollapse,
+      iconColor: widget.config.unselectedItemColor,
+      hoverColor: widget.config.selectedItemColor,
     );
   }
 
@@ -138,14 +139,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       return VooAdaptiveNavigationRail(
         config: widget.config.copyWith(
           showUserProfile: false,
-          drawerFooter: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (widget.config.drawerFooter != null)
-                widget.config.drawerFooter!,
-              collapseToggle,
-            ],
-          ),
+          // Collapse toggle in header for rail too
+          drawerHeaderTrailing: collapseToggle,
         ),
         selectedId: widget.selectedId,
         onNavigationItemSelected: widget.onNavigationItemSelected,
@@ -155,14 +150,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
 
     return VooAdaptiveNavigationDrawer(
       config: widget.config.copyWith(
-        drawerFooter: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (widget.config.drawerFooter != null)
-              widget.config.drawerFooter!,
-            collapseToggle,
-          ],
-        ),
+        // Collapse toggle in header (top right)
+        drawerHeaderTrailing: collapseToggle,
       ),
       selectedId: widget.selectedId,
       onNavigationItemSelected: widget.onNavigationItemSelected,
