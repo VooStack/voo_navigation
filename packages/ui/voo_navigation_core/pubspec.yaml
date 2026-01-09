@@ -1,0 +1,54 @@
+name: voo_navigation_core
+description: Core foundation package for voo_navigation - shared entities, atoms, molecules, and utilities for building adaptive navigation.
+version: 0.1.0
+homepage: https://voostack.com/packages/voo_navigation_core
+repository: https://github.com/voostack/voo_navigation/tree/main/packages/ui/voo_navigation_core
+issue_tracker: https://github.com/voostack/voo_navigation/issues
+topics:
+  - flutter
+  - navigation
+  - material-design
+  - ui-components
+resolution: workspace
+
+platforms:
+  android:
+  ios:
+  linux:
+  macos:
+  web:
+  windows:
+
+environment:
+  sdk: '>=3.8.1 <4.0.0'
+  flutter: '>=3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Material Design
+  material_design_icons_flutter: ^7.0.7296
+
+  # UI Core & Design System
+  voo_tokens: ^0.0.8
+  voo_responsive: ^0.1.4
+
+  # Animations
+  voo_motion: ^0.0.2
+
+  # State Management
+  flutter_bloc: ^9.1.1
+  equatable: ^2.0.5
+
+  # Utilities
+  collection: ^1.19.1
+  meta: ^1.11.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

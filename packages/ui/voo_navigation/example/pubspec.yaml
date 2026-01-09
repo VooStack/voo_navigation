@@ -1,0 +1,25 @@
+name: voo_navigation_example
+description: Example app for VooNavigation package
+publish_to: 'none'
+version: 1.0.0
+resolution: workspace
+
+environment:
+  sdk: ^3.6.0
+  flutter: '>=3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  voo_navigation:
+    path: ../
+  material_design_icons_flutter: ^7.0.7296
+  go_router: ^16.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

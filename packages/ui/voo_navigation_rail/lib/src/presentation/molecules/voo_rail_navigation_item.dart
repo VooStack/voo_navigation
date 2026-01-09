@@ -1,0 +1,286 @@
+import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_rail/src/presentation/atoms/voo_rail_modern_badge.dart';
+import 'package:voo_tokens/voo_tokens.dart';
+
+/// Navigation item widget for rail layout
+class VooRailNavigationItem extends StatefulWidget {
+  /// Navigation item data
+  final VooNavigationItem item;
+
+  /// Whether this item is selected
+  final bool isSelected;
+
+  /// Whether the rail is extended
+  final bool extended;
+
+  /// Callback when item is tapped
+  final VoidCallback? onTap;
+
+  /// Optional animation controller
+  final AnimationController? animationController;
+
+  const VooRailNavigationItem({
+    super.key,
+    required this.item,
+    required this.isSelected,
+    required this.extended,
+    this.onTap,
+    this.animationController,
+  });
+
+  @override
+  State<VooRailNavigationItem> createState() => _VooRailNavigationItemState();
+}
+
+class _VooRailNavigationItemState extends State<VooRailNavigationItem>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        widget.animationController ??
+        AnimationController(
+          duration: const Duration(milliseconds: 300),
+          vsync: this,
+        );
+
+    if (widget.isSelected) {
+      _animationController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(VooRailNavigationItem oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isSelected != oldWidget.isSelected) {
+      if (widget.isSelected) {
+        _animationController.forward();
+      } else {
+        _animationController.reverse();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.animationController == null) {
+      _animationController.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final VooSpacingTokens spacing = context.vooSpacing;
+    final VooRadiusTokens radius = context.vooRadius;
+
+    // Resolve icon color from item or theme
+    final iconColor = widget.isSelected
+        ? (widget.item.selectedIconColor ?? theme.colorScheme.primary)
+        : (widget.item.iconColor ?? theme.colorScheme.onSurfaceVariant);
+
+    Widget itemContent = AnimatedContainer(
+      duration: context.vooAnimation.durationFast,
+      height: 48,
+      width: widget.extended ? null : 48,
+      padding: widget.extended
+          ? EdgeInsets.symmetric(
+              horizontal: spacing.md,
+              vertical: spacing.sm,
+            )
+          : EdgeInsets.all(spacing.xs),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          widget.extended ? radius.md : radius.md,
+        ),
+        gradient: widget.isSelected
+            ? LinearGradient(
+                colors: [
+                  theme.colorScheme.primary.withValues(
+                    alpha: isDark ? 0.2 : 0.12,
+                  ),
+                  theme.colorScheme.primary.withValues(
+                    alpha: isDark ? 0.15 : 0.08,
+                  ),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )
+            : null,
+        color: !widget.isSelected
+            ? (_isHovered
+                  ? theme.colorScheme.onSurface.withValues(
+                      alpha: isDark ? 0.08 : 0.04,
+                    )
+                  : Colors.transparent)
+            : null,
+        boxShadow: widget.isSelected
+            ? [
+                BoxShadow(
+                  color: theme.colorScheme.primary.withValues(
+                    alpha: 0.1,
+                  ),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
+      ),
+      child: widget.extended
+          ? _buildExtendedContent(theme, spacing, iconColor)
+          : _buildCompactContent(theme, iconColor),
+    );
+
+    // Wrap with tooltip
+    itemContent = Tooltip(
+      message: widget.item.effectiveTooltip,
+      child: itemContent,
+    );
+
+    // Wrap with semantics for accessibility
+    return Semantics(
+      label: widget.item.effectiveSemanticLabel,
+      button: true,
+      enabled: widget.item.isEnabled,
+      selected: widget.isSelected,
+      child: Padding(
+        key: widget.item.key,
+        padding: EdgeInsets.symmetric(
+          horizontal: spacing.sm,
+          vertical: spacing.xxs / 2,
+        ),
+        child: MouseRegion(
+          onEnter: (_) => setState(() => _isHovered = true),
+          onExit: (_) => setState(() => _isHovered = false),
+          cursor: widget.item.isEnabled
+              ? SystemMouseCursors.click
+              : SystemMouseCursors.basic,
+          child: InkWell(
+            onTap: widget.item.isEnabled ? widget.onTap : null,
+            borderRadius: BorderRadius.circular(radius.md),
+            child: AnimatedScale(
+              scale: _isHovered ? 1.02 : 1.0,
+              duration: Duration(
+                milliseconds:
+                    (context.vooAnimation.durationFast.inMilliseconds * 0.75)
+                        .round(),
+              ),
+              child: itemContent,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildExtendedContent(
+    ThemeData theme,
+    VooSpacingTokens spacing,
+    Color iconColor,
+  ) {
+    // Resolve label style from item or theme
+    final defaultLabelStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: widget.isSelected
+          ? theme.colorScheme.primary
+          : theme.colorScheme.onSurface,
+      fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w400,
+      fontSize: 14,
+    );
+    final labelStyle = widget.isSelected
+        ? (widget.item.selectedLabelStyle ?? defaultLabelStyle)
+        : (widget.item.labelStyle ?? defaultLabelStyle);
+
+    return Row(
+      children: [
+        // Leading widget or Icon
+        if (widget.item.leadingWidget != null)
+          widget.item.leadingWidget!
+        else
+          AnimatedSwitcher(
+            duration: context.vooAnimation.durationFast,
+            child: Icon(
+              widget.isSelected
+                  ? widget.item.effectiveSelectedIcon
+                  : widget.item.icon,
+              key: ValueKey(widget.isSelected),
+              color: iconColor,
+              size: 22,
+            ),
+          ),
+        SizedBox(width: spacing.sm),
+        Expanded(
+          child: Row(
+            children: [
+              Flexible(
+                child: Text(
+                  widget.item.label,
+                  style: labelStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (widget.item.hasBadge) ...[
+                SizedBox(width: spacing.xs),
+                VooRailModernBadge(
+                  item: widget.item,
+                  isSelected: widget.isSelected,
+                  extended: widget.extended,
+                ),
+              ],
+              // Trailing widget
+              if (widget.item.trailingWidget != null) ...[
+                SizedBox(width: spacing.xs),
+                widget.item.trailingWidget!,
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCompactContent(ThemeData theme, Color iconColor) {
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Leading widget or Icon
+              if (widget.item.leadingWidget != null)
+                widget.item.leadingWidget!
+              else
+                AnimatedSwitcher(
+                  duration: context.vooAnimation.durationFast,
+                  child: Icon(
+                    widget.isSelected
+                        ? widget.item.effectiveSelectedIcon
+                        : widget.item.icon,
+                    key: ValueKey(widget.isSelected),
+                    color: iconColor,
+                    size: 24,
+                  ),
+                ),
+              if (widget.item.hasBadge)
+                Positioned(
+                  top: -4,
+                  right: -8,
+                  child: VooRailModernBadge(
+                    item: widget.item,
+                    isSelected: widget.isSelected,
+                    extended: widget.extended,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}

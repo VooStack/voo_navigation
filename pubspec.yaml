@@ -1,0 +1,14 @@
+name: voo_navigation_workspace
+description: A comprehensive, adaptive navigation package suite for Flutter.
+environment:
+  sdk: '>=3.8.1 <4.0.0'
+dev_dependencies:
+  melos: ^7.1.1
+workspace:
+  - packages/ui/voo_navigation_core
+  - packages/ui/voo_navigation_rail
+  - packages/ui/voo_navigation_drawer
+  - packages/ui/voo_navigation_bar
+  - packages/ui/voo_navigation
+  - packages/ui/voo_navigation/example
+melos:
