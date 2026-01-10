@@ -1,8 +1,9 @@
-# VooNavigation 🧭
+# VooNavigation
 
-[![Version](https://img.shields.io/badge/version-1.0.3-blue)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/version-1.2.0-blue)](pubspec.yaml)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.0.0-blue)](https://flutter.dev)
 [![Material 3](https://img.shields.io/badge/Material%203-compliant-green)](https://m3.material.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 A comprehensive, adaptive navigation package for Flutter that automatically adjusts to different screen sizes and platforms with Material 3 design. Features a modern, production-ready UI inspired by leading SaaS applications like Notion, Linear, and Figma.
 
