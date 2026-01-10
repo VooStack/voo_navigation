@@ -158,6 +158,26 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     );
   }
 
+  Widget? _buildQuickActionsFab() {
+    final quickActionsConfig = widget.config.quickActions;
+    if (quickActionsConfig == null ||
+        widget.config.quickActionsPosition != VooQuickActionsPosition.fab) {
+      return null;
+    }
+
+    return VooQuickActions(
+      actions: quickActionsConfig.actions,
+      triggerIcon: quickActionsConfig.triggerIcon,
+      triggerWidget: quickActionsConfig.triggerWidget,
+      tooltip: quickActionsConfig.tooltip,
+      showLabelsInGrid: quickActionsConfig.showLabelsInGrid,
+      style: quickActionsConfig.style,
+      compact: quickActionsConfig.compact,
+      useGridLayout: quickActionsConfig.useGridLayout,
+      gridColumns: quickActionsConfig.gridColumns,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final navigation = _getNavigation();
@@ -165,7 +185,10 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     // Determine FAB visibility and widget based on page config overrides
     final showFab = widget.pageConfig?.showFloatingActionButton ??
         widget.config.showFloatingActionButton;
-    final fabWidget = widget.pageConfig?.floatingActionButton ??
+    // Use quick actions FAB if configured, otherwise fall back to custom FAB
+    final quickActionsFab = _buildQuickActionsFab();
+    final fabWidget = quickActionsFab ??
+        widget.pageConfig?.floatingActionButton ??
         widget.config.floatingActionButton;
     final fabLocation = widget.pageConfig?.floatingActionButtonLocation ??
         widget.config.floatingActionButtonLocation;

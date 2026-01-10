@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/domain/entities/breadcrumb_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/breakpoint.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_section.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_type.dart';
+import 'package:voo_navigation_core/src/domain/entities/notification_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/organization.dart';
+import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
+import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Configuration for the adaptive navigation system
@@ -252,6 +257,51 @@ class VooNavigationConfig {
   VooNavigationTheme get effectiveTheme =>
       navigationTheme ?? VooNavigationTheme.material3Enhanced();
 
+  // ============================================================================
+  // COMMON NAVIGATION COMPONENTS
+  // ============================================================================
+
+  /// Organization switcher configuration
+  ///
+  /// When provided, displays an organization switcher in the navigation.
+  /// Position is controlled by [organizationSwitcherPosition].
+  final VooOrganizationSwitcherConfig? organizationSwitcher;
+
+  /// Position of the organization switcher
+  final VooOrganizationSwitcherPosition organizationSwitcherPosition;
+
+  /// Search bar configuration
+  ///
+  /// When provided, displays a search bar in the navigation.
+  /// Position is controlled by [searchBarPosition].
+  final VooSearchBarConfig? searchBar;
+
+  /// Position of the search bar
+  final VooSearchBarPosition searchBarPosition;
+
+  /// Notifications bell configuration
+  ///
+  /// When provided, displays a notifications bell with dropdown.
+  /// Typically displayed in the app bar actions.
+  final VooNotificationsBellConfig? notificationsBell;
+
+  /// Quick actions menu configuration
+  ///
+  /// When provided, displays a quick actions menu.
+  /// Position is controlled by [quickActionsPosition].
+  final VooQuickActionsConfig? quickActions;
+
+  /// Position of the quick actions menu
+  final VooQuickActionsPosition quickActionsPosition;
+
+  /// Breadcrumbs configuration
+  ///
+  /// When provided, displays breadcrumbs for hierarchical navigation.
+  final VooBreadcrumbsConfig? breadcrumbs;
+
+  /// Whether to show breadcrumbs in the app bar
+  final bool showBreadcrumbsInAppBar;
+
   VooNavigationConfig({
     required this.items,
     this.selectedId,
@@ -324,6 +374,16 @@ class VooNavigationConfig {
     this.contentAreaMargin,
     this.contentAreaBorderRadius,
     this.contentAreaBackgroundColor,
+    // Common navigation components
+    this.organizationSwitcher,
+    this.organizationSwitcherPosition = VooOrganizationSwitcherPosition.header,
+    this.searchBar,
+    this.searchBarPosition = VooSearchBarPosition.header,
+    this.notificationsBell,
+    this.quickActions,
+    this.quickActionsPosition = VooQuickActionsPosition.fab,
+    this.breadcrumbs,
+    this.showBreadcrumbsInAppBar = true,
   }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints,
        animationDuration = animationDuration ?? _animationTokens.durationNormal,
        animationCurve = animationCurve ?? _animationTokens.curveEaseInOut,
@@ -406,6 +466,16 @@ class VooNavigationConfig {
     EdgeInsets? contentAreaMargin,
     BorderRadius? contentAreaBorderRadius,
     Color? contentAreaBackgroundColor,
+    // Common navigation components
+    VooOrganizationSwitcherConfig? organizationSwitcher,
+    VooOrganizationSwitcherPosition? organizationSwitcherPosition,
+    VooSearchBarConfig? searchBar,
+    VooSearchBarPosition? searchBarPosition,
+    VooNotificationsBellConfig? notificationsBell,
+    VooQuickActionsConfig? quickActions,
+    VooQuickActionsPosition? quickActionsPosition,
+    VooBreadcrumbsConfig? breadcrumbs,
+    bool? showBreadcrumbsInAppBar,
   }) => VooNavigationConfig(
     items: items ?? this.items,
     selectedId: selectedId ?? this.selectedId,
@@ -491,6 +561,15 @@ class VooNavigationConfig {
     contentAreaMargin: contentAreaMargin ?? this.contentAreaMargin,
     contentAreaBorderRadius: contentAreaBorderRadius ?? this.contentAreaBorderRadius,
     contentAreaBackgroundColor: contentAreaBackgroundColor ?? this.contentAreaBackgroundColor,
+    organizationSwitcher: organizationSwitcher ?? this.organizationSwitcher,
+    organizationSwitcherPosition: organizationSwitcherPosition ?? this.organizationSwitcherPosition,
+    searchBar: searchBar ?? this.searchBar,
+    searchBarPosition: searchBarPosition ?? this.searchBarPosition,
+    notificationsBell: notificationsBell ?? this.notificationsBell,
+    quickActions: quickActions ?? this.quickActions,
+    quickActionsPosition: quickActionsPosition ?? this.quickActionsPosition,
+    breadcrumbs: breadcrumbs ?? this.breadcrumbs,
+    showBreadcrumbsInAppBar: showBreadcrumbsInAppBar ?? this.showBreadcrumbsInAppBar,
   );
 
   /// Gets the current navigation type based on screen width
@@ -1037,4 +1116,399 @@ class VooNavigationConfig {
       ),
     );
   }
+}
+
+// ============================================================================
+// COMMON NAVIGATION COMPONENT CONFIGURATIONS
+// ============================================================================
+
+/// Configuration for the organization switcher
+class VooOrganizationSwitcherConfig {
+  /// List of available organizations
+  final List<VooOrganization> organizations;
+
+  /// Currently selected organization
+  final VooOrganization? selectedOrganization;
+
+  /// Callback when an organization is selected
+  final ValueChanged<VooOrganization>? onOrganizationChanged;
+
+  /// Callback when create organization is tapped
+  final VoidCallback? onCreateOrganization;
+
+  /// Whether to show search (auto-enabled when >5 orgs)
+  final bool? showSearch;
+
+  /// Whether to show the create organization button
+  final bool showCreateButton;
+
+  /// Label for the create button
+  final String? createButtonLabel;
+
+  /// Hint text for search
+  final String? searchHint;
+
+  /// Style configuration
+  final VooOrganizationSwitcherStyle? style;
+
+  /// Whether to show in compact mode (avatar only)
+  final bool compact;
+
+  /// Tooltip text
+  final String? tooltip;
+
+  const VooOrganizationSwitcherConfig({
+    required this.organizations,
+    this.selectedOrganization,
+    this.onOrganizationChanged,
+    this.onCreateOrganization,
+    this.showSearch,
+    this.showCreateButton = true,
+    this.createButtonLabel,
+    this.searchHint,
+    this.style,
+    this.compact = false,
+    this.tooltip,
+  });
+
+  /// Creates a copy with the given fields replaced
+  VooOrganizationSwitcherConfig copyWith({
+    List<VooOrganization>? organizations,
+    VooOrganization? selectedOrganization,
+    ValueChanged<VooOrganization>? onOrganizationChanged,
+    VoidCallback? onCreateOrganization,
+    bool? showSearch,
+    bool? showCreateButton,
+    String? createButtonLabel,
+    String? searchHint,
+    VooOrganizationSwitcherStyle? style,
+    bool? compact,
+    String? tooltip,
+  }) => VooOrganizationSwitcherConfig(
+    organizations: organizations ?? this.organizations,
+    selectedOrganization: selectedOrganization ?? this.selectedOrganization,
+    onOrganizationChanged: onOrganizationChanged ?? this.onOrganizationChanged,
+    onCreateOrganization: onCreateOrganization ?? this.onCreateOrganization,
+    showSearch: showSearch ?? this.showSearch,
+    showCreateButton: showCreateButton ?? this.showCreateButton,
+    createButtonLabel: createButtonLabel ?? this.createButtonLabel,
+    searchHint: searchHint ?? this.searchHint,
+    style: style ?? this.style,
+    compact: compact ?? this.compact,
+    tooltip: tooltip ?? this.tooltip,
+  );
+}
+
+/// Configuration for the search bar
+class VooSearchBarConfig {
+  /// Navigation items to filter
+  final List<VooNavigationItem>? navigationItems;
+
+  /// Callback when filtered items change
+  final ValueChanged<List<VooNavigationItem>>? onFilteredItemsChanged;
+
+  /// Callback when search text changes
+  final ValueChanged<String>? onSearch;
+
+  /// Callback when search is submitted
+  final VoidCallback? onSearchSubmit;
+
+  /// Search actions (quick commands)
+  final List<VooSearchAction>? searchActions;
+
+  /// Hint text for the search field
+  final String? hintText;
+
+  /// Whether to show filtered results dropdown
+  final bool showFilteredResults;
+
+  /// Whether to enable CMD/CTRL+K shortcut
+  final bool enableKeyboardShortcut;
+
+  /// Keyboard shortcut hint text
+  final String? keyboardShortcutHint;
+
+  /// Style configuration
+  final VooSearchBarStyle? style;
+
+  /// Whether the search bar is expanded
+  final bool expanded;
+
+  /// Callback when a navigation item is selected
+  final ValueChanged<VooNavigationItem>? onNavigationItemSelected;
+
+  /// Callback when a search action is selected
+  final ValueChanged<VooSearchAction>? onSearchActionSelected;
+
+  const VooSearchBarConfig({
+    this.navigationItems,
+    this.onFilteredItemsChanged,
+    this.onSearch,
+    this.onSearchSubmit,
+    this.searchActions,
+    this.hintText,
+    this.showFilteredResults = true,
+    this.enableKeyboardShortcut = true,
+    this.keyboardShortcutHint,
+    this.style,
+    this.expanded = false,
+    this.onNavigationItemSelected,
+    this.onSearchActionSelected,
+  });
+
+  /// Creates a copy with the given fields replaced
+  VooSearchBarConfig copyWith({
+    List<VooNavigationItem>? navigationItems,
+    ValueChanged<List<VooNavigationItem>>? onFilteredItemsChanged,
+    ValueChanged<String>? onSearch,
+    VoidCallback? onSearchSubmit,
+    List<VooSearchAction>? searchActions,
+    String? hintText,
+    bool? showFilteredResults,
+    bool? enableKeyboardShortcut,
+    String? keyboardShortcutHint,
+    VooSearchBarStyle? style,
+    bool? expanded,
+    ValueChanged<VooNavigationItem>? onNavigationItemSelected,
+    ValueChanged<VooSearchAction>? onSearchActionSelected,
+  }) => VooSearchBarConfig(
+    navigationItems: navigationItems ?? this.navigationItems,
+    onFilteredItemsChanged: onFilteredItemsChanged ?? this.onFilteredItemsChanged,
+    onSearch: onSearch ?? this.onSearch,
+    onSearchSubmit: onSearchSubmit ?? this.onSearchSubmit,
+    searchActions: searchActions ?? this.searchActions,
+    hintText: hintText ?? this.hintText,
+    showFilteredResults: showFilteredResults ?? this.showFilteredResults,
+    enableKeyboardShortcut: enableKeyboardShortcut ?? this.enableKeyboardShortcut,
+    keyboardShortcutHint: keyboardShortcutHint ?? this.keyboardShortcutHint,
+    style: style ?? this.style,
+    expanded: expanded ?? this.expanded,
+    onNavigationItemSelected: onNavigationItemSelected ?? this.onNavigationItemSelected,
+    onSearchActionSelected: onSearchActionSelected ?? this.onSearchActionSelected,
+  );
+}
+
+/// Configuration for the notifications bell
+class VooNotificationsBellConfig {
+  /// List of notifications
+  final List<VooNotificationItem> notifications;
+
+  /// Override for unread count badge
+  final int? unreadCount;
+
+  /// Callback when a notification is tapped
+  final ValueChanged<VooNotificationItem>? onNotificationTap;
+
+  /// Callback when a notification is dismissed
+  final ValueChanged<VooNotificationItem>? onNotificationDismiss;
+
+  /// Callback when mark all as read is tapped
+  final VoidCallback? onMarkAllRead;
+
+  /// Callback when view all is tapped
+  final VoidCallback? onViewAll;
+
+  /// Maximum visible notifications in dropdown
+  final int maxVisibleNotifications;
+
+  /// Whether to show mark all as read button
+  final bool showMarkAllRead;
+
+  /// Whether to show view all button
+  final bool showViewAllButton;
+
+  /// Message to show when no notifications
+  final String? emptyStateMessage;
+
+  /// Style configuration
+  final VooNotificationsBellStyle? style;
+
+  /// Whether to show in compact mode
+  final bool compact;
+
+  /// Tooltip text
+  final String? tooltip;
+
+  /// Custom empty state widget
+  final Widget? emptyStateWidget;
+
+  /// Custom header widget for the dropdown
+  final Widget? headerWidget;
+
+  /// Custom footer widget for the dropdown
+  final Widget? footerWidget;
+
+  const VooNotificationsBellConfig({
+    required this.notifications,
+    this.unreadCount,
+    this.onNotificationTap,
+    this.onNotificationDismiss,
+    this.onMarkAllRead,
+    this.onViewAll,
+    this.maxVisibleNotifications = 5,
+    this.showMarkAllRead = true,
+    this.showViewAllButton = true,
+    this.emptyStateMessage,
+    this.style,
+    this.compact = false,
+    this.tooltip,
+    this.emptyStateWidget,
+    this.headerWidget,
+    this.footerWidget,
+  });
+
+  /// Creates a copy with the given fields replaced
+  VooNotificationsBellConfig copyWith({
+    List<VooNotificationItem>? notifications,
+    int? unreadCount,
+    ValueChanged<VooNotificationItem>? onNotificationTap,
+    ValueChanged<VooNotificationItem>? onNotificationDismiss,
+    VoidCallback? onMarkAllRead,
+    VoidCallback? onViewAll,
+    int? maxVisibleNotifications,
+    bool? showMarkAllRead,
+    bool? showViewAllButton,
+    String? emptyStateMessage,
+    VooNotificationsBellStyle? style,
+    bool? compact,
+    String? tooltip,
+    Widget? emptyStateWidget,
+    Widget? headerWidget,
+    Widget? footerWidget,
+  }) => VooNotificationsBellConfig(
+    notifications: notifications ?? this.notifications,
+    unreadCount: unreadCount ?? this.unreadCount,
+    onNotificationTap: onNotificationTap ?? this.onNotificationTap,
+    onNotificationDismiss: onNotificationDismiss ?? this.onNotificationDismiss,
+    onMarkAllRead: onMarkAllRead ?? this.onMarkAllRead,
+    onViewAll: onViewAll ?? this.onViewAll,
+    maxVisibleNotifications: maxVisibleNotifications ?? this.maxVisibleNotifications,
+    showMarkAllRead: showMarkAllRead ?? this.showMarkAllRead,
+    showViewAllButton: showViewAllButton ?? this.showViewAllButton,
+    emptyStateMessage: emptyStateMessage ?? this.emptyStateMessage,
+    style: style ?? this.style,
+    compact: compact ?? this.compact,
+    tooltip: tooltip ?? this.tooltip,
+    emptyStateWidget: emptyStateWidget ?? this.emptyStateWidget,
+    headerWidget: headerWidget ?? this.headerWidget,
+    footerWidget: footerWidget ?? this.footerWidget,
+  );
+}
+
+/// Configuration for the quick actions menu
+class VooQuickActionsConfig {
+  /// List of quick actions
+  final List<VooQuickAction> actions;
+
+  /// Icon for the trigger button
+  final IconData? triggerIcon;
+
+  /// Custom trigger widget
+  final Widget? triggerWidget;
+
+  /// Tooltip for the trigger
+  final String? tooltip;
+
+  /// Whether to show labels in grid layout
+  final bool showLabelsInGrid;
+
+  /// Style configuration
+  final VooQuickActionsStyle? style;
+
+  /// Whether to show in compact mode
+  final bool compact;
+
+  /// Callback when an action is selected
+  final ValueChanged<VooQuickAction>? onActionSelected;
+
+  /// Whether to use grid layout
+  final bool useGridLayout;
+
+  /// Number of columns in grid layout
+  final int gridColumns;
+
+  const VooQuickActionsConfig({
+    required this.actions,
+    this.triggerIcon,
+    this.triggerWidget,
+    this.tooltip,
+    this.showLabelsInGrid = true,
+    this.style,
+    this.compact = false,
+    this.onActionSelected,
+    this.useGridLayout = false,
+    this.gridColumns = 4,
+  });
+
+  /// Creates a copy with the given fields replaced
+  VooQuickActionsConfig copyWith({
+    List<VooQuickAction>? actions,
+    IconData? triggerIcon,
+    Widget? triggerWidget,
+    String? tooltip,
+    bool? showLabelsInGrid,
+    VooQuickActionsStyle? style,
+    bool? compact,
+    ValueChanged<VooQuickAction>? onActionSelected,
+    bool? useGridLayout,
+    int? gridColumns,
+  }) => VooQuickActionsConfig(
+    actions: actions ?? this.actions,
+    triggerIcon: triggerIcon ?? this.triggerIcon,
+    triggerWidget: triggerWidget ?? this.triggerWidget,
+    tooltip: tooltip ?? this.tooltip,
+    showLabelsInGrid: showLabelsInGrid ?? this.showLabelsInGrid,
+    style: style ?? this.style,
+    compact: compact ?? this.compact,
+    onActionSelected: onActionSelected ?? this.onActionSelected,
+    useGridLayout: useGridLayout ?? this.useGridLayout,
+    gridColumns: gridColumns ?? this.gridColumns,
+  );
+}
+
+/// Configuration for breadcrumbs
+class VooBreadcrumbsConfig {
+  /// List of breadcrumb items
+  final List<VooBreadcrumbItem> items;
+
+  /// Callback when a breadcrumb is tapped
+  final ValueChanged<VooBreadcrumbItem>? onItemTap;
+
+  /// Custom separator widget
+  final Widget? separator;
+
+  /// Maximum visible items before collapsing
+  final int? maxVisibleItems;
+
+  /// Whether to show home icon for first item
+  final bool showHomeIcon;
+
+  /// Style configuration
+  final VooBreadcrumbsStyle? style;
+
+  const VooBreadcrumbsConfig({
+    required this.items,
+    this.onItemTap,
+    this.separator,
+    this.maxVisibleItems,
+    this.showHomeIcon = true,
+    this.style,
+  });
+
+  /// Creates a copy with the given fields replaced
+  VooBreadcrumbsConfig copyWith({
+    List<VooBreadcrumbItem>? items,
+    ValueChanged<VooBreadcrumbItem>? onItemTap,
+    Widget? separator,
+    int? maxVisibleItems,
+    bool? showHomeIcon,
+    VooBreadcrumbsStyle? style,
+  }) => VooBreadcrumbsConfig(
+    items: items ?? this.items,
+    onItemTap: onItemTap ?? this.onItemTap,
+    separator: separator ?? this.separator,
+    maxVisibleItems: maxVisibleItems ?? this.maxVisibleItems,
+    showHomeIcon: showHomeIcon ?? this.showHomeIcon,
+    style: style ?? this.style,
+  );
 }

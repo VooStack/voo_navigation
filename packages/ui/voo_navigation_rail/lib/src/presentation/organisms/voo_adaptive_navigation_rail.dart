@@ -1,11 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
-import 'package:voo_navigation_rail/src/presentation/molecules/voo_rail_default_header.dart';
-import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
-import 'package:voo_navigation_rail/src/presentation/organisms/voo_rail_navigation_items.dart';
 import 'package:voo_navigation_rail/voo_navigation_rail.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -148,11 +143,144 @@ class _ThemedRailContainer extends StatelessWidget {
     required this.itemAnimationControllers,
   });
 
+  Widget? _buildSearchBar(BuildContext context, VooSearchBarPosition position) {
+    final searchConfig = config.searchBar;
+    if (searchConfig == null || config.searchBarPosition != position) {
+      return null;
+    }
+
+    // In compact mode, show search icon button that expands
+    if (!extended) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: IconButton(
+          icon: const Icon(Icons.search, size: 20),
+          tooltip: searchConfig.hintText ?? 'Search...',
+          onPressed: () {
+            // Show search overlay/dialog when in compact mode
+            _showSearchOverlay(context, searchConfig);
+          },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: VooSearchBar(
+        navigationItems: searchConfig.navigationItems ?? config.items,
+        onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
+        onSearch: searchConfig.onSearch,
+        onSearchSubmit: searchConfig.onSearchSubmit,
+        searchActions: searchConfig.searchActions,
+        hintText: searchConfig.hintText ?? 'Search...',
+        showFilteredResults: searchConfig.showFilteredResults,
+        enableKeyboardShortcut: searchConfig.enableKeyboardShortcut,
+        keyboardShortcutHint: searchConfig.keyboardShortcutHint,
+        style: searchConfig.style,
+        expanded: true,
+        onNavigationItemSelected: searchConfig.onNavigationItemSelected,
+        onSearchActionSelected: searchConfig.onSearchActionSelected,
+      ),
+    );
+  }
+
+  void _showSearchOverlay(BuildContext context, VooSearchBarConfig searchConfig) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 400),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: VooSearchBar(
+              navigationItems: searchConfig.navigationItems ?? config.items,
+              onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
+              onSearch: searchConfig.onSearch,
+              onSearchSubmit: searchConfig.onSearchSubmit,
+              searchActions: searchConfig.searchActions,
+              hintText: searchConfig.hintText ?? 'Search...',
+              showFilteredResults: searchConfig.showFilteredResults,
+              enableKeyboardShortcut: false,
+              style: searchConfig.style,
+              expanded: true,
+              onNavigationItemSelected: (item) {
+                Navigator.of(context).pop();
+                searchConfig.onNavigationItemSelected?.call(item);
+              },
+              onSearchActionSelected: (action) {
+                Navigator.of(context).pop();
+                searchConfig.onSearchActionSelected?.call(action);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget? _buildOrganizationSwitcherForPosition(
+      BuildContext context, VooOrganizationSwitcherPosition position) {
+    final orgSwitcher = config.organizationSwitcher;
+    if (orgSwitcher == null ||
+        config.organizationSwitcherPosition != position) {
+      return null;
+    }
+
+    // In compact mode, use compact version of switcher
+    final isCompact = !extended || orgSwitcher.compact;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: isCompact ? 8 : 12,
+        vertical: 8,
+      ),
+      child: VooOrganizationSwitcher(
+        organizations: orgSwitcher.organizations,
+        selectedOrganization: orgSwitcher.selectedOrganization,
+        onOrganizationChanged: orgSwitcher.onOrganizationChanged,
+        onCreateOrganization: orgSwitcher.onCreateOrganization,
+        showSearch: orgSwitcher.showSearch,
+        showCreateButton: orgSwitcher.showCreateButton,
+        createButtonLabel: orgSwitcher.createButtonLabel,
+        searchHint: orgSwitcher.searchHint,
+        style: orgSwitcher.style,
+        compact: isCompact,
+        tooltip: orgSwitcher.tooltip,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final borderRadius = BorderRadius.circular(navTheme.containerBorderRadius);
+
+    // Build optional components based on position
+    final searchBarInHeader =
+        _buildSearchBar(context, VooSearchBarPosition.header);
+    final searchBarBeforeItems =
+        _buildSearchBar(context, VooSearchBarPosition.beforeItems);
+    final orgSwitcherInHeader = _buildOrganizationSwitcherForPosition(
+        context, VooOrganizationSwitcherPosition.header);
+    final orgSwitcherBeforeItems = _buildOrganizationSwitcherForPosition(
+        context, VooOrganizationSwitcherPosition.beforeItems);
+    final orgSwitcherInFooter = _buildOrganizationSwitcherForPosition(
+        context, VooOrganizationSwitcherPosition.footer);
 
     Widget content = Material(
       color: Colors.transparent,
@@ -166,6 +294,18 @@ class _ThemedRailContainer extends StatelessWidget {
             _CompactRailHeader(
               trailing: config.drawerHeaderTrailing,
             ),
+
+          // Organization switcher in header position
+          if (orgSwitcherInHeader != null) orgSwitcherInHeader,
+
+          // Search bar in header position
+          if (searchBarInHeader != null) searchBarInHeader,
+
+          // Organization switcher before items
+          if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
+
+          // Search bar before items
+          if (searchBarBeforeItems != null) searchBarBeforeItems,
 
           // Navigation items
           Expanded(
@@ -205,6 +345,9 @@ class _ThemedRailContainer extends StatelessWidget {
               onItemSelected: onNavigationItemSelected,
               itemAnimationControllers: itemAnimationControllers,
             ),
+
+          // Organization switcher in footer position
+          if (orgSwitcherInFooter != null) orgSwitcherInFooter,
 
           // User profile footer when enabled
           if (config.showUserProfile)

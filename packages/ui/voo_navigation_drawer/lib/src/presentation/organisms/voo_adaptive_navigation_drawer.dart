@@ -5,6 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
+import 'package:voo_navigation_core/src/domain/entities/organization.dart';
+import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/voo_organization_switcher.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/voo_search_bar.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_default_header.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_navigation_items.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
@@ -122,44 +126,147 @@ class _VooAdaptiveNavigationDrawerState
   Widget _buildHeader(BuildContext context) {
     final customHeader = widget.config.drawerHeader;
     final trailing = widget.config.drawerHeaderTrailing;
+    final orgSwitcher = widget.config.organizationSwitcher;
+    final showOrgSwitcherInHeader = orgSwitcher != null &&
+        widget.config.organizationSwitcherPosition == VooOrganizationSwitcherPosition.header;
+
+    // Build organization switcher if configured for header
+    Widget? orgSwitcherWidget;
+    if (showOrgSwitcherInHeader) {
+      orgSwitcherWidget = Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: VooOrganizationSwitcher(
+          organizations: orgSwitcher.organizations,
+          selectedOrganization: orgSwitcher.selectedOrganization,
+          onOrganizationChanged: orgSwitcher.onOrganizationChanged,
+          onCreateOrganization: orgSwitcher.onCreateOrganization,
+          showSearch: orgSwitcher.showSearch,
+          showCreateButton: orgSwitcher.showCreateButton,
+          createButtonLabel: orgSwitcher.createButtonLabel,
+          searchHint: orgSwitcher.searchHint,
+          style: orgSwitcher.style,
+          compact: orgSwitcher.compact,
+          tooltip: orgSwitcher.tooltip,
+        ),
+      );
+    }
 
     // If using custom header, place toggle at top-right aligned with title
     if (customHeader != null) {
-      if (trailing == null) {
-        return customHeader;
+      Widget header = customHeader;
+
+      if (trailing != null) {
+        // Wrap custom header with trailing toggle at top-right
+        // Use Stack so toggle aligns with first row (title) of custom header
+        header = Stack(
+          children: [
+            customHeader,
+            Positioned(
+              top: 24, // Vertically center with logo (logo center at 38px, toggle 28px)
+              right: 12,
+              child: trailing,
+            ),
+          ],
+        );
       }
 
-      // Wrap custom header with trailing toggle at top-right
-      // Use Stack so toggle aligns with first row (title) of custom header
-      return Stack(
-        children: [
-          customHeader,
-          Positioned(
-            top: 24, // Vertically center with logo (logo center at 38px, toggle 28px)
-            right: 12,
-            child: trailing,
-          ),
-        ],
-      );
+      // Add org switcher below custom header if in header position
+      if (orgSwitcherWidget != null) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            header,
+            orgSwitcherWidget,
+          ],
+        );
+      }
+
+      return header;
     }
 
     // Default header handling
     final headerContent = const VooDrawerDefaultHeader();
 
+    Widget result;
     if (trailing == null) {
-      return headerContent;
+      result = headerContent;
+    } else {
+      // Wrap default header with trailing widget
+      result = Padding(
+        padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(child: headerContent),
+            const SizedBox(width: 4),
+            trailing,
+          ],
+        ),
+      );
     }
 
-    // Wrap default header with trailing widget
-    return Padding(
-      padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    // Add org switcher below header if in header position
+    if (orgSwitcherWidget != null) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Expanded(child: headerContent),
-          const SizedBox(width: 4),
-          trailing,
+          result,
+          orgSwitcherWidget,
         ],
+      );
+    }
+
+    return result;
+  }
+
+  Widget? _buildSearchBar(BuildContext context, VooSearchBarPosition position) {
+    final searchConfig = widget.config.searchBar;
+    if (searchConfig == null || widget.config.searchBarPosition != position) {
+      return null;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: VooSearchBar(
+        navigationItems: searchConfig.navigationItems ?? widget.config.items,
+        onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
+        onSearch: searchConfig.onSearch,
+        onSearchSubmit: searchConfig.onSearchSubmit,
+        searchActions: searchConfig.searchActions,
+        hintText: searchConfig.hintText ?? 'Search...',
+        showFilteredResults: searchConfig.showFilteredResults,
+        enableKeyboardShortcut: searchConfig.enableKeyboardShortcut,
+        keyboardShortcutHint: searchConfig.keyboardShortcutHint,
+        style: searchConfig.style,
+        expanded: true,
+        onNavigationItemSelected: searchConfig.onNavigationItemSelected,
+        onSearchActionSelected: searchConfig.onSearchActionSelected,
+      ),
+    );
+  }
+
+  Widget? _buildOrganizationSwitcherForPosition(VooOrganizationSwitcherPosition position) {
+    final orgSwitcher = widget.config.organizationSwitcher;
+    if (orgSwitcher == null || widget.config.organizationSwitcherPosition != position) {
+      return null;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: VooOrganizationSwitcher(
+        organizations: orgSwitcher.organizations,
+        selectedOrganization: orgSwitcher.selectedOrganization,
+        onOrganizationChanged: orgSwitcher.onOrganizationChanged,
+        onCreateOrganization: orgSwitcher.onCreateOrganization,
+        showSearch: orgSwitcher.showSearch,
+        showCreateButton: orgSwitcher.showCreateButton,
+        createButtonLabel: orgSwitcher.createButtonLabel,
+        searchHint: orgSwitcher.searchHint,
+        style: orgSwitcher.style,
+        compact: orgSwitcher.compact,
+        tooltip: orgSwitcher.tooltip,
       ),
     );
   }
@@ -196,6 +303,14 @@ class _VooAdaptiveNavigationDrawerState
           )
         : BorderRadius.circular(navTheme.containerBorderRadius);
 
+    // Build optional components based on position
+    final searchBarInHeader = _buildSearchBar(context, VooSearchBarPosition.header);
+    final searchBarBeforeItems = _buildSearchBar(context, VooSearchBarPosition.beforeItems);
+    final orgSwitcherBeforeItems = _buildOrganizationSwitcherForPosition(
+        VooOrganizationSwitcherPosition.beforeItems);
+    final orgSwitcherInFooter = _buildOrganizationSwitcherForPosition(
+        VooOrganizationSwitcherPosition.footer);
+
     Widget content = Material(
       color: Colors.transparent,
       child: Column(
@@ -203,6 +318,15 @@ class _VooAdaptiveNavigationDrawerState
         children: [
           // Custom header or default modern header with optional trailing widget
           _buildHeader(context),
+
+          // Search bar in header position
+          if (searchBarInHeader != null) searchBarInHeader,
+
+          // Organization switcher before items
+          if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
+
+          // Search bar before items
+          if (searchBarBeforeItems != null) searchBarBeforeItems,
 
           // Navigation items
           Expanded(
@@ -239,6 +363,9 @@ class _VooAdaptiveNavigationDrawerState
                 setState(() => _hoveredItems[itemId] = isHovered);
               },
             ),
+
+          // Organization switcher in footer position
+          if (orgSwitcherInFooter != null) orgSwitcherInFooter,
 
           // User profile footer when enabled
           if (widget.config.showUserProfile)
