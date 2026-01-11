@@ -1,3 +1,28 @@
+## 0.1.1
+
+### Added
+- **VooCollapseState**: InheritedWidget for propagating collapse state to descendants
+  - Enables auto-detection of compact mode for child widgets
+  - `VooCollapseState.isCollapsedOf(context)` to read collapse state
+  - `VooCollapseState.toggleCallbackOf(context)` to get toggle callback
+- **VooUserProfileConfig**: Data-only config class for user profile
+  - Simpler API for configuring user profile in navigation
+  - Auto-handles compact mode based on VooCollapseState
+
+### Changed
+- **Default Behavior**: Made collapsible navigation and user profile the default
+  - `enableCollapsibleRail` now defaults to `true`
+  - `showUserProfile` now defaults to `true`
+- **VooUserProfileFooter**: `compact` parameter now nullable (`bool?`)
+  - When null, auto-detects from VooCollapseState in widget tree
+- **VooOrganizationSwitcher**: `compact` parameter now nullable (`bool?`)
+  - When null, auto-detects from VooCollapseState in widget tree
+- **Unified Theme**: Default theme changed to clean flat design
+  - Default theme is now `minimalModern` with `containerBorderRadius: 0`
+  - `navigationRailMargin` defaults to `0` (flush to edge)
+
+---
+
 ## 0.1.0
 
 ### Added

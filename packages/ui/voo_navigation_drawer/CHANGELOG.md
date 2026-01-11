@@ -1,3 +1,26 @@
+## 0.1.1
+
+### Added
+- **VooCollapseState Integration**: Drawer now wraps content with VooCollapseState
+  - Enables child widgets to auto-detect collapse state
+  - `onToggleCollapse` callback parameter for external collapse control
+- **User Profile Auto-Handling**: Uses `userProfileConfig` when available
+  - Automatically creates VooUserProfileFooter with correct compact state
+
+### Changed
+- **Unified Theme**: Removed legacy themed container variants
+  - Removed glassmorphism, liquidGlass, blurry, neomorphism, material3Enhanced containers
+  - Single clean flat container design for consistent appearance
+  - Simpler codebase with ~500 lines removed
+
+### Fixed
+- **Vertical Line Alignment**: Fixed expandable section indicator lines
+  - Lines now horizontally align with parent section icon center (17px from left)
+  - Added connector line that extends from section icon down to children
+  - Uses `clipBehavior: Clip.none` to allow line to extend into header area
+
+---
+
 ## 0.1.0
 
 ### Added

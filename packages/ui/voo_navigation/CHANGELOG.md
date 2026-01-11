@@ -1,3 +1,25 @@
+## 1.2.1
+
+### Changed
+- **Default Behavior**: Made collapsible navigation and user profile the default
+  - `enableCollapsibleRail` now defaults to `true`
+  - `showUserProfile` now defaults to `true`
+- **Unified Theme**: Default theme changed to clean flat design
+  - Default theme is now `minimalModern` with `containerBorderRadius: 0`
+  - `navigationRailMargin` defaults to `0` (flush to edge)
+- **Content Area Styling**: Updated default margins for content area
+  - Default margin: 8dp on top/bottom/right
+  - Default border radius: 12dp
+
+### Added
+- **VooCollapseState**: InheritedWidget for auto-detecting collapse state
+- **VooUserProfileConfig**: Data-only config for simpler user profile setup
+
+### Fixed
+- **Vertical Line Alignment**: Expandable section indicator lines now align with parent section icon center
+
+---
+
 ## 1.2.0
 
 ### Changed
