@@ -57,10 +57,11 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Thin vertical line indicator - highlights when selected
+              // Positioned to align with section icon center (8px padding + 9px = 17px from left)
               if (showVerticalLine)
                 Container(
                   width: 2,
-                  margin: const EdgeInsets.only(left: 2, right: 8, top: 0, bottom: 0),
+                  margin: const EdgeInsets.only(left: 9, right: 8, top: 0, bottom: 0),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? selectedColor
