@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/voo_profile_menu_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/voo_user_status.dart';
+import 'package:voo_navigation_core/src/presentation/utils/voo_collapse_state.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Modern user profile footer for navigation drawer/rail
@@ -22,7 +23,10 @@ class VooUserProfileFooter extends StatefulWidget {
   final String? initials;
 
   /// Whether the profile is in compact mode (rail collapsed)
-  final bool compact;
+  ///
+  /// When null, auto-detects from [VooCollapseState] in widget tree.
+  /// Set explicitly to override auto-detection.
+  final bool? compact;
 
   /// Callback when profile is tapped
   final VoidCallback? onTap;
@@ -49,7 +53,7 @@ class VooUserProfileFooter extends StatefulWidget {
     this.avatarUrl,
     this.avatarWidget,
     this.initials,
-    this.compact = false,
+    this.compact,
     this.onTap,
     this.onSettingsTap,
     this.onLogout,
@@ -65,7 +69,10 @@ class VooUserProfileFooter extends StatefulWidget {
 class _VooUserProfileFooterState extends State<VooUserProfileFooter> {
   @override
   Widget build(BuildContext context) {
-    if (widget.compact) {
+    // Auto-detect compact mode from VooCollapseState if not explicitly set
+    final effectiveCompact = widget.compact ?? VooCollapseState.isCollapsedOf(context);
+
+    if (effectiveCompact) {
       return _CompactProfile(
         userName: widget.userName,
         avatarWidget: widget.avatarWidget,

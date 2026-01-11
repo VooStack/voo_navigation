@@ -9,6 +9,7 @@ import 'package:voo_navigation_core/src/domain/entities/notification_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
+import 'package:voo_navigation_core/src/domain/entities/user_profile_config.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Configuration for the adaptive navigation system
@@ -234,8 +235,20 @@ class VooNavigationConfig {
   /// Whether to show user profile in drawer/rail footer
   final bool showUserProfile;
 
-  /// User profile widget for drawer/rail footer
+  /// User profile widget for drawer/rail footer (legacy - must handle compact manually)
+  ///
+  /// Consider using [userProfileConfig] instead, which automatically handles
+  /// compact mode based on collapse state.
   final Widget? userProfileWidget;
+
+  /// Configuration for user profile in drawer/rail footer (preferred)
+  ///
+  /// When provided, the drawer/rail will automatically create a [VooUserProfileFooter]
+  /// with the correct compact mode based on collapse state.
+  ///
+  /// This is preferred over [userProfileWidget] because it handles
+  /// compact mode automatically.
+  final VooUserProfileConfig? userProfileConfig;
 
   /// Whether the rail/drawer supports collapsing
   final bool enableCollapsibleRail;
@@ -253,9 +266,11 @@ class VooNavigationConfig {
   /// - [VooNavigationConfig.minimalModern]
   final VooNavigationTheme? navigationTheme;
 
-  /// Gets the effective theme, defaulting to Material 3 Enhanced
+  /// Gets the effective theme, defaulting to Minimal Modern (clean flat design)
   VooNavigationTheme get effectiveTheme =>
-      navigationTheme ?? VooNavigationTheme.material3Enhanced();
+      navigationTheme ?? VooNavigationTheme.minimalModern().copyWith(
+        containerBorderRadius: 0, // Flush to edge, no rounding
+      );
 
   // ============================================================================
   // COMMON NAVIGATION COMPONENTS
@@ -364,9 +379,10 @@ class VooNavigationConfig {
     this.floatingBottomNav = true,
     this.floatingBottomNavMargin,
     this.floatingBottomNavBottomMargin,
-    this.showUserProfile = false,
+    this.showUserProfile = true,
     this.userProfileWidget,
-    this.enableCollapsibleRail = false,
+    this.userProfileConfig,
+    this.enableCollapsibleRail = true,
     this.collapseToggleBuilder,
     this.navigationTheme,
     double? navigationRailMargin,
@@ -389,7 +405,7 @@ class VooNavigationConfig {
        animationCurve = animationCurve ?? _animationTokens.curveEaseInOut,
        badgeAnimationDuration =
            badgeAnimationDuration ?? _animationTokens.durationFast,
-       navigationRailMargin = navigationRailMargin ?? _spacingTokens.sm;
+       navigationRailMargin = navigationRailMargin ?? 0; // Flush to edge by default
 
   /// Creates a copy of this configuration with the given fields replaced
   VooNavigationConfig copyWith({
@@ -457,6 +473,7 @@ class VooNavigationConfig {
     double? floatingBottomNavBottomMargin,
     bool? showUserProfile,
     Widget? userProfileWidget,
+    VooUserProfileConfig? userProfileConfig,
     bool? enableCollapsibleRail,
     Widget Function(bool isExpanded, VoidCallback onToggle)?
         collapseToggleBuilder,
@@ -553,6 +570,7 @@ class VooNavigationConfig {
         floatingBottomNavBottomMargin ?? this.floatingBottomNavBottomMargin,
     showUserProfile: showUserProfile ?? this.showUserProfile,
     userProfileWidget: userProfileWidget ?? this.userProfileWidget,
+    userProfileConfig: userProfileConfig ?? this.userProfileConfig,
     enableCollapsibleRail: enableCollapsibleRail ?? this.enableCollapsibleRail,
     collapseToggleBuilder: collapseToggleBuilder ?? this.collapseToggleBuilder,
     navigationTheme: navigationTheme ?? this.navigationTheme,
@@ -713,9 +731,10 @@ class VooNavigationConfig {
     bool floatingBottomNav = true,
     double? floatingBottomNavMargin,
     double? floatingBottomNavBottomMargin,
-    bool showUserProfile = false,
+    bool showUserProfile = true,
     Widget? userProfileWidget,
-    bool enableCollapsibleRail = false,
+    VooUserProfileConfig? userProfileConfig,
+    bool enableCollapsibleRail = true,
     double? navigationRailMargin,
     // Glassmorphism-specific options
     double surfaceOpacity = 0.75,
@@ -766,6 +785,7 @@ class VooNavigationConfig {
           floatingBottomNavBottomMargin ?? _spacingTokens.lg,
       showUserProfile: showUserProfile,
       userProfileWidget: userProfileWidget,
+      userProfileConfig: userProfileConfig,
       enableCollapsibleRail: enableCollapsibleRail,
       navigationRailMargin: navigationRailMargin,
       navigationTheme: VooNavigationTheme.glassmorphism(
@@ -826,9 +846,10 @@ class VooNavigationConfig {
     bool floatingBottomNav = false,
     double? floatingBottomNavMargin,
     double? floatingBottomNavBottomMargin,
-    bool showUserProfile = false,
+    bool showUserProfile = true,
     Widget? userProfileWidget,
-    bool enableCollapsibleRail = false,
+    VooUserProfileConfig? userProfileConfig,
+    bool enableCollapsibleRail = true,
     double? navigationRailMargin,
     // Neomorphism-specific options
     double shadowBlur = 12,
@@ -880,6 +901,7 @@ class VooNavigationConfig {
       floatingBottomNavBottomMargin: floatingBottomNavBottomMargin,
       showUserProfile: showUserProfile,
       userProfileWidget: userProfileWidget,
+      userProfileConfig: userProfileConfig,
       enableCollapsibleRail: enableCollapsibleRail,
       navigationRailMargin: navigationRailMargin ?? _spacingTokens.lg,
       navigationTheme: VooNavigationTheme.neomorphism(
@@ -941,9 +963,10 @@ class VooNavigationConfig {
     bool floatingBottomNav = false,
     double? floatingBottomNavMargin,
     double? floatingBottomNavBottomMargin,
-    bool showUserProfile = false,
+    bool showUserProfile = true,
     Widget? userProfileWidget,
-    bool enableCollapsibleRail = false,
+    VooUserProfileConfig? userProfileConfig,
+    bool enableCollapsibleRail = true,
     double? navigationRailMargin,
     EdgeInsets? drawerMargin,
     EdgeInsets? contentAreaMargin,
@@ -995,6 +1018,7 @@ class VooNavigationConfig {
       floatingBottomNavBottomMargin: floatingBottomNavBottomMargin,
       showUserProfile: showUserProfile,
       userProfileWidget: userProfileWidget,
+      userProfileConfig: userProfileConfig,
       enableCollapsibleRail: enableCollapsibleRail,
       navigationRailMargin: navigationRailMargin,
       drawerMargin: drawerMargin,
@@ -1057,9 +1081,10 @@ class VooNavigationConfig {
     bool floatingBottomNav = false,
     double? floatingBottomNavMargin,
     double? floatingBottomNavBottomMargin,
-    bool showUserProfile = false,
+    bool showUserProfile = true,
     Widget? userProfileWidget,
-    bool enableCollapsibleRail = false,
+    VooUserProfileConfig? userProfileConfig,
+    bool enableCollapsibleRail = true,
     double? navigationRailMargin,
     // Minimal-specific options
     double borderWidth = 1,
@@ -1108,6 +1133,7 @@ class VooNavigationConfig {
       floatingBottomNavBottomMargin: floatingBottomNavBottomMargin,
       showUserProfile: showUserProfile,
       userProfileWidget: userProfileWidget,
+      userProfileConfig: userProfileConfig,
       enableCollapsibleRail: enableCollapsibleRail,
       navigationRailMargin: navigationRailMargin ?? _spacingTokens.xl,
       navigationTheme: VooNavigationTheme.minimalModern(
@@ -1152,7 +1178,10 @@ class VooOrganizationSwitcherConfig {
   final VooOrganizationSwitcherStyle? style;
 
   /// Whether to show in compact mode (avatar only)
-  final bool compact;
+  ///
+  /// When null, auto-detects from [VooCollapseState] in widget tree.
+  /// Set explicitly to override auto-detection.
+  final bool? compact;
 
   /// Tooltip text
   final String? tooltip;
@@ -1167,7 +1196,7 @@ class VooOrganizationSwitcherConfig {
     this.createButtonLabel,
     this.searchHint,
     this.style,
-    this.compact = false,
+    this.compact,
     this.tooltip,
   });
 

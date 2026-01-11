@@ -18,6 +18,7 @@ export 'src/domain/entities/organization.dart';
 export 'src/domain/entities/page_config.dart';
 export 'src/domain/entities/quick_action.dart';
 export 'src/domain/entities/search_action.dart';
+export 'src/domain/entities/user_profile_config.dart';
 export 'src/domain/entities/voo_profile_menu_item.dart';
 export 'src/domain/entities/voo_user_status.dart';
 
@@ -78,6 +79,7 @@ export 'src/presentation/molecules/voo_themed_rail_item.dart';
 export 'src/presentation/molecules/voo_user_profile_footer.dart';
 
 // Presentation - Utils
+export 'src/presentation/utils/voo_collapse_state.dart';
 export 'src/presentation/utils/voo_navigation_animations.dart';
 export 'src/presentation/utils/voo_navigation_helper.dart';
 export 'src/presentation/utils/voo_navigation_inherited.dart';

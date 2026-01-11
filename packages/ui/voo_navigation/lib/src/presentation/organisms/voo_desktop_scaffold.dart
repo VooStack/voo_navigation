@@ -138,13 +138,13 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     if (_isCollapsed) {
       return VooAdaptiveNavigationRail(
         config: widget.config.copyWith(
-          showUserProfile: false,
           // Collapse toggle in header for rail too
           drawerHeaderTrailing: collapseToggle,
         ),
         selectedId: widget.selectedId,
         onNavigationItemSelected: widget.onNavigationItemSelected,
         extended: false,
+        onToggleCollapse: _toggleCollapse,
       );
     }
 
@@ -155,6 +155,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       ),
       selectedId: widget.selectedId,
       onNavigationItemSelected: widget.onNavigationItemSelected,
+      onToggleCollapse: _toggleCollapse,
     );
   }
 
@@ -197,17 +198,18 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
 
     final navTheme = widget.config.effectiveTheme;
 
-    // Calculate content area margin - use contentAreaMargin if set, otherwise default to navigationRailMargin
+    // Calculate content area margin - small margin for visual separation
+    // Default to 8dp on top/bottom/right for clean inset look
     final effectiveContentMargin = widget.config.contentAreaMargin ??
-        EdgeInsets.only(
-          top: widget.config.navigationRailMargin,
-          bottom: widget.config.navigationRailMargin,
-          right: widget.config.navigationRailMargin,
+        const EdgeInsets.only(
+          top: 8,
+          bottom: 8,
+          right: 8,
         );
 
-    // Calculate content area border radius
+    // Calculate content area border radius - subtle rounding for content area
     final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ??
-        BorderRadius.circular(navTheme.containerBorderRadius);
+        BorderRadius.circular(12);
 
     // When app bar is alongside drawer/rail, wrap the content area with its own scaffold
     if (widget.config.appBarAlongsideRail) {

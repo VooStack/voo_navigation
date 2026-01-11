@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_rail/voo_navigation_rail.dart';
 import 'package:voo_tokens/voo_tokens.dart';
@@ -28,6 +26,9 @@ class VooAdaptiveNavigationRail extends StatefulWidget {
   /// Custom elevation
   final double? elevation;
 
+  /// Callback when collapse is toggled (provided by VooDesktopScaffold)
+  final VoidCallback? onToggleCollapse;
+
   const VooAdaptiveNavigationRail({
     super.key,
     required this.config,
@@ -37,6 +38,7 @@ class VooAdaptiveNavigationRail extends StatefulWidget {
     this.width,
     this.backgroundColor,
     this.elevation,
+    this.onToggleCollapse,
   });
 
   @override
@@ -119,6 +121,7 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
         selectedId: widget.selectedId,
         onNavigationItemSelected: widget.onNavigationItemSelected,
         itemAnimationControllers: _itemAnimationControllers,
+        onToggleCollapse: widget.onToggleCollapse,
       ),
     );
   }
@@ -132,6 +135,7 @@ class _ThemedRailContainer extends StatelessWidget {
   final String selectedId;
   final void Function(String itemId) onNavigationItemSelected;
   final Map<String, AnimationController> itemAnimationControllers;
+  final VoidCallback? onToggleCollapse;
 
   const _ThemedRailContainer({
     required this.config,
@@ -141,6 +145,7 @@ class _ThemedRailContainer extends StatelessWidget {
     required this.selectedId,
     required this.onNavigationItemSelected,
     required this.itemAnimationControllers,
+    this.onToggleCollapse,
   });
 
   Widget? _buildSearchBar(BuildContext context, VooSearchBarPosition position) {
@@ -240,8 +245,8 @@ class _ThemedRailContainer extends StatelessWidget {
       return null;
     }
 
-    // In compact mode, use compact version of switcher
-    final isCompact = !extended || orgSwitcher.compact;
+    // If compact is explicitly set in config, use it; otherwise let auto-detect handle it
+    final isCompact = !extended;
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -258,10 +263,40 @@ class _ThemedRailContainer extends StatelessWidget {
         createButtonLabel: orgSwitcher.createButtonLabel,
         searchHint: orgSwitcher.searchHint,
         style: orgSwitcher.style,
-        compact: isCompact,
+        compact: orgSwitcher.compact, // Pass through config compact (nullable - allows auto-detect)
         tooltip: orgSwitcher.tooltip,
       ),
     );
+  }
+
+  /// Builds the user profile widget, preferring userProfileConfig if available
+  Widget _buildUserProfile() {
+    // If userProfileWidget is explicitly provided, use it (legacy API)
+    if (config.userProfileWidget != null) {
+      return config.userProfileWidget!;
+    }
+
+    // If userProfileConfig is provided, create the widget with auto-compact
+    final profileConfig = config.userProfileConfig;
+    if (profileConfig != null) {
+      return VooUserProfileFooter(
+        userName: profileConfig.userName,
+        userEmail: profileConfig.userEmail,
+        avatarUrl: profileConfig.avatarUrl,
+        avatarWidget: profileConfig.avatarWidget,
+        initials: profileConfig.initials,
+        status: profileConfig.status,
+        onTap: profileConfig.onTap,
+        onSettingsTap: profileConfig.onSettingsTap,
+        onLogout: profileConfig.onLogout,
+        menuItems: profileConfig.menuItems,
+        showDropdownIndicator: profileConfig.showDropdownIndicator,
+        // compact is intentionally not set - will auto-detect from VooCollapseState
+      );
+    }
+
+    // Default fallback (will auto-detect compact from VooCollapseState)
+    return const VooUserProfileFooter();
   }
 
   @override
@@ -282,469 +317,115 @@ class _ThemedRailContainer extends StatelessWidget {
     final orgSwitcherInFooter = _buildOrganizationSwitcherForPosition(
         context, VooOrganizationSwitcherPosition.footer);
 
-    Widget content = Material(
-      color: Colors.transparent,
-      child: Column(
-        children: [
-          // Header - full when extended, compact with branding when collapsed
-          if (extended)
-            config.drawerHeader ??
-                const VooRailDefaultHeader(showTitle: true)
-          else
-            _CompactRailHeader(
-              trailing: config.drawerHeaderTrailing,
-            ),
-
-          // Organization switcher in header position
-          if (orgSwitcherInHeader != null) orgSwitcherInHeader,
-
-          // Search bar in header position
-          if (searchBarInHeader != null) searchBarInHeader,
-
-          // Organization switcher before items
-          if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
-
-          // Search bar before items
-          if (searchBarBeforeItems != null) searchBarBeforeItems,
-
-          // Navigation items
-          Expanded(
-            child: ListView(
-              controller: config.drawerScrollController,
-              padding: EdgeInsets.symmetric(
-                vertical: context.vooSpacing.sm,
-                horizontal: context.vooSpacing.xs,
+    // Wrap content with VooCollapseState so children can auto-detect collapse mode
+    // Rail is collapsed when not extended
+    Widget content = VooCollapseState(
+      isCollapsed: !extended,
+      onToggleCollapse: onToggleCollapse,
+      child: Material(
+        color: Colors.transparent,
+        child: Column(
+          children: [
+            // Header - full when extended, compact with branding when collapsed
+            if (extended)
+              config.drawerHeader ??
+                  const VooRailDefaultHeader(showTitle: true)
+            else
+              _CompactRailHeader(
+                trailing: config.drawerHeaderTrailing,
               ),
-              physics: const ClampingScrollPhysics(),
-              children: [
-                VooRailNavigationItems(
-                  config: config,
-                  selectedId: selectedId,
-                  extended: extended,
-                  onItemSelected: onNavigationItemSelected,
-                  itemAnimationControllers: itemAnimationControllers,
+
+            // Organization switcher in header position
+            if (orgSwitcherInHeader != null) orgSwitcherInHeader,
+
+            // Search bar in header position
+            if (searchBarInHeader != null) searchBarInHeader,
+
+            // Organization switcher before items
+            if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
+
+            // Search bar before items
+            if (searchBarBeforeItems != null) searchBarBeforeItems,
+
+            // Navigation items
+            Expanded(
+              child: ListView(
+                controller: config.drawerScrollController,
+                padding: EdgeInsets.symmetric(
+                  vertical: context.vooSpacing.sm,
+                  horizontal: context.vooSpacing.xs,
                 ),
-              ],
-            ),
-          ),
-
-          // Leading widget for FAB or other actions
-          if (config.floatingActionButton != null &&
-              config.showFloatingActionButton)
-            Padding(
-              padding: EdgeInsets.all(context.vooSpacing.md),
-              child: config.floatingActionButton,
-            ),
-
-          // Footer items (Settings, Integrations, Help, etc.)
-          if (config.visibleFooterItems.isNotEmpty)
-            _FooterItems(
-              config: config,
-              selectedId: selectedId,
-              extended: extended,
-              onItemSelected: onNavigationItemSelected,
-              itemAnimationControllers: itemAnimationControllers,
+                physics: const ClampingScrollPhysics(),
+                children: [
+                  VooRailNavigationItems(
+                    config: config,
+                    selectedId: selectedId,
+                    extended: extended,
+                    onItemSelected: onNavigationItemSelected,
+                    itemAnimationControllers: itemAnimationControllers,
+                  ),
+                ],
+              ),
             ),
 
-          // Organization switcher in footer position
-          if (orgSwitcherInFooter != null) orgSwitcherInFooter,
+            // Leading widget for FAB or other actions
+            if (config.floatingActionButton != null &&
+                config.showFloatingActionButton)
+              Padding(
+                padding: EdgeInsets.all(context.vooSpacing.md),
+                child: config.floatingActionButton,
+              ),
 
-          // User profile footer when enabled
-          if (config.showUserProfile)
-            config.userProfileWidget ??
-                VooUserProfileFooter(compact: !extended),
+            // Footer items (Settings, Integrations, Help, etc.)
+            if (config.visibleFooterItems.isNotEmpty)
+              _FooterItems(
+                config: config,
+                selectedId: selectedId,
+                extended: extended,
+                onItemSelected: onNavigationItemSelected,
+                itemAnimationControllers: itemAnimationControllers,
+              ),
 
-          // Custom footer if provided
-          if (config.drawerFooter != null) config.drawerFooter!,
-        ],
+            // Organization switcher in footer position
+            if (orgSwitcherInFooter != null) orgSwitcherInFooter,
+
+            // User profile footer when enabled
+            if (config.showUserProfile)
+              _buildUserProfile(),
+
+            // Custom footer if provided
+            if (config.drawerFooter != null) config.drawerFooter!,
+          ],
+        ),
       ),
     );
 
-    // Apply theme-specific styling based on preset
-    switch (navTheme.preset) {
-      case VooNavigationPreset.glassmorphism:
-        // Enhanced Glassmorphism: premium frosted glass effect
-        final primaryColor = theme.colorScheme.primary;
-        // Use provided backgroundColor or fall back to theme surface
-        final surfaceColor = backgroundColor.withValues(alpha: 1.0);
-
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            boxShadow: [
-              // Outer glow with primary color
-              BoxShadow(
-                color: primaryColor.withValues(alpha: isDark ? 0.25 : 0.15),
-                blurRadius: 32,
-                spreadRadius: 0,
-              ),
-              // Soft ambient shadow
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
-                blurRadius: 24,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: navTheme.blurSigma,
-                sigmaY: navTheme.blurSigma,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius,
-                  // Multi-stop gradient for depth
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: const [0.0, 0.3, 1.0],
-                    colors: isDark
-                        ? [
-                            surfaceColor.withValues(alpha: 0.85),
-                            surfaceColor.withValues(alpha: 0.75),
-                            surfaceColor.withValues(alpha: 0.65),
-                          ]
-                        : [
-                            surfaceColor.withValues(alpha: 0.9),
-                            surfaceColor.withValues(alpha: 0.8),
-                            surfaceColor.withValues(alpha: 0.7),
-                          ],
-                  ),
-                  // Gradient border effect
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: 0.12)
-                        : Colors.white.withValues(alpha: 0.6),
-                    width: 1.5,
-                  ),
-                ),
-                child: Stack(
-                  children: [
-                    // Top highlight shine
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      height: 60,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(navTheme.containerBorderRadius),
-                            topRight: Radius.circular(navTheme.containerBorderRadius),
-                          ),
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.white.withValues(alpha: isDark ? 0.08 : 0.3),
-                              Colors.white.withValues(alpha: 0.0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Content
-                    content,
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-
-      case VooNavigationPreset.liquidGlass:
-        // Liquid Glass: deep blur with layered effects and refraction
-        final primaryColor = theme.colorScheme.primary;
-        // Use provided backgroundColor or fall back to theme surface
-        final surfaceColor = backgroundColor.withValues(alpha: 1.0);
-
-        // Apply tint if specified
-        final tintedSurface = navTheme.tintIntensity > 0
-            ? Color.lerp(surfaceColor, primaryColor, navTheme.tintIntensity * 0.3)!
-            : surfaceColor;
-
-        return Container(
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            boxShadow: [
-              // Primary ambient glow
-              BoxShadow(
-                color: primaryColor.withValues(alpha: isDark ? 0.2 : 0.12),
-                blurRadius: 40,
-                spreadRadius: 0,
-              ),
-              // Deep shadow for depth
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.18),
-                blurRadius: 32,
-                offset: const Offset(4, 8),
-              ),
-              // Soft close shadow
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: Stack(
-              children: [
-                // Layer 1: Primary deep blur
-                Positioned.fill(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: navTheme.blurSigma,
-                      sigmaY: navTheme.blurSigma,
-                    ),
-                    child: const SizedBox.expand(),
-                  ),
-                ),
-
-                // Layer 2: Secondary blur for extra depth
-                if (navTheme.secondaryBlurSigma > 0)
-                  Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(
-                        sigmaX: navTheme.secondaryBlurSigma,
-                        sigmaY: navTheme.secondaryBlurSigma,
-                      ),
-                      child: const SizedBox.expand(),
-                    ),
-                  ),
-
-                // Layer 3: Glass surface with gradient
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: borderRadius,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        stops: const [0.0, 0.25, 0.75, 1.0],
-                        colors: isDark
-                            ? [
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.1),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.05),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.1),
-                              ]
-                            : [
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.18),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.05),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.02),
-                                tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.12),
-                              ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Layer 4: Inner glow effect
-                if (navTheme.innerGlowIntensity > 0)
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: borderRadius,
-                        gradient: RadialGradient(
-                          center: const Alignment(0, -0.5),
-                          radius: 1.8,
-                          colors: [
-                            primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.08),
-                            primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.02),
-                            Colors.transparent,
-                          ],
-                          stops: const [0.0, 0.35, 1.0],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                // Layer 5: Top edge highlight (refraction)
-                if (navTheme.edgeHighlightIntensity > 0)
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    height: 80,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(navTheme.containerBorderRadius),
-                          topRight: Radius.circular(navTheme.containerBorderRadius),
-                        ),
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withValues(
-                              alpha: isDark
-                                  ? navTheme.edgeHighlightIntensity * 0.12
-                                  : navTheme.edgeHighlightIntensity * 0.35,
-                            ),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                // Layer 6: Left edge highlight
-                if (navTheme.edgeHighlightIntensity > 0)
-                  Positioned(
-                    top: 16,
-                    left: 0,
-                    bottom: 16,
-                    width: 1.5,
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: [
-                            Colors.white.withValues(alpha: 0.0),
-                            Colors.white.withValues(
-                              alpha: isDark
-                                  ? navTheme.edgeHighlightIntensity * 0.15
-                                  : navTheme.edgeHighlightIntensity * 0.4,
-                            ),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-
-                // Layer 7: Border
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: borderRadius,
-                      border: Border.all(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: navTheme.borderOpacity)
-                            : Colors.white.withValues(alpha: navTheme.borderOpacity * 2.2),
-                        width: navTheme.borderWidth,
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Layer 8: Content
-                content,
-              ],
-            ),
-          ),
-        );
-
-      case VooNavigationPreset.blurry:
-        // Blurry: clean frosted blur with minimal styling
-        // Use provided backgroundColor or fall back to theme surface
-        final surfaceColor = backgroundColor.withValues(alpha: 1.0);
-
-        return ClipRRect(
-          borderRadius: borderRadius,
-          child: BackdropFilter(
-            filter: ImageFilter.blur(
-              sigmaX: navTheme.blurSigma,
-              sigmaY: navTheme.blurSigma,
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: borderRadius,
-                color: surfaceColor.withValues(alpha: navTheme.surfaceOpacity),
-                border: Border.all(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: navTheme.borderOpacity)
-                      : Colors.black.withValues(alpha: navTheme.borderOpacity * 0.5),
-                  width: navTheme.borderWidth,
-                ),
-              ),
-              child: content,
-            ),
-          ),
-        );
-
-      case VooNavigationPreset.neomorphism:
-        // Neomorphism: embossed with pronounced dual shadows
-        // Use provided backgroundColor
-        return Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: borderRadius,
-            boxShadow: [
-              // Light shadow (top-left) - more pronounced
-              BoxShadow(
-                color: (isDark ? Colors.white : Colors.white)
-                    .withValues(alpha: isDark ? 0.05 : 0.8),
-                blurRadius: navTheme.shadowBlur * 1.5,
-                offset: navTheme.shadowLightOffset * 1.2,
-                spreadRadius: isDark ? 0 : 2,
-              ),
-              // Dark shadow (bottom-right) - more pronounced
-              BoxShadow(
-                color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.2),
-                blurRadius: navTheme.shadowBlur * 1.5,
-                offset: navTheme.shadowDarkOffset * 1.2,
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: content,
-          ),
-        );
-
-      case VooNavigationPreset.material3Enhanced:
-        // Material 3: polished with elevation and subtle surface tint
-        return Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: borderRadius,
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withValues(alpha: isDark ? 0.4 : 0.15),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-                spreadRadius: 1,
-              ),
-              BoxShadow(
-                color: theme.shadowColor.withValues(alpha: isDark ? 0.2 : 0.08),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: content,
-          ),
-        );
-
-      case VooNavigationPreset.minimalModern:
-        // Minimal: completely flat with thin visible border
-        // Use provided backgroundColor
-        return Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.circular(navTheme.containerBorderRadius * 0.5),
-            border: Border.all(
-              color: theme.colorScheme.outlineVariant,
-              width: 1,
-            ),
-          ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(navTheme.containerBorderRadius * 0.5),
-            child: content,
-          ),
-        );
-    }
+    // Use unified clean container - simple flat design
+    return Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: borderRadius,
+        // Subtle border for visual separation
+        border: navTheme.borderWidth > 0
+            ? Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : Colors.black.withValues(alpha: 0.06),
+                width: navTheme.borderWidth,
+              )
+            : null,
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: content,
+      ),
+    );
   }
 }
+
+// NOTE: Legacy themed container code (glassmorphism, liquidGlass, neomorphism,
+// material3Enhanced, minimalModern variants) has been removed in favor of
+// unified clean design. All navigation now uses a simple flat container.
 
 /// Footer items widget for static routes like Settings, Integrations, Help
 class _FooterItems extends StatelessWidget {

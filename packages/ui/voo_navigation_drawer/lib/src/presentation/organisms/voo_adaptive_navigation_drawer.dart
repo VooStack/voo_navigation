@@ -1,14 +1,12 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_organization_switcher.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_search_bar.dart';
+import 'package:voo_navigation_core/src/presentation/utils/voo_collapse_state.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_default_header.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_navigation_items.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
@@ -31,6 +29,9 @@ class VooAdaptiveNavigationDrawer extends StatefulWidget {
   /// Custom background color
   final Color? backgroundColor;
 
+  /// Callback when collapse is toggled (provided by VooDesktopScaffold)
+  final VoidCallback? onToggleCollapse;
+
   /// Custom elevation
   final double? elevation;
 
@@ -44,6 +45,7 @@ class VooAdaptiveNavigationDrawer extends StatefulWidget {
     required this.onNavigationItemSelected,
     this.width,
     this.backgroundColor,
+    this.onToggleCollapse,
     this.elevation,
     this.permanent = true,
   });
@@ -271,6 +273,36 @@ class _VooAdaptiveNavigationDrawerState
     );
   }
 
+  /// Builds the user profile widget, preferring userProfileConfig if available
+  Widget _buildUserProfile() {
+    // If userProfileWidget is explicitly provided, use it (legacy API)
+    if (widget.config.userProfileWidget != null) {
+      return widget.config.userProfileWidget!;
+    }
+
+    // If userProfileConfig is provided, create the widget with auto-compact
+    final profileConfig = widget.config.userProfileConfig;
+    if (profileConfig != null) {
+      return VooUserProfileFooter(
+        userName: profileConfig.userName,
+        userEmail: profileConfig.userEmail,
+        avatarUrl: profileConfig.avatarUrl,
+        avatarWidget: profileConfig.avatarWidget,
+        initials: profileConfig.initials,
+        status: profileConfig.status,
+        onTap: profileConfig.onTap,
+        onSettingsTap: profileConfig.onSettingsTap,
+        onLogout: profileConfig.onLogout,
+        menuItems: profileConfig.menuItems,
+        showDropdownIndicator: profileConfig.showDropdownIndicator,
+        // compact is intentionally not set - will auto-detect from VooCollapseState
+      );
+    }
+
+    // Default fallback
+    return const VooUserProfileFooter();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -311,11 +343,16 @@ class _VooAdaptiveNavigationDrawerState
     final orgSwitcherInFooter = _buildOrganizationSwitcherForPosition(
         VooOrganizationSwitcherPosition.footer);
 
-    Widget content = Material(
-      color: Colors.transparent,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+    // Wrap content with VooCollapseState so children can auto-detect collapse mode
+    // Drawer is always expanded (not collapsed)
+    Widget content = VooCollapseState(
+      isCollapsed: false,
+      onToggleCollapse: widget.onToggleCollapse,
+      child: Material(
+        color: Colors.transparent,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
           // Custom header or default modern header with optional trailing widget
           _buildHeader(context),
 
@@ -369,7 +406,7 @@ class _VooAdaptiveNavigationDrawerState
 
           // User profile footer when enabled
           if (widget.config.showUserProfile)
-            widget.config.userProfileWidget ?? const VooUserProfileFooter(),
+            _buildUserProfile(),
 
           // Custom footer
           if (widget.config.drawerFooter != null)
@@ -380,54 +417,32 @@ class _VooAdaptiveNavigationDrawerState
               child: widget.config.drawerFooter!,
             ),
         ],
+        ),
       ),
     );
 
-    // Apply theme-specific styling based on preset
-    final themedContainer = switch (navTheme.preset) {
-      VooNavigationPreset.glassmorphism => _GlassmorphismDrawerContainer(
-          navTheme: navTheme,
-          isDark: isDark,
-          backgroundColor: effectiveBackgroundColor,
-          borderRadius: borderRadius,
-          child: content,
-        ),
-      VooNavigationPreset.liquidGlass => _LiquidGlassDrawerContainer(
-          navTheme: navTheme,
-          isDark: isDark,
-          backgroundColor: effectiveBackgroundColor,
-          borderRadius: borderRadius,
-          child: content,
-        ),
-      VooNavigationPreset.blurry => _BlurryDrawerContainer(
-          navTheme: navTheme,
-          isDark: isDark,
-          backgroundColor: effectiveBackgroundColor,
-          borderRadius: borderRadius,
-          child: content,
-        ),
-      VooNavigationPreset.neomorphism => _NeomorphismDrawerContainer(
-          navTheme: navTheme,
-          isDark: isDark,
-          backgroundColor: effectiveBackgroundColor,
-          borderRadius: borderRadius,
-          child: content,
-        ),
-      VooNavigationPreset.material3Enhanced => _Material3DrawerContainer(
-          isDark: isDark,
-          backgroundColor: effectiveBackgroundColor,
-          borderRadius: borderRadius,
-          child: content,
-        ),
-      VooNavigationPreset.minimalModern => _MinimalDrawerContainer(
-          navTheme: navTheme,
-          backgroundColor: effectiveBackgroundColor,
-          borderRadius: borderRadius,
-          child: content,
-        ),
-    };
+    // Use unified clean container - simple flat design
+    final themedContainer = Container(
+      decoration: BoxDecoration(
+        color: effectiveBackgroundColor,
+        borderRadius: borderRadius,
+        // Subtle border for visual separation
+        border: navTheme.borderWidth > 0
+            ? Border.all(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : Colors.black.withValues(alpha: 0.06),
+                width: navTheme.borderWidth,
+              )
+            : null,
+      ),
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: content,
+      ),
+    );
 
-    // Build the container based on theme preset
+    // Build the container
     return AnimatedContainer(
       duration: navTheme.animationDuration,
       curve: navTheme.animationCurve,
@@ -438,483 +453,9 @@ class _VooAdaptiveNavigationDrawerState
   }
 }
 
-class _GlassmorphismDrawerContainer extends StatelessWidget {
-  final VooNavigationTheme navTheme;
-  final bool isDark;
-  final Color backgroundColor;
-  final BorderRadius borderRadius;
-  final Widget child;
-
-  const _GlassmorphismDrawerContainer({
-    required this.navTheme,
-    required this.isDark,
-    required this.backgroundColor,
-    required this.borderRadius,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final primaryColor = theme.colorScheme.primary;
-    final surfaceColor = backgroundColor.withValues(alpha: 1.0);
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        boxShadow: [
-          BoxShadow(
-            color: primaryColor.withValues(alpha: isDark ? 0.25 : 0.15),
-            blurRadius: 32,
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.4 : 0.1),
-            blurRadius: 24,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: navTheme.blurSigma,
-            sigmaY: navTheme.blurSigma,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                stops: const [0.0, 0.3, 1.0],
-                colors: isDark
-                    ? [
-                        surfaceColor.withValues(alpha: 0.85),
-                        surfaceColor.withValues(alpha: 0.75),
-                        surfaceColor.withValues(alpha: 0.65),
-                      ]
-                    : [
-                        surfaceColor.withValues(alpha: 0.9),
-                        surfaceColor.withValues(alpha: 0.8),
-                        surfaceColor.withValues(alpha: 0.7),
-                      ],
-              ),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.12)
-                    : Colors.white.withValues(alpha: 0.6),
-                width: 1.5,
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: 80,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(navTheme.containerBorderRadius),
-                        topRight: Radius.circular(navTheme.containerBorderRadius),
-                      ),
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.white.withValues(alpha: isDark ? 0.08 : 0.3),
-                          Colors.white.withValues(alpha: 0.0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 20,
-                  left: 0,
-                  bottom: 20,
-                  width: 1,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.0),
-                          Colors.white.withValues(alpha: isDark ? 0.1 : 0.4),
-                          Colors.white.withValues(alpha: 0.0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                child,
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _LiquidGlassDrawerContainer extends StatelessWidget {
-  final VooNavigationTheme navTheme;
-  final bool isDark;
-  final Color backgroundColor;
-  final BorderRadius borderRadius;
-  final Widget child;
-
-  const _LiquidGlassDrawerContainer({
-    required this.navTheme,
-    required this.isDark,
-    required this.backgroundColor,
-    required this.borderRadius,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final primaryColor = theme.colorScheme.primary;
-    final surfaceColor = backgroundColor.withValues(alpha: 1.0);
-    final tintedSurface = navTheme.tintIntensity > 0
-        ? Color.lerp(surfaceColor, primaryColor, navTheme.tintIntensity * 0.3)!
-        : surfaceColor;
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        boxShadow: [
-          BoxShadow(
-            color: primaryColor.withValues(alpha: isDark ? 0.2 : 0.12),
-            blurRadius: 44,
-            spreadRadius: 0,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.18),
-            blurRadius: 36,
-            offset: const Offset(6, 10),
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.08),
-            blurRadius: 12,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(
-                  sigmaX: navTheme.blurSigma,
-                  sigmaY: navTheme.blurSigma,
-                ),
-                child: const SizedBox.expand(),
-              ),
-            ),
-            if (navTheme.secondaryBlurSigma > 0)
-              Positioned.fill(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: navTheme.secondaryBlurSigma,
-                    sigmaY: navTheme.secondaryBlurSigma,
-                  ),
-                  child: const SizedBox.expand(),
-                ),
-              ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius,
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: const [0.0, 0.25, 0.75, 1.0],
-                    colors: isDark
-                        ? [
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.1),
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity),
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.05),
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.1),
-                          ]
-                        : [
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.2),
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity + 0.08),
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity),
-                            tintedSurface.withValues(alpha: navTheme.surfaceOpacity - 0.12),
-                          ],
-                  ),
-                ),
-              ),
-            ),
-            if (navTheme.innerGlowIntensity > 0)
-              Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: borderRadius,
-                    gradient: RadialGradient(
-                      center: const Alignment(-0.3, -0.6),
-                      radius: 2.0,
-                      colors: [
-                        primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.08),
-                        primaryColor.withValues(alpha: navTheme.innerGlowIntensity * 0.02),
-                        Colors.transparent,
-                      ],
-                      stops: const [0.0, 0.3, 1.0],
-                    ),
-                  ),
-                ),
-              ),
-            if (navTheme.edgeHighlightIntensity > 0)
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                height: 100,
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(navTheme.containerBorderRadius),
-                      topRight: Radius.circular(navTheme.containerBorderRadius),
-                    ),
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withValues(
-                          alpha: isDark
-                              ? navTheme.edgeHighlightIntensity * 0.1
-                              : navTheme.edgeHighlightIntensity * 0.35,
-                        ),
-                        Colors.white.withValues(alpha: 0.0),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            if (navTheme.edgeHighlightIntensity > 0)
-              Positioned(
-                top: 20,
-                left: 0,
-                bottom: 20,
-                width: 1.5,
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.0),
-                        Colors.white.withValues(
-                          alpha: isDark
-                              ? navTheme.edgeHighlightIntensity * 0.15
-                              : navTheme.edgeHighlightIntensity * 0.45,
-                        ),
-                        Colors.white.withValues(alpha: 0.0),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: borderRadius,
-                  border: Border.all(
-                    color: isDark
-                        ? Colors.white.withValues(alpha: navTheme.borderOpacity)
-                        : Colors.white.withValues(alpha: navTheme.borderOpacity * 2.2),
-                    width: navTheme.borderWidth,
-                  ),
-                ),
-              ),
-            ),
-            child,
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _BlurryDrawerContainer extends StatelessWidget {
-  final VooNavigationTheme navTheme;
-  final bool isDark;
-  final Color backgroundColor;
-  final BorderRadius borderRadius;
-  final Widget child;
-
-  const _BlurryDrawerContainer({
-    required this.navTheme,
-    required this.isDark,
-    required this.backgroundColor,
-    required this.borderRadius,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final surfaceColor = backgroundColor.withValues(alpha: 1.0);
-
-    return ClipRRect(
-      borderRadius: borderRadius,
-      child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: navTheme.blurSigma,
-          sigmaY: navTheme.blurSigma,
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: borderRadius,
-            color: surfaceColor.withValues(alpha: navTheme.surfaceOpacity),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: navTheme.borderOpacity)
-                  : Colors.black.withValues(alpha: navTheme.borderOpacity * 0.5),
-              width: navTheme.borderWidth,
-            ),
-          ),
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
-class _NeomorphismDrawerContainer extends StatelessWidget {
-  final VooNavigationTheme navTheme;
-  final bool isDark;
-  final Color backgroundColor;
-  final BorderRadius borderRadius;
-  final Widget child;
-
-  const _NeomorphismDrawerContainer({
-    required this.navTheme,
-    required this.isDark,
-    required this.backgroundColor,
-    required this.borderRadius,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: borderRadius,
-        boxShadow: [
-          BoxShadow(
-            color: (isDark ? Colors.white : Colors.white)
-                .withValues(alpha: isDark ? 0.05 : 0.8),
-            blurRadius: navTheme.shadowBlur * 1.5,
-            offset: navTheme.shadowLightOffset * 1.2,
-            spreadRadius: isDark ? 0 : 2,
-          ),
-          BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.5 : 0.2),
-            blurRadius: navTheme.shadowBlur * 1.5,
-            offset: navTheme.shadowDarkOffset * 1.2,
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: child,
-      ),
-    );
-  }
-}
-
-class _Material3DrawerContainer extends StatelessWidget {
-  final bool isDark;
-  final Color backgroundColor;
-  final BorderRadius borderRadius;
-  final Widget child;
-
-  const _Material3DrawerContainer({
-    required this.isDark,
-    required this.backgroundColor,
-    required this.borderRadius,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: borderRadius,
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withValues(alpha: isDark ? 0.4 : 0.15),
-            blurRadius: 16,
-            offset: const Offset(0, 4),
-            spreadRadius: 1,
-          ),
-          BoxShadow(
-            color: theme.shadowColor.withValues(alpha: isDark ? 0.2 : 0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: child,
-      ),
-    );
-  }
-}
-
-class _MinimalDrawerContainer extends StatelessWidget {
-  final VooNavigationTheme navTheme;
-  final Color backgroundColor;
-  final BorderRadius borderRadius;
-  final Widget child;
-
-  const _MinimalDrawerContainer({
-    required this.navTheme,
-    required this.backgroundColor,
-    required this.borderRadius,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final borderColor = theme.colorScheme.outlineVariant.withValues(alpha: 0.3);
-
-    // Check if this is full-height mode (no left rounding = flush to edge)
-    final isFullHeight = borderRadius.topLeft == Radius.zero &&
-        borderRadius.bottomLeft == Radius.zero;
-
-    // Use right-only border for full-height mode (HRISELINK style)
-    final border = isFullHeight
-        ? Border(right: BorderSide(color: borderColor, width: 1))
-        : Border.all(color: borderColor, width: 1);
-
-    return Container(
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: borderRadius,
-        border: border,
-      ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: child,
-      ),
-    );
-  }
-}
+// NOTE: Legacy themed container code (glassmorphism, liquidGlass, blurry,
+// neomorphism, material3Enhanced, minimalModern) has been removed in favor
+// of unified clean design. All navigation now uses a simple flat container.
 
 /// Footer items widget for static routes like Settings, Integrations, Help
 class _DrawerFooterItems extends StatelessWidget {

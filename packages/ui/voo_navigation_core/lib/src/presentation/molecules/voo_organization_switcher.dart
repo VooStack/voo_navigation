@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_avatar.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_search_field.dart';
+import 'package:voo_navigation_core/src/presentation/utils/voo_collapse_state.dart';
 
 /// A dropdown switcher for selecting between organizations
 class VooOrganizationSwitcher extends StatefulWidget {
@@ -37,7 +38,10 @@ class VooOrganizationSwitcher extends StatefulWidget {
   final VooOrganizationSwitcherStyle? style;
 
   /// Whether to show in compact mode (avatar only)
-  final bool compact;
+  ///
+  /// When null, auto-detects from [VooCollapseState] in widget tree.
+  /// Set explicitly to override auto-detection.
+  final bool? compact;
 
   /// Custom builder for organization tiles in dropdown
   final Widget Function(VooOrganization, bool isSelected)? organizationTileBuilder;
@@ -60,7 +64,7 @@ class VooOrganizationSwitcher extends StatefulWidget {
     this.createButtonLabel,
     this.searchHint,
     this.style,
-    this.compact = false,
+    this.compact,
     this.organizationTileBuilder,
     this.selectedOrganizationBuilder,
     this.tooltip,
@@ -318,9 +322,12 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
     final style = widget.style ?? const VooOrganizationSwitcherStyle();
     final selected = widget.selectedOrganization;
 
+    // Auto-detect compact mode from VooCollapseState if not explicitly set
+    final effectiveCompact = widget.compact ?? VooCollapseState.isCollapsedOf(context);
+
     Widget trigger;
 
-    if (widget.compact) {
+    if (effectiveCompact) {
       // Compact mode - just avatar
       trigger = Tooltip(
         message: selected?.name ?? widget.tooltip ?? 'Select organization',

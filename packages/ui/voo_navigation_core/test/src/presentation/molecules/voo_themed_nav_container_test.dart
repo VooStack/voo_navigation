@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation/voo_navigation.dart'; // For VooAdaptiveScaffold
 
 import '../../../helpers/test_helpers.dart';

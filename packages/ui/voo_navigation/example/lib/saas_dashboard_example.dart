@@ -59,7 +59,10 @@ class SaasDashboard extends StatefulWidget {
 class _SaasDashboardState extends State<SaasDashboard> {
   String _selectedId = 'overview';
   final int _notificationCount = 3;
-  bool _isRailExpanded = true;
+  // Note: _isRailExpanded state is no longer needed!
+  // VooDesktopScaffold now manages collapse state internally and passes it
+  // to children via VooCollapseState, so user profile and org switcher
+  // automatically adapt to collapsed mode.
 
   final List<VooNavigationItem> _navigationItems = [
     const VooNavigationItem(
@@ -195,19 +198,18 @@ class _SaasDashboardState extends State<SaasDashboard> {
       floatingBottomNavBottomMargin: 24,
       bottomNavigationType: VooNavigationBarType.custom,
 
-      // Collapsible rail
-      enableCollapsibleRail: true,
-      useExtendedRail: _isRailExpanded,
+      // Collapsible rail is now enabled by default
+      // enableCollapsibleRail: true, // This is now the default!
       navigationRailWidth: 72,
       extendedNavigationRailWidth: 280,
 
-      // User profile
-      showUserProfile: true,
-      userProfileWidget: VooUserProfileFooter(
+      // User profile - using config-based API (auto-handles compact mode)
+      // showUserProfile: true, // This is now the default!
+      userProfileConfig: VooUserProfileConfig(
         userName: 'Sarah Chen',
         userEmail: 'sarah@acme.com',
         status: VooUserStatus.online,
-        compact: !_isRailExpanded,
+        // No need to pass compact! It auto-detects from VooCollapseState
         onTap: () => _showUserMenu(context),
         onSettingsTap: () => setState(() => _selectedId = 'general'),
         onLogout: () => _showLogoutDialog(context),
@@ -287,6 +289,13 @@ class _SaasDashboardState extends State<SaasDashboard> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    // Auto-detect collapse state from VooCollapseState
+    final isCollapsed = VooCollapseState.isCollapsedOf(context);
+    final isExpanded = !isCollapsed;
+
+    // Get the toggle callback from VooCollapseState
+    final onToggle = VooCollapseState.toggleCallbackOf(context);
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 32, 20, 16),
       child: Column(
@@ -323,7 +332,7 @@ class _SaasDashboardState extends State<SaasDashboard> {
                 ),
               ),
               const SizedBox(width: 12),
-              if (_isRailExpanded)
+              if (isExpanded)
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,14 +352,19 @@ class _SaasDashboardState extends State<SaasDashboard> {
                     ],
                   ),
                 ),
+              // Collapse toggle on the right side of the header row
+              if (onToggle != null)
+                VooCollapseToggle(
+                  isExpanded: isExpanded,
+                  onToggle: onToggle,
+                ),
             ],
           ),
 
-          // Collapse toggle
-          if (_isRailExpanded) ...[
+          // Search bar (only when expanded)
+          if (isExpanded) ...[
             const SizedBox(height: 20),
 
-            // Search bar
             Container(
               height: 40,
               decoration: BoxDecoration(
@@ -397,13 +411,6 @@ class _SaasDashboardState extends State<SaasDashboard> {
               ),
             ),
           ],
-
-          // Collapse button
-          const SizedBox(height: 12),
-          VooCollapseToggle(
-            isExpanded: _isRailExpanded,
-            onToggle: () => setState(() => _isRailExpanded = !_isRailExpanded),
-          ),
         ],
       ),
     );
