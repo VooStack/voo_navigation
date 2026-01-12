@@ -1,3 +1,8 @@
+## 1.2.2
+
+### Fixed
+- Updated `voo_navigation_bar` dependency to ^0.1.1 for compatibility with `voo_navigation_core` 0.1.1 simplified theme API
+
 ## 1.2.1
 
 ### Changed
