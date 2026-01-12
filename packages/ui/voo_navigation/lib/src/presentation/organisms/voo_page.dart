@@ -85,35 +85,19 @@ class VooPage extends StatefulWidget {
   final Widget child;
 
   /// Creates a page with custom scaffold configuration.
-  const VooPage({
-    super.key,
-    required this.config,
-    required this.child,
-  });
+  const VooPage({super.key, required this.config, required this.child});
 
   /// Creates a page with a custom floating action button.
-  factory VooPage.withFab({
-    Key? key,
-    required Widget fab,
-    FloatingActionButtonLocation? fabLocation,
-    required Widget child,
-  }) {
+  factory VooPage.withFab({Key? key, required Widget fab, FloatingActionButtonLocation? fabLocation, required Widget child}) {
     return VooPage(
       key: key,
-      config: VooPageConfig(
-        floatingActionButton: fab,
-        floatingActionButtonLocation: fabLocation,
-      ),
+      config: VooPageConfig(floatingActionButton: fab, floatingActionButtonLocation: fabLocation),
       child: child,
     );
   }
 
   /// Creates a page with a custom app bar.
-  factory VooPage.withAppBar({
-    Key? key,
-    required PreferredSizeWidget appBar,
-    required Widget child,
-  }) {
+  factory VooPage.withAppBar({Key? key, required PreferredSizeWidget appBar, required Widget child}) {
     return VooPage(
       key: key,
       config: VooPageConfig(appBar: appBar),
@@ -122,27 +106,13 @@ class VooPage extends StatefulWidget {
   }
 
   /// Creates a full-screen page without app bar.
-  factory VooPage.fullscreen({
-    Key? key,
-    required Widget child,
-  }) {
-    return VooPage(
-      key: key,
-      config: const VooPageConfig.fullscreen(),
-      child: child,
-    );
+  factory VooPage.fullscreen({Key? key, required Widget child}) {
+    return VooPage(key: key, config: const VooPageConfig.fullscreen(), child: child);
   }
 
   /// Creates a clean page without any scaffold elements.
-  factory VooPage.clean({
-    Key? key,
-    required Widget child,
-  }) {
-    return VooPage(
-      key: key,
-      config: const VooPageConfig.clean(),
-      child: child,
-    );
+  factory VooPage.clean({Key? key, required Widget child}) {
+    return VooPage(key: key, config: const VooPageConfig.clean(), child: child);
   }
 
   @override
