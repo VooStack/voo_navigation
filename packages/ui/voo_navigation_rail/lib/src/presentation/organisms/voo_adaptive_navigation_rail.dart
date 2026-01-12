@@ -245,7 +245,7 @@ class _ThemedRailContainer extends StatelessWidget {
       return null;
     }
 
-    // If compact is explicitly set in config, use it; otherwise let auto-detect handle it
+    // Rail must always use compact mode when collapsed to prevent overflow
     final isCompact = !extended;
 
     return Padding(
@@ -253,18 +253,21 @@ class _ThemedRailContainer extends StatelessWidget {
         horizontal: isCompact ? 8 : 12,
         vertical: 8,
       ),
-      child: VooOrganizationSwitcher(
-        organizations: orgSwitcher.organizations,
-        selectedOrganization: orgSwitcher.selectedOrganization,
-        onOrganizationChanged: orgSwitcher.onOrganizationChanged,
-        onCreateOrganization: orgSwitcher.onCreateOrganization,
-        showSearch: orgSwitcher.showSearch,
-        showCreateButton: orgSwitcher.showCreateButton,
-        createButtonLabel: orgSwitcher.createButtonLabel,
-        searchHint: orgSwitcher.searchHint,
-        style: orgSwitcher.style,
-        compact: orgSwitcher.compact, // Pass through config compact (nullable - allows auto-detect)
-        tooltip: orgSwitcher.tooltip,
+      child: Center(
+        child: VooOrganizationSwitcher(
+          organizations: orgSwitcher.organizations,
+          selectedOrganization: orgSwitcher.selectedOrganization,
+          onOrganizationChanged: orgSwitcher.onOrganizationChanged,
+          onCreateOrganization: orgSwitcher.onCreateOrganization,
+          showSearch: orgSwitcher.showSearch,
+          showCreateButton: orgSwitcher.showCreateButton,
+          createButtonLabel: orgSwitcher.createButtonLabel,
+          searchHint: orgSwitcher.searchHint,
+          style: orgSwitcher.style,
+          // Force compact mode when rail is collapsed to prevent overflow
+          compact: isCompact ? true : orgSwitcher.compact,
+          tooltip: orgSwitcher.tooltip,
+        ),
       ),
     );
   }
