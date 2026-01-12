@@ -42,8 +42,27 @@ class VooNavigationConfig {
   /// Whether to use extended navigation rail when possible
   final bool useExtendedRail;
 
-  /// Custom header widget for navigation drawer
+  /// Custom header widget for navigation drawer (full override)
+  ///
+  /// When provided, completely replaces the default header.
+  /// For simpler customization, use [headerConfig] instead.
   final Widget? drawerHeader;
+
+  /// Simplified header configuration
+  ///
+  /// Provides easy customization of title, logo, and other header options.
+  /// Ignored if [drawerHeader] is provided.
+  ///
+  /// Example:
+  /// ```dart
+  /// VooNavigationConfig(
+  ///   headerConfig: VooHeaderConfig(
+  ///     title: 'My App',
+  ///     logoIcon: Icons.dashboard,
+  ///   ),
+  /// )
+  /// ```
+  final VooHeaderConfig? headerConfig;
 
   /// Trailing widget for drawer header (e.g., collapse toggle)
   /// Positioned to the right of the header content
@@ -327,6 +346,7 @@ class VooNavigationConfig {
     this.railLabelType = NavigationRailLabelType.selected,
     this.useExtendedRail = true,
     this.drawerHeader,
+    this.headerConfig,
     this.drawerHeaderTrailing,
     this.drawerFooter,
     this.appBarLeadingBuilder,
@@ -418,6 +438,7 @@ class VooNavigationConfig {
     NavigationRailLabelType? railLabelType,
     bool? useExtendedRail,
     Widget? drawerHeader,
+    VooHeaderConfig? headerConfig,
     Widget? drawerHeaderTrailing,
     Widget? drawerFooter,
     Widget? Function(String? selectedId)? appBarLeadingBuilder,
@@ -503,6 +524,7 @@ class VooNavigationConfig {
     railLabelType: railLabelType ?? this.railLabelType,
     useExtendedRail: useExtendedRail ?? this.useExtendedRail,
     drawerHeader: drawerHeader ?? this.drawerHeader,
+    headerConfig: headerConfig ?? this.headerConfig,
     drawerHeaderTrailing: drawerHeaderTrailing ?? this.drawerHeaderTrailing,
     drawerFooter: drawerFooter ?? this.drawerFooter,
     appBarLeadingBuilder: appBarLeadingBuilder ?? this.appBarLeadingBuilder,
@@ -607,6 +629,7 @@ class VooNavigationConfig {
 
   /// Gets mobile priority navigation items (max 5 items for bottom navigation)
   /// Includes both direct items and children of sections marked with mobilePriority
+  /// Falls back to first 5 visible non-section items if no items have mobilePriority
   List<VooNavigationItem> get mobilePriorityItems {
     final priorityItems = <VooNavigationItem>[];
 
@@ -624,6 +647,19 @@ class VooNavigationConfig {
           }
         }
       }
+    }
+
+    // If no items have mobilePriority, fall back to first 5 visible non-section items
+    if (priorityItems.isEmpty) {
+      final fallbackItems = <VooNavigationItem>[];
+      for (final item in items) {
+        // Skip sections (items with children) - only show leaf items in bottom nav
+        if (item.isVisible && !item.hasChildren) {
+          fallbackItems.add(item);
+        }
+      }
+      fallbackItems.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
+      return fallbackItems.take(5).toList();
     }
 
     // Sort by sortOrder and take first 5 (Material 3 supports 3-5 destinations)
@@ -1492,6 +1528,70 @@ class VooQuickActionsConfig {
     onActionSelected: onActionSelected ?? this.onActionSelected,
     useGridLayout: useGridLayout ?? this.useGridLayout,
     gridColumns: gridColumns ?? this.gridColumns,
+  );
+}
+
+/// Configuration for the navigation header
+///
+/// Provides a simplified API for configuring the navigation header
+/// with title, logo, and other common options.
+///
+/// For full customization, use [VooNavigationConfig.drawerHeader] instead.
+class VooHeaderConfig {
+  /// Title text displayed in the header
+  final String? title;
+
+  /// Logo widget to display (takes precedence over logoIcon)
+  final Widget? logo;
+
+  /// Icon to use for the logo when no logo widget is provided
+  final IconData? logoIcon;
+
+  /// Background color for the logo container
+  final Color? logoBackgroundColor;
+
+  /// Whether to show the title (hidden in compact/collapsed mode)
+  final bool showTitle;
+
+  /// Text style for the title
+  final TextStyle? titleStyle;
+
+  /// Padding around the header content
+  final EdgeInsets? padding;
+
+  /// Callback when the header is tapped
+  final VoidCallback? onTap;
+
+  const VooHeaderConfig({
+    this.title,
+    this.logo,
+    this.logoIcon,
+    this.logoBackgroundColor,
+    this.showTitle = true,
+    this.titleStyle,
+    this.padding,
+    this.onTap,
+  });
+
+  /// Creates a copy with the given fields replaced
+  VooHeaderConfig copyWith({
+    String? title,
+    Widget? logo,
+    IconData? logoIcon,
+    Color? logoBackgroundColor,
+    bool? showTitle,
+    TextStyle? titleStyle,
+    EdgeInsets? padding,
+    VoidCallback? onTap,
+  }) => VooHeaderConfig(
+    title: title ?? this.title,
+    logo: logo ?? this.logo,
+    logoIcon: logoIcon ?? this.logoIcon,
+    logoBackgroundColor: logoBackgroundColor ?? this.logoBackgroundColor,
+    showTitle: showTitle ?? this.showTitle,
+    titleStyle: titleStyle ?? this.titleStyle,
+    padding: padding ?? this.padding,
+    onTap: onTap ?? this.onTap,
   );
 }
 

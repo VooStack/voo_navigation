@@ -187,24 +187,33 @@ class _VooAdaptiveNavigationDrawerState
       return header;
     }
 
-    // Default header handling
-    final headerContent = const VooDrawerDefaultHeader();
+    // Default header handling - use headerConfig if provided
+    final headerConfig = widget.config.headerConfig;
+    final Widget headerContent;
+    if (headerConfig != null) {
+      headerContent = VooDrawerDefaultHeader(
+        title: headerConfig.title ?? 'Navigation',
+        icon: headerConfig.logoIcon ?? Icons.dashboard,
+      );
+    } else {
+      headerContent = const VooDrawerDefaultHeader();
+    }
 
     Widget result;
     if (trailing == null) {
       result = headerContent;
     } else {
-      // Wrap default header with trailing widget
-      result = Padding(
-        padding: const EdgeInsets.only(top: 8, left: 8, right: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: headerContent),
-            const SizedBox(width: 4),
-            trailing,
-          ],
-        ),
+      // Wrap default header with trailing widget - header handles its own padding
+      result = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(child: headerContent),
+          // Trailing widget with minimal right padding
+          Padding(
+            padding: const EdgeInsets.only(top: 16, right: 8),
+            child: trailing,
+          ),
+        ],
       );
     }
 
@@ -230,7 +239,7 @@ class _VooAdaptiveNavigationDrawerState
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.sm, vertical: 8),
       child: VooSearchBar(
         navigationItems: searchConfig.navigationItems ?? widget.config.items,
         onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,

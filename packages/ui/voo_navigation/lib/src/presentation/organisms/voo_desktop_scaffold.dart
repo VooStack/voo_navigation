@@ -64,6 +64,9 @@ class VooDesktopScaffold extends StatefulWidget {
   /// Page-level configuration overrides
   final VooPageConfig? pageConfig;
 
+  /// Navigation type - used to determine initial collapsed state
+  final VooNavigationType navigationType;
+
   const VooDesktopScaffold({
     super.key,
     required this.config,
@@ -85,6 +88,7 @@ class VooDesktopScaffold extends StatefulWidget {
     this.persistentFooterButtons,
     this.restorationId,
     this.pageConfig,
+    this.navigationType = VooNavigationType.navigationDrawer,
   });
 
   @override
@@ -92,7 +96,15 @@ class VooDesktopScaffold extends StatefulWidget {
 }
 
 class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
-  bool _isCollapsed = false;
+  late bool _isCollapsed;
+
+  @override
+  void initState() {
+    super.initState();
+    // Start collapsed (rail mode) for navigationRail type (medium screens)
+    // Start expanded (drawer mode) for other types
+    _isCollapsed = widget.navigationType == VooNavigationType.navigationRail;
+  }
 
   void _toggleCollapse() {
     if (widget.config.enableHapticFeedback) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_desktop_scaffold.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_mobile_scaffold.dart';
-import 'package:voo_navigation/src/presentation/organisms/voo_tablet_scaffold.dart';
 import 'package:voo_responsive/voo_responsive.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -166,6 +165,11 @@ class VooScaffoldBuilder extends StatelessWidget {
     // Build the scaffold based on navigation type with animation
     // Note: Keys are applied directly to scaffold widgets instead of using KeyedSubtree
     // to avoid confusing Flutter's diffing algorithm with AnimatedSwitcher
+    //
+    // SIMPLIFIED NAVIGATION:
+    // - Mobile (< 600px): Bottom navigation bar
+    // - Desktop (≥ 600px): Collapsible drawer (can collapse to compact rail)
+    // - No intermediate tablet-only rail mode
     Widget scaffold;
     switch (navigationType) {
       case VooNavigationType.bottomNavigation:
@@ -193,37 +197,11 @@ class VooScaffoldBuilder extends StatelessWidget {
         );
         break;
 
+      // All non-mobile widths use the desktop scaffold with collapsible drawer
+      // This provides a unified experience: expanded drawer that can collapse to rail
+      // Medium screens (navigationRail) start collapsed, others start expanded
       case VooNavigationType.navigationRail:
       case VooNavigationType.extendedNavigationRail:
-        // Only show extended rail if config allows it AND we're in the right width range
-        final shouldExtend =
-            config.useExtendedRail &&
-            navigationType == VooNavigationType.extendedNavigationRail;
-        scaffold = VooTabletScaffold(
-          key: ValueKey('tablet_scaffold_$navigationType'),
-          config: config,
-          body: processedBody,
-          backgroundColor: effectiveBackgroundColor,
-          extended: shouldExtend,
-          selectedId: selectedId,
-          onNavigationItemSelected: onNavigationItemSelected,
-          scaffoldKey: scaffoldKey,
-          appBar: appBar,
-          showAppBar: showAppBar,
-          endDrawer: endDrawer,
-          drawerEdgeDragWidth: drawerEdgeDragWidth,
-          drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
-          endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
-          resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-          extendBody: extendBody,
-          extendBodyBehindAppBar: extendBodyBehindAppBar,
-          bottomSheet: bottomSheet,
-          persistentFooterButtons: persistentFooterButtons,
-          restorationId: restorationId,
-          pageConfig: pageConfig,
-        );
-        break;
-
       case VooNavigationType.navigationDrawer:
         scaffold = VooDesktopScaffold(
           key: const ValueKey('desktop_scaffold'),
@@ -246,6 +224,7 @@ class VooScaffoldBuilder extends StatelessWidget {
           persistentFooterButtons: persistentFooterButtons,
           restorationId: restorationId,
           pageConfig: pageConfig,
+          navigationType: navigationType,
         );
         break;
     }

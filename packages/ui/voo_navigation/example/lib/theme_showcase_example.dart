@@ -24,41 +24,41 @@ class _ThemeShowcaseExampleState extends State<ThemeShowcaseExample> {
   NavStyleOption _navStyle = NavStyleOption.adaptive;
 
   List<VooNavigationItem> get _navigationItems => [
-    VooNavigationItem(
-      id: 'home',
-      label: 'Home',
-      mobilePriority: true,
-      icon: Icons.home_outlined,
-      selectedIcon: Icons.home,
-      onTap: () {},
-    ),
-    VooNavigationItem(
-      id: 'explore',
-      label: 'Explore',
-      mobilePriority: true,
-      icon: Icons.explore_outlined,
-      selectedIcon: Icons.explore,
-      badgeCount: 5,
-      onTap: () {},
-    ),
-    VooNavigationItem(
-      id: 'favorites',
-      label: 'Favorites',
-      mobilePriority: true,
-      icon: Icons.favorite_outline,
-      selectedIcon: Icons.favorite,
-      showDot: true,
-      onTap: () {},
-    ),
-    VooNavigationItem(
-      id: 'profile',
-      label: 'Profile',
-      mobilePriority: true,
-      icon: Icons.person_outline,
-      selectedIcon: Icons.person,
-      onTap: () {},
-    ),
-  ];
+        VooNavigationItem(
+          id: 'home',
+          label: 'Home',
+          mobilePriority: true,
+          icon: Icons.home_outlined,
+          selectedIcon: Icons.home,
+          onTap: () {},
+        ),
+        VooNavigationItem(
+          id: 'explore',
+          label: 'Explore',
+          mobilePriority: true,
+          icon: Icons.explore_outlined,
+          selectedIcon: Icons.explore,
+          badgeCount: 5,
+          onTap: () {},
+        ),
+        VooNavigationItem(
+          id: 'favorites',
+          label: 'Favorites',
+          mobilePriority: true,
+          icon: Icons.favorite_outline,
+          selectedIcon: Icons.favorite,
+          showDot: true,
+          onTap: () {},
+        ),
+        VooNavigationItem(
+          id: 'profile',
+          label: 'Profile',
+          mobilePriority: true,
+          icon: Icons.person_outline,
+          selectedIcon: Icons.person,
+          onTap: () {},
+        ),
+      ];
 
   VooNavigationTheme _getThemeForPreset() {
     switch (_currentPreset) {
@@ -159,17 +159,17 @@ class _ThemeShowcaseExampleState extends State<ThemeShowcaseExample> {
   }
 
   VooNavigationConfig get _config => VooNavigationConfig(
-    items: _navigationItems,
-    selectedId: _selectedId,
-    navigationTheme: _getThemeForPreset(),
-    isAdaptive: true,
-    enableAnimations: true,
-    enableHapticFeedback: true,
-    showNotificationBadges: true,
-    onNavigationItemSelected: (itemId) {
-      setState(() => _selectedId = itemId);
-    },
-  );
+        items: _navigationItems,
+        selectedId: _selectedId,
+        navigationTheme: _getThemeForPreset(),
+        isAdaptive: true,
+        enableAnimations: true,
+        enableHapticFeedback: true,
+        showNotificationBadges: true,
+        onNavigationItemSelected: (itemId) {
+          setState(() => _selectedId = itemId);
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -208,9 +208,7 @@ class _ThemeShowcaseExampleState extends State<ThemeShowcaseExample> {
             config: _config,
             selectedId: _selectedId,
             onNavigationItemSelected: (id) => setState(() => _selectedId = id),
-            horizontalMargin: 16,
             bottomMargin: 24,
-            borderRadius: 28,
           ),
         );
 
@@ -498,9 +496,7 @@ class _ThemeShowcaseExampleState extends State<ThemeShowcaseExample> {
                   avatar: Icon(
                     _getNavStyleIcon(style),
                     size: 18,
-                    color: isSelected
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurfaceVariant,
+                    color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
                   ),
                 );
               }).toList(),
@@ -542,9 +538,7 @@ class _ThemeShowcaseExampleState extends State<ThemeShowcaseExample> {
                   avatar: Icon(
                     _getPresetIconFor(preset),
                     size: 18,
-                    color: isSelected
-                        ? theme.colorScheme.onPrimary
-                        : theme.colorScheme.onSurfaceVariant,
+                    color: isSelected ? theme.colorScheme.onPrimary : theme.colorScheme.onSurfaceVariant,
                   ),
                 );
               }).toList(),
@@ -638,14 +632,10 @@ class _ThemeShowcaseExampleState extends State<ThemeShowcaseExample> {
             const SizedBox(height: 16),
             const Divider(),
             const SizedBox(height: 12),
-            _buildThemeProperty(theme, 'Surface Opacity',
-                '${(navTheme.surfaceOpacity * 100).toInt()}%'),
-            _buildThemeProperty(
-                theme, 'Blur Sigma', navTheme.blurSigma.toString()),
-            _buildThemeProperty(
-                theme, 'Indicator Style', navTheme.indicatorStyle.name),
-            _buildThemeProperty(theme, 'Animation',
-                '${navTheme.animationDuration.inMilliseconds}ms'),
+            _buildThemeProperty(theme, 'Surface Opacity', '${(navTheme.surfaceOpacity * 100).toInt()}%'),
+            _buildThemeProperty(theme, 'Blur Sigma', navTheme.blurSigma.toString()),
+            _buildThemeProperty(theme, 'Indicator Style', navTheme.indicatorStyle.name),
+            _buildThemeProperty(theme, 'Animation', '${navTheme.animationDuration.inMilliseconds}ms'),
           ],
         ),
       ),

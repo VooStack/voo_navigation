@@ -274,32 +274,43 @@ class _ThemedRailContainer extends StatelessWidget {
 
   /// Builds the user profile widget, preferring userProfileConfig if available
   Widget _buildUserProfile() {
+    // Rail must always use compact mode when collapsed to prevent overflow
+    final isCompact = !extended;
+
     // If userProfileWidget is explicitly provided, use it (legacy API)
+    // WARNING: Legacy widgets don't respect collapse state - wrap in Center for alignment
     if (config.userProfileWidget != null) {
-      return config.userProfileWidget!;
+      return Center(child: config.userProfileWidget!);
     }
 
-    // If userProfileConfig is provided, create the widget with auto-compact
+    // If userProfileConfig is provided, create the widget with forced compact when collapsed
     final profileConfig = config.userProfileConfig;
     if (profileConfig != null) {
-      return VooUserProfileFooter(
-        userName: profileConfig.userName,
-        userEmail: profileConfig.userEmail,
-        avatarUrl: profileConfig.avatarUrl,
-        avatarWidget: profileConfig.avatarWidget,
-        initials: profileConfig.initials,
-        status: profileConfig.status,
-        onTap: profileConfig.onTap,
-        onSettingsTap: profileConfig.onSettingsTap,
-        onLogout: profileConfig.onLogout,
-        menuItems: profileConfig.menuItems,
-        showDropdownIndicator: profileConfig.showDropdownIndicator,
-        // compact is intentionally not set - will auto-detect from VooCollapseState
+      return Center(
+        child: VooUserProfileFooter(
+          userName: profileConfig.userName,
+          userEmail: profileConfig.userEmail,
+          avatarUrl: profileConfig.avatarUrl,
+          avatarWidget: profileConfig.avatarWidget,
+          initials: profileConfig.initials,
+          status: profileConfig.status,
+          onTap: profileConfig.onTap,
+          onSettingsTap: profileConfig.onSettingsTap,
+          onLogout: profileConfig.onLogout,
+          menuItems: profileConfig.menuItems,
+          showDropdownIndicator: profileConfig.showDropdownIndicator,
+          // Force compact mode when rail is collapsed to prevent overflow
+          compact: isCompact ? true : null,
+        ),
       );
     }
 
-    // Default fallback (will auto-detect compact from VooCollapseState)
-    return const VooUserProfileFooter();
+    // Default fallback - force compact when rail is collapsed
+    return Center(
+      child: VooUserProfileFooter(
+        compact: isCompact ? true : null,
+      ),
+    );
   }
 
   @override
@@ -332,10 +343,16 @@ class _ThemedRailContainer extends StatelessWidget {
             // Header - full when extended, compact with branding when collapsed
             if (extended)
               config.drawerHeader ??
-                  const VooRailDefaultHeader(showTitle: true)
+                  (config.headerConfig != null
+                      ? VooRailDefaultHeader.fromConfig(
+                          config: config.headerConfig!,
+                          showTitle: true,
+                        )
+                      : const VooRailDefaultHeader(showTitle: true))
             else
               _CompactRailHeader(
                 trailing: config.drawerHeaderTrailing,
+                headerConfig: config.headerConfig,
               ),
 
             // Organization switcher in header position
@@ -350,7 +367,7 @@ class _ThemedRailContainer extends StatelessWidget {
             // Search bar before items
             if (searchBarBeforeItems != null) searchBarBeforeItems,
 
-            // Navigation items
+            // Main navigation items - only main items scroll
             Expanded(
               child: ListView(
                 controller: config.drawerScrollController,
@@ -379,7 +396,7 @@ class _ThemedRailContainer extends StatelessWidget {
                 child: config.floatingActionButton,
               ),
 
-            // Footer items (Settings, Integrations, Help, etc.)
+            // Footer items ALWAYS pinned at bottom (both collapsed and expanded)
             if (config.visibleFooterItems.isNotEmpty)
               _FooterItems(
                 config: config,
@@ -493,31 +510,61 @@ class _CompactRailHeader extends StatelessWidget {
   /// Trailing widget (expand toggle)
   final Widget? trailing;
 
+  /// Header configuration for customizing the logo
+  final VooHeaderConfig? headerConfig;
+
   const _CompactRailHeader({
     this.trailing,
+    this.headerConfig,
   });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final spacing = context.vooSpacing;
+    final radius = context.vooRadius;
+    final size = context.vooSize;
+
+    // Use headerConfig values if provided
+    final effectiveIcon = headerConfig?.logoIcon ?? Icons.dashboard;
+    final effectiveLogo = headerConfig?.logo;
+    final effectiveLogoBackground = headerConfig?.logoBackgroundColor ??
+        theme.colorScheme.onSurface.withValues(alpha: 0.12);
+
+    // Build the logo widget
+    Widget logoWidget;
+    if (effectiveLogo != null) {
+      logoWidget = SizedBox(
+        width: size.avatarMedium,
+        height: size.avatarMedium,
+        child: effectiveLogo,
+      );
+    } else {
+      logoWidget = Container(
+        width: size.avatarMedium,
+        height: size.avatarMedium,
+        decoration: BoxDecoration(
+          color: effectiveLogoBackground,
+          borderRadius: BorderRadius.circular(radius.md),
+        ),
+        child: Icon(
+          effectiveIcon,
+          color: theme.colorScheme.onSurface,
+          size: size.iconMedium,
+        ),
+      );
+    }
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+      padding: EdgeInsets.fromLTRB(0, spacing.xl, 0, spacing.sm),
       child: Column(
         children: [
-          // Compact branding - just the logo icon
-          Container(
-            width: 36,
-            height: 36,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1F2937),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: 20,
-            ),
+          // Compact branding - just the logo
+          GestureDetector(
+            onTap: headerConfig?.onTap,
+            child: logoWidget,
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: spacing.md),
           // Expand toggle
           if (trailing != null) trailing!,
         ],

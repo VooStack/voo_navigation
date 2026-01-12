@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Default header widget for navigation rail.
 ///
-/// Shows an icon with optional title. Use [VooNavigationConfig.railHeader]
-/// to provide a custom header widget instead.
+/// Shows an icon with optional title in a row layout.
+/// Use [VooNavigationConfig.drawerHeader] to provide a custom header widget,
+/// or [VooNavigationConfig.headerConfig] for simpler customization.
 class VooRailDefaultHeader extends StatelessWidget {
-  /// Title text displayed below the icon
+  /// Title text displayed next to the icon
   final String? title;
 
   /// Icon to display
@@ -15,12 +17,37 @@ class VooRailDefaultHeader extends StatelessWidget {
   /// Whether to show the title (false for compact mode)
   final bool showTitle;
 
+  /// Header configuration (takes precedence over individual properties)
+  final VooHeaderConfig? config;
+
+  /// Custom logo widget (takes precedence over icon)
+  final Widget? logo;
+
+  /// Background color for the logo container
+  final Color? logoBackgroundColor;
+
   const VooRailDefaultHeader({
     super.key,
     this.title = 'Navigation',
     this.icon = Icons.dashboard,
     this.showTitle = false,
+    this.config,
+    this.logo,
+    this.logoBackgroundColor,
   });
+
+  /// Creates a header from a VooHeaderConfig
+  factory VooRailDefaultHeader.fromConfig({
+    Key? key,
+    required VooHeaderConfig config,
+    bool showTitle = true,
+  }) {
+    return VooRailDefaultHeader(
+      key: key,
+      config: config,
+      showTitle: showTitle,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,36 +56,63 @@ class VooRailDefaultHeader extends StatelessWidget {
     final radius = context.vooRadius;
     final size = context.vooSize;
 
-    return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.md, spacing.lg, spacing.md, spacing.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: size.avatarSmall,
-            height: size.avatarSmall,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(radius.md),
-            ),
-            child: Icon(
-              icon,
-              color: theme.colorScheme.primary,
-              size: size.iconSmall,
-            ),
-          ),
-          if (showTitle && title != null) ...[
-            SizedBox(height: spacing.sm),
-            Text(
-              title!,
-              style: theme.textTheme.titleSmall?.copyWith(
-                color: theme.colorScheme.primary,
-                fontWeight: FontWeight.w600,
+    // Use config values if provided, otherwise use direct parameters
+    final effectiveTitle = config?.title ?? title;
+    final effectiveIcon = config?.logoIcon ?? icon;
+    final effectiveLogo = config?.logo ?? logo;
+    final effectiveShowTitle = config?.showTitle ?? showTitle;
+    final effectiveLogoBackground = config?.logoBackgroundColor ??
+        logoBackgroundColor ??
+        theme.colorScheme.onSurface.withValues(alpha: 0.12);
+    final effectivePadding = config?.padding ??
+        EdgeInsets.fromLTRB(spacing.sm, spacing.lg, spacing.sm, spacing.md);
+
+    // Build the logo widget
+    Widget logoWidget;
+    if (effectiveLogo != null) {
+      logoWidget = SizedBox(
+        width: size.avatarMedium,
+        height: size.avatarMedium,
+        child: effectiveLogo,
+      );
+    } else {
+      logoWidget = Container(
+        width: size.avatarMedium,
+        height: size.avatarMedium,
+        decoration: BoxDecoration(
+          color: effectiveLogoBackground,
+          borderRadius: BorderRadius.circular(radius.md),
+        ),
+        child: Icon(
+          effectiveIcon,
+          color: theme.colorScheme.onSurface,
+          size: size.iconMedium,
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: config?.onTap,
+      child: Padding(
+        padding: effectivePadding,
+        child: Row(
+          children: [
+            logoWidget,
+            if (effectiveShowTitle && effectiveTitle != null) ...[
+              SizedBox(width: spacing.sm),
+              Expanded(
+                child: Text(
+                  effectiveTitle,
+                  style: config?.titleStyle ?? theme.textTheme.titleMedium?.copyWith(
+                    color: theme.colorScheme.onSurface,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-            ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

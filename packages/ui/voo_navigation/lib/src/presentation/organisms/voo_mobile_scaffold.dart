@@ -86,10 +86,7 @@ class VooMobileScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get the selected item from the config
-    final selectedItem = config.items.firstWhere(
-      (item) => item.id == selectedId,
-      orElse: () => config.items.first,
-    );
+    final selectedItem = config.items.firstWhere((item) => item.id == selectedId, orElse: () => config.items.first);
 
     // Use floating bottom navigation if configured
     final useFloating = config.floatingBottomNav;
@@ -100,40 +97,20 @@ class VooMobileScaffold extends StatelessWidget {
             config: config,
             selectedId: selectedId,
             onNavigationItemSelected: onNavigationItemSelected,
-            horizontalMargin: config.floatingBottomNavMargin,
             bottomMargin: config.floatingBottomNavBottomMargin,
           )
-        : VooAdaptiveBottomNavigation(
-            config: config,
-            selectedId: selectedId,
-            onNavigationItemSelected: onNavigationItemSelected,
-            type: config.bottomNavigationType,
-          );
+        : VooAdaptiveBottomNavigation(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected, type: config.bottomNavigationType);
 
     // Determine FAB visibility and widget based on page config overrides
-    final showFab = pageConfig?.showFloatingActionButton ??
-        config.showFloatingActionButton;
-    final fabWidget = pageConfig?.floatingActionButton ??
-        config.floatingActionButton;
-    final fabLocation = pageConfig?.floatingActionButtonLocation ??
-        config.floatingActionButtonLocation ??
-        FloatingActionButtonLocation.endFloat;
-    final fabAnimator = pageConfig?.floatingActionButtonAnimator ??
-        config.floatingActionButtonAnimator;
+    final showFab = pageConfig?.showFloatingActionButton ?? config.showFloatingActionButton;
+    final fabWidget = pageConfig?.floatingActionButton ?? config.floatingActionButton;
+    final fabLocation = pageConfig?.floatingActionButtonLocation ?? config.floatingActionButtonLocation ?? FloatingActionButtonLocation.endFloat;
+    final fabAnimator = pageConfig?.floatingActionButtonAnimator ?? config.floatingActionButtonAnimator;
 
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: backgroundColor,
-      appBar:
-          showAppBar
-              ? (appBar ??
-                  VooMobileAppBar(
-                    config: config,
-                    selectedItem: selectedItem,
-                    selectedId: selectedId,
-                    showMenuButton: false,
-                  ))
-              : null,
+      appBar: showAppBar ? (appBar ?? VooMobileAppBar(config: config, selectedItem: selectedItem, selectedId: selectedId, showMenuButton: false)) : null,
       body: body,
       bottomNavigationBar: bottomNav,
       floatingActionButton: showFab ? fabWidget : null,

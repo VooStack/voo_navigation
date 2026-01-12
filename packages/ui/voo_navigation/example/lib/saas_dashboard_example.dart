@@ -126,6 +126,15 @@ class _SaasDashboardState extends State<SaasDashboard> {
       mobilePriority: true,
       sortOrder: 3,
     ),
+    const VooNavigationItem(
+      id: 'settings',
+      label: 'Settings',
+      icon: Icons.settings_outlined,
+      selectedIcon: Icons.settings,
+      route: '/settings',
+      mobilePriority: true,
+      sortOrder: 4,
+    ),
     VooNavigationItem.section(
       label: 'Workspace',
       id: 'workspace_section',

@@ -25,7 +25,7 @@ class VooDrawerDefaultHeader extends StatelessWidget {
     final size = context.vooSize;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.md, spacing.xxl, spacing.md, spacing.md),
+      padding: EdgeInsets.fromLTRB(spacing.sm, spacing.lg, spacing.sm, spacing.md),
       child: Row(
         children: [
           Container(
