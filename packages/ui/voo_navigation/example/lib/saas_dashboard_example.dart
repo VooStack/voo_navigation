@@ -64,6 +64,29 @@ class _SaasDashboardState extends State<SaasDashboard> {
   // to children via VooCollapseState, so user profile and org switcher
   // automatically adapt to collapsed mode.
 
+  // Sample organizations for the organization switcher
+  final List<VooOrganization> _organizations = [
+    const VooOrganization(
+      id: 'acme',
+      name: 'Acme Inc',
+      subtitle: '12 members',
+      avatarColor: Color(0xFF6366F1),
+    ),
+    const VooOrganization(
+      id: 'startup',
+      name: 'Startup Labs',
+      subtitle: '5 members',
+      avatarColor: Color(0xFF22C55E),
+    ),
+    const VooOrganization(
+      id: 'enterprise',
+      name: 'Enterprise Corp',
+      subtitle: '48 members',
+      avatarColor: Color(0xFFF59E0B),
+    ),
+  ];
+  VooOrganization? _selectedOrganization;
+
   final List<VooNavigationItem> _navigationItems = [
     const VooNavigationItem(
       id: 'overview',
@@ -214,6 +237,22 @@ class _SaasDashboardState extends State<SaasDashboard> {
         onSettingsTap: () => setState(() => _selectedId = 'general'),
         onLogout: () => _showLogoutDialog(context),
       ),
+
+      // Organization switcher - auto-adapts to compact mode when rail is collapsed
+      organizationSwitcher: VooOrganizationSwitcherConfig(
+        organizations: _organizations,
+        selectedOrganization: _selectedOrganization ?? _organizations.first,
+        onOrganizationChanged: (org) {
+          setState(() => _selectedOrganization = org);
+        },
+        onCreateOrganization: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Create organization tapped')),
+          );
+        },
+        // compact is not set - auto-detects from VooCollapseState
+      ),
+      organizationSwitcherPosition: VooOrganizationSwitcherPosition.footer,
 
       // Animations
       enableAnimations: true,
