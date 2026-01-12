@@ -1,3 +1,13 @@
+## 1.2.5
+
+### Fixed
+- **VooPageConfig App Bar Properties Not Working**: Fixed `appBarTitle`, `appBarLeading`, and `additionalAppBarActions` from `VooPageConfig` not being applied
+  - `VooDesktopScaffold` and `VooMobileScaffold` now properly pass these properties to their app bar components
+  - Added `additionalActions` parameter to `VooAdaptiveAppBar` for appending actions without replacing default integrated actions
+  - Updated `voo_navigation_core` dependency to ^0.1.3
+
+---
+
 ## 1.2.4
 
 ### Fixed

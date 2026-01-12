@@ -1,3 +1,12 @@
+## 0.1.3
+
+### Fixed
+- **VooPageConfig Properties Not Applied**: Fixed `appBarTitle`, `appBarLeading`, and `additionalAppBarActions` from `VooPageConfig` not being applied to the app bar
+  - Added `additionalActions` parameter to `VooMobileAppBar` to support appending actions to the default actions
+  - Actions are now properly merged instead of being ignored
+
+---
+
 ## 0.1.1
 
 ### Added

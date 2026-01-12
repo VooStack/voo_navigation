@@ -262,6 +262,9 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
             config: widget.config,
             selectedId: widget.selectedId,
             showMenuButton: false,
+            title: widget.pageConfig?.appBarTitle,
+            leading: widget.pageConfig?.appBarLeading,
+            additionalActions: widget.pageConfig?.additionalAppBarActions,
             margin: EdgeInsets.only(
               top: context.vooTokens.spacing.sm,
             ),
@@ -329,7 +332,14 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       key: widget.scaffoldKey,
       backgroundColor: widget.backgroundColor,
       appBar: widget.showAppBar
-          ? (widget.appBar ?? VooAdaptiveAppBar(config: widget.config, selectedId: widget.selectedId, showMenuButton: false))
+          ? (widget.appBar ?? VooAdaptiveAppBar(
+              config: widget.config,
+              selectedId: widget.selectedId,
+              showMenuButton: false,
+              title: widget.pageConfig?.appBarTitle,
+              leading: widget.pageConfig?.appBarLeading,
+              additionalActions: widget.pageConfig?.additionalAppBarActions,
+            ))
           : null,
       body: Row(
         children: [

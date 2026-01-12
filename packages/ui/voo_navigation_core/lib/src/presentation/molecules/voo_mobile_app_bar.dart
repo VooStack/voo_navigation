@@ -23,8 +23,11 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Custom leading widget
   final Widget? leading;
 
-  /// Custom actions
+  /// Custom actions (replaces default actions when provided)
   final List<Widget>? actions;
+
+  /// Additional actions to append to the default or custom actions
+  final List<Widget>? additionalActions;
 
   /// Whether to center the title
   final bool? centerTitle;
@@ -49,6 +52,7 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.leading,
     this.actions,
+    this.additionalActions,
     this.centerTitle,
     this.backgroundColor,
     this.foregroundColor,
@@ -83,7 +87,12 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final effectiveCenterTitle = centerTitle ?? config?.centerAppBarTitle ?? false;
 
-    final effectiveActions = actions ?? config?.appBarActionsBuilder?.call(effectiveSelectedId);
+    var effectiveActions = actions ?? config?.appBarActionsBuilder?.call(effectiveSelectedId);
+
+    // Append additional actions if provided
+    if (additionalActions != null && additionalActions!.isNotEmpty) {
+      effectiveActions = [...?effectiveActions, ...additionalActions!];
+    }
 
     // Use pure white/dark background to match body (no tinted colors)
     final isDark = theme.brightness == Brightness.dark;

@@ -110,7 +110,15 @@ class VooMobileScaffold extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: backgroundColor,
-      appBar: showAppBar ? (appBar ?? VooMobileAppBar(config: config, selectedItem: selectedItem, selectedId: selectedId, showMenuButton: false)) : null,
+      appBar: showAppBar ? (appBar ?? VooMobileAppBar(
+        config: config,
+        selectedItem: selectedItem,
+        selectedId: selectedId,
+        showMenuButton: false,
+        title: pageConfig?.appBarTitle,
+        leading: pageConfig?.appBarLeading,
+        additionalActions: pageConfig?.additionalAppBarActions,
+      )) : null,
       body: body,
       bottomNavigationBar: bottomNav,
       floatingActionButton: showFab ? fabWidget : null,

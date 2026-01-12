@@ -28,8 +28,11 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Custom leading widget
   final Widget? leading;
 
-  /// Custom actions
+  /// Custom actions (replaces default actions when provided)
   final List<Widget>? actions;
+
+  /// Additional actions to append to the default or custom actions
+  final List<Widget>? additionalActions;
 
   /// Whether to center the title
   final bool? centerTitle;
@@ -64,6 +67,7 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.leading,
     this.actions,
+    this.additionalActions,
     this.centerTitle,
     this.backgroundColor,
     this.foregroundColor,
@@ -147,6 +151,11 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else {
       // Build default actions with integrated components
       effectiveActions = _buildIntegratedActions(context, effectiveConfig);
+    }
+
+    // Append additional actions if provided
+    if (additionalActions != null && additionalActions!.isNotEmpty) {
+      effectiveActions = [...?effectiveActions, ...additionalActions!];
     }
 
     final effectiveCenterTitle = centerTitle ?? effectiveConfig?.centerAppBarTitle ?? false;
