@@ -105,8 +105,7 @@ class VooAdaptiveScaffold extends StatefulWidget {
   State<VooAdaptiveScaffold> createState() => _VooAdaptiveScaffoldState();
 }
 
-class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold>
-    with SingleTickerProviderStateMixin {
+class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTickerProviderStateMixin {
   late String _selectedId;
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
@@ -117,30 +116,16 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold>
   @override
   void initState() {
     super.initState();
-    _selectedId =
-        widget.config.selectedId ??
-        widget.config.items.firstWhere((item) => item.isEnabled).id;
+    _selectedId = widget.config.selectedId ?? widget.config.items.firstWhere((item) => item.isEnabled).id;
 
     _pageController = VooPageController();
     _pageController.setOnConfigChanged(_onPageConfigChanged);
 
-    _animationController = AnimationController(
-      duration: widget.config.animationDuration,
-      vsync: this,
-    );
+    _animationController = AnimationController(duration: widget.config.animationDuration, vsync: this);
 
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: widget.config.animationCurve,
-    );
+    _fadeAnimation = CurvedAnimation(parent: _animationController, curve: widget.config.animationCurve);
 
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0.0, 0.05), end: Offset.zero).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: widget.config.animationCurve,
-          ),
-        );
+    _slideAnimation = Tween<Offset>(begin: const Offset(0.0, 0.05), end: Offset.zero).animate(CurvedAnimation(parent: _animationController, curve: widget.config.animationCurve));
 
     _animationController.forward();
   }
@@ -159,10 +144,7 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold>
   }
 
   /// Recursively finds an item by ID, including items nested in sections
-  VooNavigationItem? _findItemById(
-    List<VooNavigationItem> items,
-    String itemId,
-  ) {
+  VooNavigationItem? _findItemById(List<VooNavigationItem> items, String itemId) {
     for (final item in items) {
       if (item.id == itemId) return item;
       if (item.children != null) {
@@ -231,9 +213,7 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold>
             final navigationType = widget.config.getNavigationType(screenWidth);
 
             // Animate navigation type changes - defer to post-frame to avoid layout during build
-            if (_previousNavigationType != null &&
-                _previousNavigationType != navigationType &&
-                widget.config.enableAnimations) {
+            if (_previousNavigationType != null && _previousNavigationType != navigationType && widget.config.enableAnimations) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 if (mounted) {
                   _animationController.forward(from: 0);
@@ -247,32 +227,15 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold>
             final pageConfig = _pageController.currentConfig;
 
             // Effective values with priority: pageConfig > widget > config
-            final effectiveShowAppBar =
-                pageConfig?.showAppBar ?? widget.showAppBar;
-            final effectiveResizeToAvoidBottomInset =
-                pageConfig?.resizeToAvoidBottomInset ??
-                widget.resizeToAvoidBottomInset;
-            final effectiveExtendBody =
-                pageConfig?.extendBody ?? widget.extendBody;
-            final effectiveExtendBodyBehindAppBar =
-                pageConfig?.extendBodyBehindAppBar ??
-                widget.extendBodyBehindAppBar;
-            final effectiveBodyPadding =
-                pageConfig?.bodyPadding ??
-                widget.bodyPadding ??
-                widget.config.bodyPadding;
-            final effectiveUseBodyCard =
-                pageConfig?.useBodyCard ?? widget.useBodyCard;
-            final effectiveBodyCardElevation =
-                pageConfig?.bodyCardElevation ?? widget.bodyCardElevation;
-            final effectiveBodyCardBorderRadius =
-                pageConfig?.bodyCardBorderRadius ??
-                widget.bodyCardBorderRadius ??
-                widget.config.bodyCardBorderRadius;
-            final effectiveBodyCardColor =
-                pageConfig?.bodyCardColor ??
-                widget.bodyCardColor ??
-                widget.config.bodyCardColor;
+            final effectiveShowAppBar = pageConfig?.showAppBar ?? widget.showAppBar;
+            final effectiveResizeToAvoidBottomInset = pageConfig?.resizeToAvoidBottomInset ?? widget.resizeToAvoidBottomInset;
+            final effectiveExtendBody = pageConfig?.extendBody ?? widget.extendBody;
+            final effectiveExtendBodyBehindAppBar = pageConfig?.extendBodyBehindAppBar ?? widget.extendBodyBehindAppBar;
+            final effectiveBodyPadding = pageConfig?.bodyPadding ?? widget.bodyPadding ?? widget.config.bodyPadding;
+            final effectiveUseBodyCard = pageConfig?.useBodyCard ?? widget.useBodyCard;
+            final effectiveBodyCardElevation = pageConfig?.bodyCardElevation ?? widget.bodyCardElevation;
+            final effectiveBodyCardBorderRadius = pageConfig?.bodyCardBorderRadius ?? widget.bodyCardBorderRadius ?? widget.config.bodyCardBorderRadius;
+            final effectiveBodyCardColor = pageConfig?.bodyCardColor ?? widget.bodyCardColor ?? widget.config.bodyCardColor;
 
             // Build appropriate scaffold based on navigation type
             return VooScaffoldBuilder(
@@ -290,18 +253,14 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold>
               endDrawer: pageConfig?.endDrawer ?? widget.endDrawer,
               drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
               drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
-              endDrawerEnableOpenDragGesture:
-                  widget.endDrawerEnableOpenDragGesture,
+              endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
               scaffoldKey: widget.scaffoldKey,
-              backgroundColor:
-                  pageConfig?.backgroundColor ?? widget.backgroundColor,
+              backgroundColor: pageConfig?.backgroundColor ?? widget.backgroundColor,
               resizeToAvoidBottomInset: effectiveResizeToAvoidBottomInset,
               extendBody: effectiveExtendBody,
               extendBodyBehindAppBar: effectiveExtendBodyBehindAppBar,
               bottomSheet: pageConfig?.bottomSheet ?? widget.bottomSheet,
-              persistentFooterButtons:
-                  pageConfig?.persistentFooterButtons ??
-                  widget.persistentFooterButtons,
+              persistentFooterButtons: pageConfig?.persistentFooterButtons ?? widget.persistentFooterButtons,
               restorationId: widget.restorationId,
               bodyPadding: effectiveBodyPadding,
               useBodyCard: effectiveUseBodyCard,
