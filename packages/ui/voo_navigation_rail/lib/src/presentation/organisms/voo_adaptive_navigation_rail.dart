@@ -94,7 +94,9 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final navTheme = widget.config.effectiveTheme;
+    final isDark = theme.brightness == Brightness.dark;
 
     final effectiveWidth =
         widget.width ??
@@ -102,11 +104,11 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
             ? (widget.config.extendedNavigationRailWidth ?? 256)
             : (widget.config.navigationRailWidth ?? 80));
 
-    // Use theme-based surface color
+    // Use pure white/dark surface to match drawer styling (no tinted colors)
     final effectiveBackgroundColor =
         widget.backgroundColor ??
         widget.config.navigationBackgroundColor ??
-        navTheme.resolveSurfaceColor(context);
+        (isDark ? const Color(0xFF1A1A1A) : Colors.white);
 
     return AnimatedContainer(
       duration: navTheme.animationDuration,

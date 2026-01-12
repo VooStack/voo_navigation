@@ -29,8 +29,10 @@ class VooDrawerDefaultHeader extends StatelessWidget {
         ? const Color(0xFFF0F0F0)
         : theme.colorScheme.onSurface.withValues(alpha: 0.12);
 
+    // Align branding center with app bar title center
+    // Content area has 8px top margin, app bar title is centered in toolbar
     return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.sm, spacing.md, spacing.sm, spacing.sm),
+      padding: EdgeInsets.fromLTRB(spacing.sm, 28, spacing.sm, spacing.sm),
       child: Row(
         children: [
           Container(

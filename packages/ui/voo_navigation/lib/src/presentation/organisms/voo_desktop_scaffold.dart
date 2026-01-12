@@ -106,6 +106,17 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     _isCollapsed = widget.navigationType == VooNavigationType.navigationRail;
   }
 
+  @override
+  void didUpdateWidget(VooDesktopScaffold oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Auto-collapse/expand when navigation type changes due to screen resize
+    if (oldWidget.navigationType != widget.navigationType) {
+      setState(() {
+        _isCollapsed = widget.navigationType == VooNavigationType.navigationRail;
+      });
+    }
+  }
+
   void _toggleCollapse() {
     if (widget.config.enableHapticFeedback) {
       HapticFeedback.lightImpact();
