@@ -130,21 +130,26 @@ class VooAvatar extends StatelessWidget {
                 }
               : null,
           errorBuilder: (context, error, stackTrace) {
-            return errorWidget ?? _buildInitialsOrPlaceholder(
-              effectiveInitials,
-              effectiveBgColor,
-              effectiveFgColor,
-              effectiveBorderRadius,
-            );
+            return errorWidget ??
+                _VooAvatarInitialsOrPlaceholder(
+                  initials: effectiveInitials,
+                  bgColor: effectiveBgColor,
+                  fgColor: effectiveFgColor,
+                  borderRadius: effectiveBorderRadius,
+                  size: size,
+                  placeholderIcon: placeholderIcon,
+                );
           },
         ),
       );
     } else {
-      avatarContent = _buildInitialsOrPlaceholder(
-        effectiveInitials,
-        effectiveBgColor,
-        effectiveFgColor,
-        effectiveBorderRadius,
+      avatarContent = _VooAvatarInitialsOrPlaceholder(
+        initials: effectiveInitials,
+        bgColor: effectiveBgColor,
+        fgColor: effectiveFgColor,
+        borderRadius: effectiveBorderRadius,
+        size: size,
+        placeholderIcon: placeholderIcon,
       );
     }
 
@@ -170,13 +175,27 @@ class VooAvatar extends StatelessWidget {
 
     return avatar;
   }
+}
 
-  Widget _buildInitialsOrPlaceholder(
-    String? initials,
-    Color bgColor,
-    Color fgColor,
-    BorderRadius borderRadius,
-  ) {
+class _VooAvatarInitialsOrPlaceholder extends StatelessWidget {
+  final String? initials;
+  final Color bgColor;
+  final Color fgColor;
+  final BorderRadius borderRadius;
+  final double size;
+  final IconData? placeholderIcon;
+
+  const _VooAvatarInitialsOrPlaceholder({
+    required this.initials,
+    required this.bgColor,
+    required this.fgColor,
+    required this.borderRadius,
+    required this.size,
+    this.placeholderIcon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: size,
       height: size,
@@ -185,9 +204,9 @@ class VooAvatar extends StatelessWidget {
         borderRadius: borderRadius,
       ),
       alignment: Alignment.center,
-      child: initials != null && initials.isNotEmpty
+      child: initials != null && initials!.isNotEmpty
           ? Text(
-              initials,
+              initials!,
               style: TextStyle(
                 color: fgColor,
                 fontSize: size * 0.4,

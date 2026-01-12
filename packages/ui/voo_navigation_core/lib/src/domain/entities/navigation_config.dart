@@ -287,8 +287,11 @@ class VooNavigationConfig {
 
   /// Gets the effective theme, defaulting to Minimal Modern (clean flat design)
   VooNavigationTheme get effectiveTheme =>
-      navigationTheme ?? VooNavigationTheme.minimalModern().copyWith(
+      navigationTheme ?? VooNavigationTheme.minimalModern(
+        borderWidth: 0, // No border for clean look
+      ).copyWith(
         containerBorderRadius: 0, // Flush to edge, no rounding
+        showContainerBorder: false, // No border on drawer
       );
 
   // ============================================================================

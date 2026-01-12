@@ -49,6 +49,7 @@ export 'src/presentation/atoms/voo_neomorph_inset.dart';
 export 'src/presentation/atoms/voo_neomorph_surface.dart';
 export 'src/presentation/atoms/voo_neomorph_surface_interactive.dart';
 export 'src/presentation/atoms/voo_pill_indicator.dart';
+export 'src/presentation/atoms/voo_search_button.dart';
 export 'src/presentation/atoms/voo_search_field.dart';
 export 'src/presentation/atoms/voo_sliding_pill_indicator.dart';
 export 'src/presentation/atoms/voo_text_badge.dart';

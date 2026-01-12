@@ -190,16 +190,24 @@ class _VooSearchFieldState extends State<VooSearchField> {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    // Use neutral gray colors instead of tinted surface colors
+    final neutralBg = theme.brightness == Brightness.light
+        ? const Color(0xFFF5F5F5)  // Light neutral gray
+        : const Color(0xFF2A2A2A); // Dark neutral gray
+    final neutralBgFocused = theme.brightness == Brightness.light
+        ? const Color(0xFFFFFFFF)  // White when focused
+        : const Color(0xFF3A3A3A); // Slightly lighter dark
+
     final effectiveBgColor = _hasFocus
-        ? (widget.focusedBackgroundColor ?? widget.backgroundColor ?? colorScheme.surfaceContainerHighest)
-        : (widget.backgroundColor ?? colorScheme.surfaceContainerHigh);
+        ? (widget.focusedBackgroundColor ?? widget.backgroundColor ?? neutralBgFocused)
+        : (widget.backgroundColor ?? neutralBg);
 
     final effectiveBorderColor = _hasFocus
         ? (widget.focusedBorderColor ?? widget.borderColor ?? colorScheme.primary)
         : (widget.borderColor ?? colorScheme.outline.withValues(alpha: 0.3));
 
-    final effectiveBorderRadius = widget.borderRadius ?? BorderRadius.circular(12);
-    final effectiveHeight = widget.height ?? 44;
+    final effectiveBorderRadius = widget.borderRadius ?? BorderRadius.circular(8);
+    final effectiveHeight = widget.height ?? 36;
 
     Widget searchField = Container(
       width: widget.expanded ? double.infinity : widget.width,
@@ -217,15 +225,15 @@ class _VooSearchFieldState extends State<VooSearchField> {
           // Prefix / Search icon
           if (widget.prefixWidget != null)
             Padding(
-              padding: const EdgeInsets.only(left: 12),
+              padding: const EdgeInsets.only(left: 10),
               child: widget.prefixWidget,
             )
           else if (widget.showSearchIcon)
             Padding(
-              padding: const EdgeInsets.only(left: 12),
+              padding: const EdgeInsets.only(left: 10),
               child: Icon(
                 Icons.search,
-                size: 20,
+                size: 18,
                 color: _hasFocus
                     ? colorScheme.primary
                     : colorScheme.onSurfaceVariant,
@@ -240,15 +248,15 @@ class _VooSearchFieldState extends State<VooSearchField> {
               readOnly: widget.readOnly,
               enabled: widget.enabled,
               autofocus: widget.autofocus,
-              style: widget.textStyle ?? theme.textTheme.bodyMedium,
+              style: widget.textStyle ?? theme.textTheme.bodySmall,
               decoration: InputDecoration(
                 hintText: widget.hintText ?? 'Search...',
-                hintStyle: widget.hintStyle ?? theme.textTheme.bodyMedium?.copyWith(
+                hintStyle: widget.hintStyle ?? theme.textTheme.bodySmall?.copyWith(
                   color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
                 ),
                 border: InputBorder.none,
                 contentPadding: widget.contentPadding ??
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 isDense: true,
               ),
               onChanged: widget.onChanged,
@@ -262,19 +270,19 @@ class _VooSearchFieldState extends State<VooSearchField> {
             Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(
-                    color: colorScheme.outline.withValues(alpha: 0.2),
-                  ),
+                  color: theme.brightness == Brightness.light
+                      ? const Color(0xFFE8E8E8)
+                      : const Color(0xFF3A3A3A),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
                   _keyboardHint,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                     fontWeight: FontWeight.w500,
+                    fontSize: 11,
                   ),
                 ),
               ),
@@ -337,107 +345,4 @@ class _VooSearchFieldState extends State<VooSearchField> {
 
 class _FocusSearchIntent extends Intent {
   const _FocusSearchIntent();
-}
-
-/// A compact search button that expands into a search field
-class VooSearchButton extends StatefulWidget {
-  /// Callback when text changes
-  final ValueChanged<String>? onChanged;
-
-  /// Callback when search is submitted
-  final ValueChanged<String>? onSubmitted;
-
-  /// Hint text
-  final String? hintText;
-
-  /// Icon for the button
-  final IconData? icon;
-
-  /// Tooltip for the button
-  final String? tooltip;
-
-  /// Width when expanded
-  final double expandedWidth;
-
-  /// Animation duration
-  final Duration animationDuration;
-
-  const VooSearchButton({
-    super.key,
-    this.onChanged,
-    this.onSubmitted,
-    this.hintText,
-    this.icon,
-    this.tooltip,
-    this.expandedWidth = 300,
-    this.animationDuration = const Duration(milliseconds: 200),
-  });
-
-  @override
-  State<VooSearchButton> createState() => _VooSearchButtonState();
-}
-
-class _VooSearchButtonState extends State<VooSearchButton> {
-  bool _isExpanded = false;
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-
-  @override
-  void initState() {
-    super.initState();
-    _focusNode.addListener(_onFocusChange);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    super.dispose();
-  }
-
-  void _onFocusChange() {
-    if (!_focusNode.hasFocus && _controller.text.isEmpty) {
-      setState(() {
-        _isExpanded = false;
-      });
-    }
-  }
-
-  void _expand() {
-    setState(() {
-      _isExpanded = true;
-    });
-    Future.delayed(widget.animationDuration, () {
-      _focusNode.requestFocus();
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return AnimatedContainer(
-      duration: widget.animationDuration,
-      curve: Curves.easeOutCubic,
-      width: _isExpanded ? widget.expandedWidth : 44,
-      height: 44,
-      child: _isExpanded
-          ? VooSearchField(
-              controller: _controller,
-              focusNode: _focusNode,
-              hintText: widget.hintText,
-              onChanged: widget.onChanged,
-              onSubmitted: widget.onSubmitted,
-              showKeyboardHint: false,
-            )
-          : IconButton(
-              icon: Icon(widget.icon ?? Icons.search),
-              onPressed: _expand,
-              tooltip: widget.tooltip ?? 'Search',
-              style: IconButton.styleFrom(
-                backgroundColor: theme.colorScheme.surfaceContainerHigh,
-              ),
-            ),
-    );
-  }
 }

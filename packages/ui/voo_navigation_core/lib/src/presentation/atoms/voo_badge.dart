@@ -139,16 +139,44 @@ class VooBadge extends StatelessWidget {
         scale: isVisible ? 1.0 : 0.0,
         duration: animationDuration,
         curve: Curves.easeOutBack,
-        child: showDot ? _buildDot(effectiveBgColor) : _buildTextBadge(
-          effectiveBgColor,
-          effectiveFgColor,
-          theme,
-        ),
+        child: showDot
+            ? _VooBadgeDot(
+                bgColor: effectiveBgColor,
+                dotSize: dotSize,
+                border: border,
+                boxShadow: boxShadow,
+              )
+            : _VooBadgeText(
+                bgColor: effectiveBgColor,
+                fgColor: effectiveFgColor,
+                displayText: _displayText,
+                padding: padding,
+                minWidth: minWidth,
+                borderRadius: borderRadius,
+                border: border,
+                boxShadow: boxShadow,
+                textStyle: textStyle,
+              ),
       ),
     );
   }
+}
 
-  Widget _buildDot(Color bgColor) {
+class _VooBadgeDot extends StatelessWidget {
+  final Color bgColor;
+  final double dotSize;
+  final BoxBorder? border;
+  final List<BoxShadow>? boxShadow;
+
+  const _VooBadgeDot({
+    required this.bgColor,
+    required this.dotSize,
+    this.border,
+    this.boxShadow,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: dotSize,
       height: dotSize,
@@ -156,22 +184,49 @@ class VooBadge extends StatelessWidget {
         color: bgColor,
         shape: BoxShape.circle,
         border: border,
-        boxShadow: boxShadow ?? [
-          BoxShadow(
-            color: bgColor.withValues(alpha: 0.4),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
+        boxShadow: boxShadow ??
+            [
+              BoxShadow(
+                color: bgColor.withValues(alpha: 0.4),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
+            ],
       ),
     );
   }
+}
 
-  Widget _buildTextBadge(Color bgColor, Color fgColor, ThemeData theme) {
-    final displayText = _displayText;
-    if (displayText == null || displayText.isEmpty) {
+class _VooBadgeText extends StatelessWidget {
+  final Color bgColor;
+  final Color fgColor;
+  final String? displayText;
+  final EdgeInsets? padding;
+  final double minWidth;
+  final BorderRadius? borderRadius;
+  final BoxBorder? border;
+  final List<BoxShadow>? boxShadow;
+  final TextStyle? textStyle;
+
+  const _VooBadgeText({
+    required this.bgColor,
+    required this.fgColor,
+    required this.displayText,
+    required this.minWidth,
+    this.padding,
+    this.borderRadius,
+    this.border,
+    this.boxShadow,
+    this.textStyle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (displayText == null || displayText!.isEmpty) {
       return const SizedBox.shrink();
     }
+
+    final theme = Theme.of(context);
 
     return Container(
       padding: padding ?? const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -180,23 +235,25 @@ class VooBadge extends StatelessWidget {
         color: bgColor,
         borderRadius: borderRadius ?? BorderRadius.circular(minWidth / 2),
         border: border,
-        boxShadow: boxShadow ?? [
-          BoxShadow(
-            color: bgColor.withValues(alpha: 0.4),
-            blurRadius: 4,
-            offset: const Offset(0, 1),
-          ),
-        ],
+        boxShadow: boxShadow ??
+            [
+              BoxShadow(
+                color: bgColor.withValues(alpha: 0.4),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
+            ],
       ),
       alignment: Alignment.center,
       child: Text(
-        displayText,
-        style: textStyle ?? theme.textTheme.labelSmall?.copyWith(
-          color: fgColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 10,
-          height: 1.2,
-        ),
+        displayText!,
+        style: textStyle ??
+            theme.textTheme.labelSmall?.copyWith(
+              color: fgColor,
+              fontWeight: FontWeight.w600,
+              fontSize: 10,
+              height: 1.2,
+            ),
         textAlign: TextAlign.center,
       ),
     );

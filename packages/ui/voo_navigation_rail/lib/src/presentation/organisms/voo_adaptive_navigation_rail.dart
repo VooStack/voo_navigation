@@ -148,171 +148,6 @@ class _ThemedRailContainer extends StatelessWidget {
     this.onToggleCollapse,
   });
 
-  Widget? _buildSearchBar(BuildContext context, VooSearchBarPosition position) {
-    final searchConfig = config.searchBar;
-    if (searchConfig == null || config.searchBarPosition != position) {
-      return null;
-    }
-
-    // In compact mode, show search icon button that expands
-    if (!extended) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: IconButton(
-          icon: const Icon(Icons.search, size: 20),
-          tooltip: searchConfig.hintText ?? 'Search...',
-          onPressed: () {
-            // Show search overlay/dialog when in compact mode
-            _showSearchOverlay(context, searchConfig);
-          },
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: VooSearchBar(
-        navigationItems: searchConfig.navigationItems ?? config.items,
-        onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
-        onSearch: searchConfig.onSearch,
-        onSearchSubmit: searchConfig.onSearchSubmit,
-        searchActions: searchConfig.searchActions,
-        hintText: searchConfig.hintText ?? 'Search...',
-        showFilteredResults: searchConfig.showFilteredResults,
-        enableKeyboardShortcut: searchConfig.enableKeyboardShortcut,
-        keyboardShortcutHint: searchConfig.keyboardShortcutHint,
-        style: searchConfig.style,
-        expanded: true,
-        onNavigationItemSelected: searchConfig.onNavigationItemSelected,
-        onSearchActionSelected: searchConfig.onSearchActionSelected,
-      ),
-    );
-  }
-
-  void _showSearchOverlay(BuildContext context, VooSearchBarConfig searchConfig) {
-    showDialog(
-      context: context,
-      barrierColor: Colors.black54,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 400),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: VooSearchBar(
-              navigationItems: searchConfig.navigationItems ?? config.items,
-              onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
-              onSearch: searchConfig.onSearch,
-              onSearchSubmit: searchConfig.onSearchSubmit,
-              searchActions: searchConfig.searchActions,
-              hintText: searchConfig.hintText ?? 'Search...',
-              showFilteredResults: searchConfig.showFilteredResults,
-              enableKeyboardShortcut: false,
-              style: searchConfig.style,
-              expanded: true,
-              onNavigationItemSelected: (item) {
-                Navigator.of(context).pop();
-                searchConfig.onNavigationItemSelected?.call(item);
-              },
-              onSearchActionSelected: (action) {
-                Navigator.of(context).pop();
-                searchConfig.onSearchActionSelected?.call(action);
-              },
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget? _buildOrganizationSwitcherForPosition(
-      BuildContext context, VooOrganizationSwitcherPosition position) {
-    final orgSwitcher = config.organizationSwitcher;
-    if (orgSwitcher == null ||
-        config.organizationSwitcherPosition != position) {
-      return null;
-    }
-
-    // Rail must always use compact mode when collapsed to prevent overflow
-    final isCompact = !extended;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: isCompact ? 8 : 12,
-        vertical: 8,
-      ),
-      child: Center(
-        child: VooOrganizationSwitcher(
-          organizations: orgSwitcher.organizations,
-          selectedOrganization: orgSwitcher.selectedOrganization,
-          onOrganizationChanged: orgSwitcher.onOrganizationChanged,
-          onCreateOrganization: orgSwitcher.onCreateOrganization,
-          showSearch: orgSwitcher.showSearch,
-          showCreateButton: orgSwitcher.showCreateButton,
-          createButtonLabel: orgSwitcher.createButtonLabel,
-          searchHint: orgSwitcher.searchHint,
-          style: orgSwitcher.style,
-          // Force compact mode when rail is collapsed to prevent overflow
-          compact: isCompact ? true : orgSwitcher.compact,
-          tooltip: orgSwitcher.tooltip,
-        ),
-      ),
-    );
-  }
-
-  /// Builds the user profile widget, preferring userProfileConfig if available
-  Widget _buildUserProfile() {
-    // Rail must always use compact mode when collapsed to prevent overflow
-    final isCompact = !extended;
-
-    // If userProfileWidget is explicitly provided, use it (legacy API)
-    // WARNING: Legacy widgets don't respect collapse state - wrap in Center for alignment
-    if (config.userProfileWidget != null) {
-      return Center(child: config.userProfileWidget!);
-    }
-
-    // If userProfileConfig is provided, create the widget with forced compact when collapsed
-    final profileConfig = config.userProfileConfig;
-    if (profileConfig != null) {
-      return Center(
-        child: VooUserProfileFooter(
-          userName: profileConfig.userName,
-          userEmail: profileConfig.userEmail,
-          avatarUrl: profileConfig.avatarUrl,
-          avatarWidget: profileConfig.avatarWidget,
-          initials: profileConfig.initials,
-          status: profileConfig.status,
-          onTap: profileConfig.onTap,
-          onSettingsTap: profileConfig.onSettingsTap,
-          onLogout: profileConfig.onLogout,
-          menuItems: profileConfig.menuItems,
-          showDropdownIndicator: profileConfig.showDropdownIndicator,
-          // Force compact mode when rail is collapsed to prevent overflow
-          compact: isCompact ? true : null,
-        ),
-      );
-    }
-
-    // Default fallback - force compact when rail is collapsed
-    return Center(
-      child: VooUserProfileFooter(
-        compact: isCompact ? true : null,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -320,16 +155,36 @@ class _ThemedRailContainer extends StatelessWidget {
     final borderRadius = BorderRadius.circular(navTheme.containerBorderRadius);
 
     // Build optional components based on position
-    final searchBarInHeader =
-        _buildSearchBar(context, VooSearchBarPosition.header);
-    final searchBarBeforeItems =
-        _buildSearchBar(context, VooSearchBarPosition.beforeItems);
-    final orgSwitcherInHeader = _buildOrganizationSwitcherForPosition(
-        context, VooOrganizationSwitcherPosition.header);
-    final orgSwitcherBeforeItems = _buildOrganizationSwitcherForPosition(
-        context, VooOrganizationSwitcherPosition.beforeItems);
-    final orgSwitcherInFooter = _buildOrganizationSwitcherForPosition(
-        context, VooOrganizationSwitcherPosition.footer);
+    final searchBarInHeader = _RailSearchBar.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooSearchBarPosition.header,
+    );
+    final searchBarBeforeItems = _RailSearchBar.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooSearchBarPosition.beforeItems,
+    );
+    final orgSwitcherInHeader = _RailOrganizationSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooOrganizationSwitcherPosition.header,
+    );
+    final orgSwitcherBeforeItems = _RailOrganizationSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooOrganizationSwitcherPosition.beforeItems,
+    );
+    final orgSwitcherInFooter = _RailOrganizationSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooOrganizationSwitcherPosition.footer,
+    );
 
     // Wrap content with VooCollapseState so children can auto-detect collapse mode
     // Rail is collapsed when not extended
@@ -411,7 +266,10 @@ class _ThemedRailContainer extends StatelessWidget {
 
             // User profile footer when enabled
             if (config.showUserProfile)
-              _buildUserProfile(),
+              _RailUserProfile(
+                config: config,
+                extended: extended,
+              ),
 
             // Custom footer if provided
             if (config.drawerFooter != null) config.drawerFooter!,
@@ -446,6 +304,193 @@ class _ThemedRailContainer extends StatelessWidget {
 // NOTE: Legacy themed container code (glassmorphism, liquidGlass, neomorphism,
 // material3Enhanced, minimalModern variants) has been removed in favor of
 // unified clean design. All navigation now uses a simple flat container.
+
+class _RailSearchBar {
+  static Widget? forPosition({
+    required BuildContext context,
+    required VooNavigationConfig config,
+    required bool extended,
+    required VooSearchBarPosition position,
+  }) {
+    final searchConfig = config.searchBar;
+    if (searchConfig == null || config.searchBarPosition != position) {
+      return null;
+    }
+
+    // In compact mode, show search icon button that expands
+    if (!extended) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: IconButton(
+          icon: const Icon(Icons.search, size: 20),
+          tooltip: searchConfig.hintText ?? 'Search...',
+          onPressed: () {
+            _showSearchOverlay(context, config, searchConfig);
+          },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      child: VooSearchBar(
+        navigationItems: searchConfig.navigationItems ?? config.items,
+        onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
+        onSearch: searchConfig.onSearch,
+        onSearchSubmit: searchConfig.onSearchSubmit,
+        searchActions: searchConfig.searchActions,
+        hintText: searchConfig.hintText ?? 'Search...',
+        showFilteredResults: searchConfig.showFilteredResults,
+        enableKeyboardShortcut: searchConfig.enableKeyboardShortcut,
+        keyboardShortcutHint: searchConfig.keyboardShortcutHint,
+        style: searchConfig.style,
+        expanded: true,
+        onNavigationItemSelected: searchConfig.onNavigationItemSelected,
+        onSearchActionSelected: searchConfig.onSearchActionSelected,
+      ),
+    );
+  }
+
+  static void _showSearchOverlay(
+    BuildContext context,
+    VooNavigationConfig config,
+    VooSearchBarConfig searchConfig,
+  ) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black54,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 400),
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surface,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.3),
+                blurRadius: 20,
+                offset: const Offset(0, 8),
+              ),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: VooSearchBar(
+              navigationItems: searchConfig.navigationItems ?? config.items,
+              onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
+              onSearch: searchConfig.onSearch,
+              onSearchSubmit: searchConfig.onSearchSubmit,
+              searchActions: searchConfig.searchActions,
+              hintText: searchConfig.hintText ?? 'Search...',
+              showFilteredResults: searchConfig.showFilteredResults,
+              enableKeyboardShortcut: false,
+              style: searchConfig.style,
+              expanded: true,
+              onNavigationItemSelected: (item) {
+                Navigator.of(context).pop();
+                searchConfig.onNavigationItemSelected?.call(item);
+              },
+              onSearchActionSelected: (action) {
+                Navigator.of(context).pop();
+                searchConfig.onSearchActionSelected?.call(action);
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _RailOrganizationSwitcher {
+  static Widget? forPosition({
+    required BuildContext context,
+    required VooNavigationConfig config,
+    required bool extended,
+    required VooOrganizationSwitcherPosition position,
+  }) {
+    final orgSwitcher = config.organizationSwitcher;
+    if (orgSwitcher == null || config.organizationSwitcherPosition != position) {
+      return null;
+    }
+
+    // Rail must always use compact mode when collapsed to prevent overflow
+    final isCompact = !extended;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: isCompact ? 8 : 12,
+        vertical: 8,
+      ),
+      child: Center(
+        child: VooOrganizationSwitcher(
+          organizations: orgSwitcher.organizations,
+          selectedOrganization: orgSwitcher.selectedOrganization,
+          onOrganizationChanged: orgSwitcher.onOrganizationChanged,
+          onCreateOrganization: orgSwitcher.onCreateOrganization,
+          showSearch: orgSwitcher.showSearch,
+          showCreateButton: orgSwitcher.showCreateButton,
+          createButtonLabel: orgSwitcher.createButtonLabel,
+          searchHint: orgSwitcher.searchHint,
+          style: orgSwitcher.style,
+          compact: isCompact ? true : orgSwitcher.compact,
+          tooltip: orgSwitcher.tooltip,
+        ),
+      ),
+    );
+  }
+}
+
+class _RailUserProfile extends StatelessWidget {
+  final VooNavigationConfig config;
+  final bool extended;
+
+  const _RailUserProfile({
+    required this.config,
+    required this.extended,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // Rail must always use compact mode when collapsed to prevent overflow
+    final isCompact = !extended;
+
+    // If userProfileWidget is explicitly provided, use it (legacy API)
+    if (config.userProfileWidget != null) {
+      return Center(child: config.userProfileWidget!);
+    }
+
+    // If userProfileConfig is provided, create the widget with forced compact when collapsed
+    final profileConfig = config.userProfileConfig;
+    if (profileConfig != null) {
+      return Center(
+        child: VooUserProfileFooter(
+          userName: profileConfig.userName,
+          userEmail: profileConfig.userEmail,
+          avatarUrl: profileConfig.avatarUrl,
+          avatarWidget: profileConfig.avatarWidget,
+          initials: profileConfig.initials,
+          status: profileConfig.status,
+          onTap: profileConfig.onTap,
+          onSettingsTap: profileConfig.onSettingsTap,
+          onLogout: profileConfig.onLogout,
+          menuItems: profileConfig.menuItems,
+          showDropdownIndicator: profileConfig.showDropdownIndicator,
+          compact: isCompact ? true : null,
+        ),
+      );
+    }
+
+    // Default fallback - force compact when rail is collapsed
+    return Center(
+      child: VooUserProfileFooter(
+        compact: isCompact ? true : null,
+      ),
+    );
+  }
+}
 
 /// Footer items widget for static routes like Settings, Integrations, Help
 class _FooterItems extends StatelessWidget {

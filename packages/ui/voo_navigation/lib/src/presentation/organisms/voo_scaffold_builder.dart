@@ -130,10 +130,13 @@ class VooScaffoldBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    // Use neutral white/dark background to match drawer (no tinted colors)
+    final defaultBg = isDark ? const Color(0xFF1A1A1A) : Colors.white;
     final effectiveBackgroundColor =
         backgroundColor ??
         config.backgroundColor ??
-        theme.scaffoldBackgroundColor;
+        defaultBg;
 
     // Prepare the body - let each scaffold type handle its own padding
     // This follows the KISS principle - each scaffold knows best how to position its content

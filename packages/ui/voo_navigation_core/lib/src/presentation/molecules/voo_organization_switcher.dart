@@ -199,118 +199,34 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
             child: KeyboardListener(
               focusNode: FocusNode(),
               onKeyEvent: _handleKeyEvent,
-              child: _buildDropdownContent(style, maxHeight),
+              child: _OrganizationDropdownContent(
+                style: style,
+                maxHeight: maxHeight,
+                shouldShowSearch: _shouldShowSearch,
+                searchController: _searchController,
+                searchFocusNode: _searchFocusNode,
+                searchHint: widget.searchHint,
+                onSearchChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                    _selectedIndex = -1;
+                  });
+                  widget.onSearch?.call(value);
+                  _overlayEntry?.markNeedsBuild();
+                },
+                filteredOrganizations: _filteredOrganizations,
+                selectedOrganization: widget.selectedOrganization,
+                selectedIndex: _selectedIndex,
+                organizationTileBuilder: widget.organizationTileBuilder,
+                onSelectOrganization: _selectOrganization,
+                showCreateButton: widget.showCreateButton,
+                onCreateOrganization: widget.onCreateOrganization,
+                createButtonLabel: widget.createButtonLabel,
+                onRemoveOverlay: _removeOverlay,
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDropdownContent(VooOrganizationSwitcherStyle style, double maxHeight) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Material(
-      elevation: 8,
-      borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-      color: style.backgroundColor ?? colorScheme.surface,
-      child: Container(
-        constraints: BoxConstraints(maxHeight: maxHeight),
-        decoration: style.dropdownDecoration ??
-            BoxDecoration(
-              borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-              border: Border.all(
-                color: colorScheme.outline.withValues(alpha: 0.2),
-              ),
-            ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Search
-            if (_shouldShowSearch)
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: VooSearchField(
-                  controller: _searchController,
-                  focusNode: _searchFocusNode,
-                  hintText: widget.searchHint ?? 'Search organizations...',
-                  showKeyboardHint: false,
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                      _selectedIndex = -1;
-                    });
-                    widget.onSearch?.call(value);
-                    _overlayEntry?.markNeedsBuild();
-                  },
-                ),
-              ),
-
-            // Organization list
-            Flexible(
-              child: ListView.builder(
-                shrinkWrap: true,
-                padding: EdgeInsets.only(
-                  top: _shouldShowSearch ? 0 : 8,
-                  bottom: 8,
-                ),
-                itemCount: _filteredOrganizations.length,
-                itemBuilder: (context, index) {
-                  final org = _filteredOrganizations[index];
-                  final isSelected = org.id == widget.selectedOrganization?.id;
-                  final isHighlighted = index == _selectedIndex;
-
-                  if (widget.organizationTileBuilder != null) {
-                    return InkWell(
-                      onTap: () => _selectOrganization(org),
-                      child: widget.organizationTileBuilder!(org, isSelected),
-                    );
-                  }
-
-                  return _OrganizationTile(
-                    organization: org,
-                    isSelected: isSelected,
-                    isHighlighted: isHighlighted,
-                    style: style,
-                    onTap: () => _selectOrganization(org),
-                  );
-                },
-              ),
-            ),
-
-            // Create button
-            if (widget.showCreateButton && widget.onCreateOrganization != null) ...[
-              const Divider(height: 1),
-              InkWell(
-                onTap: () {
-                  _removeOverlay();
-                  widget.onCreateOrganization?.call();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.add_circle_outline,
-                        size: 20,
-                        color: colorScheme.primary,
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        widget.createButtonLabel ?? 'Create Organization',
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
       ),
     );
   }
@@ -418,6 +334,146 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
     return CompositedTransformTarget(
       link: _layerLink,
       child: trigger,
+    );
+  }
+}
+
+class _OrganizationDropdownContent extends StatelessWidget {
+  final VooOrganizationSwitcherStyle style;
+  final double maxHeight;
+  final bool shouldShowSearch;
+  final TextEditingController searchController;
+  final FocusNode searchFocusNode;
+  final String? searchHint;
+  final ValueChanged<String> onSearchChanged;
+  final List<VooOrganization> filteredOrganizations;
+  final VooOrganization? selectedOrganization;
+  final int selectedIndex;
+  final Widget Function(VooOrganization, bool isSelected)? organizationTileBuilder;
+  final ValueChanged<VooOrganization> onSelectOrganization;
+  final bool showCreateButton;
+  final VoidCallback? onCreateOrganization;
+  final String? createButtonLabel;
+  final VoidCallback onRemoveOverlay;
+
+  const _OrganizationDropdownContent({
+    required this.style,
+    required this.maxHeight,
+    required this.shouldShowSearch,
+    required this.searchController,
+    required this.searchFocusNode,
+    this.searchHint,
+    required this.onSearchChanged,
+    required this.filteredOrganizations,
+    this.selectedOrganization,
+    required this.selectedIndex,
+    this.organizationTileBuilder,
+    required this.onSelectOrganization,
+    required this.showCreateButton,
+    this.onCreateOrganization,
+    this.createButtonLabel,
+    required this.onRemoveOverlay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Material(
+      elevation: 8,
+      borderRadius: style.borderRadius ?? BorderRadius.circular(12),
+      color: style.backgroundColor ?? colorScheme.surface,
+      child: Container(
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        decoration: style.dropdownDecoration ??
+            BoxDecoration(
+              borderRadius: style.borderRadius ?? BorderRadius.circular(12),
+              border: Border.all(
+                color: colorScheme.outline.withValues(alpha: 0.2),
+              ),
+            ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Search
+            if (shouldShowSearch)
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: VooSearchField(
+                  controller: searchController,
+                  focusNode: searchFocusNode,
+                  hintText: searchHint ?? 'Search organizations...',
+                  showKeyboardHint: false,
+                  onChanged: onSearchChanged,
+                ),
+              ),
+
+            // Organization list
+            Flexible(
+              child: ListView.builder(
+                shrinkWrap: true,
+                padding: EdgeInsets.only(
+                  top: shouldShowSearch ? 0 : 8,
+                  bottom: 8,
+                ),
+                itemCount: filteredOrganizations.length,
+                itemBuilder: (context, index) {
+                  final org = filteredOrganizations[index];
+                  final isSelected = org.id == selectedOrganization?.id;
+                  final isHighlighted = index == selectedIndex;
+
+                  if (organizationTileBuilder != null) {
+                    return InkWell(
+                      onTap: () => onSelectOrganization(org),
+                      child: organizationTileBuilder!(org, isSelected),
+                    );
+                  }
+
+                  return _OrganizationTile(
+                    organization: org,
+                    isSelected: isSelected,
+                    isHighlighted: isHighlighted,
+                    style: style,
+                    onTap: () => onSelectOrganization(org),
+                  );
+                },
+              ),
+            ),
+
+            // Create button
+            if (showCreateButton && onCreateOrganization != null) ...[
+              const Divider(height: 1),
+              InkWell(
+                onTap: () {
+                  onRemoveOverlay();
+                  onCreateOrganization?.call();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.add_circle_outline,
+                        size: 20,
+                        color: colorScheme.primary,
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        createButtonLabel ?? 'Create Organization',
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: colorScheme.primary,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

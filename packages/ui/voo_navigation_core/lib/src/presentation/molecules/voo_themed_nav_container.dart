@@ -642,10 +642,13 @@ class _MinimalModernContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final themeData = Theme.of(context);
+    final isDark = themeData.brightness == Brightness.dark;
 
-    final surfaceColor = backgroundColor ?? theme.surfaceTintColor ?? colorScheme.surface;
-    final borderColor = theme.borderColor ?? colorScheme.outlineVariant;
+    // Use neutral gray for content area (no tinted colors)
+    final surfaceColor = backgroundColor ??
+        theme.surfaceTintColor ??
+        (isDark ? const Color(0xFF121212) : const Color(0xFFF8F8F8));
 
     Widget content = Container(
       width: width,
@@ -654,13 +657,7 @@ class _MinimalModernContainer extends StatelessWidget {
       decoration: BoxDecoration(
         color: surfaceColor,
         borderRadius: radius,
-        border: theme.showContainerBorder
-            ? Border.all(
-                color: borderColor.withValues(alpha: theme.borderOpacity),
-                width: theme.borderWidth,
-              )
-            : null,
-        // No shadows for minimal
+        // No border for minimal modern - clean seamless look
       ),
       child: child,
     );

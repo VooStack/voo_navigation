@@ -162,131 +162,20 @@ class _VooQuickActionsState extends State<VooQuickActions>
             child: ScaleTransition(
               scale: _scaleAnimation,
               alignment: showAbove ? Alignment.bottomCenter : Alignment.topCenter,
-              child: _buildMenuContent(style, dropdownWidth),
+              child: _QuickActionsMenuContent(
+                style: style,
+                width: dropdownWidth,
+                useGridLayout: widget.useGridLayout,
+                gridColumns: widget.gridColumns,
+                showLabelsInGrid: widget.showLabelsInGrid,
+                actions: widget.actions,
+                actionBuilder: widget.actionBuilder,
+                onActionTap: _handleActionTap,
+              ),
             ),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildMenuContent(VooQuickActionsStyle style, double width) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Material(
-      elevation: 8,
-      borderRadius: style.borderRadius ?? BorderRadius.circular(16),
-      color: style.backgroundColor ?? colorScheme.surface,
-      child: Container(
-        width: width,
-        decoration: BoxDecoration(
-          borderRadius: style.borderRadius ?? BorderRadius.circular(16),
-          border: Border.all(
-            color: colorScheme.outline.withValues(alpha: 0.2),
-          ),
-        ),
-        child: widget.useGridLayout
-            ? _buildGridLayout(style)
-            : _buildListLayout(style),
-      ),
-    );
-  }
-
-  Widget _buildGridLayout(VooQuickActionsStyle style) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final visibleActions = widget.actions.where((a) => !a.isDivider).toList();
-
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: visibleActions.map((action) {
-          return SizedBox(
-            width: (style.dropdownWidth ?? (widget.gridColumns * 80.0)) /
-                    widget.gridColumns -
-                16,
-            child: InkWell(
-              onTap: action.isEnabled ? () => _handleActionTap(action) : null,
-              borderRadius: BorderRadius.circular(12),
-              child: Opacity(
-                opacity: action.isEnabled ? 1.0 : 0.5,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: action.isDangerous
-                              ? (style.dangerColor ?? colorScheme.error)
-                                  .withValues(alpha: 0.1)
-                              : colorScheme.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: action.iconWidget ??
-                            Icon(
-                              action.icon ?? Icons.star,
-                              size: style.iconSize ?? 24,
-                              color: action.isDangerous
-                                  ? (style.dangerColor ?? colorScheme.error)
-                                  : (action.iconColor ?? colorScheme.onSurfaceVariant),
-                            ),
-                      ),
-                      if (widget.showLabelsInGrid) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          action.label,
-                          style: style.labelStyle ?? theme.textTheme.labelSmall?.copyWith(
-                            color: action.isDangerous
-                                ? (style.dangerColor ?? colorScheme.error)
-                                : colorScheme.onSurface,
-                          ),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget _buildListLayout(VooQuickActionsStyle style) {
-    return ListView.builder(
-      shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      itemCount: widget.actions.length,
-      itemBuilder: (context, index) {
-        final action = widget.actions[index];
-
-        if (action.isDivider) {
-          return const Divider(height: 8);
-        }
-
-        if (widget.actionBuilder != null) {
-          return widget.actionBuilder!(
-            action,
-            () => _handleActionTap(action),
-          );
-        }
-
-        return _ActionTile(
-          action: action,
-          style: style,
-          onTap: () => _handleActionTap(action),
-        );
-      },
     );
   }
 
@@ -337,6 +226,189 @@ class _VooQuickActionsState extends State<VooQuickActions>
           );
         },
       ),
+    );
+  }
+}
+
+class _QuickActionsMenuContent extends StatelessWidget {
+  final VooQuickActionsStyle style;
+  final double width;
+  final bool useGridLayout;
+  final int gridColumns;
+  final bool showLabelsInGrid;
+  final List<VooQuickAction> actions;
+  final Widget Function(VooQuickAction, VoidCallback onTap)? actionBuilder;
+  final void Function(VooQuickAction) onActionTap;
+
+  const _QuickActionsMenuContent({
+    required this.style,
+    required this.width,
+    required this.useGridLayout,
+    required this.gridColumns,
+    required this.showLabelsInGrid,
+    required this.actions,
+    this.actionBuilder,
+    required this.onActionTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Material(
+      elevation: 8,
+      borderRadius: style.borderRadius ?? BorderRadius.circular(16),
+      color: style.backgroundColor ?? colorScheme.surface,
+      child: Container(
+        width: width,
+        decoration: BoxDecoration(
+          borderRadius: style.borderRadius ?? BorderRadius.circular(16),
+          border: Border.all(
+            color: colorScheme.outline.withValues(alpha: 0.2),
+          ),
+        ),
+        child: useGridLayout
+            ? _QuickActionsGridLayout(
+                style: style,
+                gridColumns: gridColumns,
+                showLabelsInGrid: showLabelsInGrid,
+                actions: actions,
+                onActionTap: onActionTap,
+              )
+            : _QuickActionsListLayout(
+                style: style,
+                actions: actions,
+                actionBuilder: actionBuilder,
+                onActionTap: onActionTap,
+              ),
+      ),
+    );
+  }
+}
+
+class _QuickActionsGridLayout extends StatelessWidget {
+  final VooQuickActionsStyle style;
+  final int gridColumns;
+  final bool showLabelsInGrid;
+  final List<VooQuickAction> actions;
+  final void Function(VooQuickAction) onActionTap;
+
+  const _QuickActionsGridLayout({
+    required this.style,
+    required this.gridColumns,
+    required this.showLabelsInGrid,
+    required this.actions,
+    required this.onActionTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final visibleActions = actions.where((a) => !a.isDivider).toList();
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: visibleActions.map((action) {
+          return SizedBox(
+            width: (style.dropdownWidth ?? (gridColumns * 80.0)) / gridColumns - 16,
+            child: InkWell(
+              onTap: action.isEnabled ? () => onActionTap(action) : null,
+              borderRadius: BorderRadius.circular(12),
+              child: Opacity(
+                opacity: action.isEnabled ? 1.0 : 0.5,
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: action.isDangerous
+                              ? (style.dangerColor ?? colorScheme.error).withValues(alpha: 0.1)
+                              : colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: action.iconWidget ??
+                            Icon(
+                              action.icon ?? Icons.star,
+                              size: style.iconSize ?? 24,
+                              color: action.isDangerous
+                                  ? (style.dangerColor ?? colorScheme.error)
+                                  : (action.iconColor ?? colorScheme.onSurfaceVariant),
+                            ),
+                      ),
+                      if (showLabelsInGrid) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          action.label,
+                          style: style.labelStyle ??
+                              theme.textTheme.labelSmall?.copyWith(
+                                color: action.isDangerous
+                                    ? (style.dangerColor ?? colorScheme.error)
+                                    : colorScheme.onSurface,
+                              ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        }).toList(),
+      ),
+    );
+  }
+}
+
+class _QuickActionsListLayout extends StatelessWidget {
+  final VooQuickActionsStyle style;
+  final List<VooQuickAction> actions;
+  final Widget Function(VooQuickAction, VoidCallback onTap)? actionBuilder;
+  final void Function(VooQuickAction) onActionTap;
+
+  const _QuickActionsListLayout({
+    required this.style,
+    required this.actions,
+    this.actionBuilder,
+    required this.onActionTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      itemCount: actions.length,
+      itemBuilder: (context, index) {
+        final action = actions[index];
+
+        if (action.isDivider) {
+          return const Divider(height: 8);
+        }
+
+        if (actionBuilder != null) {
+          return actionBuilder!(
+            action,
+            () => onActionTap(action),
+          );
+        }
+
+        return _ActionTile(
+          action: action,
+          style: style,
+          onTap: () => onActionTap(action),
+        );
+      },
     );
   }
 }

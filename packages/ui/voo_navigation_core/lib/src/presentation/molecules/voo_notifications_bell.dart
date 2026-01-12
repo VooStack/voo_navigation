@@ -174,191 +174,32 @@ class _VooNotificationsBellState extends State<VooNotificationsBell>
             child: ScaleTransition(
               scale: _scaleAnimation,
               alignment: Alignment.topCenter,
-              child: _buildDropdownContent(style, dropdownWidth, maxHeight),
+              child: _NotificationsBellDropdownContent(
+                style: style,
+                width: dropdownWidth,
+                maxHeight: maxHeight,
+                notifications: widget.notifications,
+                maxVisibleNotifications: widget.maxVisibleNotifications,
+                headerWidget: widget.headerWidget,
+                emptyStateWidget: widget.emptyStateWidget,
+                emptyStateMessage: widget.emptyStateMessage,
+                footerWidget: widget.footerWidget,
+                showViewAllButton: widget.showViewAllButton,
+                showMarkAllRead: widget.showMarkAllRead,
+                unreadCount: _unreadCount,
+                onMarkAllRead: widget.onMarkAllRead,
+                onViewAll: widget.onViewAll,
+                onRemoveOverlay: _removeOverlay,
+                onMarkNeedsBuild: () => _overlayEntry?.markNeedsBuild(),
+                notificationBuilder: widget.notificationBuilder,
+                onNotificationTap: _handleNotificationTap,
+                onNotificationDismiss: widget.onNotificationDismiss != null
+                    ? _handleNotificationDismiss
+                    : null,
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDropdownContent(
-    VooNotificationsBellStyle style,
-    double width,
-    double maxHeight,
-  ) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Material(
-      elevation: 8,
-      borderRadius: style.borderRadius ?? BorderRadius.circular(16),
-      color: style.backgroundColor ?? colorScheme.surface,
-      child: Container(
-        width: width,
-        constraints: BoxConstraints(maxHeight: maxHeight),
-        decoration: BoxDecoration(
-          borderRadius: style.borderRadius ?? BorderRadius.circular(16),
-          border: Border.all(
-            color: colorScheme.outline.withValues(alpha: 0.2),
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Header
-            widget.headerWidget ?? _buildHeader(style),
-
-            // Notifications list
-            if (widget.notifications.isEmpty)
-              widget.emptyStateWidget ?? _buildEmptyState(style)
-            else
-              Flexible(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  itemCount: widget.notifications
-                      .take(widget.maxVisibleNotifications)
-                      .length,
-                  itemBuilder: (context, index) {
-                    final notification = widget.notifications[index];
-
-                    if (widget.notificationBuilder != null) {
-                      return widget.notificationBuilder!(
-                        notification,
-                        () => _handleNotificationTap(notification),
-                        notification.onDismiss != null
-                            ? () => _handleNotificationDismiss(notification)
-                            : null,
-                      );
-                    }
-
-                    return _NotificationTile(
-                      notification: notification,
-                      style: style,
-                      onTap: () => _handleNotificationTap(notification),
-                      onDismiss: widget.onNotificationDismiss != null
-                          ? () => _handleNotificationDismiss(notification)
-                          : null,
-                    );
-                  },
-                ),
-              ),
-
-            // Footer
-            if (widget.footerWidget != null)
-              widget.footerWidget!
-            else if (widget.showViewAllButton &&
-                widget.notifications.length > widget.maxVisibleNotifications)
-              _buildFooter(style),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeader(VooNotificationsBellStyle style) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.1),
-          ),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Notifications',
-            style: style.titleStyle ?? theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          if (widget.showMarkAllRead && _unreadCount > 0)
-            TextButton(
-              onPressed: () {
-                widget.onMarkAllRead?.call();
-                _overlayEntry?.markNeedsBuild();
-              },
-              child: Text(
-                'Mark all as read',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.primary,
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmptyState(VooNotificationsBellStyle style) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Padding(
-      padding: const EdgeInsets.all(32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.notifications_none,
-            size: 48,
-            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            widget.emptyStateMessage ?? 'No notifications',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFooter(VooNotificationsBellStyle style) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Container(
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.1),
-          ),
-        ),
-      ),
-      child: TextButton(
-        onPressed: () {
-          _removeOverlay();
-          widget.onViewAll?.call();
-        },
-        style: TextButton.styleFrom(
-          minimumSize: const Size(double.infinity, 48),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(
-                (style.borderRadius?.bottomLeft.x ?? 16),
-              ),
-              bottomRight: Radius.circular(
-                (style.borderRadius?.bottomRight.x ?? 16),
-              ),
-            ),
-          ),
-        ),
-        child: Text(
-          'View all notifications',
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: colorScheme.primary,
-          ),
-        ),
       ),
     );
   }
@@ -402,6 +243,281 @@ class _VooNotificationsBellState extends State<VooNotificationsBell>
                   ? colorScheme.primary
                   : (style.iconColor ?? colorScheme.onSurfaceVariant),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NotificationsBellDropdownContent extends StatelessWidget {
+  final VooNotificationsBellStyle style;
+  final double width;
+  final double maxHeight;
+  final List<VooNotificationItem> notifications;
+  final int maxVisibleNotifications;
+  final Widget? headerWidget;
+  final Widget? emptyStateWidget;
+  final String? emptyStateMessage;
+  final Widget? footerWidget;
+  final bool showViewAllButton;
+  final bool showMarkAllRead;
+  final int unreadCount;
+  final VoidCallback? onMarkAllRead;
+  final VoidCallback? onViewAll;
+  final VoidCallback onRemoveOverlay;
+  final VoidCallback onMarkNeedsBuild;
+  final Widget Function(VooNotificationItem, VoidCallback onTap, VoidCallback? onDismiss)? notificationBuilder;
+  final void Function(VooNotificationItem) onNotificationTap;
+  final void Function(VooNotificationItem)? onNotificationDismiss;
+
+  const _NotificationsBellDropdownContent({
+    required this.style,
+    required this.width,
+    required this.maxHeight,
+    required this.notifications,
+    required this.maxVisibleNotifications,
+    this.headerWidget,
+    this.emptyStateWidget,
+    this.emptyStateMessage,
+    this.footerWidget,
+    required this.showViewAllButton,
+    required this.showMarkAllRead,
+    required this.unreadCount,
+    this.onMarkAllRead,
+    this.onViewAll,
+    required this.onRemoveOverlay,
+    required this.onMarkNeedsBuild,
+    this.notificationBuilder,
+    required this.onNotificationTap,
+    this.onNotificationDismiss,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Material(
+      elevation: 8,
+      borderRadius: style.borderRadius ?? BorderRadius.circular(16),
+      color: style.backgroundColor ?? colorScheme.surface,
+      child: Container(
+        width: width,
+        constraints: BoxConstraints(maxHeight: maxHeight),
+        decoration: BoxDecoration(
+          borderRadius: style.borderRadius ?? BorderRadius.circular(16),
+          border: Border.all(
+            color: colorScheme.outline.withValues(alpha: 0.2),
+          ),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            headerWidget ??
+                _NotificationsBellHeader(
+                  style: style,
+                  showMarkAllRead: showMarkAllRead,
+                  unreadCount: unreadCount,
+                  onMarkAllRead: onMarkAllRead,
+                  onMarkNeedsBuild: onMarkNeedsBuild,
+                ),
+
+            // Notifications list
+            if (notifications.isEmpty)
+              emptyStateWidget ??
+                  _NotificationsBellEmptyState(
+                    style: style,
+                    emptyStateMessage: emptyStateMessage,
+                  )
+            else
+              Flexible(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  itemCount: notifications.take(maxVisibleNotifications).length,
+                  itemBuilder: (context, index) {
+                    final notification = notifications[index];
+
+                    if (notificationBuilder != null) {
+                      return notificationBuilder!(
+                        notification,
+                        () => onNotificationTap(notification),
+                        notification.onDismiss != null && onNotificationDismiss != null
+                            ? () => onNotificationDismiss!(notification)
+                            : null,
+                      );
+                    }
+
+                    return _NotificationTile(
+                      notification: notification,
+                      style: style,
+                      onTap: () => onNotificationTap(notification),
+                      onDismiss: onNotificationDismiss != null
+                          ? () => onNotificationDismiss!(notification)
+                          : null,
+                    );
+                  },
+                ),
+              ),
+
+            // Footer
+            if (footerWidget != null)
+              footerWidget!
+            else if (showViewAllButton && notifications.length > maxVisibleNotifications)
+              _NotificationsBellFooter(
+                style: style,
+                onViewAll: onViewAll,
+                onRemoveOverlay: onRemoveOverlay,
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NotificationsBellHeader extends StatelessWidget {
+  final VooNotificationsBellStyle style;
+  final bool showMarkAllRead;
+  final int unreadCount;
+  final VoidCallback? onMarkAllRead;
+  final VoidCallback onMarkNeedsBuild;
+
+  const _NotificationsBellHeader({
+    required this.style,
+    required this.showMarkAllRead,
+    required this.unreadCount,
+    this.onMarkAllRead,
+    required this.onMarkNeedsBuild,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: colorScheme.outline.withValues(alpha: 0.1),
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Notifications',
+            style: style.titleStyle ??
+                theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+          if (showMarkAllRead && unreadCount > 0)
+            TextButton(
+              onPressed: () {
+                onMarkAllRead?.call();
+                onMarkNeedsBuild();
+              },
+              child: Text(
+                'Mark all as read',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NotificationsBellEmptyState extends StatelessWidget {
+  final VooNotificationsBellStyle style;
+  final String? emptyStateMessage;
+
+  const _NotificationsBellEmptyState({
+    required this.style,
+    this.emptyStateMessage,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.all(32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.notifications_none,
+            size: 48,
+            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            emptyStateMessage ?? 'No notifications',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NotificationsBellFooter extends StatelessWidget {
+  final VooNotificationsBellStyle style;
+  final VoidCallback? onViewAll;
+  final VoidCallback onRemoveOverlay;
+
+  const _NotificationsBellFooter({
+    required this.style,
+    this.onViewAll,
+    required this.onRemoveOverlay,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: colorScheme.outline.withValues(alpha: 0.1),
+          ),
+        ),
+      ),
+      child: TextButton(
+        onPressed: () {
+          onRemoveOverlay();
+          onViewAll?.call();
+        },
+        style: TextButton.styleFrom(
+          minimumSize: const Size(double.infinity, 48),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(
+                style.borderRadius?.bottomLeft.x ?? 16,
+              ),
+              bottomRight: Radius.circular(
+                style.borderRadius?.bottomRight.x ?? 16,
+              ),
+            ),
+          ),
+        ),
+        child: Text(
+          'View all notifications',
+          style: theme.textTheme.labelLarge?.copyWith(
+            color: colorScheme.primary,
           ),
         ),
       ),

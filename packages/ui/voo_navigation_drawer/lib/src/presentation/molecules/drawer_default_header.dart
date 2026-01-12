@@ -24,14 +24,19 @@ class VooDrawerDefaultHeader extends StatelessWidget {
     final radius = context.vooRadius;
     final size = context.vooSize;
 
+    // Use neutral gray for icon background instead of tinted surface
+    final iconBgColor = theme.brightness == Brightness.light
+        ? const Color(0xFFF0F0F0)
+        : theme.colorScheme.onSurface.withValues(alpha: 0.12);
+
     return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.sm, spacing.lg, spacing.sm, spacing.md),
+      padding: EdgeInsets.fromLTRB(spacing.sm, spacing.md, spacing.sm, spacing.md),
       child: Row(
         children: [
           Container(
             width: size.avatarMedium,
             height: size.avatarMedium,
-            decoration: BoxDecoration(color: theme.colorScheme.onSurface.withValues(alpha: 0.12), borderRadius: BorderRadius.circular(radius.md)),
+            decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(radius.md)),
             child: Icon(icon, color: theme.colorScheme.onSurface, size: size.iconMedium),
           ),
           SizedBox(width: spacing.sm),

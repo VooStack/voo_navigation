@@ -302,7 +302,32 @@ class _VooSearchBarState extends State<VooSearchBar> {
                   child: KeyboardListener(
                     focusNode: FocusNode(),
                     onKeyEvent: _handleKeyEvent,
-                    child: _buildResults(style),
+                    child: _SearchBarResults(
+                      style: style,
+                      query: _query,
+                      showRecentSection: _showRecentSection,
+                      recentSearches: widget.recentSearches,
+                      filteredNavItems: _filteredNavItems,
+                      filteredActions: _filteredActions,
+                      selectedIndex: _selectedIndex,
+                      onClearRecentSearches: widget.onClearRecentSearches,
+                      onRecentSearchSelected: (search) {
+                        widget.onRecentSearchSelected?.call(search);
+                        _controller.text = search;
+                        _handleSearch(search);
+                      },
+                      onNavigationItemSelected: (item) {
+                        widget.onNavigationItemSelected?.call(item);
+                        _removeOverlay();
+                      },
+                      onSearchActionSelected: (action) {
+                        widget.onSearchActionSelected?.call(action);
+                        action.onTap?.call();
+                        _removeOverlay();
+                      },
+                      filteredItemBuilder: widget.filteredItemBuilder,
+                      actionBuilder: widget.actionBuilder,
+                    ),
                   ),
                 ),
               ),
@@ -310,227 +335,6 @@ class _VooSearchBarState extends State<VooSearchBar> {
           ],
         );
       },
-    );
-  }
-
-  Widget _buildResults(VooSearchBarStyle style) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return ListView(
-      shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      children: [
-        // Recent searches
-        if (_showRecentSection) ...[
-          _buildSectionHeader(
-            'Recent',
-            trailing: TextButton(
-              onPressed: widget.onClearRecentSearches,
-              child: Text(
-                'Clear',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: colorScheme.primary,
-                ),
-              ),
-            ),
-          ),
-          ...widget.recentSearches!.asMap().entries.map((entry) {
-            final index = entry.key;
-            final search = entry.value;
-            return _buildResultItem(
-              icon: Icons.history,
-              label: search,
-              isSelected: index == _selectedIndex,
-              onTap: () {
-                widget.onRecentSearchSelected?.call(search);
-                _controller.text = search;
-                _handleSearch(search);
-              },
-            );
-          }),
-          if (_filteredNavItems.isNotEmpty || _filteredActions.isNotEmpty)
-            const Divider(height: 16),
-        ],
-
-        // Navigation items
-        if (_filteredNavItems.isNotEmpty) ...[
-          _buildSectionHeader('Navigation'),
-          ..._filteredNavItems.asMap().entries.map((entry) {
-            final offsetIndex = _showRecentSection
-                ? (widget.recentSearches?.length ?? 0) + entry.key
-                : entry.key;
-            final item = entry.value;
-
-            if (widget.filteredItemBuilder != null) {
-              return widget.filteredItemBuilder!(
-                item,
-                () {
-                  widget.onNavigationItemSelected?.call(item);
-                  _removeOverlay();
-                },
-              );
-            }
-
-            return _buildResultItem(
-              icon: item.icon,
-              label: item.label,
-              subtitle: item.route,
-              isSelected: offsetIndex == _selectedIndex,
-              onTap: () {
-                widget.onNavigationItemSelected?.call(item);
-                _removeOverlay();
-              },
-            );
-          }),
-          if (_filteredActions.isNotEmpty) const Divider(height: 16),
-        ],
-
-        // Search actions
-        if (_filteredActions.isNotEmpty) ...[
-          _buildSectionHeader('Actions'),
-          ..._filteredActions.asMap().entries.map((entry) {
-            final offsetIndex = (_showRecentSection
-                    ? (widget.recentSearches?.length ?? 0)
-                    : 0) +
-                _filteredNavItems.length +
-                entry.key;
-            final action = entry.value;
-
-            if (action.isDivider) {
-              return const Divider(height: 8);
-            }
-
-            if (widget.actionBuilder != null) {
-              return widget.actionBuilder!(
-                action,
-                () {
-                  widget.onSearchActionSelected?.call(action);
-                  action.onTap?.call();
-                  _removeOverlay();
-                },
-              );
-            }
-
-            return _buildResultItem(
-              icon: action.icon,
-              iconWidget: action.iconWidget,
-              label: action.label,
-              subtitle: action.description,
-              shortcut: action.shortcut,
-              isSelected: offsetIndex == _selectedIndex,
-              onTap: () {
-                widget.onSearchActionSelected?.call(action);
-                action.onTap?.call();
-                _removeOverlay();
-              },
-            );
-          }),
-        ],
-
-        // Empty state
-        if (_query.isNotEmpty && _filteredNavItems.isEmpty && _filteredActions.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              'No results found for "$_query"',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildSectionHeader(String title, {Widget? trailing}) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: theme.textTheme.labelSmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          if (trailing != null) trailing,
-        ],
-      ),
-    );
-  }
-
-  Widget _buildResultItem({
-    IconData? icon,
-    Widget? iconWidget,
-    required String label,
-    String? subtitle,
-    String? shortcut,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final style = widget.style ?? const VooSearchBarStyle();
-
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        color: isSelected ? colorScheme.surfaceContainerHighest : null,
-        child: Row(
-          children: [
-            if (iconWidget != null)
-              iconWidget
-            else if (icon != null)
-              Icon(
-                icon,
-                size: 20,
-                color: colorScheme.onSurfaceVariant,
-              ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    label,
-                    style: style.resultItemStyle ?? theme.textTheme.bodyMedium,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (subtitle != null)
-                    Text(
-                      subtitle,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                ],
-              ),
-            ),
-            if (shortcut != null)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  shortcut,
-                  style: style.shortcutStyle ?? theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -565,6 +369,270 @@ class _VooSearchBarState extends State<VooSearchBar> {
             _selectCurrentItem();
           }
         },
+      ),
+    );
+  }
+}
+
+class _SearchBarResults extends StatelessWidget {
+  final VooSearchBarStyle style;
+  final String query;
+  final bool showRecentSection;
+  final List<String>? recentSearches;
+  final List<VooNavigationItem> filteredNavItems;
+  final List<VooSearchAction> filteredActions;
+  final int selectedIndex;
+  final VoidCallback? onClearRecentSearches;
+  final ValueChanged<String> onRecentSearchSelected;
+  final ValueChanged<VooNavigationItem> onNavigationItemSelected;
+  final ValueChanged<VooSearchAction> onSearchActionSelected;
+  final Widget Function(VooNavigationItem, VoidCallback onTap)? filteredItemBuilder;
+  final Widget Function(VooSearchAction, VoidCallback onTap)? actionBuilder;
+
+  const _SearchBarResults({
+    required this.style,
+    required this.query,
+    required this.showRecentSection,
+    this.recentSearches,
+    required this.filteredNavItems,
+    required this.filteredActions,
+    required this.selectedIndex,
+    this.onClearRecentSearches,
+    required this.onRecentSearchSelected,
+    required this.onNavigationItemSelected,
+    required this.onSearchActionSelected,
+    this.filteredItemBuilder,
+    this.actionBuilder,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return ListView(
+      shrinkWrap: true,
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      children: [
+        // Recent searches
+        if (showRecentSection) ...[
+          _SearchBarSectionHeader(
+            title: 'Recent',
+            trailing: TextButton(
+              onPressed: onClearRecentSearches,
+              child: Text(
+                'Clear',
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: colorScheme.primary,
+                ),
+              ),
+            ),
+          ),
+          ...recentSearches!.asMap().entries.map((entry) {
+            final index = entry.key;
+            final search = entry.value;
+            return _SearchBarResultItem(
+              style: style,
+              icon: Icons.history,
+              label: search,
+              isSelected: index == selectedIndex,
+              onTap: () => onRecentSearchSelected(search),
+            );
+          }),
+          if (filteredNavItems.isNotEmpty || filteredActions.isNotEmpty)
+            const Divider(height: 16),
+        ],
+
+        // Navigation items
+        if (filteredNavItems.isNotEmpty) ...[
+          const _SearchBarSectionHeader(title: 'Navigation'),
+          ...filteredNavItems.asMap().entries.map((entry) {
+            final offsetIndex = showRecentSection
+                ? (recentSearches?.length ?? 0) + entry.key
+                : entry.key;
+            final item = entry.value;
+
+            if (filteredItemBuilder != null) {
+              return filteredItemBuilder!(
+                item,
+                () => onNavigationItemSelected(item),
+              );
+            }
+
+            return _SearchBarResultItem(
+              style: style,
+              icon: item.icon,
+              label: item.label,
+              subtitle: item.route,
+              isSelected: offsetIndex == selectedIndex,
+              onTap: () => onNavigationItemSelected(item),
+            );
+          }),
+          if (filteredActions.isNotEmpty) const Divider(height: 16),
+        ],
+
+        // Search actions
+        if (filteredActions.isNotEmpty) ...[
+          const _SearchBarSectionHeader(title: 'Actions'),
+          ...filteredActions.asMap().entries.map((entry) {
+            final offsetIndex =
+                (showRecentSection ? (recentSearches?.length ?? 0) : 0) +
+                    filteredNavItems.length +
+                    entry.key;
+            final action = entry.value;
+
+            if (action.isDivider) {
+              return const Divider(height: 8);
+            }
+
+            if (actionBuilder != null) {
+              return actionBuilder!(
+                action,
+                () => onSearchActionSelected(action),
+              );
+            }
+
+            return _SearchBarResultItem(
+              style: style,
+              icon: action.icon,
+              iconWidget: action.iconWidget,
+              label: action.label,
+              subtitle: action.description,
+              shortcut: action.shortcut,
+              isSelected: offsetIndex == selectedIndex,
+              onTap: () => onSearchActionSelected(action),
+            );
+          }),
+        ],
+
+        // Empty state
+        if (query.isNotEmpty && filteredNavItems.isEmpty && filteredActions.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'No results found for "$query"',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _SearchBarSectionHeader extends StatelessWidget {
+  final String title;
+  final Widget? trailing;
+
+  const _SearchBarSectionHeader({
+    required this.title,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          if (trailing != null) trailing!,
+        ],
+      ),
+    );
+  }
+}
+
+class _SearchBarResultItem extends StatelessWidget {
+  final VooSearchBarStyle style;
+  final IconData? icon;
+  final Widget? iconWidget;
+  final String label;
+  final String? subtitle;
+  final String? shortcut;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _SearchBarResultItem({
+    required this.style,
+    this.icon,
+    this.iconWidget,
+    required this.label,
+    this.subtitle,
+    this.shortcut,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        color: isSelected ? colorScheme.surfaceContainerHighest : null,
+        child: Row(
+          children: [
+            if (iconWidget != null)
+              iconWidget!
+            else if (icon != null)
+              Icon(
+                icon,
+                size: 20,
+                color: colorScheme.onSurfaceVariant,
+              ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    label,
+                    style: style.resultItemStyle ?? theme.textTheme.bodyMedium,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (subtitle != null)
+                    Text(
+                      subtitle!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                ],
+              ),
+            ),
+            if (shortcut != null)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  shortcut!,
+                  style: style.shortcutStyle ??
+                      theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

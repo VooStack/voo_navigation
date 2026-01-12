@@ -47,8 +47,6 @@ class VooBreadcrumbs extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
 
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final effectiveStyle = style ?? const VooBreadcrumbsStyle();
 
     // Determine which items to show
@@ -83,7 +81,10 @@ class VooBreadcrumbs extends StatelessWidget {
           for (int i = 0; i < visibleItems.length; i++) ...[
             // Collapsed items indicator (after first item)
             if (i == 1 && collapsedItems.isNotEmpty) ...[
-              _buildSeparator(effectiveStyle, colorScheme),
+              _BreadcrumbSeparator(
+                style: effectiveStyle,
+                separator: separator,
+              ),
               collapsedItemsBuilder != null
                   ? collapsedItemsBuilder!(collapsedItems)
                   : _CollapsedItemsDropdown(
@@ -95,7 +96,10 @@ class VooBreadcrumbs extends StatelessWidget {
 
             // Separator (except before first item)
             if (i > 0 || (i == 1 && collapsedItems.isNotEmpty))
-              _buildSeparator(effectiveStyle, colorScheme),
+              _BreadcrumbSeparator(
+                style: effectiveStyle,
+                separator: separator,
+              ),
 
             // Breadcrumb item
             itemBuilder != null
@@ -113,8 +117,20 @@ class VooBreadcrumbs extends StatelessWidget {
       ),
     );
   }
+}
 
-  Widget _buildSeparator(VooBreadcrumbsStyle style, ColorScheme colorScheme) {
+class _BreadcrumbSeparator extends StatelessWidget {
+  final VooBreadcrumbsStyle style;
+  final Widget? separator;
+
+  const _BreadcrumbSeparator({
+    required this.style,
+    this.separator,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: style.itemSpacing ?? 8),
       child: separator ??
