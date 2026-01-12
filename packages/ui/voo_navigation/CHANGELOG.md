@@ -1,3 +1,18 @@
+## 1.2.4
+
+### Fixed
+- **Logo Widget Support**: Custom `logo` widget from `VooHeaderConfig` now applies to both rail and drawer navigation
+  - Updated `voo_navigation_drawer` dependency to ^0.1.3
+
+---
+
+## 1.2.3
+
+### Changed
+- Internal dependency updates
+
+---
+
 ## 1.2.2
 
 ### Fixed

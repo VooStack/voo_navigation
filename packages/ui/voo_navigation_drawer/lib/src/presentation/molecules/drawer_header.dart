@@ -73,6 +73,8 @@ class VooDrawerHeader extends StatelessWidget {
         tagline: headerConfig.tagline,
         icon: headerConfig.logoIcon ?? Icons.dashboard,
         trailing: trailing,
+        logo: headerConfig.logo,
+        logoBackgroundColor: headerConfig.logoBackgroundColor,
       );
     } else {
       headerContent = VooDrawerDefaultHeader(trailing: trailing);

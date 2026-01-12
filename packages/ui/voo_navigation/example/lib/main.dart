@@ -13,10 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'VoO Navigation Example',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue), useMaterial3: true),
       home: const NavigationExample(),
     );
   }
@@ -36,24 +33,9 @@ class _NavigationExampleState extends State<NavigationExample> {
   // Organization switcher state
   late VooOrganization _selectedOrganization;
   final List<VooOrganization> _organizations = [
-    const VooOrganization(
-      id: 'acme',
-      name: 'ACME Corp',
-      subtitle: '12 members',
-      avatarColor: Colors.blue,
-    ),
-    const VooOrganization(
-      id: 'startup',
-      name: 'Startup Inc',
-      subtitle: '5 members',
-      avatarColor: Colors.green,
-    ),
-    const VooOrganization(
-      id: 'enterprise',
-      name: 'Enterprise Ltd',
-      subtitle: '50 members',
-      avatarColor: Colors.purple,
-    ),
+    const VooOrganization(id: 'acme', name: 'ACME Corp', subtitle: '12 members', avatarColor: Colors.blue),
+    const VooOrganization(id: 'startup', name: 'Startup Inc', subtitle: '5 members', avatarColor: Colors.green),
+    const VooOrganization(id: 'enterprise', name: 'Enterprise Ltd', subtitle: '50 members', avatarColor: Colors.purple),
   ];
 
   @override
@@ -63,33 +45,14 @@ class _NavigationExampleState extends State<NavigationExample> {
   }
 
   final List<VooNavigationItem> _items = [
-    const VooNavigationItem(
-      id: 'dashboard',
-      label: 'Dashboard',
-      icon: Icons.dashboard_outlined,
-      selectedIcon: Icons.dashboard,
-      mobilePriority: true,
-      route: '/dashboard',
-    ),
+    const VooNavigationItem(id: 'dashboard', label: 'Dashboard', icon: Icons.dashboard_outlined, selectedIcon: Icons.dashboard, mobilePriority: true, route: '/dashboard'),
     VooNavigationItem.section(
       label: 'Teams',
       id: 'teams',
       isExpanded: false,
       children: const [
-        VooNavigationItem(
-          id: 'team_overview',
-          label: 'Overview',
-          icon: Icons.groups_outlined,
-          selectedIcon: Icons.groups,
-          route: '/teams/overview',
-        ),
-        VooNavigationItem(
-          id: 'team_members',
-          label: 'Members',
-          icon: Icons.person_outline,
-          selectedIcon: Icons.person,
-          route: '/teams/members',
-        ),
+        VooNavigationItem(id: 'team_overview', label: 'Overview', icon: Icons.groups_outlined, selectedIcon: Icons.groups, route: '/teams/overview'),
+        VooNavigationItem(id: 'team_members', label: 'Members', icon: Icons.person_outline, selectedIcon: Icons.person, route: '/teams/members'),
       ],
     ),
     VooNavigationItem.section(
@@ -97,27 +60,9 @@ class _NavigationExampleState extends State<NavigationExample> {
       id: 'employee',
       isExpanded: true,
       children: const [
-        VooNavigationItem(
-          id: 'attendance',
-          label: 'Attendance',
-          icon: Icons.access_time_outlined,
-          selectedIcon: Icons.access_time,
-          route: '/employee/attendance',
-        ),
-        VooNavigationItem(
-          id: 'checklist',
-          label: 'Checklist',
-          icon: Icons.checklist_outlined,
-          selectedIcon: Icons.checklist,
-          route: '/employee/checklist',
-        ),
-        VooNavigationItem(
-          id: 'time_off',
-          label: 'Time off',
-          icon: Icons.beach_access_outlined,
-          selectedIcon: Icons.beach_access,
-          route: '/employee/time-off',
-        ),
+        VooNavigationItem(id: 'attendance', label: 'Attendance', icon: Icons.access_time_outlined, selectedIcon: Icons.access_time, route: '/employee/attendance'),
+        VooNavigationItem(id: 'checklist', label: 'Checklist', icon: Icons.checklist_outlined, selectedIcon: Icons.checklist, route: '/employee/checklist'),
+        VooNavigationItem(id: 'time_off', label: 'Time off', icon: Icons.beach_access_outlined, selectedIcon: Icons.beach_access, route: '/employee/time-off'),
       ],
     ),
     const VooNavigationItem(
@@ -132,13 +77,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   ];
 
   final List<VooNavigationItem> _footerItems = [
-    const VooNavigationItem(
-      id: 'settings',
-      label: 'Settings',
-      icon: Icons.settings_outlined,
-      selectedIcon: Icons.settings,
-      route: '/settings',
-    ),
+    const VooNavigationItem(id: 'settings', label: 'Settings', icon: Icons.settings_outlined, selectedIcon: Icons.settings, route: '/settings'),
   ];
 
   void _onNavigationItemSelected(String itemId) {
@@ -188,18 +127,10 @@ class _NavigationExampleState extends State<NavigationExample> {
         onNavigationItemSelected: _onNavigationItemSelected,
 
         // Simple theme configuration
-        navigationTheme: const VooNavigationTheme(
-          borderRadius: 12,
-          elevation: 0,
-        ),
+        navigationTheme: const VooNavigationTheme(borderRadius: 12, elevation: 0),
 
         // Header configuration with tagline
-        headerConfig: const VooHeaderConfig(
-          title: 'ACME',
-          tagline: 'Corp',
-          logoIcon: Icons.rocket_launch,
-          showTitle: true,
-        ),
+        headerConfig: const VooHeaderConfig(title: 'ACME', tagline: 'Corp', logoIcon: Icons.rocket_launch, showTitle: true),
 
         // Enable collapsible rail for desktop
         enableCollapsibleRail: true,
@@ -240,12 +171,7 @@ class _NavigationExampleState extends State<NavigationExample> {
         organizationSwitcherPosition: VooOrganizationSwitcherPosition.footer,
 
         // Search bar configuration
-        searchBar: VooSearchBarConfig(
-          hintText: 'Search...',
-          onSearch: _onSearch,
-          enableKeyboardShortcut: true,
-          keyboardShortcutHint: '⌘K',
-        ),
+        searchBar: VooSearchBarConfig(hintText: 'Search...', onSearch: _onSearch, enableKeyboardShortcut: true, keyboardShortcutHint: '⌘K'),
         searchBarPosition: VooSearchBarPosition.header,
       ),
       body: _buildBody(),
@@ -257,38 +183,16 @@ class _NavigationExampleState extends State<NavigationExample> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            _getIconForId(_selectedId),
-            size: 64,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          Icon(_getIconForId(_selectedId), size: 64, color: Theme.of(context).colorScheme.primary),
           const SizedBox(height: 16),
-          Text(
-            _getLabelForId(_selectedId),
-            style: Theme.of(context).textTheme.headlineMedium,
-          ),
+          Text(_getLabelForId(_selectedId), style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 8),
-          Text(
-            'Selected: $_selectedId',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
+          Text('Selected: $_selectedId', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant)),
           const SizedBox(height: 8),
-          Text(
-            'Organization: ${_selectedOrganization.name}',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-          ),
+          Text('Organization: ${_selectedOrganization.name}', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary)),
           if (_searchQuery.isNotEmpty) ...[
             const SizedBox(height: 16),
-            Text(
-              'Search: $_searchQuery',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.tertiary,
-                  ),
-            ),
+            Text('Search: $_searchQuery', style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.tertiary)),
           ],
         ],
       ),

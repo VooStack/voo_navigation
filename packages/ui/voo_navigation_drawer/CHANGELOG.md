@@ -1,3 +1,20 @@
+## 0.1.3
+
+### Fixed
+- **Logo Widget Support**: `VooDrawerDefaultHeader` now supports custom `logo` widget from `VooHeaderConfig`
+  - Added `logo` and `logoBackgroundColor` parameters to `VooDrawerDefaultHeader`
+  - `VooDrawerHeader` now passes logo properties from `headerConfig`
+  - Logo widget now applies consistently to both rail and drawer navigation
+
+---
+
+## 0.1.2
+
+### Changed
+- Internal dependency updates
+
+---
+
 ## 0.1.1
 
 ### Added

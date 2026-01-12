@@ -18,12 +18,20 @@ class VooDrawerDefaultHeader extends StatelessWidget {
   /// Optional trailing widget (e.g., collapse button)
   final Widget? trailing;
 
+  /// Custom logo widget (takes precedence over icon)
+  final Widget? logo;
+
+  /// Background color for the logo container
+  final Color? logoBackgroundColor;
+
   const VooDrawerDefaultHeader({
     super.key,
     this.title = 'Navigation',
     this.tagline,
     this.icon = Icons.dashboard,
     this.trailing,
+    this.logo,
+    this.logoBackgroundColor,
   });
 
   @override
@@ -34,21 +42,34 @@ class VooDrawerDefaultHeader extends StatelessWidget {
     final size = context.vooSize;
 
     // Use neutral gray for icon background instead of tinted surface
-    final iconBgColor = theme.brightness == Brightness.light
-        ? const Color(0xFFF0F0F0)
-        : theme.colorScheme.onSurface.withValues(alpha: 0.12);
+    final iconBgColor = logoBackgroundColor ??
+        (theme.brightness == Brightness.light
+            ? const Color(0xFFF0F0F0)
+            : theme.colorScheme.onSurface.withValues(alpha: 0.12));
+
+    // Build the logo widget
+    Widget logoWidget;
+    if (logo != null) {
+      logoWidget = SizedBox(
+        width: size.avatarMedium,
+        height: size.avatarMedium,
+        child: logo,
+      );
+    } else {
+      logoWidget = Container(
+        width: size.avatarMedium,
+        height: size.avatarMedium,
+        decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(radius.md)),
+        child: Icon(icon, color: theme.colorScheme.onSurface, size: size.iconMedium),
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.fromLTRB(spacing.sm, 28, spacing.sm, spacing.sm),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: size.avatarMedium,
-            height: size.avatarMedium,
-            decoration: BoxDecoration(color: iconBgColor, borderRadius: BorderRadius.circular(radius.md)),
-            child: Icon(icon, color: theme.colorScheme.onSurface, size: size.iconMedium),
-          ),
+          logoWidget,
           SizedBox(width: spacing.sm),
           Expanded(
             child: Column(
