@@ -91,6 +91,7 @@ class VooTabletScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final navigationRail = VooAdaptiveNavigationRail(
       config: config,
       selectedId: selectedId,
@@ -155,20 +156,35 @@ class VooTabletScaffold extends StatelessWidget {
           children: [
             navigationRail,
             Expanded(
-              child: VooThemedNavContainer(
-                theme: navTheme,
-                expand: true,
+              child: Container(
                 margin: const EdgeInsets.only(top: 8),
-                borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
-                clipContent: true,
-                backgroundColor: effectiveContentBackgroundColor,
-                child: Scaffold(
-                  backgroundColor: Colors.transparent,
-                  appBar: effectiveAppBar,
-                  body: body,
-                  floatingActionButton: showFab ? fabWidget : null,
-                  floatingActionButtonLocation: fabLocation,
-                  floatingActionButtonAnimator: fabAnimator,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
+                  border: Border(
+                    left: BorderSide(
+                      color: theme.dividerColor.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                    top: BorderSide(
+                      color: theme.dividerColor.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: VooThemedNavContainer(
+                  theme: navTheme,
+                  expand: true,
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
+                  clipContent: true,
+                  backgroundColor: effectiveContentBackgroundColor,
+                  child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    appBar: effectiveAppBar,
+                    body: body,
+                    floatingActionButton: showFab ? fabWidget : null,
+                    floatingActionButtonLocation: fabLocation,
+                    floatingActionButtonAnimator: fabAnimator,
+                  ),
                 ),
               ),
             ),
@@ -206,14 +222,29 @@ class VooTabletScaffold extends StatelessWidget {
         children: [
           navigationRail,
           Expanded(
-            child: VooThemedNavContainer(
-              theme: navTheme,
-              expand: true,
+            child: Container(
               margin: const EdgeInsets.only(top: 8),
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
-              clipContent: true,
-              backgroundColor: effectiveContentBackgroundColor2,
-              child: body,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
+                border: Border(
+                  left: BorderSide(
+                    color: theme.dividerColor.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
+                  top: BorderSide(
+                    color: theme.dividerColor.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: VooThemedNavContainer(
+                theme: navTheme,
+                expand: true,
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
+                clipContent: true,
+                backgroundColor: effectiveContentBackgroundColor2,
+                child: body,
+              ),
             ),
           ),
         ],

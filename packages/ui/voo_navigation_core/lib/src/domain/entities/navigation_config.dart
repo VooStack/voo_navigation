@@ -893,42 +893,50 @@ class VooQuickActionsConfig {
 /// Configuration for the navigation header
 class VooHeaderConfig {
   final String? title;
+  final String? tagline;
   final Widget? logo;
   final IconData? logoIcon;
   final Color? logoBackgroundColor;
   final bool showTitle;
   final TextStyle? titleStyle;
+  final TextStyle? taglineStyle;
   final EdgeInsets? padding;
   final VoidCallback? onTap;
 
   const VooHeaderConfig({
     this.title,
+    this.tagline,
     this.logo,
     this.logoIcon,
     this.logoBackgroundColor,
     this.showTitle = true,
     this.titleStyle,
+    this.taglineStyle,
     this.padding,
     this.onTap,
   });
 
   VooHeaderConfig copyWith({
     String? title,
+    String? tagline,
     Widget? logo,
     IconData? logoIcon,
     Color? logoBackgroundColor,
     bool? showTitle,
     TextStyle? titleStyle,
+    TextStyle? taglineStyle,
     EdgeInsets? padding,
     VoidCallback? onTap,
   }) =>
       VooHeaderConfig(
         title: title ?? this.title,
+        tagline: tagline ?? this.tagline,
         logo: logo ?? this.logo,
         logoIcon: logoIcon ?? this.logoIcon,
         logoBackgroundColor: logoBackgroundColor ?? this.logoBackgroundColor,
         showTitle: showTitle ?? this.showTitle,
         titleStyle: titleStyle ?? this.titleStyle,
+        taglineStyle: taglineStyle ?? this.taglineStyle,
         padding: padding ?? this.padding,
         onTap: onTap ?? this.onTap,
       );

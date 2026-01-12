@@ -58,7 +58,7 @@ class VooDrawerNavigationItem extends StatelessWidget {
       duration: context.vooAnimation.durationFast,
       padding: const EdgeInsets.symmetric(
         horizontal: 10,
-        vertical: 8,
+        vertical: 10,
       ),
       decoration: BoxDecoration(
         color: isSelected

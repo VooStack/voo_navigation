@@ -9,13 +9,13 @@ class VooDrawerDefaultHeader extends StatelessWidget {
   /// Title text displayed in the header
   final String title;
 
-  /// Subtitle text displayed below the title
-  final String? subtitle;
+  /// Tagline text displayed next to the title
+  final String? tagline;
 
   /// Icon to display
   final IconData icon;
 
-  const VooDrawerDefaultHeader({super.key, this.title = 'Navigation', this.subtitle, this.icon = Icons.dashboard});
+  const VooDrawerDefaultHeader({super.key, this.title = 'Navigation', this.tagline, this.icon = Icons.dashboard});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class VooDrawerDefaultHeader extends StatelessWidget {
         : theme.colorScheme.onSurface.withValues(alpha: 0.12);
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.sm, spacing.md, spacing.sm, spacing.md),
+      padding: EdgeInsets.fromLTRB(spacing.sm, spacing.md, spacing.sm, spacing.sm),
       child: Row(
         children: [
           Container(
@@ -49,7 +49,14 @@ class VooDrawerDefaultHeader extends StatelessWidget {
                   title,
                   style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurface, fontWeight: FontWeight.w600),
                 ),
-                if (subtitle != null) Text(subtitle!, style: theme.textTheme.bodySmall?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.7))),
+                if (tagline != null)
+                  Text(
+                    tagline!,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
               ],
             ),
           ),

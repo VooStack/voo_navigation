@@ -157,12 +157,21 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
         (isInsideContentContainer ? Colors.transparent : colorScheme.surface);
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSurface;
 
+    // Align app bar title with the vertical center of the collapse toggle icon
+    // The collapse icon is centered within the drawer header row (between title and tagline)
+    // Fine-tuned offset to match the icon's vertical center
+    final titleTopPadding = 6.0;
+
     return Container(
       margin: margin,
       color: effectiveBackgroundColor,
       child: AppBar(
           title: Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.xs),
+            padding: EdgeInsets.only(
+              left: context.vooSpacing.xs,
+              right: context.vooSpacing.xs,
+              top: titleTopPadding,
+            ),
             child: effectiveTitle,
           ),
           leading: effectiveLeading,

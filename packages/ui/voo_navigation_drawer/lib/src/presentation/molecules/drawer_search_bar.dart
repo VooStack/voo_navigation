@@ -24,7 +24,7 @@ class VooDrawerSearchBar extends StatelessWidget {
     }
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.sm, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.sm, vertical: context.vooSpacing.xs),
       child: VooSearchBar(
         navigationItems: searchConfig.navigationItems ?? config.items,
         onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,

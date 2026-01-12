@@ -38,10 +38,10 @@ class VooFloatingBottomNavigation extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.fromLTRB(24, 0, 24, margin),
         child: Container(
-          height: 64,
+          height: 56,
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(32),
+            borderRadius: BorderRadius.circular(28),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.2),

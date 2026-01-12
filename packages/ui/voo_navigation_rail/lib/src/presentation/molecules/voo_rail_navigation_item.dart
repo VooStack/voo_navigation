@@ -84,61 +84,29 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final VooSpacingTokens spacing = context.vooSpacing;
-    final VooRadiusTokens radius = context.vooRadius;
+
+    // Use config colors if provided, otherwise fall back to theme
+    final unselectedColor = widget.unselectedItemColor ?? theme.colorScheme.onSurface;
+    final selectedColor = widget.selectedItemColor ?? theme.colorScheme.primary;
 
     // Resolve icon color from item, widget (config), or theme
     final iconColor = widget.isSelected
-        ? (widget.item.selectedIconColor ?? widget.selectedItemColor ?? theme.colorScheme.primary)
-        : (widget.item.iconColor ?? widget.unselectedItemColor ?? theme.colorScheme.onSurfaceVariant);
+        ? (widget.item.selectedIconColor ?? selectedColor)
+        : (widget.item.iconColor ?? unselectedColor.withValues(alpha: 0.7));
 
     Widget itemContent = AnimatedContainer(
       duration: context.vooAnimation.durationFast,
-      height: 48,
-      width: widget.extended ? null : 48,
       padding: widget.extended
-          ? EdgeInsets.symmetric(
-              horizontal: spacing.md,
-              vertical: spacing.sm,
-            )
-          : EdgeInsets.all(spacing.xs),
+          ? const EdgeInsets.symmetric(horizontal: 10, vertical: 10)
+          : const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          widget.extended ? radius.md : radius.md,
-        ),
-        gradient: widget.isSelected
-            ? LinearGradient(
-                colors: [
-                  theme.colorScheme.primary.withValues(
-                    alpha: isDark ? 0.2 : 0.12,
-                  ),
-                  theme.colorScheme.primary.withValues(
-                    alpha: isDark ? 0.15 : 0.08,
-                  ),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              )
-            : null,
-        color: !widget.isSelected
-            ? (_isHovered
-                  ? theme.colorScheme.onSurface.withValues(
-                      alpha: isDark ? 0.08 : 0.04,
-                    )
-                  : Colors.transparent)
-            : null,
-        boxShadow: widget.isSelected
-            ? [
-                BoxShadow(
-                  color: theme.colorScheme.primary.withValues(
-                    alpha: 0.1,
-                  ),
-                  blurRadius: 8,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
+        borderRadius: BorderRadius.circular(6),
+        color: widget.isSelected
+            ? selectedColor.withValues(alpha: 0.1)
+            : _isHovered
+                ? unselectedColor.withValues(alpha: 0.04)
+                : Colors.transparent,
       ),
       child: widget.extended
           ? _ExtendedItemContent(
@@ -155,11 +123,13 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
             ),
     );
 
-    // Wrap with tooltip
-    itemContent = Tooltip(
-      message: widget.item.effectiveTooltip,
-      child: itemContent,
-    );
+    // Wrap with tooltip for compact mode
+    if (!widget.extended) {
+      itemContent = Tooltip(
+        message: widget.item.effectiveTooltip,
+        child: itemContent,
+      );
+    }
 
     // Wrap with semantics for accessibility
     return Semantics(
@@ -171,7 +141,7 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
         key: widget.item.key,
         padding: EdgeInsets.symmetric(
           horizontal: spacing.sm,
-          vertical: spacing.xxs / 2,
+          vertical: spacing.xxs,
         ),
         child: MouseRegion(
           onEnter: (_) => setState(() => _isHovered = true),
@@ -181,16 +151,8 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
               : SystemMouseCursors.basic,
           child: InkWell(
             onTap: widget.item.isEnabled ? widget.onTap : null,
-            borderRadius: BorderRadius.circular(radius.md),
-            child: AnimatedScale(
-              scale: _isHovered ? 1.02 : 1.0,
-              duration: Duration(
-                milliseconds:
-                    (context.vooAnimation.durationFast.inMilliseconds * 0.75)
-                        .round(),
-              ),
-              child: itemContent,
-            ),
+            borderRadius: BorderRadius.circular(6),
+            child: itemContent,
           ),
         ),
       ),
@@ -217,21 +179,16 @@ class _ExtendedItemContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final spacing = context.vooSpacing;
 
-    // Resolve label color from config or theme
-    final selectedLabelColor = selectedItemColor ?? theme.colorScheme.primary;
+    // Resolve label color - match drawer styling
     final unselectedLabelColor = unselectedItemColor ?? theme.colorScheme.onSurface;
 
-    // Resolve label style from item or theme
-    final defaultLabelStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: isSelected ? selectedLabelColor : unselectedLabelColor,
-      fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
-      fontSize: 14,
+    // Resolve label style from item or theme - match drawer (13px, w500)
+    final labelStyle = theme.textTheme.bodyMedium?.copyWith(
+      color: unselectedLabelColor,
+      fontWeight: FontWeight.w500,
+      fontSize: 13,
     );
-    final labelStyle = isSelected
-        ? (item.selectedLabelStyle ?? defaultLabelStyle)
-        : (item.labelStyle ?? defaultLabelStyle);
 
     return Row(
       children: [
@@ -242,41 +199,33 @@ class _ExtendedItemContent extends StatelessWidget {
           AnimatedSwitcher(
             duration: context.vooAnimation.durationFast,
             child: Icon(
-              isSelected
-                  ? item.effectiveSelectedIcon
-                  : item.icon,
+              isSelected ? item.effectiveSelectedIcon : item.icon,
               key: ValueKey(isSelected),
               color: iconColor,
-              size: 22,
+              size: 18,
             ),
           ),
-        SizedBox(width: spacing.sm),
+        const SizedBox(width: 10),
         Expanded(
-          child: Row(
-            children: [
-              Flexible(
-                child: Text(
-                  item.label,
-                  style: labelStyle,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              if (item.hasBadge) ...[
-                SizedBox(width: spacing.xs),
-                VooRailModernBadge(
-                  item: item,
-                  isSelected: isSelected,
-                  extended: true,
-                ),
-              ],
-              // Trailing widget
-              if (item.trailingWidget != null) ...[
-                SizedBox(width: spacing.xs),
-                item.trailingWidget!,
-              ],
-            ],
+          child: Text(
+            item.label,
+            style: labelStyle,
+            overflow: TextOverflow.ellipsis,
           ),
         ),
+        if (item.hasBadge) ...[
+          const SizedBox(width: 8),
+          VooRailModernBadge(
+            item: item,
+            isSelected: isSelected,
+            extended: true,
+          ),
+        ],
+        // Trailing widget
+        if (item.trailingWidget != null) ...[
+          const SizedBox(width: 8),
+          item.trailingWidget!,
+        ],
       ],
     );
   }
@@ -296,39 +245,32 @@ class _CompactItemContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              // Leading widget or Icon
-              if (item.leadingWidget != null)
-                item.leadingWidget!
-              else
-                AnimatedSwitcher(
-                  duration: context.vooAnimation.durationFast,
-                  child: Icon(
-                    isSelected
-                        ? item.effectiveSelectedIcon
-                        : item.icon,
-                    key: ValueKey(isSelected),
-                    color: iconColor,
-                    size: 24,
-                  ),
-                ),
-              if (item.hasBadge)
-                Positioned(
-                  top: -4,
-                  right: -8,
-                  child: VooRailModernBadge(
-                    item: item,
-                    isSelected: isSelected,
-                    extended: false,
-                  ),
-                ),
-            ],
-          ),
+          // Leading widget or Icon
+          if (item.leadingWidget != null)
+            item.leadingWidget!
+          else
+            AnimatedSwitcher(
+              duration: context.vooAnimation.durationFast,
+              child: Icon(
+                isSelected ? item.effectiveSelectedIcon : item.icon,
+                key: ValueKey(isSelected),
+                color: iconColor,
+                size: 20,
+              ),
+            ),
+          if (item.hasBadge)
+            Positioned(
+              top: -4,
+              right: -8,
+              child: VooRailModernBadge(
+                item: item,
+                isSelected: isSelected,
+                extended: false,
+              ),
+            ),
         ],
       ),
     );

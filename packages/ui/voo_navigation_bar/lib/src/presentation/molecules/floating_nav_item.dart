@@ -25,15 +25,15 @@ class VooFloatingNavItem extends StatelessWidget {
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 56,
-        height: 56,
+        width: 52,
+        height: 52,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
               isSelected ? item.effectiveSelectedIcon : item.icon,
               color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
-              size: 24,
+              size: 20,
             ),
           ],
         ),

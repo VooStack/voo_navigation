@@ -65,9 +65,9 @@ class VooDrawerFooterItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           child: AnimatedContainer(
             duration: context.vooAnimation.durationFast,
-            padding: EdgeInsets.symmetric(
-              horizontal: context.vooSpacing.sm,
-              vertical: context.vooSpacing.sm,
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+              vertical: 10,
             ),
             decoration: BoxDecoration(
               color: isSelected

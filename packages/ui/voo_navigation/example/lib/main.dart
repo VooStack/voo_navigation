@@ -30,24 +30,66 @@ class NavigationExample extends StatefulWidget {
 }
 
 class _NavigationExampleState extends State<NavigationExample> {
-  String _selectedId = 'home';
+  String _selectedId = 'dashboard';
+  String _searchQuery = '';
 
   final List<VooNavigationItem> _items = [
     const VooNavigationItem(
-      id: 'home',
-      label: 'Home',
-      icon: Icons.home_outlined,
-      selectedIcon: Icons.home,
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: Icons.dashboard_outlined,
+      selectedIcon: Icons.dashboard,
       mobilePriority: true,
-      route: '/home',
+      route: '/dashboard',
     ),
-    const VooNavigationItem(
-      id: 'search',
-      label: 'Search',
-      icon: Icons.search_outlined,
-      selectedIcon: Icons.search,
-      mobilePriority: true,
-      route: '/search',
+    VooNavigationItem.section(
+      label: 'Teams',
+      id: 'teams',
+      isExpanded: false,
+      children: const [
+        VooNavigationItem(
+          id: 'team_overview',
+          label: 'Overview',
+          icon: Icons.groups_outlined,
+          selectedIcon: Icons.groups,
+          route: '/teams/overview',
+        ),
+        VooNavigationItem(
+          id: 'team_members',
+          label: 'Members',
+          icon: Icons.person_outline,
+          selectedIcon: Icons.person,
+          route: '/teams/members',
+        ),
+      ],
+    ),
+    VooNavigationItem.section(
+      label: 'Employee',
+      id: 'employee',
+      isExpanded: true,
+      children: const [
+        VooNavigationItem(
+          id: 'attendance',
+          label: 'Attendance',
+          icon: Icons.access_time_outlined,
+          selectedIcon: Icons.access_time,
+          route: '/employee/attendance',
+        ),
+        VooNavigationItem(
+          id: 'checklist',
+          label: 'Checklist',
+          icon: Icons.checklist_outlined,
+          selectedIcon: Icons.checklist,
+          route: '/employee/checklist',
+        ),
+        VooNavigationItem(
+          id: 'time_off',
+          label: 'Time off',
+          icon: Icons.beach_access_outlined,
+          selectedIcon: Icons.beach_access,
+          route: '/employee/time-off',
+        ),
+      ],
     ),
     const VooNavigationItem(
       id: 'notifications',
@@ -57,14 +99,6 @@ class _NavigationExampleState extends State<NavigationExample> {
       mobilePriority: true,
       badgeCount: 3,
       route: '/notifications',
-    ),
-    const VooNavigationItem(
-      id: 'profile',
-      label: 'Profile',
-      icon: Icons.person_outlined,
-      selectedIcon: Icons.person,
-      mobilePriority: true,
-      route: '/profile',
     ),
   ];
 
@@ -84,6 +118,12 @@ class _NavigationExampleState extends State<NavigationExample> {
     });
   }
 
+  void _onSearch(String query) {
+    setState(() {
+      _searchQuery = query;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return VooAdaptiveScaffold(
@@ -97,10 +137,11 @@ class _NavigationExampleState extends State<NavigationExample> {
           borderRadius: 12,
           elevation: 0,
         ),
-        // Header configuration
+        // Header configuration with tagline
         headerConfig: const VooHeaderConfig(
-          title: 'Navigation',
-          logoIcon: Icons.apps,
+          title: 'ACME',
+          tagline: 'Corp',
+          logoIcon: Icons.rocket_launch,
           showTitle: true,
         ),
         // Enable collapsible rail for desktop
@@ -111,6 +152,14 @@ class _NavigationExampleState extends State<NavigationExample> {
           userName: 'John Doe',
           userEmail: 'john@example.com',
         ),
+        // Search bar configuration
+        searchBar: VooSearchBarConfig(
+          hintText: 'Search...',
+          onSearch: _onSearch,
+          enableKeyboardShortcut: true,
+          keyboardShortcutHint: '⌘K',
+        ),
+        searchBarPosition: VooSearchBarPosition.header,
       ),
       body: _buildBody(),
     );
@@ -138,26 +187,40 @@ class _NavigationExampleState extends State<NavigationExample> {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),
+          if (_searchQuery.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            Text(
+              'Search: $_searchQuery',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+            ),
+          ],
         ],
       ),
     );
   }
 
-  IconData _getIconForId(String id) {
+  VooNavigationItem? _findItemById(String id) {
     final allItems = [..._items, ..._footerItems];
-    final item = allItems.firstWhere(
-      (item) => item.id == id,
-      orElse: () => _items.first,
-    );
+    for (final item in allItems) {
+      if (item.id == id) return item;
+      if (item.children != null) {
+        for (final child in item.children!) {
+          if (child.id == id) return child;
+        }
+      }
+    }
+    return null;
+  }
+
+  IconData _getIconForId(String id) {
+    final item = _findItemById(id) ?? _items.first;
     return item.selectedIcon ?? item.icon;
   }
 
   String _getLabelForId(String id) {
-    final allItems = [..._items, ..._footerItems];
-    final item = allItems.firstWhere(
-      (item) => item.id == id,
-      orElse: () => _items.first,
-    );
+    final item = _findItemById(id) ?? _items.first;
     return item.label;
   }
 }

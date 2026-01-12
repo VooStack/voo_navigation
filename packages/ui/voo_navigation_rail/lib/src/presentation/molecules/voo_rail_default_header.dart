@@ -91,6 +91,8 @@ class VooRailDefaultHeader extends StatelessWidget {
       );
     }
 
+    final effectiveTagline = config?.tagline;
+
     return GestureDetector(
       onTap: config?.onTap,
       child: Padding(
@@ -101,13 +103,27 @@ class VooRailDefaultHeader extends StatelessWidget {
             if (effectiveShowTitle && effectiveTitle != null) ...[
               SizedBox(width: spacing.sm),
               Expanded(
-                child: Text(
-                  effectiveTitle,
-                  style: config?.titleStyle ?? theme.textTheme.titleMedium?.copyWith(
-                    color: theme.colorScheme.onSurface,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  overflow: TextOverflow.ellipsis,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      effectiveTitle,
+                      style: config?.titleStyle ?? theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    if (effectiveTagline != null)
+                      Text(
+                        effectiveTagline,
+                        style: config?.taglineStyle ?? theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],

@@ -265,20 +265,35 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
           children: [
             navigation,
             Expanded(
-              child: VooThemedNavContainer(
-                theme: navTheme,
-                expand: true,
+              child: Container(
                 margin: effectiveContentMargin,
-                borderRadius: effectiveContentBorderRadius,
-                clipContent: true,
-                backgroundColor: effectiveContentBackgroundColor,
-                child: Scaffold(
-                  backgroundColor: Colors.transparent,
-                  appBar: effectiveAppBar,
-                  body: widget.body,
-                  floatingActionButton: showFab ? fabWidget : null,
-                  floatingActionButtonLocation: fabLocation,
-                  floatingActionButtonAnimator: fabAnimator,
+                decoration: BoxDecoration(
+                  borderRadius: effectiveContentBorderRadius,
+                  border: Border(
+                    left: BorderSide(
+                      color: theme.dividerColor.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                    top: BorderSide(
+                      color: theme.dividerColor.withValues(alpha: 0.15),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: VooThemedNavContainer(
+                  theme: navTheme,
+                  expand: true,
+                  borderRadius: effectiveContentBorderRadius,
+                  clipContent: true,
+                  backgroundColor: effectiveContentBackgroundColor,
+                  child: Scaffold(
+                    backgroundColor: Colors.transparent,
+                    appBar: effectiveAppBar,
+                    body: widget.body,
+                    floatingActionButton: showFab ? fabWidget : null,
+                    floatingActionButtonLocation: fabLocation,
+                    floatingActionButtonAnimator: fabAnimator,
+                  ),
                 ),
               ),
             ),
@@ -309,14 +324,29 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
         children: [
           navigation,
           Expanded(
-            child: VooThemedNavContainer(
-              theme: navTheme,
-              expand: true,
+            child: Container(
               margin: effectiveContentMargin,
-              borderRadius: effectiveContentBorderRadius,
-              clipContent: true,
-              backgroundColor: effectiveContentBackgroundColor,
-              child: widget.body,
+              decoration: BoxDecoration(
+                borderRadius: effectiveContentBorderRadius,
+                border: Border(
+                  left: BorderSide(
+                    color: theme.dividerColor.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
+                  top: BorderSide(
+                    color: theme.dividerColor.withValues(alpha: 0.15),
+                    width: 1,
+                  ),
+                ),
+              ),
+              child: VooThemedNavContainer(
+                theme: navTheme,
+                expand: true,
+                borderRadius: effectiveContentBorderRadius,
+                clipContent: true,
+                backgroundColor: effectiveContentBackgroundColor,
+                child: widget.body,
+              ),
             ),
           ),
         ],

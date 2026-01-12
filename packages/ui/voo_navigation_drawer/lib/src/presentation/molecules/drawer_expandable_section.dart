@@ -61,8 +61,8 @@ class VooDrawerExpandableSection extends StatelessWidget {
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               padding: const EdgeInsets.symmetric(
-                horizontal: 8,
-                vertical: 8,
+                horizontal: 10,
+                vertical: 10,
               ),
               decoration: BoxDecoration(
                 color: isHovered

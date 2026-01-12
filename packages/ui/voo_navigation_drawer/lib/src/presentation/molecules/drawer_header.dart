@@ -70,6 +70,7 @@ class VooDrawerHeader extends StatelessWidget {
     if (headerConfig != null) {
       headerContent = VooDrawerDefaultHeader(
         title: headerConfig.title ?? 'Navigation',
+        tagline: headerConfig.tagline,
         icon: headerConfig.logoIcon ?? Icons.dashboard,
       );
     } else {
