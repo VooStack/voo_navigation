@@ -101,47 +101,25 @@ class VooDrawerExpandableSection extends StatelessWidget {
           ),
         ),
 
-        // Animated expansion for children with connector line
+        // Animated expansion for children
         if (expansionController != null && expansionAnimation != null)
           SizeTransition(
             sizeFactor: expansionAnimation!,
-            child: Stack(
-              clipBehavior: Clip.none, // Allow line to extend upward
-              children: [
-                // Connector line from section icon center to children
-                // Positioned at 17px from left (8px padding + 9px icon center)
-                // Extends upward (-17px) to reach the icon's vertical center
-                // (header has 8px bottom padding + 9px to reach icon center = 17px up)
-                Positioned(
-                  left: 17,
-                  top: -17,
-                  child: Container(
-                    width: 2,
-                    height: 25, // Extends from icon center down into children area
-                    decoration: BoxDecoration(
-                      color: sectionColor.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(1),
+            child: Column(
+              children: item.children!
+                  .map(
+                    (child) => VooDrawerChildNavigationItem(
+                      item: child,
+                      config: config,
+                      selectedId: selectedId,
+                      onItemTap: onItemTap,
+                      isHovered: hoveredItems[child.id] == true,
+                      onHoverChanged: (isHovered) =>
+                          onHoverChanged(child.id, isHovered),
+                      showVerticalLine: true,
                     ),
-                  ),
-                ),
-                // Children items
-                Column(
-                  children: item.children!
-                      .map(
-                        (child) => VooDrawerChildNavigationItem(
-                          item: child,
-                          config: config,
-                          selectedId: selectedId,
-                          onItemTap: onItemTap,
-                          isHovered: hoveredItems[child.id] == true,
-                          onHoverChanged: (isHovered) =>
-                              onHoverChanged(child.id, isHovered),
-                          showVerticalLine: true,
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
+                  )
+                  .toList(),
             ),
           ),
       ],
