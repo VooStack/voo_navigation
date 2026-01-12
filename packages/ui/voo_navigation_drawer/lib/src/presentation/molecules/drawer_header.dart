@@ -72,26 +72,13 @@ class VooDrawerHeader extends StatelessWidget {
         title: headerConfig.title ?? 'Navigation',
         tagline: headerConfig.tagline,
         icon: headerConfig.logoIcon ?? Icons.dashboard,
+        trailing: trailing,
       );
     } else {
-      headerContent = const VooDrawerDefaultHeader();
+      headerContent = VooDrawerDefaultHeader(trailing: trailing);
     }
 
-    Widget result;
-    if (trailing == null) {
-      result = headerContent;
-    } else {
-      result = Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Expanded(child: headerContent),
-            trailing,
-          ],
-        ),
-      );
-    }
+    final Widget result = headerContent;
 
     if (orgSwitcherWidget != null) {
       return Column(

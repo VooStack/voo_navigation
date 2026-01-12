@@ -47,6 +47,9 @@ class VooUserProfileFooter extends StatefulWidget {
   /// Whether to show the chevron/dropdown indicator
   final bool showDropdownIndicator;
 
+  /// Whether to show the top border divider
+  final bool showTopBorder;
+
   const VooUserProfileFooter({
     super.key,
     this.userName,
@@ -61,6 +64,7 @@ class VooUserProfileFooter extends StatefulWidget {
     this.menuItems,
     this.status,
     this.showDropdownIndicator = true,
+    this.showTopBorder = true,
   });
 
   @override
@@ -92,6 +96,7 @@ class _VooUserProfileFooterState extends State<VooUserProfileFooter> {
       initials: widget.initials,
       status: widget.status,
       showDropdownIndicator: widget.showDropdownIndicator,
+      showTopBorder: widget.showTopBorder,
       onTap: widget.onTap,
       onSettingsTap: widget.onSettingsTap,
       onLogout: widget.onLogout,

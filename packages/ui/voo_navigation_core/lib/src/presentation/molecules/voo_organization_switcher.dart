@@ -233,8 +233,6 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final style = widget.style ?? const VooOrganizationSwitcherStyle();
     final selected = widget.selectedOrganization;
 
@@ -263,77 +261,129 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
         child: widget.selectedOrganizationBuilder!(selected),
       );
     } else {
-      // Default trigger
-      trigger = InkWell(
+      // Default trigger - clean design matching profile card style
+      trigger = _DefaultOrgSwitcherTrigger(
+        selected: selected,
+        isOpen: _isOpen,
         onTap: _toggleDropdown,
-        borderRadius: style.borderRadius ?? BorderRadius.circular(8),
-        child: Container(
-          padding: style.triggerPadding ??
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: style.triggerDecoration ??
-              BoxDecoration(
-                color: _isOpen
-                    ? colorScheme.surfaceContainerHighest
-                    : colorScheme.surfaceContainerHigh,
-                borderRadius: style.borderRadius ?? BorderRadius.circular(8),
-                border: Border.all(
-                  color: _isOpen
-                      ? colorScheme.primary.withValues(alpha: 0.5)
-                      : colorScheme.outline.withValues(alpha: 0.2),
-                ),
-              ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              VooAvatar(
-                imageUrl: selected?.avatarUrl,
-                name: selected?.name,
-                backgroundColor: selected?.avatarColor,
-                size: style.avatarSize,
-                placeholderIcon: Icons.business,
-              ),
-              const SizedBox(width: 12),
-              Flexible(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      selected?.name ?? 'Select Organization',
-                      style: style.titleStyle ?? theme.textTheme.titleSmall,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (selected?.subtitle != null)
-                      Text(
-                        selected!.subtitle!,
-                        style: style.subtitleStyle ??
-                            theme.textTheme.bodySmall?.copyWith(
-                              color: colorScheme.onSurfaceVariant,
-                            ),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 8),
-              AnimatedRotation(
-                turns: _isOpen ? 0.5 : 0,
-                duration: const Duration(milliseconds: 200),
-                child: Icon(
-                  Icons.keyboard_arrow_down,
-                  size: 20,
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
+        style: style,
       );
     }
 
     return CompositedTransformTarget(
       link: _layerLink,
       child: trigger,
+    );
+  }
+}
+
+/// Clean default trigger matching profile card style
+class _DefaultOrgSwitcherTrigger extends StatefulWidget {
+  final VooOrganization? selected;
+  final bool isOpen;
+  final VoidCallback onTap;
+  final VooOrganizationSwitcherStyle style;
+
+  const _DefaultOrgSwitcherTrigger({
+    required this.selected,
+    required this.isOpen,
+    required this.onTap,
+    required this.style,
+  });
+
+  @override
+  State<_DefaultOrgSwitcherTrigger> createState() => _DefaultOrgSwitcherTriggerState();
+}
+
+class _DefaultOrgSwitcherTriggerState extends State<_DefaultOrgSwitcherTrigger> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final selected = widget.selected;
+    final style = widget.style;
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: widget.onTap,
+          borderRadius: style.borderRadius ?? BorderRadius.circular(8),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: style.triggerPadding ??
+                const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+            decoration: style.triggerDecoration ??
+                BoxDecoration(
+                  color: _isHovered || widget.isOpen
+                      ? colorScheme.onSurface.withValues(alpha: 0.05)
+                      : Colors.transparent,
+                  borderRadius: style.borderRadius ?? BorderRadius.circular(8),
+                  border: _isHovered || widget.isOpen
+                      ? Border.all(
+                          color: colorScheme.outline.withValues(alpha: 0.1),
+                          width: 1,
+                        )
+                      : null,
+                ),
+            child: Row(
+              children: [
+                VooAvatar(
+                  imageUrl: selected?.avatarUrl,
+                  name: selected?.name,
+                  backgroundColor: selected?.avatarColor,
+                  size: 32,
+                  placeholderIcon: Icons.business,
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        selected?.name ?? 'Select Organization',
+                        style: style.titleStyle ??
+                            theme.textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: colorScheme.onSurface,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      if (selected?.subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          selected!.subtitle!,
+                          style: style.subtitleStyle ??
+                              theme.textTheme.bodySmall?.copyWith(
+                                color: colorScheme.onSurfaceVariant,
+                              ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                AnimatedRotation(
+                  turns: _isHovered ? 0.5 : 0,
+                  duration: const Duration(milliseconds: 200),
+                  child: Icon(
+                    Icons.keyboard_arrow_down_rounded,
+                    size: 18,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

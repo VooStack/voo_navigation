@@ -27,6 +27,9 @@ class VooExpandedProfile extends StatefulWidget {
   /// Whether to show the dropdown indicator
   final bool showDropdownIndicator;
 
+  /// Whether to show the top border divider
+  final bool showTopBorder;
+
   /// Callback when tapped
   final VoidCallback? onTap;
 
@@ -48,6 +51,7 @@ class VooExpandedProfile extends StatefulWidget {
     this.initials,
     this.status,
     this.showDropdownIndicator = true,
+    this.showTopBorder = true,
     this.onTap,
     this.onSettingsTap,
     this.onLogout,
@@ -136,18 +140,21 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final spacing = context.vooSpacing;
-    final radius = context.vooRadius;
 
     return Container(
-      padding: EdgeInsets.all(spacing.sm),
-      decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: theme.dividerColor.withValues(alpha: 0.1),
-            width: 1,
-          ),
-        ),
-      ),
+      padding: widget.showTopBorder
+          ? EdgeInsets.all(spacing.sm)
+          : EdgeInsets.zero,
+      decoration: widget.showTopBorder
+          ? BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: theme.dividerColor.withValues(alpha: 0.1),
+                  width: 1,
+                ),
+              ),
+            )
+          : null,
       child: MouseRegion(
         onEnter: (_) => setState(() => _isHovered = true),
         onExit: (_) => setState(() => _isHovered = false),
@@ -155,18 +162,15 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
           color: Colors.transparent,
           child: InkWell(
             onTap: widget.onTap ?? () => _showProfileMenu(context),
-            borderRadius: BorderRadius.circular(radius.md),
+            borderRadius: BorderRadius.circular(8),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: EdgeInsets.symmetric(
-                horizontal: spacing.sm,
-                vertical: spacing.sm,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
               decoration: BoxDecoration(
                 color: _isHovered
                     ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(radius.md),
+                borderRadius: BorderRadius.circular(8),
                 border: _isHovered
                     ? Border.all(
                         color: theme.colorScheme.outline.withValues(alpha: 0.1),
@@ -182,9 +186,9 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
                     userName: widget.userName,
                     initials: widget.initials,
                     status: widget.status,
-                    size: 40,
+                    size: 32,
                   ),
-                  SizedBox(width: spacing.sm),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -220,7 +224,7 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
                       child: Icon(
                         Icons.keyboard_arrow_down_rounded,
                         color: theme.colorScheme.onSurfaceVariant,
-                        size: 20,
+                        size: 18,
                       ),
                     ),
                 ],

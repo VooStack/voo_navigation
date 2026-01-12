@@ -21,8 +21,11 @@ class VooDrawerOrganizationSwitcher extends StatelessWidget {
       return null;
     }
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    // In footer position, add a top border divider for visual separation
+    final isFooter = position == VooOrganizationSwitcherPosition.footer;
+
+    return _DrawerOrgSwitcherContainer(
+      isFooter: isFooter,
       child: VooOrganizationSwitcher(
         organizations: orgSwitcher.organizations,
         selectedOrganization: orgSwitcher.selectedOrganization,
@@ -46,5 +49,41 @@ class VooDrawerOrganizationSwitcher extends StatelessWidget {
           position: config.organizationSwitcherPosition,
         ) ??
         const SizedBox.shrink();
+  }
+}
+
+/// Container for org switcher with footer-specific styling
+class _DrawerOrgSwitcherContainer extends StatelessWidget {
+  final bool isFooter;
+  final Widget child;
+
+  const _DrawerOrgSwitcherContainer({
+    required this.isFooter,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    if (isFooter) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: theme.dividerColor.withValues(alpha: 0.1),
+              width: 1,
+            ),
+          ),
+        ),
+        child: child,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      child: child,
+    );
   }
 }

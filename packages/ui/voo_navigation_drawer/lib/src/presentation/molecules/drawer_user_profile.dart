@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
+import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
 
 /// User profile widget for the navigation drawer footer
@@ -11,6 +12,10 @@ class VooDrawerUserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Check if org switcher is in footer position (above profile)
+    final hasOrgSwitcherAbove = config.organizationSwitcher != null &&
+        config.organizationSwitcherPosition == VooOrganizationSwitcherPosition.footer;
+
     // If userProfileWidget is explicitly provided, use it (legacy API)
     if (config.userProfileWidget != null) {
       return config.userProfileWidget!;
@@ -31,10 +36,13 @@ class VooDrawerUserProfile extends StatelessWidget {
         onLogout: profileConfig.onLogout,
         menuItems: profileConfig.menuItems,
         showDropdownIndicator: profileConfig.showDropdownIndicator,
+        showTopBorder: !hasOrgSwitcherAbove,
       );
     }
 
     // Default fallback
-    return const VooUserProfileFooter();
+    return VooUserProfileFooter(
+      showTopBorder: !hasOrgSwitcherAbove,
+    );
   }
 }

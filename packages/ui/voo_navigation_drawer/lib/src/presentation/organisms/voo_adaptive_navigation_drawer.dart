@@ -4,13 +4,14 @@ import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/voo_organization_switcher.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
 import 'package:voo_navigation_core/src/presentation/utils/voo_collapse_state.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_footer_items.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_header.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_navigation_items.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_organization_switcher.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_search_bar.dart';
-import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_user_profile.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Modern adaptive navigation drawer for desktop layouts
@@ -198,11 +199,13 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
                 },
               ),
 
-            // Organization switcher in footer position
-            if (orgSwitcherInFooter != null) orgSwitcherInFooter,
-
-            // User profile footer when enabled
-            if (widget.config.showUserProfile) VooDrawerUserProfile(config: widget.config),
+            // Unified footer section for org switcher and profile
+            if (orgSwitcherInFooter != null || widget.config.showUserProfile)
+              _DrawerFooterSection(
+                config: widget.config,
+                orgSwitcher: orgSwitcherInFooter,
+                showProfile: widget.config.showUserProfile,
+              ),
 
             // Custom footer
             if (widget.config.drawerFooter != null) Padding(padding: EdgeInsets.all(context.vooSpacing.sm + context.vooSpacing.xs), child: widget.config.drawerFooter!),
@@ -219,5 +222,122 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
 
     // Build the container
     return AnimatedContainer(duration: navTheme.animationDuration, curve: navTheme.animationCurve, width: effectiveWidth, margin: effectiveDrawerMargin, child: themedContainer);
+  }
+}
+
+/// Unified footer section containing org switcher and profile
+class _DrawerFooterSection extends StatelessWidget {
+  final VooNavigationConfig config;
+  final Widget? orgSwitcher;
+  final bool showProfile;
+
+  const _DrawerFooterSection({
+    required this.config,
+    this.orgSwitcher,
+    required this.showProfile,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final spacing = context.vooSpacing;
+
+    return Container(
+      margin: EdgeInsets.only(
+        left: spacing.sm,
+        right: spacing.sm,
+        top: spacing.xs,
+        bottom: spacing.sm,
+      ),
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: isDark
+            ? Colors.white.withValues(alpha: 0.03)
+            : Colors.black.withValues(alpha: 0.02),
+        borderRadius: BorderRadius.circular(context.vooRadius.md),
+        border: Border.all(
+          color: theme.dividerColor.withValues(alpha: 0.08),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (orgSwitcher != null) _FooterOrgSwitcher(config: config),
+          if (orgSwitcher != null && showProfile)
+            Divider(
+              height: 9,
+              thickness: 1,
+              indent: spacing.sm,
+              endIndent: spacing.sm,
+              color: theme.dividerColor.withValues(alpha: 0.08),
+            ),
+          if (showProfile) _FooterProfile(config: config),
+        ],
+      ),
+    );
+  }
+}
+
+/// Organization switcher styled for footer section
+class _FooterOrgSwitcher extends StatelessWidget {
+  final VooNavigationConfig config;
+
+  const _FooterOrgSwitcher({required this.config});
+
+  @override
+  Widget build(BuildContext context) {
+    final orgConfig = config.organizationSwitcher;
+    if (orgConfig == null) return const SizedBox.shrink();
+
+    return VooOrganizationSwitcher(
+      organizations: orgConfig.organizations,
+      selectedOrganization: orgConfig.selectedOrganization,
+      onOrganizationChanged: orgConfig.onOrganizationChanged,
+      onCreateOrganization: orgConfig.onCreateOrganization,
+      showSearch: orgConfig.showSearch,
+      showCreateButton: orgConfig.showCreateButton,
+      createButtonLabel: orgConfig.createButtonLabel,
+      searchHint: orgConfig.searchHint,
+      style: orgConfig.style,
+      compact: orgConfig.compact,
+      tooltip: orgConfig.tooltip,
+    );
+  }
+}
+
+/// User profile styled for footer section
+class _FooterProfile extends StatelessWidget {
+  final VooNavigationConfig config;
+
+  const _FooterProfile({required this.config});
+
+  @override
+  Widget build(BuildContext context) {
+    final profileConfig = config.userProfileConfig;
+
+    if (config.userProfileWidget != null) {
+      return config.userProfileWidget!;
+    }
+
+    if (profileConfig != null) {
+      return VooUserProfileFooter(
+        userName: profileConfig.userName,
+        userEmail: profileConfig.userEmail,
+        avatarUrl: profileConfig.avatarUrl,
+        avatarWidget: profileConfig.avatarWidget,
+        initials: profileConfig.initials,
+        status: profileConfig.status,
+        onTap: profileConfig.onTap,
+        onSettingsTap: profileConfig.onSettingsTap,
+        onLogout: profileConfig.onLogout,
+        menuItems: profileConfig.menuItems,
+        showDropdownIndicator: profileConfig.showDropdownIndicator,
+        showTopBorder: false,
+      );
+    }
+
+    return const VooUserProfileFooter(showTopBorder: false);
   }
 }

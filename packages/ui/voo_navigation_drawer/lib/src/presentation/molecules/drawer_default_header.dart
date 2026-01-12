@@ -15,7 +15,16 @@ class VooDrawerDefaultHeader extends StatelessWidget {
   /// Icon to display
   final IconData icon;
 
-  const VooDrawerDefaultHeader({super.key, this.title = 'Navigation', this.tagline, this.icon = Icons.dashboard});
+  /// Optional trailing widget (e.g., collapse button)
+  final Widget? trailing;
+
+  const VooDrawerDefaultHeader({
+    super.key,
+    this.title = 'Navigation',
+    this.tagline,
+    this.icon = Icons.dashboard,
+    this.trailing,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +38,10 @@ class VooDrawerDefaultHeader extends StatelessWidget {
         ? const Color(0xFFF0F0F0)
         : theme.colorScheme.onSurface.withValues(alpha: 0.12);
 
-    // Align branding center with app bar title center
-    // Content area has 8px top margin, app bar title is centered in toolbar
     return Padding(
       padding: EdgeInsets.fromLTRB(spacing.sm, 28, spacing.sm, spacing.sm),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: size.avatarMedium,
@@ -62,6 +70,10 @@ class VooDrawerDefaultHeader extends StatelessWidget {
               ],
             ),
           ),
+          if (trailing != null) ...[
+            SizedBox(width: spacing.xs),
+            trailing!,
+          ],
         ],
       ),
     );

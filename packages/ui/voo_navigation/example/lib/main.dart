@@ -33,6 +33,35 @@ class _NavigationExampleState extends State<NavigationExample> {
   String _selectedId = 'dashboard';
   String _searchQuery = '';
 
+  // Organization switcher state
+  late VooOrganization _selectedOrganization;
+  final List<VooOrganization> _organizations = [
+    const VooOrganization(
+      id: 'acme',
+      name: 'ACME Corp',
+      subtitle: '12 members',
+      avatarColor: Colors.blue,
+    ),
+    const VooOrganization(
+      id: 'startup',
+      name: 'Startup Inc',
+      subtitle: '5 members',
+      avatarColor: Colors.green,
+    ),
+    const VooOrganization(
+      id: 'enterprise',
+      name: 'Enterprise Ltd',
+      subtitle: '50 members',
+      avatarColor: Colors.purple,
+    ),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedOrganization = _organizations.first;
+  }
+
   final List<VooNavigationItem> _items = [
     const VooNavigationItem(
       id: 'dashboard',
@@ -124,6 +153,31 @@ class _NavigationExampleState extends State<NavigationExample> {
     });
   }
 
+  void _onOrganizationChanged(VooOrganization org) {
+    setState(() {
+      _selectedOrganization = org;
+    });
+  }
+
+  void _onCreateOrganization() {
+    // Handle create organization
+    debugPrint('Create organization tapped');
+  }
+
+  void _onProfileTap() {
+    debugPrint('Profile tapped');
+  }
+
+  void _onSettingsTap() {
+    setState(() {
+      _selectedId = 'settings';
+    });
+  }
+
+  void _onLogout() {
+    debugPrint('Logout tapped');
+  }
+
   @override
   Widget build(BuildContext context) {
     return VooAdaptiveScaffold(
@@ -132,11 +186,13 @@ class _NavigationExampleState extends State<NavigationExample> {
         footerItems: _footerItems,
         selectedId: _selectedId,
         onNavigationItemSelected: _onNavigationItemSelected,
+
         // Simple theme configuration
         navigationTheme: const VooNavigationTheme(
           borderRadius: 12,
           elevation: 0,
         ),
+
         // Header configuration with tagline
         headerConfig: const VooHeaderConfig(
           title: 'ACME',
@@ -144,14 +200,45 @@ class _NavigationExampleState extends State<NavigationExample> {
           logoIcon: Icons.rocket_launch,
           showTitle: true,
         ),
+
         // Enable collapsible rail for desktop
         enableCollapsibleRail: true,
-        // Show user profile in navigation
+
+        // ========================================
+        // SIMPLIFIED USER PROFILE API
+        // ========================================
+        // Just set showUserProfile and provide a config object.
+        // The profile footer automatically adapts to compact/expanded mode.
         showUserProfile: true,
-        userProfileConfig: const VooUserProfileConfig(
+        userProfileConfig: VooUserProfileConfig(
           userName: 'John Doe',
           userEmail: 'john@example.com',
+          initials: 'JD',
+          status: VooUserStatus.online,
+          onTap: _onProfileTap,
+          onSettingsTap: _onSettingsTap,
+          onLogout: _onLogout,
+          showDropdownIndicator: true,
         ),
+
+        // ========================================
+        // SIMPLIFIED ORGANIZATION SWITCHER API
+        // ========================================
+        // Provide a config object with organizations list.
+        // The switcher automatically adapts to compact/expanded mode,
+        // shows search when there are many organizations,
+        // and handles keyboard navigation.
+        organizationSwitcher: VooOrganizationSwitcherConfig(
+          organizations: _organizations,
+          selectedOrganization: _selectedOrganization,
+          onOrganizationChanged: _onOrganizationChanged,
+          onCreateOrganization: _onCreateOrganization,
+          showCreateButton: true,
+          createButtonLabel: 'New Organization',
+          tooltip: 'Switch organization',
+        ),
+        organizationSwitcherPosition: VooOrganizationSwitcherPosition.footer,
+
         // Search bar configuration
         searchBar: VooSearchBarConfig(
           hintText: 'Search...',
@@ -187,12 +274,19 @@ class _NavigationExampleState extends State<NavigationExample> {
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),
+          const SizedBox(height: 8),
+          Text(
+            'Organization: ${_selectedOrganization.name}',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
           if (_searchQuery.isNotEmpty) ...[
             const SizedBox(height: 16),
             Text(
               'Search: $_searchQuery',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.tertiary,
                   ),
             ),
           ],
