@@ -33,7 +33,7 @@ class VooRailSearchBar extends StatelessWidget {
     // In compact mode, show search icon button that expands
     if (!extended) {
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
         child: IconButton(
           icon: const Icon(Icons.search, size: 20),
           tooltip: searchConfig.hintText ?? 'Search...',
@@ -45,7 +45,7 @@ class VooRailSearchBar extends StatelessWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 8),
       child: VooSearchBar(
         navigationItems: searchConfig.navigationItems ?? config.items,
         onFilteredItemsChanged: searchConfig.onFilteredItemsChanged,
