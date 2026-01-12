@@ -120,8 +120,8 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       selectedId: _selectedId,
       onNavigationItemSelected: _onNavigationItemSelected,
 
-      // Use minimal modern theme with flat design
-      navigationTheme: VooNavigationTheme.minimalModern().copyWith(containerBorderRadius: 0),
+      // Simple navigation theme
+      navigationTheme: const VooNavigationTheme(borderRadius: 0),
 
       // Header configuration - simplified API for title and logo
       headerConfig: const VooHeaderConfig(

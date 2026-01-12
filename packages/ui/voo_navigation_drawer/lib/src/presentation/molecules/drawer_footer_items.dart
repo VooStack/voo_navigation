@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_footer_item.dart';
+import 'package:voo_tokens/voo_tokens.dart';
 
 /// Footer items widget for static routes like Settings, Integrations, Help
 class VooDrawerFooterItems extends StatelessWidget {
@@ -36,32 +37,28 @@ class VooDrawerFooterItems extends StatelessWidget {
 
     if (footerItems.isEmpty) return const SizedBox.shrink();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
+    return Container(
+      padding: EdgeInsets.all(context.vooSpacing.sm),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: theme.dividerColor.withValues(alpha: 0.1),
+            width: 1,
+          ),
+        ),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          // Divider above footer items
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: Divider(
-              height: 1,
-              thickness: 1,
-              color: theme.colorScheme.outlineVariant.withValues(alpha: 0.5),
-            ),
+        children: footerItems.map(
+          (item) => VooDrawerFooterItem(
+            item: item,
+            config: config,
+            selectedId: selectedId,
+            onItemTap: onItemTap,
+            isHovered: hoveredItems[item.id] ?? false,
+            onHoverChanged: (isHovered) => onHoverChanged(item.id, isHovered),
           ),
-          // Footer navigation items
-          ...footerItems.map(
-            (item) => VooDrawerFooterItem(
-              item: item,
-              config: config,
-              selectedId: selectedId,
-              onItemTap: onItemTap,
-              isHovered: hoveredItems[item.id] ?? false,
-              onHoverChanged: (isHovered) => onHoverChanged(item.id, isHovered),
-            ),
-          ),
-        ],
+        ).toList(),
       ),
     );
   }

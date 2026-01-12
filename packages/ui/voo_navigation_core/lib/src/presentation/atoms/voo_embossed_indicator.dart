@@ -37,7 +37,7 @@ class VooEmbossedIndicator extends StatelessWidget {
         color: isSelected
             ? indicatorColor.withValues(alpha: 0.08)
             : Colors.transparent,
-        borderRadius: BorderRadius.circular(theme.indicatorBorderRadius),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: isSelected
             ? [
                 BoxShadow(

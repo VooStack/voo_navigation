@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_type.dart';
 import 'package:voo_navigation_bar/src/presentation/organisms/voo_custom_navigation_bar.dart';
-import 'package:voo_navigation_bar/src/presentation/organisms/voo_material2_bottom_navigation.dart';
-import 'package:voo_navigation_bar/src/presentation/organisms/voo_material3_navigation_bar.dart';
 
 /// Adaptive bottom navigation bar for mobile layouts with Material 3 design
 /// Features smooth animations, haptic feedback, and beautiful visual transitions
@@ -26,9 +23,6 @@ class VooAdaptiveBottomNavigation extends StatefulWidget {
   /// Whether to show selected labels only
   final bool showSelectedLabels;
 
-  /// Type of bottom navigation bar
-  final VooNavigationBarType type;
-
   /// Custom background color
   final Color? backgroundColor;
 
@@ -46,7 +40,6 @@ class VooAdaptiveBottomNavigation extends StatefulWidget {
     this.height,
     this.showLabels = true,
     this.showSelectedLabels = true,
-    this.type = VooNavigationBarType.material3,
     this.backgroundColor,
     this.elevation,
     this.enableFeedback = true,
@@ -174,46 +167,17 @@ class _VooAdaptiveBottomNavigationState
 
     final selectedIndex = _getSelectedIndex() ?? 0;
 
-    switch (widget.type) {
-      case VooNavigationBarType.material3:
-        return VooMaterial3NavigationBar(
-          items: items,
-          selectedIndex: selectedIndex,
-          config: widget.config,
-          scaleAnimations: _scaleAnimations,
-          height: widget.height,
-          backgroundColor: widget.backgroundColor,
-          elevation: widget.elevation,
-          showLabels: widget.showLabels,
-          showSelectedLabels: widget.showSelectedLabels,
-          enableFeedback: widget.enableFeedback,
-          onItemSelected: widget.onNavigationItemSelected,
-        );
-      case VooNavigationBarType.material2:
-        return VooMaterial2BottomNavigation(
-          items: items,
-          selectedIndex: selectedIndex,
-          config: widget.config,
-          backgroundColor: widget.backgroundColor,
-          elevation: widget.elevation,
-          showLabels: widget.showLabels,
-          showSelectedLabels: widget.showSelectedLabels,
-          enableFeedback: widget.enableFeedback,
-          onItemSelected: widget.onNavigationItemSelected,
-        );
-      case VooNavigationBarType.custom:
-        return VooCustomNavigationBar(
-          items: items,
-          selectedIndex: selectedIndex,
-          config: widget.config,
-          scaleAnimations: _scaleAnimations,
-          rotationAnimations: _rotationAnimations,
-          height: widget.height,
-          showLabels: widget.showLabels,
-          showSelectedLabels: widget.showSelectedLabels,
-          enableFeedback: widget.enableFeedback,
-          onItemSelected: widget.onNavigationItemSelected,
-        );
-    }
+    return VooCustomNavigationBar(
+      items: items,
+      selectedIndex: selectedIndex,
+      config: widget.config,
+      scaleAnimations: _scaleAnimations,
+      rotationAnimations: _rotationAnimations,
+      height: widget.height,
+      showLabels: widget.showLabels,
+      showSelectedLabels: widget.showSelectedLabels,
+      enableFeedback: widget.enableFeedback,
+      onItemSelected: widget.onNavigationItemSelected,
+    );
   }
 }

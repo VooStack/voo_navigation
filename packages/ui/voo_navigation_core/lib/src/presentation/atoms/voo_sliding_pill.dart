@@ -25,24 +25,12 @@ class VooSlidingPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showGlow = theme.indicatorStyle == VooThemeIndicatorStyle.glow ||
-        theme.preset == VooNavigationPreset.glassmorphism;
-
     return Container(
       width: pillWidth,
       height: height,
       decoration: BoxDecoration(
         color: indicatorColor,
         borderRadius: BorderRadius.circular(height / 2),
-        boxShadow: showGlow
-            ? [
-                BoxShadow(
-                  color: indicatorColor.withValues(alpha: 0.4),
-                  blurRadius: theme.indicatorGlowBlur,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
       ),
     );
   }

@@ -32,8 +32,6 @@ class VooEdgeBarIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final indicatorColor = color ?? theme.resolveIndicatorColor(context);
-    final showGlow = theme.indicatorStyle == VooThemeIndicatorStyle.glow ||
-        theme.preset == VooNavigationPreset.glassmorphism;
 
     return AnimatedContainer(
       duration: theme.animationDuration,
@@ -46,15 +44,6 @@ class VooEdgeBarIndicator extends StatelessWidget {
           topRight: Radius.circular(width),
           bottomRight: Radius.circular(width),
         ),
-        boxShadow: isSelected && showGlow
-            ? [
-                BoxShadow(
-                  color: indicatorColor.withValues(alpha: 0.5),
-                  blurRadius: 8,
-                  offset: const Offset(2, 0),
-                ),
-              ]
-            : null,
       ),
     );
   }

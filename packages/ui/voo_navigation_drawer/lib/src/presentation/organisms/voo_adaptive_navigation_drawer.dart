@@ -134,8 +134,8 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
     // Check all sides explicitly to handle different EdgeInsets instances
     final isFullHeight = effectiveDrawerMargin.left == 0 && effectiveDrawerMargin.top == 0 && effectiveDrawerMargin.right == 0 && effectiveDrawerMargin.bottom == 0;
     final borderRadius = isFullHeight
-        ? BorderRadius.only(topRight: Radius.circular(navTheme.containerBorderRadius), bottomRight: Radius.circular(navTheme.containerBorderRadius))
-        : BorderRadius.circular(navTheme.containerBorderRadius);
+        ? BorderRadius.only(topRight: Radius.circular(navTheme.borderRadius), bottomRight: Radius.circular(navTheme.borderRadius))
+        : BorderRadius.circular(navTheme.borderRadius);
 
     // Build optional components based on position
     final searchBarInHeader = VooDrawerSearchBar.forPosition(context: context, config: widget.config, position: VooSearchBarPosition.header);

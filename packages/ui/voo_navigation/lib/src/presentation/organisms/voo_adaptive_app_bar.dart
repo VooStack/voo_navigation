@@ -150,36 +150,17 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     final effectiveCenterTitle = centerTitle ?? effectiveConfig?.centerAppBarTitle ?? false;
-    // Use pure white/dark background to match body (no tinted colors)
-    final isDark = theme.brightness == Brightness.dark;
-    final effectiveBackgroundColor =
-        backgroundColor ??
-        effectiveConfig?.navigationBackgroundColor ??
-        (isDark ? const Color(0xFF1A1A1A) : Colors.white);
+    // When appBarAlongsideRail is true, the app bar is inside the content container
+    // so it should be transparent to show the container's background
+    final isInsideContentContainer = effectiveConfig?.appBarAlongsideRail ?? true;
+    final effectiveBackgroundColor = backgroundColor ??
+        (isInsideContentContainer ? Colors.transparent : colorScheme.surface);
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSurface;
-
-    // Determine if we should use rounded corners based on content area border radius
-    final contentBorderRadius = effectiveConfig?.contentAreaBorderRadius ?? BorderRadius.zero;
-    final useRoundedCorners = contentBorderRadius != BorderRadius.zero;
-    final appBarRadius = useRoundedCorners
-        ? BorderRadius.only(
-            topLeft: Radius.circular(context.vooRadius.lg),
-            topRight: Radius.circular(context.vooRadius.lg),
-          )
-        : BorderRadius.zero;
 
     return Container(
       margin: margin,
-      decoration: BoxDecoration(
-        color: effectiveBackgroundColor,
-        borderRadius: appBarRadius,
-        boxShadow: useRoundedCorners
-            ? [BoxShadow(color: theme.shadowColor.withValues(alpha: 0.04), blurRadius: 8, offset: const Offset(0, 2))]
-            : null,
-      ),
-      child: ClipRRect(
-        borderRadius: appBarRadius,
-        child: AppBar(
+      color: effectiveBackgroundColor,
+      child: AppBar(
           title: Padding(
             padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.xs),
             child: effectiveTitle,
@@ -204,7 +185,6 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
             statusBarBrightness: theme.brightness,
           ),
         ),
-      ),
     );
   }
 

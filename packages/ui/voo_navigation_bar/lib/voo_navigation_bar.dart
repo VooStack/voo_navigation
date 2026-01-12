@@ -15,5 +15,3 @@ export 'src/presentation/molecules/voo_navigation_dropdown.dart';
 export 'src/presentation/organisms/voo_adaptive_bottom_navigation.dart';
 export 'src/presentation/organisms/voo_custom_navigation_bar.dart';
 export 'src/presentation/organisms/voo_floating_bottom_navigation.dart';
-export 'src/presentation/organisms/voo_material2_bottom_navigation.dart';
-export 'src/presentation/organisms/voo_material3_navigation_bar.dart';

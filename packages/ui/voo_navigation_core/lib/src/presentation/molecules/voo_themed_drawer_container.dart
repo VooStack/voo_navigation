@@ -30,8 +30,8 @@ class VooThemedDrawerContainer extends StatelessWidget {
       theme: theme,
       width: width,
       borderRadius: BorderRadius.only(
-        topRight: Radius.circular(theme.containerBorderRadius),
-        bottomRight: Radius.circular(theme.containerBorderRadius),
+        topRight: Radius.circular(theme.borderRadius),
+        bottomRight: Radius.circular(theme.borderRadius),
       ),
       child: child,
     );

@@ -143,6 +143,10 @@ class VooTabletScaffold extends StatelessWidget {
       }
 
       final navTheme = config.effectiveTheme;
+      final colorScheme = Theme.of(context).colorScheme;
+      final isDark = Theme.of(context).brightness == Brightness.dark;
+      final effectiveContentBackgroundColor = config.contentAreaBackgroundColor ??
+          (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
 
       return Scaffold(
         key: scaffoldKey,
@@ -154,13 +158,10 @@ class VooTabletScaffold extends StatelessWidget {
               child: VooThemedNavContainer(
                 theme: navTheme,
                 expand: true,
-                margin: EdgeInsets.only(
-                  top: config.navigationRailMargin,
-                  bottom: config.navigationRailMargin,
-                  right: config.navigationRailMargin,
-                ),
-                borderRadius: BorderRadius.circular(navTheme.containerBorderRadius),
+                margin: const EdgeInsets.only(top: 8),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
                 clipContent: true,
+                backgroundColor: effectiveContentBackgroundColor,
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
                   appBar: effectiveAppBar,
@@ -190,6 +191,10 @@ class VooTabletScaffold extends StatelessWidget {
     // Apply consistent body margins and themed styling for visual alignment with rail
     // Body always gets margins on top, bottom, right to match navigation styling (default behavior)
     final navTheme = config.effectiveTheme;
+    final colorScheme2 = Theme.of(context).colorScheme;
+    final isDark2 = Theme.of(context).brightness == Brightness.dark;
+    final effectiveContentBackgroundColor2 = config.contentAreaBackgroundColor ??
+        (isDark2 ? colorScheme2.surfaceContainerLow : const Color(0xFFF5F5F5));
 
     return Scaffold(
       key: scaffoldKey,
@@ -204,13 +209,10 @@ class VooTabletScaffold extends StatelessWidget {
             child: VooThemedNavContainer(
               theme: navTheme,
               expand: true,
-              margin: EdgeInsets.only(
-                top: config.navigationRailMargin,
-                bottom: config.navigationRailMargin,
-                right: config.navigationRailMargin,
-              ),
-              borderRadius: BorderRadius.circular(navTheme.containerBorderRadius),
+              margin: const EdgeInsets.only(top: 8),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
               clipContent: true,
+              backgroundColor: effectiveContentBackgroundColor2,
               child: body,
             ),
           ),

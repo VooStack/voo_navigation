@@ -1,17 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Enum defining the style of bottom navigation bar
-enum VooNavigationBarType {
-  /// Material 3 NavigationBar
-  material3,
-
-  /// Material 2 BottomNavigationBar
-  material2,
-
-  /// Custom implementation
-  custom,
-}
-
 /// Enum defining the type of navigation layout
 enum VooNavigationType {
   /// Bottom navigation bar for mobile devices

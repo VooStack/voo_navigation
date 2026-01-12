@@ -219,7 +219,6 @@ class _VooThemedNavItemState extends State<VooThemedNavItem>
     content = VooThemedIndicator(
       theme: widget.theme,
       isSelected: widget.isSelected,
-      linePosition: widget.lineIndicatorPosition,
       child: content,
     );
 

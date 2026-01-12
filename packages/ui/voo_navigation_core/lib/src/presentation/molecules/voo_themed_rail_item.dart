@@ -93,9 +93,7 @@ class _VooThemedRailItemState extends State<VooThemedRailItem> {
                     color: _isHovered && !widget.isSelected
                         ? colorScheme.onSurface.withValues(alpha: 0.04)
                         : Colors.transparent,
-                    borderRadius: BorderRadius.circular(
-                      widget.theme.indicatorBorderRadius,
-                    ),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,

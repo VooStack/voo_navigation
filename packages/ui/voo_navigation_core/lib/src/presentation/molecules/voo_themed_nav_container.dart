@@ -1,26 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
-import 'package:voo_navigation_core/src/presentation/molecules/blurry_container.dart';
-import 'package:voo_navigation_core/src/presentation/molecules/glassmorphism_container.dart';
-import 'package:voo_navigation_core/src/presentation/molecules/liquid_glass_container.dart';
-import 'package:voo_navigation_core/src/presentation/molecules/material3_enhanced_container.dart';
-import 'package:voo_navigation_core/src/presentation/molecules/minimal_modern_container.dart';
-import 'package:voo_navigation_core/src/presentation/molecules/neomorphism_container.dart';
-
-export 'package:voo_navigation_core/src/presentation/molecules/blurry_container.dart';
-export 'package:voo_navigation_core/src/presentation/molecules/glassmorphism_container.dart';
-export 'package:voo_navigation_core/src/presentation/molecules/liquid_glass_container.dart';
-export 'package:voo_navigation_core/src/presentation/molecules/material3_enhanced_container.dart';
-export 'package:voo_navigation_core/src/presentation/molecules/minimal_modern_container.dart';
-export 'package:voo_navigation_core/src/presentation/molecules/neomorphism_container.dart';
 
 /// A themed container for navigation components
 ///
-/// Automatically applies the appropriate visual style based on the theme preset:
-/// - Glassmorphism: Frosted glass with blur
-/// - Neomorphism: Soft shadows with embossed effect
-/// - Material 3 Enhanced: Polished Material with rich colors
-/// - Minimal Modern: Clean flat design
+/// Applies the navigation theme styling to the container.
 ///
 /// ```dart
 /// VooThemedNavContainer(
@@ -54,10 +37,9 @@ class VooThemedNavContainer extends StatelessWidget {
   final bool clipContent;
 
   /// Whether to expand to fill available space
-  /// When true and width/height are not set, container fills parent constraints
   final bool expand;
 
-  /// Override background color (ignores theme preset's background)
+  /// Override background color
   final Color? backgroundColor;
 
   const VooThemedNavContainer({
@@ -74,82 +56,43 @@ class VooThemedNavContainer extends StatelessWidget {
     this.backgroundColor,
   });
 
-  /// Effective width considering expand parameter
-  double? get _effectiveWidth => expand && width == null ? double.infinity : width;
-
-  /// Effective height considering expand parameter
-  double? get _effectiveHeight => expand && height == null ? double.infinity : height;
+  double? get _effectiveWidth =>
+      expand && width == null ? double.infinity : width;
+  double? get _effectiveHeight =>
+      expand && height == null ? double.infinity : height;
 
   @override
   Widget build(BuildContext context) {
-    final effectiveBorderRadius = borderRadius ??
-        BorderRadius.circular(theme.containerBorderRadius);
+    final effectiveBorderRadius =
+        borderRadius ?? BorderRadius.circular(theme.borderRadius);
+    final effectiveBackgroundColor =
+        backgroundColor ?? theme.resolveSurfaceColor(context);
+    final borderColor = theme.resolveBorderColor(context);
+    final shadows = theme.resolveShadows(context);
 
-    return switch (theme.preset) {
-      VooNavigationPreset.glassmorphism => VooGlassmorphismContainer(
-          theme: theme,
-          radius: effectiveBorderRadius,
-          width: _effectiveWidth,
-          height: _effectiveHeight,
-          padding: padding,
-          margin: margin,
-          clipContent: clipContent,
-          backgroundColor: backgroundColor,
-          child: child,
-        ),
-      VooNavigationPreset.liquidGlass => VooLiquidGlassContainer(
-          theme: theme,
-          radius: effectiveBorderRadius,
-          width: _effectiveWidth,
-          height: _effectiveHeight,
-          padding: padding,
-          margin: margin,
-          backgroundColor: backgroundColor,
-          child: child,
-        ),
-      VooNavigationPreset.blurry => VooBlurryContainer(
-          theme: theme,
-          radius: effectiveBorderRadius,
-          width: _effectiveWidth,
-          height: _effectiveHeight,
-          padding: padding,
-          margin: margin,
-          backgroundColor: backgroundColor,
-          child: child,
-        ),
-      VooNavigationPreset.neomorphism => VooNeomorphismContainer(
-          theme: theme,
-          radius: effectiveBorderRadius,
-          width: _effectiveWidth,
-          height: _effectiveHeight,
-          padding: padding,
-          margin: margin,
-          clipContent: clipContent,
-          backgroundColor: backgroundColor,
-          child: child,
-        ),
-      VooNavigationPreset.material3Enhanced => VooMaterial3EnhancedContainer(
-          theme: theme,
-          radius: effectiveBorderRadius,
-          width: _effectiveWidth,
-          height: _effectiveHeight,
-          padding: padding,
-          margin: margin,
-          clipContent: clipContent,
-          backgroundColor: backgroundColor,
-          child: child,
-        ),
-      VooNavigationPreset.minimalModern => VooMinimalModernContainer(
-          theme: theme,
-          radius: effectiveBorderRadius,
-          width: _effectiveWidth,
-          height: _effectiveHeight,
-          padding: padding,
-          margin: margin,
-          clipContent: clipContent,
-          backgroundColor: backgroundColor,
-          child: child,
-        ),
-    };
+    Widget container = Container(
+      width: _effectiveWidth,
+      height: _effectiveHeight,
+      padding: padding,
+      margin: margin,
+      decoration: BoxDecoration(
+        color: effectiveBackgroundColor,
+        borderRadius: effectiveBorderRadius,
+        border: borderColor != null && theme.borderWidth > 0
+            ? Border.all(color: borderColor, width: theme.borderWidth)
+            : null,
+        boxShadow: shadows.isNotEmpty ? shadows : null,
+      ),
+      child: child,
+    );
+
+    if (clipContent) {
+      container = ClipRRect(
+        borderRadius: effectiveBorderRadius,
+        child: container,
+      );
+    }
+
+    return container;
   }
 }

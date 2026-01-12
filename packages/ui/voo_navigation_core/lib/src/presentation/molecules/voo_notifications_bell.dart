@@ -42,8 +42,7 @@ class VooNotificationsBell extends StatefulWidget {
   final bool compact;
 
   /// Custom notification item builder
-  final Widget Function(VooNotificationItem, VoidCallback onTap, VoidCallback? onDismiss)?
-      notificationBuilder;
+  final Widget Function(VooNotificationItem, VoidCallback onTap, VoidCallback? onDismiss)? notificationBuilder;
 
   /// Custom empty state widget
   final Widget? emptyStateWidget;
@@ -82,28 +81,19 @@ class VooNotificationsBell extends StatefulWidget {
   State<VooNotificationsBell> createState() => _VooNotificationsBellState();
 }
 
-class _VooNotificationsBellState extends State<VooNotificationsBell>
-    with SingleTickerProviderStateMixin {
+class _VooNotificationsBellState extends State<VooNotificationsBell> with SingleTickerProviderStateMixin {
   OverlayEntry? _overlayEntry;
   bool _isOpen = false;
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
-  int get _unreadCount =>
-      widget.unreadCount ??
-      widget.notifications.where((n) => !n.isRead).length;
+  int get _unreadCount => widget.unreadCount ?? widget.notifications.where((n) => !n.isRead).length;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _scaleAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutBack,
-    );
+    _animationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
+    _scaleAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack);
   }
 
   @override
@@ -194,9 +184,7 @@ class _VooNotificationsBellState extends State<VooNotificationsBell>
                 onMarkNeedsBuild: () => _overlayEntry?.markNeedsBuild(),
                 notificationBuilder: widget.notificationBuilder,
                 onNotificationTap: _handleNotificationTap,
-                onNotificationDismiss: widget.onNotificationDismiss != null
-                    ? _handleNotificationDismiss
-                    : null,
+                onNotificationDismiss: widget.onNotificationDismiss != null ? _handleNotificationDismiss : null,
               ),
             ),
           ),
@@ -232,17 +220,11 @@ class _VooNotificationsBellState extends State<VooNotificationsBell>
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: VooBadgeWrapper(
-            badge: VooBadge.count(
-              count: _unreadCount,
-              backgroundColor: style.badgeColor,
-              foregroundColor: style.badgeTextColor,
-            ),
+            badge: VooBadge.count(count: _unreadCount, backgroundColor: style.badgeColor, foregroundColor: style.badgeTextColor),
             child: Icon(
               _isOpen ? Icons.notifications : Icons.notifications_outlined,
               size: iconSize,
-              color: _isOpen
-                  ? colorScheme.primary
-                  : (style.iconColor ?? colorScheme.onSurfaceVariant),
+              color: _isOpen ? colorScheme.primary : (style.iconColor ?? colorScheme.onSurfaceVariant),
             ),
           ),
         ),
@@ -258,13 +240,7 @@ class _NotificationsBellHeader extends StatelessWidget {
   final VoidCallback? onMarkAllRead;
   final VoidCallback onMarkNeedsBuild;
 
-  const _NotificationsBellHeader({
-    required this.style,
-    required this.showMarkAllRead,
-    required this.unreadCount,
-    this.onMarkAllRead,
-    required this.onMarkNeedsBuild,
-  });
+  const _NotificationsBellHeader({required this.style, required this.showMarkAllRead, required this.unreadCount, this.onMarkAllRead, required this.onMarkNeedsBuild});
 
   @override
   Widget build(BuildContext context) {
@@ -274,34 +250,19 @@ class _NotificationsBellHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.1),
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: colorScheme.outline.withValues(alpha: 0.1))),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Notifications',
-            style: style.titleStyle ??
-                theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-          ),
+          Text('Notifications', style: style.titleStyle ?? theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600)),
           if (showMarkAllRead && unreadCount > 0)
             TextButton(
               onPressed: () {
                 onMarkAllRead?.call();
                 onMarkNeedsBuild();
               },
-              child: Text(
-                'Mark all as read',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: colorScheme.primary,
-                ),
-              ),
+              child: Text('Mark all as read', style: theme.textTheme.labelMedium?.copyWith(color: colorScheme.primary)),
             ),
         ],
       ),
@@ -313,10 +274,7 @@ class _NotificationsBellEmptyState extends StatelessWidget {
   final VooNotificationsBellStyle style;
   final String? emptyStateMessage;
 
-  const _NotificationsBellEmptyState({
-    required this.style,
-    this.emptyStateMessage,
-  });
+  const _NotificationsBellEmptyState({required this.style, this.emptyStateMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -328,18 +286,9 @@ class _NotificationsBellEmptyState extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.notifications_none,
-            size: 48,
-            color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
+          Icon(Icons.notifications_none, size: 48, color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
-          Text(
-            emptyStateMessage ?? 'No notifications',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
+          Text(emptyStateMessage ?? 'No notifications', style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant)),
         ],
       ),
     );
@@ -351,11 +300,7 @@ class _NotificationsBellFooter extends StatelessWidget {
   final VoidCallback? onViewAll;
   final VoidCallback onRemoveOverlay;
 
-  const _NotificationsBellFooter({
-    required this.style,
-    this.onViewAll,
-    required this.onRemoveOverlay,
-  });
+  const _NotificationsBellFooter({required this.style, this.onViewAll, required this.onRemoveOverlay});
 
   @override
   Widget build(BuildContext context) {
@@ -364,11 +309,7 @@ class _NotificationsBellFooter extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: colorScheme.outline.withValues(alpha: 0.1),
-          ),
-        ),
+        border: Border(top: BorderSide(color: colorScheme.outline.withValues(alpha: 0.1))),
       ),
       child: TextButton(
         onPressed: () {
@@ -379,21 +320,12 @@ class _NotificationsBellFooter extends StatelessWidget {
           minimumSize: const Size(double.infinity, 48),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(
-                style.borderRadius?.bottomLeft.x ?? 16,
-              ),
-              bottomRight: Radius.circular(
-                style.borderRadius?.bottomRight.x ?? 16,
-              ),
+              bottomLeft: Radius.circular(style.borderRadius?.bottomLeft.x ?? 16),
+              bottomRight: Radius.circular(style.borderRadius?.bottomRight.x ?? 16),
             ),
           ),
         ),
-        child: Text(
-          'View all notifications',
-          style: theme.textTheme.labelLarge?.copyWith(
-            color: colorScheme.primary,
-          ),
-        ),
+        child: Text('View all notifications', style: theme.textTheme.labelLarge?.copyWith(color: colorScheme.primary)),
       ),
     );
   }
@@ -405,12 +337,7 @@ class _NotificationTile extends StatefulWidget {
   final VoidCallback onTap;
   final VoidCallback? onDismiss;
 
-  const _NotificationTile({
-    required this.notification,
-    required this.style,
-    required this.onTap,
-    this.onDismiss,
-  });
+  const _NotificationTile({required this.notification, required this.style, required this.onTap, this.onDismiss});
 
   @override
   State<_NotificationTile> createState() => _NotificationTileState();
@@ -431,27 +358,20 @@ class _NotificationTileState extends State<_NotificationTile> {
       onExit: (_) => setState(() => _isHovered = false),
       child: Dismissible(
         key: Key(notification.id),
-        direction: widget.onDismiss != null
-            ? DismissDirection.endToStart
-            : DismissDirection.none,
+        direction: widget.onDismiss != null ? DismissDirection.endToStart : DismissDirection.none,
         onDismissed: (_) => widget.onDismiss?.call(),
         background: Container(
           color: colorScheme.error,
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 16),
-          child: Icon(
-            Icons.delete_outline,
-            color: colorScheme.onError,
-          ),
+          child: Icon(Icons.delete_outline, color: colorScheme.onError),
         ),
         child: InkWell(
           onTap: widget.onTap,
           child: Container(
-            padding: style.itemPadding ??
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: style.itemPadding ?? const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             color: !notification.isRead
-                ? (style.unreadBackgroundColor ??
-                    colorScheme.primaryContainer.withValues(alpha: 0.3))
+                ? (style.unreadBackgroundColor ?? colorScheme.primaryContainer.withValues(alpha: 0.3))
                 : (_isHovered ? colorScheme.surfaceContainerHighest : null),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,17 +380,8 @@ class _NotificationTileState extends State<_NotificationTile> {
                 Container(
                   width: 40,
                   height: 40,
-                  decoration: BoxDecoration(
-                    color: notification.iconBackgroundColor ??
-                        colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: notification.iconWidget ??
-                      Icon(
-                        notification.icon ?? Icons.notifications,
-                        size: 20,
-                        color: notification.iconColor ?? colorScheme.onSurfaceVariant,
-                      ),
+                  decoration: BoxDecoration(color: notification.iconBackgroundColor ?? colorScheme.surfaceContainerHighest, borderRadius: BorderRadius.circular(10)),
+                  child: notification.iconWidget ?? Icon(notification.icon ?? Icons.notifications, size: 20, color: notification.iconColor ?? colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(width: 12),
 
@@ -486,20 +397,12 @@ class _NotificationTileState extends State<_NotificationTile> {
                               width: 6,
                               height: 6,
                               margin: const EdgeInsets.only(right: 6),
-                              decoration: BoxDecoration(
-                                color: style.urgentColor ?? colorScheme.error,
-                                shape: BoxShape.circle,
-                              ),
+                              decoration: BoxDecoration(color: style.urgentColor ?? colorScheme.error, shape: BoxShape.circle),
                             ),
                           Expanded(
                             child: Text(
                               notification.title,
-                              style: style.titleStyle ??
-                                  theme.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: notification.isRead
-                                        ? FontWeight.w400
-                                        : FontWeight.w600,
-                                  ),
+                              style: style.titleStyle ?? theme.textTheme.bodyMedium?.copyWith(fontWeight: notification.isRead ? FontWeight.w400 : FontWeight.w600),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -510,10 +413,7 @@ class _NotificationTileState extends State<_NotificationTile> {
                         const SizedBox(height: 2),
                         Text(
                           notification.subtitle!,
-                          style: style.subtitleStyle ??
-                              theme.textTheme.bodySmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant,
-                              ),
+                          style: style.subtitleStyle ?? theme.textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -522,14 +422,10 @@ class _NotificationTileState extends State<_NotificationTile> {
                         const SizedBox(height: 4),
                         Text(
                           notification.relativeTime,
-                          style: style.timestampStyle ??
-                              theme.textTheme.labelSmall?.copyWith(
-                                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
-                              ),
+                          style: style.timestampStyle ?? theme.textTheme.labelSmall?.copyWith(color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7)),
                         ),
                       ],
-                      if (notification.actions != null &&
-                          notification.actions!.isNotEmpty) ...[
+                      if (notification.actions != null && notification.actions!.isNotEmpty) ...[
                         const SizedBox(height: 8),
                         Row(
                           children: notification.actions!.map((action) {
@@ -539,10 +435,7 @@ class _NotificationTileState extends State<_NotificationTile> {
                                   ? FilledButton(
                                       onPressed: action.onTap,
                                       style: FilledButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 12,
-                                          vertical: 4,
-                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                                         minimumSize: Size.zero,
                                         textStyle: theme.textTheme.labelSmall,
                                       ),
@@ -551,10 +444,7 @@ class _NotificationTileState extends State<_NotificationTile> {
                                   : TextButton(
                                       onPressed: action.onTap,
                                       style: TextButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(
-                                          horizontal: 8,
-                                          vertical: 4,
-                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                         minimumSize: Size.zero,
                                         textStyle: theme.textTheme.labelSmall,
                                       ),
@@ -574,10 +464,7 @@ class _NotificationTileState extends State<_NotificationTile> {
                     width: 8,
                     height: 8,
                     margin: const EdgeInsets.only(left: 8, top: 4),
-                    decoration: BoxDecoration(
-                      color: colorScheme.primary,
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: BoxDecoration(color: colorScheme.primary, shape: BoxShape.circle),
                   ),
               ],
             ),

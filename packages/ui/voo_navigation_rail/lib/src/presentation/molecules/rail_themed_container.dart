@@ -47,7 +47,7 @@ class VooRailThemedContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(navTheme.containerBorderRadius);
+    final borderRadius = BorderRadius.circular(navTheme.borderRadius);
 
     // Build optional components based on position
     final searchBarInHeader = VooRailSearchBar.forPosition(context: context, config: config, extended: extended, position: VooSearchBarPosition.header);

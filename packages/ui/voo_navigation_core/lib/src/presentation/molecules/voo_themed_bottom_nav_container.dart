@@ -52,7 +52,7 @@ class VooThemedBottomNavContainer extends StatelessWidget {
         child: VooThemedNavContainer(
           theme: theme,
           height: height,
-          borderRadius: BorderRadius.circular(theme.containerBorderRadius),
+          borderRadius: BorderRadius.circular(theme.borderRadius),
           child: child,
         ),
       );
@@ -63,7 +63,7 @@ class VooThemedBottomNavContainer extends StatelessWidget {
       theme: theme,
       height: height,
       borderRadius: BorderRadius.vertical(
-        top: Radius.circular(theme.containerBorderRadius * 0.5),
+        top: Radius.circular(theme.borderRadius * 0.5),
       ),
       child: child,
     );

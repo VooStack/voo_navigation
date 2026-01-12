@@ -209,19 +209,21 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
         widget.config.floatingActionButtonAnimator;
 
     final navTheme = widget.config.effectiveTheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
 
-    // Calculate content area margin - small margin for visual separation
-    // Default to 8dp on top/bottom/right for clean inset look
+    // Calculate content area margin - only top margin for visual separation
     final effectiveContentMargin = widget.config.contentAreaMargin ??
-        const EdgeInsets.only(
-          top: 8,
-          bottom: 8,
-          right: 8,
-        );
+        const EdgeInsets.only(top: 8);
 
-    // Calculate content area border radius - subtle rounding for content area
+    // Calculate content area border radius - only top-left corner rounded
     final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ??
-        BorderRadius.circular(12);
+        const BorderRadius.only(topLeft: Radius.circular(12));
+
+    // Content area background - use surfaceContainerLow for visible distinction from navigation
+    final isDark = theme.brightness == Brightness.dark;
+    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ??
+        (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
 
     // When app bar is alongside drawer/rail, wrap the content area with its own scaffold
     if (widget.config.appBarAlongsideRail) {
@@ -269,7 +271,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
                 margin: effectiveContentMargin,
                 borderRadius: effectiveContentBorderRadius,
                 clipContent: true,
-                backgroundColor: widget.config.contentAreaBackgroundColor,
+                backgroundColor: effectiveContentBackgroundColor,
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
                   appBar: effectiveAppBar,
@@ -313,7 +315,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
               margin: effectiveContentMargin,
               borderRadius: effectiveContentBorderRadius,
               clipContent: true,
-              backgroundColor: widget.config.contentAreaBackgroundColor,
+              backgroundColor: effectiveContentBackgroundColor,
               child: widget.body,
             ),
           ),

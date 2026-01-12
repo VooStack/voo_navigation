@@ -41,7 +41,7 @@ class VooThemedRailContainer extends StatelessWidget {
       child: VooThemedNavContainer(
         theme: theme,
         width: width,
-        borderRadius: BorderRadius.circular(theme.containerBorderRadius),
+        borderRadius: BorderRadius.circular(theme.borderRadius),
         child: child,
       ),
     );

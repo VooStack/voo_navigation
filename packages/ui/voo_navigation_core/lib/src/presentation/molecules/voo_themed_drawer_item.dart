@@ -78,13 +78,12 @@ class _VooThemedDrawerItemState extends State<VooThemedDrawerItem> {
                 : _isHovered
                     ? colorScheme.onSurface.withValues(alpha: 0.04)
                     : Colors.transparent,
-            borderRadius: BorderRadius.circular(widget.theme.indicatorBorderRadius),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
             children: [
               // Edge indicator for selected
-              if (widget.isSelected &&
-                  widget.theme.preset != VooNavigationPreset.minimalModern)
+              if (widget.isSelected)
                 Container(
                   width: 3,
                   height: 24,
