@@ -85,12 +85,12 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     final effectiveActions = actions ?? config?.appBarActionsBuilder?.call(effectiveSelectedId);
 
+    // Use pure white/dark background to match body (no tinted colors)
+    final isDark = theme.brightness == Brightness.dark;
     final effectiveBackgroundColor =
         backgroundColor ??
         config?.navigationBackgroundColor ??
-        (theme.brightness == Brightness.light
-            ? theme.colorScheme.surface.withValues(alpha: 0.95)
-            : theme.colorScheme.surfaceContainerLow);
+        (isDark ? const Color(0xFF1A1A1A) : Colors.white);
 
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSurface;
 
