@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voo_navigation_bar/src/presentation/molecules/floating_nav_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Floating bottom navigation bar with pill shape design
@@ -54,7 +54,7 @@ class VooFloatingBottomNavigation extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: items.map((item) {
               final isSelected = item.id == selectedId;
-              return _NavItem(
+              return VooFloatingNavItem(
                 item: item,
                 isSelected: isSelected,
                 onTap: () {
@@ -66,40 +66,6 @@ class VooFloatingBottomNavigation extends StatelessWidget {
               );
             }).toList(),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _NavItem extends StatelessWidget {
-  final VooNavigationItem item;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _NavItem({
-    required this.item,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: SizedBox(
-        width: 56,
-        height: 56,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              isSelected ? item.effectiveSelectedIcon : item.icon,
-              color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
-              size: 24,
-            ),
-          ],
         ),
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
+import 'package:voo_navigation/src/presentation/pages/default_navigation_page.dart';
 import 'package:voo_navigation/src/presentation/providers/voo_go_router.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -432,53 +433,12 @@ class VooNavigationBuilder {
     // Otherwise, generate routes from items
     return VooGoRouter.fromNavigationItems(
       config: config,
-      pageBuilder: (context, item) => _DefaultNavigationPage(item: item),
+      pageBuilder: (context, item) => VooDefaultNavigationPage(item: item),
       initialLocation: initialLocation,
       errorBuilder: errorBuilder,
       builder: builder,
       observers: observers,
       debugLogDiagnostics: debugLogDiagnostics,
-    );
-  }
-}
-
-/// Default navigation page widget
-class _DefaultNavigationPage extends StatelessWidget {
-  final VooNavigationItem item;
-
-  const _DefaultNavigationPage({required this.item});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              item.effectiveSelectedIcon,
-              size: context.vooSize.avatarXLarge,
-              color: theme.colorScheme.primary,
-            ),
-            SizedBox(height: context.vooSpacing.lg),
-            Text(
-              item.label,
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: context.vooSpacing.sm),
-            Text(
-              'Page for ${item.label}',
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/breadcrumb_item.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/breadcrumb_item_widget.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/breadcrumb_separator.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/collapsed_items_dropdown.dart';
 
 /// A breadcrumbs navigation widget
 class VooBreadcrumbs extends StatelessWidget {
@@ -81,13 +84,13 @@ class VooBreadcrumbs extends StatelessWidget {
           for (int i = 0; i < visibleItems.length; i++) ...[
             // Collapsed items indicator (after first item)
             if (i == 1 && collapsedItems.isNotEmpty) ...[
-              _BreadcrumbSeparator(
+              VooBreadcrumbSeparator(
                 style: effectiveStyle,
                 separator: separator,
               ),
               collapsedItemsBuilder != null
                   ? collapsedItemsBuilder!(collapsedItems)
-                  : _CollapsedItemsDropdown(
+                  : VooCollapsedItemsDropdown(
                       items: collapsedItems,
                       style: effectiveStyle,
                       onItemTap: onItemTap,
@@ -96,7 +99,7 @@ class VooBreadcrumbs extends StatelessWidget {
 
             // Separator (except before first item)
             if (i > 0 || (i == 1 && collapsedItems.isNotEmpty))
-              _BreadcrumbSeparator(
+              VooBreadcrumbSeparator(
                 style: effectiveStyle,
                 separator: separator,
               ),
@@ -104,7 +107,7 @@ class VooBreadcrumbs extends StatelessWidget {
             // Breadcrumb item
             itemBuilder != null
                 ? itemBuilder!(visibleItems[i], i == visibleItems.length - 1)
-                : _BreadcrumbItem(
+                : VooBreadcrumbItemWidget(
                     item: visibleItems[i],
                     isFirst: i == 0,
                     isLast: i == visibleItems.length - 1,
@@ -114,299 +117,6 @@ class VooBreadcrumbs extends StatelessWidget {
                   ),
           ],
         ],
-      ),
-    );
-  }
-}
-
-class _BreadcrumbSeparator extends StatelessWidget {
-  final VooBreadcrumbsStyle style;
-  final Widget? separator;
-
-  const _BreadcrumbSeparator({
-    required this.style,
-    this.separator,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: style.itemSpacing ?? 8),
-      child: separator ??
-          Icon(
-            Icons.chevron_right,
-            size: 16,
-            color: style.separatorColor ?? colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-    );
-  }
-}
-
-class _BreadcrumbItem extends StatefulWidget {
-  final VooBreadcrumbItem item;
-  final bool isFirst;
-  final bool isLast;
-  final bool showHomeIcon;
-  final VooBreadcrumbsStyle style;
-  final VoidCallback? onTap;
-
-  const _BreadcrumbItem({
-    required this.item,
-    required this.isFirst,
-    required this.isLast,
-    required this.showHomeIcon,
-    required this.style,
-    this.onTap,
-  });
-
-  @override
-  State<_BreadcrumbItem> createState() => _BreadcrumbItemState();
-}
-
-class _BreadcrumbItemState extends State<_BreadcrumbItem> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-    final item = widget.item;
-    final style = widget.style;
-
-    final isClickable = !item.isCurrentPage && (item.onTap != null || widget.onTap != null);
-
-    final textStyle = item.isCurrentPage
-        ? (style.currentItemStyle ?? theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurface,
-            fontWeight: FontWeight.w600,
-          ))
-        : (style.itemStyle ?? theme.textTheme.bodyMedium?.copyWith(
-            color: _isHovered
-                ? colorScheme.primary
-                : colorScheme.onSurfaceVariant,
-          ));
-
-    Widget content = Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (widget.showHomeIcon && item.icon != null)
-          Padding(
-            padding: EdgeInsets.only(right: style.iconSpacing ?? 4),
-            child: item.iconWidget ??
-                Icon(
-                  item.icon,
-                  size: style.iconSize ?? 16,
-                  color: textStyle?.color,
-                ),
-          )
-        else if (widget.showHomeIcon && widget.isFirst)
-          Padding(
-            padding: EdgeInsets.only(right: style.iconSpacing ?? 4),
-            child: Icon(
-              Icons.home_outlined,
-              size: style.iconSize ?? 16,
-              color: textStyle?.color,
-            ),
-          ),
-        if (!widget.showHomeIcon || !widget.isFirst || item.label != 'Home')
-          Text(
-            item.label,
-            style: textStyle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-      ],
-    );
-
-    if (isClickable) {
-      content = MouseRegion(
-        onEnter: (_) => setState(() => _isHovered = true),
-        onExit: (_) => setState(() => _isHovered = false),
-        cursor: SystemMouseCursors.click,
-        child: GestureDetector(
-          onTap: () {
-            item.onTap?.call();
-            widget.onTap?.call();
-          },
-          child: Container(
-            padding: style.itemPadding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-            decoration: BoxDecoration(
-              color: _isHovered ? (style.hoverColor ?? colorScheme.surfaceContainerHighest) : null,
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: content,
-          ),
-        ),
-      );
-    } else {
-      content = Padding(
-        padding: style.itemPadding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-        child: content,
-      );
-    }
-
-    return content;
-  }
-}
-
-class _CollapsedItemsDropdown extends StatefulWidget {
-  final List<VooBreadcrumbItem> items;
-  final VooBreadcrumbsStyle style;
-  final ValueChanged<VooBreadcrumbItem>? onItemTap;
-
-  const _CollapsedItemsDropdown({
-    required this.items,
-    required this.style,
-    this.onItemTap,
-  });
-
-  @override
-  State<_CollapsedItemsDropdown> createState() => _CollapsedItemsDropdownState();
-}
-
-class _CollapsedItemsDropdownState extends State<_CollapsedItemsDropdown> {
-  OverlayEntry? _overlayEntry;
-  bool _isOpen = false;
-  bool _isHovered = false;
-
-  @override
-  void dispose() {
-    _removeOverlay();
-    super.dispose();
-  }
-
-  void _toggleDropdown() {
-    if (_isOpen) {
-      _removeOverlay();
-    } else {
-      _showOverlay();
-    }
-  }
-
-  void _showOverlay() {
-    _overlayEntry = _createOverlayEntry();
-    Overlay.of(context).insert(_overlayEntry!);
-    setState(() {
-      _isOpen = true;
-    });
-  }
-
-  void _removeOverlay() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-    if (mounted) {
-      setState(() {
-        _isOpen = false;
-      });
-    }
-  }
-
-  OverlayEntry _createOverlayEntry() {
-    final renderBox = context.findRenderObject() as RenderBox;
-    final size = renderBox.size;
-    final offset = renderBox.localToGlobal(Offset.zero);
-
-    return OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: _removeOverlay,
-              behavior: HitTestBehavior.opaque,
-              child: Container(color: Colors.transparent),
-            ),
-          ),
-          Positioned(
-            left: offset.dx,
-            top: offset.dy + size.height + 4,
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 200),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-                  ),
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  itemCount: widget.items.length,
-                  itemBuilder: (context, index) {
-                    final item = widget.items[index];
-                    return InkWell(
-                      onTap: () {
-                        _removeOverlay();
-                        item.onTap?.call();
-                        widget.onItemTap?.call(item);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        child: Row(
-                          children: [
-                            if (item.icon != null) ...[
-                              item.iconWidget ??
-                                  Icon(
-                                    item.icon,
-                                    size: 16,
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  ),
-                              const SizedBox(width: 8),
-                            ],
-                            Expanded(
-                              child: Text(
-                                item.label,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: GestureDetector(
-        onTap: _toggleDropdown,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-          decoration: BoxDecoration(
-            color: _isHovered || _isOpen
-                ? (widget.style.hoverColor ?? colorScheme.surfaceContainerHighest)
-                : null,
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Text(
-            '...',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
       ),
     );
   }

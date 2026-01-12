@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/presentation/atoms/voo_avatar_initials_placeholder.dart';
 
 /// A reusable avatar widget that displays an image, initials, or custom widget
 class VooAvatar extends StatelessWidget {
@@ -131,7 +132,7 @@ class VooAvatar extends StatelessWidget {
               : null,
           errorBuilder: (context, error, stackTrace) {
             return errorWidget ??
-                _VooAvatarInitialsOrPlaceholder(
+                VooAvatarInitialsPlaceholder(
                   initials: effectiveInitials,
                   bgColor: effectiveBgColor,
                   fgColor: effectiveFgColor,
@@ -143,7 +144,7 @@ class VooAvatar extends StatelessWidget {
         ),
       );
     } else {
-      avatarContent = _VooAvatarInitialsOrPlaceholder(
+      avatarContent = VooAvatarInitialsPlaceholder(
         initials: effectiveInitials,
         bgColor: effectiveBgColor,
         fgColor: effectiveFgColor,
@@ -174,51 +175,6 @@ class VooAvatar extends StatelessWidget {
     }
 
     return avatar;
-  }
-}
-
-class _VooAvatarInitialsOrPlaceholder extends StatelessWidget {
-  final String? initials;
-  final Color bgColor;
-  final Color fgColor;
-  final BorderRadius borderRadius;
-  final double size;
-  final IconData? placeholderIcon;
-
-  const _VooAvatarInitialsOrPlaceholder({
-    required this.initials,
-    required this.bgColor,
-    required this.fgColor,
-    required this.borderRadius,
-    required this.size,
-    this.placeholderIcon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: borderRadius,
-      ),
-      alignment: Alignment.center,
-      child: initials != null && initials!.isNotEmpty
-          ? Text(
-              initials!,
-              style: TextStyle(
-                color: fgColor,
-                fontSize: size * 0.4,
-                fontWeight: FontWeight.w600,
-              ),
-            )
-          : Icon(
-              placeholderIcon ?? Icons.person,
-              size: size * 0.5,
-              color: fgColor,
-            ),
-    );
   }
 }
 

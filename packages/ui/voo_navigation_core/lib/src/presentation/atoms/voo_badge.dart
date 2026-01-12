@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/presentation/atoms/voo_badge_dot.dart';
+import 'package:voo_navigation_core/src/presentation/atoms/voo_badge_text.dart';
+import 'package:voo_navigation_core/src/presentation/atoms/voo_pulsing_status_badge.dart';
 
 /// A versatile badge widget for displaying counts, status indicators, and labels
 class VooBadge extends StatelessWidget {
@@ -140,13 +143,13 @@ class VooBadge extends StatelessWidget {
         duration: animationDuration,
         curve: Curves.easeOutBack,
         child: showDot
-            ? _VooBadgeDot(
+            ? VooBadgeDot(
                 bgColor: effectiveBgColor,
                 dotSize: dotSize,
                 border: border,
                 boxShadow: boxShadow,
               )
-            : _VooBadgeText(
+            : VooBadgeText(
                 bgColor: effectiveBgColor,
                 fgColor: effectiveFgColor,
                 displayText: _displayText,
@@ -157,104 +160,6 @@ class VooBadge extends StatelessWidget {
                 boxShadow: boxShadow,
                 textStyle: textStyle,
               ),
-      ),
-    );
-  }
-}
-
-class _VooBadgeDot extends StatelessWidget {
-  final Color bgColor;
-  final double dotSize;
-  final BoxBorder? border;
-  final List<BoxShadow>? boxShadow;
-
-  const _VooBadgeDot({
-    required this.bgColor,
-    required this.dotSize,
-    this.border,
-    this.boxShadow,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: dotSize,
-      height: dotSize,
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-        border: border,
-        boxShadow: boxShadow ??
-            [
-              BoxShadow(
-                color: bgColor.withValues(alpha: 0.4),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-      ),
-    );
-  }
-}
-
-class _VooBadgeText extends StatelessWidget {
-  final Color bgColor;
-  final Color fgColor;
-  final String? displayText;
-  final EdgeInsets? padding;
-  final double minWidth;
-  final BorderRadius? borderRadius;
-  final BoxBorder? border;
-  final List<BoxShadow>? boxShadow;
-  final TextStyle? textStyle;
-
-  const _VooBadgeText({
-    required this.bgColor,
-    required this.fgColor,
-    required this.displayText,
-    required this.minWidth,
-    this.padding,
-    this.borderRadius,
-    this.border,
-    this.boxShadow,
-    this.textStyle,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (displayText == null || displayText!.isEmpty) {
-      return const SizedBox.shrink();
-    }
-
-    final theme = Theme.of(context);
-
-    return Container(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      constraints: BoxConstraints(minWidth: minWidth, minHeight: minWidth),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: borderRadius ?? BorderRadius.circular(minWidth / 2),
-        border: border,
-        boxShadow: boxShadow ??
-            [
-              BoxShadow(
-                color: bgColor.withValues(alpha: 0.4),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        displayText!,
-        style: textStyle ??
-            theme.textTheme.labelSmall?.copyWith(
-              color: fgColor,
-              fontWeight: FontWeight.w600,
-              fontSize: 10,
-              height: 1.2,
-            ),
-        textAlign: TextAlign.center,
       ),
     );
   }
@@ -346,7 +251,7 @@ class VooStatusBadge extends StatelessWidget {
     );
 
     if (showPulse && status == VooStatus.online) {
-      indicator = _PulsingStatusBadge(
+      indicator = VooPulsingStatusBadge(
         color: color,
         size: size,
         borderColor: theme.colorScheme.surface,
@@ -354,89 +259,6 @@ class VooStatusBadge extends StatelessWidget {
     }
 
     return indicator;
-  }
-}
-
-class _PulsingStatusBadge extends StatefulWidget {
-  final Color color;
-  final double size;
-  final Color borderColor;
-
-  const _PulsingStatusBadge({
-    required this.color,
-    required this.size,
-    required this.borderColor,
-  });
-
-  @override
-  State<_PulsingStatusBadge> createState() => _PulsingStatusBadgeState();
-}
-
-class _PulsingStatusBadgeState extends State<_PulsingStatusBadge>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: const Duration(seconds: 2),
-      vsync: this,
-    )..repeat();
-
-    _animation = Tween<double>(begin: 1.0, end: 1.8).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: widget.size * 2,
-      height: widget.size * 2,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          AnimatedBuilder(
-            animation: _controller,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: _animation.value,
-                child: Container(
-                  width: widget.size,
-                  height: widget.size,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: widget.color.withValues(
-                      alpha: (1.0 - _controller.value) * 0.4,
-                    ),
-                  ),
-                ),
-              );
-            },
-          ),
-          Container(
-            width: widget.size,
-            height: widget.size,
-            decoration: BoxDecoration(
-              color: widget.color,
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: widget.borderColor,
-                width: 2,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 

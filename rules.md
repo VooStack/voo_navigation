@@ -679,6 +679,34 @@ class _MyPageContent extends StatelessWidget {
   - Instead, create separate widget classes following atomic design
   - Each widget type should be in its own file
   - This improves code readability and maintainability
+- **No private widget classes in other files**: DO NOT define private widget classes like `_DrawerHeader` inside another widget's file
+  - Each widget must be in its OWN file with a descriptive name
+  - Private widgets should still be separate files, just with underscore prefix in class name if internal
+  - **FORBIDDEN pattern:**
+    ```dart
+    // BAD: Private widget class embedded in another file
+    // File: voo_adaptive_navigation_drawer.dart
+    class VooAdaptiveNavigationDrawer extends StatefulWidget { ... }
+
+    class _DrawerHeader extends StatelessWidget { ... }  // NO! Separate file!
+    class _DrawerSearchBar extends StatelessWidget { ... }  // NO! Separate file!
+    ```
+  - **CORRECT pattern:**
+    ```dart
+    // File: drawer_header.dart (or voo_drawer_header.dart)
+    class VooDrawerHeader extends StatelessWidget { ... }
+
+    // File: drawer_search_bar.dart (or voo_drawer_search_bar.dart)
+    class VooDrawerSearchBar extends StatelessWidget { ... }
+
+    // File: voo_adaptive_navigation_drawer.dart
+    // Only contains VooAdaptiveNavigationDrawer, imports the above
+    ```
+  - **Why this matters:**
+    - Files become too large and hard to navigate
+    - Widgets cannot be reused across other files
+    - Violates atomic design principle of one component per file
+    - Makes testing individual widgets difficult
 - **No `_*Content` delegation pattern**: DO NOT create a shell page that only provides a BlocProvider and delegates to a private `_*Content` widget
   - **FORBIDDEN pattern:**
     ```dart
@@ -717,7 +745,7 @@ class _MyPageContent extends StatelessWidget {
     - Private `_*Content` widgets hide complexity and make files harder to understand
     - The "shell" page provides no value - it's just boilerplate
     - Testing becomes harder when logic is split across classes
-  - **Exception:** Small private widgets for UI fragments (like `_LoadingIndicator`, `_ErrorView`) are fine
+  - **Exception:** ONLY `_*State` classes for StatefulWidget are allowed in the same file
 - **No static widget creation methods**: Avoid static methods for creating widgets or form fields
   - Use factory constructors instead
 - **Stateless when possible**: Only use StatefulWidget when necessary

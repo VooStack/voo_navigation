@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
+import 'package:voo_navigation_core/src/presentation/atoms/voo_sliding_pill.dart';
 
 /// A sliding pill indicator for bottom navigation
 ///
@@ -51,7 +52,7 @@ class VooSlidingPillIndicator extends StatelessWidget {
           curve: theme.animationCurve,
           left: leftPosition,
           top: topOffset,
-          child: _SlidingPill(
+          child: VooSlidingPill(
             theme: theme,
             indicatorColor: indicatorColor,
             pillWidth: pillWidth,
@@ -59,44 +60,6 @@ class VooSlidingPillIndicator extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _SlidingPill extends StatelessWidget {
-  final VooNavigationTheme theme;
-  final Color indicatorColor;
-  final double pillWidth;
-  final double height;
-
-  const _SlidingPill({
-    required this.theme,
-    required this.indicatorColor,
-    required this.pillWidth,
-    required this.height,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final showGlow = theme.indicatorStyle == VooThemeIndicatorStyle.glow ||
-        theme.preset == VooNavigationPreset.glassmorphism;
-
-    return Container(
-      width: pillWidth,
-      height: height,
-      decoration: BoxDecoration(
-        color: indicatorColor,
-        borderRadius: BorderRadius.circular(height / 2),
-        boxShadow: showGlow
-            ? [
-                BoxShadow(
-                  color: indicatorColor.withValues(alpha: 0.4),
-                  blurRadius: theme.indicatorGlowBlur,
-                  offset: const Offset(0, 2),
-                ),
-              ]
-            : null,
-      ),
     );
   }
 }
