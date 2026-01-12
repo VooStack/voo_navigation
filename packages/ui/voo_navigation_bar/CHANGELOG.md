@@ -1,3 +1,9 @@
+## 0.1.1
+
+### Fixed
+- Updated to be compatible with `voo_navigation_core` 0.1.1 simplified theme API
+- Removed dependency on deprecated theme properties (`VooNavigationBarType`, `VooNavigationPreset`, `containerBorderRadius`, `preset`, `blurSigma`, `surfaceOpacity`, etc.)
+
 ## 0.1.0
 
 ### Added
