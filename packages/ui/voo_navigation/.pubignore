@@ -1,0 +1,20 @@
+# IDE and editor files
+.vscode/
+.idea/
+
+# Flutter metadata
+.metadata
+
+# Example app web assets (not needed for package)
+example/.metadata
+example/web/favicon.png
+example/web/icons/
+
+# Web assets in package root (if any)
+web/favicon.png
+web/icons/
+
+# Build and generated files
+build/
+.dart_tool/
+.packages
