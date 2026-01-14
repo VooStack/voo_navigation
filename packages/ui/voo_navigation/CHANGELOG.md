@@ -1,3 +1,34 @@
+## 1.2.6
+
+### Added
+- **VooNavigationTokens**: New centralized design tokens for consistent styling across all navigation components
+  - Icon sizes: `iconSizeDefault` (18dp), `iconSizeCompact` (20dp)
+  - Border radius: `itemBorderRadius` (8dp - slightly larger for modern look)
+  - Spacing tokens: `itemPaddingHorizontal`, `itemPaddingVertical`, `iconLabelSpacing`
+  - Typography: `labelFontSize`, `labelFontWeight`, `labelFontWeightSelected`
+  - Semantic opacity tokens: `opacitySelectedBackground`, `opacityHoverBackground`, `opacityMutedIcon`
+  - Theme-aware extension methods: `context.navSelectedBackground()`, `context.navHoverBackground`, `context.floatingNavBackground`
+
+### Fixed
+- **Floating Bottom Navigation Theme**: Fixed hardcoded `Colors.black` background - now uses `surfaceContainerHighest` from theme for proper light/dark mode support
+- **Floating Nav Item Colors**: Fixed hardcoded `Colors.white` icons - now uses theme-aware colors with proper primary color for selection
+
+### Improved
+- **Unified Selection States**: All navigation components (drawer, rail, bottom nav) now share consistent selection styling:
+  - Selected: `primary @ 10%` opacity background
+  - Hover: `onSurface @ 4%` opacity background
+  - Border radius: `8dp` across all items
+- **Modernized Appearance**: Updated border radius from 6dp to 8dp for a more modern tech company look
+- **Custom Navigation Item**: Simplified selection state to match drawer/rail (removed heavy border and shadow treatment)
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.1.4
+- Updated `voo_navigation_drawer` to ^0.1.4
+- Updated `voo_navigation_rail` to ^0.1.2
+- Updated `voo_navigation_bar` to ^0.1.2
+
+---
+
 ## 1.2.5
 
 ### Fixed

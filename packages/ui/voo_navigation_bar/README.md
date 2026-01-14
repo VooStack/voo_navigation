@@ -1,6 +1,6 @@
 # voo_navigation_bar
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/version-0.1.2-blue)](pubspec.yaml)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.0.0-blue)](https://flutter.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -19,14 +19,14 @@ Bottom navigation bar components for Flutter - part of the voo_navigation packag
 
 ```yaml
 dependencies:
-  voo_navigation_bar: ^0.1.0
+  voo_navigation_bar: ^0.1.2
 ```
 
 Or use the main package which includes all navigation components:
 
 ```yaml
 dependencies:
-  voo_navigation: ^1.2.0
+  voo_navigation: ^1.2.6
 ```
 
 ## Components

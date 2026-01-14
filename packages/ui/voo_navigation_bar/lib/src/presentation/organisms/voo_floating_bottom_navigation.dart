@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/floating_nav_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Floating bottom navigation bar with pill shape design
@@ -30,7 +31,8 @@ class VooFloatingBottomNavigation extends StatelessWidget {
 
     if (items.isEmpty) return const SizedBox.shrink();
 
-    final bgColor = backgroundColor ?? Colors.black;
+    final theme = Theme.of(context);
+    final bgColor = backgroundColor ?? context.floatingNavBackground;
     final margin = bottomMargin ?? (spacing.lg > 0 ? spacing.lg : 24.0);
 
     return Align(
@@ -41,10 +43,10 @@ class VooFloatingBottomNavigation extends StatelessWidget {
           height: 56,
           decoration: BoxDecoration(
             color: bgColor,
-            borderRadius: BorderRadius.circular(28),
+            borderRadius: BorderRadius.circular(VooNavigationTokens.floatingNavBorderRadius),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
+                color: theme.colorScheme.shadow.withValues(alpha: 0.2),
                 blurRadius: 16,
                 offset: const Offset(0, 4),
               ),

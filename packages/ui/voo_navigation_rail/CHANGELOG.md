@@ -1,3 +1,17 @@
+## 0.1.2
+
+### Improved
+- **Design System Tokens**: All rail components now use `VooNavigationTokens` for consistent styling
+  - `VooRailNavigationItem` - Uses token-based icon sizes, padding, border radius, and opacity values
+  - Icon sizes now standardized: 18dp (extended) and 20dp (compact)
+- **Modernized Appearance**: Updated border radius from 6dp to 8dp for modern look
+- **Unified Selection States**: Selection and hover backgrounds now use theme-aware extension methods
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.1.4
+
+---
+
 ## 0.1.1
 
 ### Added

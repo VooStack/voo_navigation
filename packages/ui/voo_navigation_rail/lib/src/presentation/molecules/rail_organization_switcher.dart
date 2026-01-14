@@ -35,7 +35,7 @@ class VooRailOrganizationSwitcher extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: isCompact ? 8 : 12,
+        horizontal: isCompact ? 8 : 16,
         vertical: 8,
       ),
       child: Center(

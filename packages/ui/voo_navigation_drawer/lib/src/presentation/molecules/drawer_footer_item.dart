@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Single footer item widget for navigation drawer
@@ -43,12 +44,12 @@ class VooDrawerFooterItem extends StatelessWidget {
 
     final iconColor = isSelected
         ? (item.selectedIconColor ?? selectedColor)
-        : (item.iconColor ?? unselectedColor.withValues(alpha: 0.7));
+        : (item.iconColor ?? unselectedColor.withValues(alpha: VooNavigationTokens.opacityMutedIcon));
 
     final labelStyle = theme.textTheme.bodyMedium?.copyWith(
       color: unselectedColor,
-      fontWeight: FontWeight.w500,
-      fontSize: 13,
+      fontWeight: isSelected ? VooNavigationTokens.labelFontWeightSelected : VooNavigationTokens.labelFontWeight,
+      fontSize: VooNavigationTokens.labelFontSize,
     );
 
     return Semantics(
@@ -62,29 +63,29 @@ class VooDrawerFooterItem extends StatelessWidget {
         child: InkWell(
           key: item.key,
           onTap: item.isEnabled ? () => onItemTap(item) : null,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
           child: AnimatedContainer(
             duration: context.vooAnimation.durationFast,
             padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 10,
+              horizontal: VooNavigationTokens.itemPaddingHorizontal,
+              vertical: VooNavigationTokens.itemPaddingVertical,
             ),
             decoration: BoxDecoration(
               color: isSelected
-                  ? selectedColor.withValues(alpha: 0.1)
+                  ? context.navSelectedBackground(selectedColor)
                   : isHovered
-                      ? unselectedColor.withValues(alpha: 0.04)
+                      ? context.navHoverBackground
                       : Colors.transparent,
-              borderRadius: BorderRadius.circular(6),
+              borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
             ),
             child: Row(
               children: [
                 Icon(
                   isSelected ? item.effectiveSelectedIcon : item.icon,
                   color: iconColor,
-                  size: 18,
+                  size: VooNavigationTokens.iconSizeDefault,
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
                 Expanded(
                   child: Text(
                     item.label,

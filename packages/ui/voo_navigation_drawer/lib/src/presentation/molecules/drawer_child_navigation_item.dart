@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_modern_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -65,7 +66,7 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? selectedColor
-                        : unselectedColor.withValues(alpha: 0.12),
+                        : unselectedColor.withValues(alpha: VooNavigationTokens.opacityBorderSubtle),
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),
@@ -73,20 +74,20 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
               Expanded(
                 child: InkWell(
                   onTap: item.isEnabled ? () => onItemTap(item) : null,
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
                   child: AnimatedContainer(
                     duration: context.vooAnimation.durationFast,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 7,
+                      horizontal: VooNavigationTokens.itemPaddingHorizontal,
+                      vertical: VooNavigationTokens.itemChildPaddingVertical,
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? selectedColor.withValues(alpha: 0.1)
+                          ? context.navSelectedBackground(selectedColor)
                           : isHovered
-                              ? unselectedColor.withValues(alpha: 0.04)
+                              ? context.navHoverBackground
                               : Colors.transparent,
-                      borderRadius: BorderRadius.circular(6),
+                      borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
                     ),
                     child: Row(
                       children: [
@@ -97,9 +98,9 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: isSelected
                                   ? unselectedColor
-                                  : unselectedColor.withValues(alpha: 0.7),
-                              fontWeight: isSelected ? FontWeight.w500 : FontWeight.w400,
-                              fontSize: 13,
+                                  : unselectedColor.withValues(alpha: VooNavigationTokens.opacityMutedIcon),
+                              fontWeight: isSelected ? VooNavigationTokens.labelFontWeightSelected : FontWeight.w400,
+                              fontSize: VooNavigationTokens.labelFontSize,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),

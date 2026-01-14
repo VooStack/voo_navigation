@@ -1,6 +1,6 @@
 # VooNavigation
 
-[![Version](https://img.shields.io/badge/version-1.2.0-blue)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/version-1.2.6-blue)](pubspec.yaml)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.0.0-blue)](https://flutter.dev)
 [![Material 3](https://img.shields.io/badge/Material%203-compliant-green)](https://m3.material.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -34,7 +34,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  voo_navigation: ^1.0.3
+  voo_navigation: ^1.2.6
   # Or for local development:
   # voo_navigation:
   #   path: packages/ui/voo_navigation
@@ -650,6 +650,11 @@ This package is part of the VooFlutter ecosystem.
 
 ## 📊 Version History
 
+- **1.2.6** - Design system consistency
+  - Centralized `VooNavigationTokens` for consistent styling across all components
+  - Theme-aware floating navigation (no more hardcoded colors)
+  - Unified selection states (subtle primary tint @ 10% opacity)
+  - Modern 8dp border radius throughout
 - **1.0.3** - New theme presets
   - Added **Liquid Glass** preset - deep blur with layered effects, inner glow, and edge refraction
   - Added **Blurry** preset - clean frosted blur with minimal styling (inspired by BlurryContainer)
@@ -683,25 +688,37 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 Contributions are welcome! Please read our contributing guidelines and follow the code style defined in `rules.md`.
 
-## 🆕 What's New in v1.0.3
+## 🆕 What's New in v1.2.6
 
-### New Theme Presets
-Two new visually stunning theme presets for modern glass-like navigation:
+### Design System Tokens
+Centralized design tokens ensure consistent styling across all navigation components:
 
-- **Liquid Glass**: Premium frosted glass with deep blur, layered effects, inner glow, and edge refraction. Creates a high-end, iOS-inspired aesthetic with multiple blur layers and subtle color tinting.
+```dart
+// All navigation components now use VooNavigationTokens
+VooNavigationTokens.iconSizeDefault      // 18dp
+VooNavigationTokens.itemBorderRadius     // 8dp (modernized)
+VooNavigationTokens.opacitySelectedBackground  // 10%
+```
 
-- **Blurry**: Clean frosted blur effect with minimal styling. Inspired by BlurryContainer - heavy blur (28 sigma), semi-transparent surface, thin border, no shadows. Perfect for dark mode interfaces.
+### Theme-Aware Colors
+New extension methods for consistent, theme-aware color generation:
 
-### New Theme Properties
-Fine-tune your glass effects with new customization options:
-- `innerGlowIntensity` - Controls the intensity of the inner glow effect
-- `edgeHighlightIntensity` - Controls the brightness of edge highlights/refraction
-- `secondaryBlurSigma` - Secondary blur layer for added depth
-- `tintIntensity` - How much the primary color tints the surface
+```dart
+context.navSelectedBackground()  // primary @ 10% opacity
+context.navHoverBackground       // onSurface @ 4% opacity
+context.floatingNavBackground    // surfaceContainerHighest
+```
 
-### Enhanced Example App
-- Background gradients now properly fill the screen for better blur visibility
-- Higher contrast colors in dark mode to showcase blur effects
+### Floating Navigation Improvements
+- **Theme-aware background**: Uses `surfaceContainerHighest` instead of hardcoded black
+- **Proper dark/light mode support**: Colors adapt automatically to theme
+- **Consistent selection states**: Matches drawer and rail styling
+
+### Unified Selection States
+All navigation components (drawer, rail, bottom nav) now use the same selection style:
+- **Default**: Transparent background
+- **Hover**: `onSurface @ 4%` - subtle feedback
+- **Selected**: `primary @ 10%` - unified tint across all components
 
 ## 🐛 Issues
 

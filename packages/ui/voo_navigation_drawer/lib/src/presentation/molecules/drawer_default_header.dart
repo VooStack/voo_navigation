@@ -64,8 +64,12 @@ class VooDrawerDefaultHeader extends StatelessWidget {
       );
     }
 
+    // Top padding calculated to align logo center with app bar title center
+    // App bar title centered at ~32dp, logo is 40dp tall, so logo top = 32 - 20 = 12dp
+    final topPadding = spacing.sm + spacing.xs; // 12dp
+
     return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.sm, 28, spacing.sm, spacing.sm),
+      padding: EdgeInsets.fromLTRB(spacing.md, topPadding, spacing.md, spacing.md),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

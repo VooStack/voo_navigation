@@ -247,10 +247,10 @@ class _DrawerFooterSection extends StatelessWidget {
       margin: EdgeInsets.only(
         left: spacing.sm,
         right: spacing.sm,
-        top: spacing.xs,
+        top: spacing.sm,
         bottom: spacing.sm,
       ),
-      padding: const EdgeInsets.all(4),
+      padding: EdgeInsets.all(spacing.xs),
       decoration: BoxDecoration(
         color: isDark
             ? Colors.white.withValues(alpha: 0.03)
@@ -267,10 +267,10 @@ class _DrawerFooterSection extends StatelessWidget {
           if (orgSwitcher != null) _FooterOrgSwitcher(config: config),
           if (orgSwitcher != null && showProfile)
             Divider(
-              height: 9,
+              height: spacing.md,
               thickness: 1,
-              indent: spacing.sm,
-              endIndent: spacing.sm,
+              indent: spacing.md,
+              endIndent: spacing.md,
               color: theme.dividerColor.withValues(alpha: 0.08),
             ),
           if (showProfile) _FooterProfile(config: config),

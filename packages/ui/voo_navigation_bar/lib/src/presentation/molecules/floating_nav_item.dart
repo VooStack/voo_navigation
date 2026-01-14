@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 
 /// Single navigation item for the floating bottom navigation bar
 class VooFloatingNavItem extends StatelessWidget {
@@ -21,6 +22,9 @@ class VooFloatingNavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final foreground = context.floatingNavForeground;
+    final selectedColor = context.floatingNavSelectedColor;
+
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
@@ -32,8 +36,10 @@ class VooFloatingNavItem extends StatelessWidget {
           children: [
             Icon(
               isSelected ? item.effectiveSelectedIcon : item.icon,
-              color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.5),
-              size: 20,
+              color: isSelected
+                  ? selectedColor
+                  : foreground.withValues(alpha: VooNavigationTokens.opacityDisabled),
+              size: VooNavigationTokens.iconSizeCompact,
             ),
           ],
         ),

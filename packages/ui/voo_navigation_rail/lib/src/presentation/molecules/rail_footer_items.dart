@@ -38,7 +38,7 @@ class VooRailFooterItems extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: context.vooSpacing.xs,
+        horizontal: context.vooSpacing.sm,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -47,7 +47,7 @@ class VooRailFooterItems extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
               vertical: context.vooSpacing.sm,
-              horizontal: context.vooSpacing.xs,
+              horizontal: context.vooSpacing.sm,
             ),
             child: Divider(
               height: 1,

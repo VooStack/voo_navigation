@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_modern_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -45,28 +46,28 @@ class VooDrawerNavigationItem extends StatelessWidget {
 
     final iconColor = isSelected
         ? (item.selectedIconColor ?? selectedColor)
-        : (item.iconColor ?? unselectedColor.withValues(alpha: 0.7));
+        : (item.iconColor ?? unselectedColor.withValues(alpha: VooNavigationTokens.opacityMutedIcon));
 
     // Resolve label style
     final labelStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: isSelected ? unselectedColor : unselectedColor,
-      fontWeight: isSelected ? FontWeight.w500 : FontWeight.w500,
-      fontSize: 13,
+      color: unselectedColor,
+      fontWeight: isSelected ? VooNavigationTokens.labelFontWeightSelected : VooNavigationTokens.labelFontWeight,
+      fontSize: VooNavigationTokens.labelFontSize,
     );
 
     Widget itemContent = AnimatedContainer(
       duration: context.vooAnimation.durationFast,
       padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 10,
+        horizontal: VooNavigationTokens.itemPaddingHorizontal,
+        vertical: VooNavigationTokens.itemPaddingVertical,
       ),
       decoration: BoxDecoration(
         color: isSelected
-            ? selectedColor.withValues(alpha: 0.1)
+            ? context.navSelectedBackground(selectedColor)
             : isHovered
-                ? unselectedColor.withValues(alpha: 0.04)
+                ? context.navHoverBackground
                 : Colors.transparent,
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
       ),
       child: Row(
         children: [
@@ -80,11 +81,11 @@ class VooDrawerNavigationItem extends StatelessWidget {
                 isSelected ? item.effectiveSelectedIcon : item.icon,
                 key: ValueKey(isSelected),
                 color: iconColor,
-                size: 18,
+                size: VooNavigationTokens.iconSizeDefault,
               ),
             ),
 
-          const SizedBox(width: 10),
+          const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
 
           // Label
           Expanded(
@@ -130,7 +131,7 @@ class VooDrawerNavigationItem extends StatelessWidget {
         child: InkWell(
           key: item.key,
           onTap: item.isEnabled ? () => onItemTap(item) : null,
-          borderRadius: BorderRadius.circular(6),
+          borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
           child: itemContent,
         ),
       ),

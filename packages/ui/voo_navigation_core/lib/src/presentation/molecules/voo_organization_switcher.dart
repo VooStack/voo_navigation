@@ -316,7 +316,7 @@ class _DefaultOrgSwitcherTriggerState extends State<_DefaultOrgSwitcherTrigger> 
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             padding: style.triggerPadding ??
-                const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: style.triggerDecoration ??
                 BoxDecoration(
                   color: _isHovered || widget.isOpen

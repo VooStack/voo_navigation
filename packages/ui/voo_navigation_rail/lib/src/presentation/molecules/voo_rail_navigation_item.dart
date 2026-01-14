@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_rail/src/presentation/atoms/voo_rail_modern_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -93,19 +94,22 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
     // Resolve icon color from item, widget (config), or theme
     final iconColor = widget.isSelected
         ? (widget.item.selectedIconColor ?? selectedColor)
-        : (widget.item.iconColor ?? unselectedColor.withValues(alpha: 0.7));
+        : (widget.item.iconColor ?? unselectedColor.withValues(alpha: VooNavigationTokens.opacityMutedIcon));
 
     Widget itemContent = AnimatedContainer(
       duration: context.vooAnimation.durationFast,
       padding: widget.extended
-          ? const EdgeInsets.symmetric(horizontal: 10, vertical: 10)
-          : const EdgeInsets.all(12),
+          ? const EdgeInsets.symmetric(
+              horizontal: VooNavigationTokens.itemPaddingHorizontal,
+              vertical: VooNavigationTokens.itemPaddingVertical,
+            )
+          : const EdgeInsets.all(VooNavigationTokens.itemPaddingVertical),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
         color: widget.isSelected
-            ? selectedColor.withValues(alpha: 0.1)
+            ? context.navSelectedBackground(selectedColor)
             : _isHovered
-                ? unselectedColor.withValues(alpha: 0.04)
+                ? context.navHoverBackground
                 : Colors.transparent,
       ),
       child: widget.extended
@@ -151,7 +155,7 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
               : SystemMouseCursors.basic,
           child: InkWell(
             onTap: widget.item.isEnabled ? widget.onTap : null,
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
             child: itemContent,
           ),
         ),
@@ -183,11 +187,11 @@ class _ExtendedItemContent extends StatelessWidget {
     // Resolve label color - match drawer styling
     final unselectedLabelColor = unselectedItemColor ?? theme.colorScheme.onSurface;
 
-    // Resolve label style from item or theme - match drawer (13px, w500)
+    // Resolve label style from item or theme - match drawer
     final labelStyle = theme.textTheme.bodyMedium?.copyWith(
       color: unselectedLabelColor,
-      fontWeight: FontWeight.w500,
-      fontSize: 13,
+      fontWeight: isSelected ? VooNavigationTokens.labelFontWeightSelected : VooNavigationTokens.labelFontWeight,
+      fontSize: VooNavigationTokens.labelFontSize,
     );
 
     return Row(
@@ -202,10 +206,10 @@ class _ExtendedItemContent extends StatelessWidget {
               isSelected ? item.effectiveSelectedIcon : item.icon,
               key: ValueKey(isSelected),
               color: iconColor,
-              size: 18,
+              size: VooNavigationTokens.iconSizeDefault,
             ),
           ),
-        const SizedBox(width: 10),
+        const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
         Expanded(
           child: Text(
             item.label,
@@ -258,7 +262,7 @@ class _CompactItemContent extends StatelessWidget {
                 isSelected ? item.effectiveSelectedIcon : item.icon,
                 key: ValueKey(isSelected),
                 color: iconColor,
-                size: 20,
+                size: VooNavigationTokens.iconSizeCompact,
               ),
             ),
           if (item.hasBadge)

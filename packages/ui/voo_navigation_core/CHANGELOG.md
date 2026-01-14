@@ -1,3 +1,24 @@
+## 0.1.4
+
+### Added
+- **VooNavigationTokens**: New centralized design tokens for consistent styling across all navigation components
+  - `VooNavigationTokens` class with static constants for icon sizes, spacing, typography, border radius, and opacity values
+  - `VooNavigationTokensTheme` extension on `BuildContext` for theme-aware color generation:
+    - `context.navSelectedBackground([customColor])` - Selected item background with 10% opacity
+    - `context.navHoverBackground` - Hover background with 4% opacity
+    - `context.navMutedIconColor` - Muted icon color with 70% opacity
+    - `context.floatingNavBackground` - Theme-aware floating nav background (surfaceContainerHighest)
+    - `context.floatingNavForeground` - Floating nav foreground color
+    - `context.floatingNavSelectedColor` - Primary color for selected floating nav items
+    - `context.navDividerColor` - Divider color with proper opacity
+    - `context.navBorderSubtle` - Subtle border color
+
+### Improved
+- **Design System Consistency**: All navigation packages now use shared tokens from `voo_navigation_core`
+- **Modern Appearance**: Updated default `itemBorderRadius` to 8dp for a more modern look
+
+---
+
 ## 0.1.3
 
 ### Fixed

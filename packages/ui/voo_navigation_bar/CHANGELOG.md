@@ -1,3 +1,25 @@
+## 0.1.2
+
+### Fixed
+- **Floating Bottom Navigation Theme**: Fixed hardcoded `Colors.black` background
+  - Now uses `context.floatingNavBackground` (`surfaceContainerHighest`) from theme
+  - Properly adapts to light and dark mode
+- **Floating Nav Item Colors**: Fixed hardcoded `Colors.white` icons
+  - Selected: Uses `theme.colorScheme.primary`
+  - Unselected: Uses `theme.colorScheme.onSurface` with 50% opacity
+  - Proper theme awareness for light/dark mode support
+
+### Improved
+- **Design System Tokens**: Bottom navigation components now use `VooNavigationTokens`
+  - `VooCustomNavigationItem` - Simplified selection state to match drawer/rail (removed heavy border and shadow)
+  - `VooFloatingNavItem` - Uses standardized icon sizes
+- **Modernized Appearance**: Updated border radius to 8dp for consistency
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.1.4
+
+---
+
 ## 0.1.1
 
 ### Fixed

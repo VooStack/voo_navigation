@@ -53,8 +53,12 @@ class VooRailCompactHeader extends StatelessWidget {
       );
     }
 
+    // Top padding calculated to align logo center with app bar title center
+    // App bar title centered at ~32dp, logo is 40dp tall, so logo top = 32 - 20 = 12dp
+    final topPadding = spacing.sm + spacing.xs; // 12dp
+
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, spacing.xl, 0, spacing.sm),
+      padding: EdgeInsets.fromLTRB(0, topPadding, 0, spacing.md),
       child: Column(
         children: [
           // Compact branding - just the logo

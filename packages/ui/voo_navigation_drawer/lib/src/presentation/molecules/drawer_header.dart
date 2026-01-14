@@ -23,7 +23,7 @@ class VooDrawerHeader extends StatelessWidget {
     Widget? orgSwitcherWidget;
     if (showOrgSwitcherInHeader) {
       orgSwitcherWidget = Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: VooOrganizationSwitcher(
           organizations: orgSwitcher.organizations,
           selectedOrganization: orgSwitcher.selectedOrganization,
@@ -48,7 +48,7 @@ class VooDrawerHeader extends StatelessWidget {
         header = Stack(
           children: [
             customHeader,
-            Positioned(top: 24, right: 12, child: trailing),
+            Positioned(top: 12, right: 16, child: trailing),
           ],
         );
       }

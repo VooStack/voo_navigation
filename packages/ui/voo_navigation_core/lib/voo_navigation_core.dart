@@ -4,6 +4,9 @@
 /// that are used by voo_navigation_rail, voo_navigation_drawer, and voo_navigation_bar.
 library voo_navigation_core;
 
+// Domain - Tokens
+export 'src/domain/tokens/voo_navigation_tokens.dart';
+
 // Domain Entities
 export 'src/domain/entities/breadcrumb_item.dart';
 export 'src/domain/entities/breakpoint.dart';

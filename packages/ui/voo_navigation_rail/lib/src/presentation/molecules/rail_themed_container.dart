@@ -93,7 +93,7 @@ class VooRailThemedContainer extends StatelessWidget {
             Expanded(
               child: ListView(
                 controller: config.drawerScrollController,
-                padding: EdgeInsets.symmetric(vertical: context.vooSpacing.sm, horizontal: context.vooSpacing.xs),
+                padding: EdgeInsets.symmetric(vertical: context.vooSpacing.xs, horizontal: context.vooSpacing.sm),
                 physics: const ClampingScrollPhysics(),
                 children: [
                   VooRailNavigationItems(

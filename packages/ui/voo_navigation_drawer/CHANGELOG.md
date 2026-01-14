@@ -1,3 +1,18 @@
+## 0.1.4
+
+### Improved
+- **Design System Tokens**: All drawer components now use `VooNavigationTokens` for consistent styling
+  - `VooDrawerNavigationItem` - Uses token-based icon sizes, padding, border radius, and opacity values
+  - `VooDrawerFooterItem` - Consistent styling with navigation items
+  - `VooDrawerChildNavigationItem` - Uses child-specific padding tokens
+- **Modernized Appearance**: Updated border radius from 6dp to 8dp for modern look
+- **Unified Selection States**: Selection and hover backgrounds now use theme-aware extension methods
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.1.4
+
+---
+
 ## 0.1.3
 
 ### Fixed

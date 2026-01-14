@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_modern_icon.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -90,27 +91,11 @@ class VooCustomNavigationItem extends StatelessWidget {
           vertical: isCompact ? spacing.xxs : spacing.xs,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            context.vooRadius.md + spacing.xxs,
-          ),
+          borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
+          // Simplified selection state to match drawer/rail
           color: isSelected
-              ? theme.colorScheme.primary.withValues(alpha: 0.14)
+              ? context.navSelectedBackground(primaryColor)
               : Colors.transparent,
-          border: isSelected
-              ? Border.all(
-                  color: theme.colorScheme.primary.withValues(alpha: 0.25),
-                  width: context.vooSize.borderThin,
-                )
-              : null,
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: theme.colorScheme.primary.withValues(alpha: 0.1),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : null,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

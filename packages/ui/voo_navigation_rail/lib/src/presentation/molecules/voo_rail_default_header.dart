@@ -64,10 +64,11 @@ class VooRailDefaultHeader extends StatelessWidget {
     final effectiveLogoBackground = config?.logoBackgroundColor ??
         logoBackgroundColor ??
         theme.colorScheme.onSurface.withValues(alpha: 0.12);
-    // Align branding center with app bar title center
-    // Content area has 8px top margin, app bar title is centered in toolbar
+    // Top padding calculated to align logo center with app bar title center
+    // App bar title centered at ~32dp, logo is 40dp tall, so logo top = 32 - 20 = 12dp
+    final topPadding = spacing.sm + spacing.xs; // 12dp
     final effectivePadding = config?.padding ??
-        EdgeInsets.fromLTRB(spacing.sm, 28, spacing.sm, spacing.sm);
+        EdgeInsets.fromLTRB(spacing.md, topPadding, spacing.md, spacing.md);
 
     // Build the logo widget
     Widget logoWidget;

@@ -165,7 +165,7 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
             borderRadius: BorderRadius.circular(8),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               decoration: BoxDecoration(
                 color: _isHovered
                     ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
