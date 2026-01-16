@@ -1,6 +1,6 @@
 # voo_navigation_core
 
-[![Version](https://img.shields.io/badge/version-0.1.4-blue)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue)](pubspec.yaml)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.0.0-blue)](https://flutter.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -19,7 +19,7 @@ This package provides the foundational building blocks used by all voo_navigatio
 
 ```yaml
 dependencies:
-  voo_navigation_core: ^0.1.4
+  voo_navigation_core: ^0.2.0
 ```
 
 > **Note**: You typically don't need to install this package directly. It's automatically included when using the main `voo_navigation` package or any of its sub-packages (`voo_navigation_rail`, `voo_navigation_drawer`, `voo_navigation_bar`).
@@ -38,6 +38,9 @@ dependencies:
 | `VooNavigationRoute` | GoRouter integration routes |
 | `VooNavigationSection` | Hierarchical navigation grouping |
 | `VooPageConfig` | Per-page scaffold customization |
+| `VooMultiSwitcherConfig` | Configuration for unified org/user switcher |
+| `VooMultiSwitcherUser` | User entity for multi-switcher |
+| `VooMultiSwitcherStyle` | Styling for multi-switcher card and modal |
 
 ### Atoms
 
@@ -88,6 +91,12 @@ Composite components built from atoms:
 
 **User Profile**
 - `VooUserProfileFooter` - User profile footer component
+
+**Multi-Switcher**
+- `VooMultiSwitcher` - Unified org/user switching widget
+- `VooMultiSwitcherCard` - Card state with stacked avatars
+- `VooMultiSwitcherModal` - Modal state with selection sections
+- `VooStackedAvatars` - Overlapping avatar display
 
 ### Design Tokens
 

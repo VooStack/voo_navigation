@@ -1,3 +1,38 @@
+## 1.3.0
+
+### Added
+- **VooMultiSwitcher**: New unified organization and user switching component
+  - Combines organization switching and user profile into a single, beautifully animated widget
+  - Card state shows stacked avatars (org + user) with current selection
+  - Modal state slides up as overlay with organization list and user actions
+  - Full customization via `cardBuilder` and `modalBuilder`
+  - Tap outside to dismiss, smooth spring animation with `Curves.easeOutBack`
+
+### Usage
+```dart
+VooNavigationConfig(
+  // ... other config
+  multiSwitcher: VooMultiSwitcherConfig(
+    organizations: myOrganizations,
+    selectedOrganization: currentOrg,
+    onOrganizationChanged: (org) => setState(() => currentOrg = org),
+    userName: 'John Doe',
+    userEmail: 'john@example.com',
+    status: VooUserStatus.online,
+    onSettingsTap: () => openSettings(),
+    onLogout: () => logout(),
+  ),
+  multiSwitcherPosition: VooMultiSwitcherPosition.footer,
+  showUserProfile: false, // Disable old profile when using multi-switcher
+)
+```
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.0
+- Updated `voo_navigation_drawer` to ^0.2.0
+
+---
+
 ## 1.2.6
 
 ### Added

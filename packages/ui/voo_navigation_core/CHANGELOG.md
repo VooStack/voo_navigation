@@ -1,3 +1,27 @@
+## 0.2.0
+
+### Added
+- **VooMultiSwitcher**: Unified organization and user switching component
+  - `VooMultiSwitcherConfig` - Main configuration class for the multi-switcher
+  - `VooMultiSwitcherUser` - Entity representing a switchable user account
+  - `VooMultiSwitcherStyle` - Style configuration for card, modal, and sections
+  - `VooMultiSwitcherPosition` - Enum for positioning (header, footer)
+- **Multi-Switcher Widgets**:
+  - `VooMultiSwitcher` - Main widget combining card and modal with overlay animation
+  - `VooMultiSwitcherCard` - Closed state showing stacked org + user avatars
+  - `VooMultiSwitcherModal` - Expanded state with organization and user sections
+  - `VooMultiSwitcherOrganizationSection` - Organization list with selection
+  - `VooMultiSwitcherUserSection` - User info with settings and logout actions
+  - `VooStackedAvatars` - Overlapping org + user avatar display
+  - `VooMultiSwitcherOrgTile`, `VooMultiSwitcherUserTile`, `VooMultiSwitcherActionTile` - List tiles
+- **Custom Builders**: Full customization support with `cardBuilder` and `modalBuilder`
+- **Animation**: Smooth overlay animation with spring physics using `Curves.easeOutBack`
+
+### Changed
+- `VooNavigationConfig` now includes `multiSwitcher` and `multiSwitcherPosition` fields
+
+---
+
 ## 0.1.4
 
 ### Added

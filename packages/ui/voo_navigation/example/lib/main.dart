@@ -103,10 +103,6 @@ class _NavigationExampleState extends State<NavigationExample> {
     debugPrint('Create organization tapped');
   }
 
-  void _onProfileTap() {
-    debugPrint('Profile tapped');
-  }
-
   void _onSettingsTap() {
     setState(() {
       _selectedId = 'settings';
@@ -136,39 +132,41 @@ class _NavigationExampleState extends State<NavigationExample> {
         enableCollapsibleRail: true,
 
         // ========================================
-        // SIMPLIFIED USER PROFILE API
+        // MULTI-SWITCHER API (replaces org + user)
         // ========================================
-        // Just set showUserProfile and provide a config object.
-        // The profile footer automatically adapts to compact/expanded mode.
-        showUserProfile: true,
-        userProfileConfig: VooUserProfileConfig(
-          userName: 'John Doe',
-          userEmail: 'john@example.com',
-          initials: 'JD',
-          status: VooUserStatus.online,
-          onTap: _onProfileTap,
-          onSettingsTap: _onSettingsTap,
-          onLogout: _onLogout,
-          showDropdownIndicator: true,
-        ),
-
-        // ========================================
-        // SIMPLIFIED ORGANIZATION SWITCHER API
-        // ========================================
-        // Provide a config object with organizations list.
-        // The switcher automatically adapts to compact/expanded mode,
-        // shows search when there are many organizations,
-        // and handles keyboard navigation.
-        organizationSwitcher: VooOrganizationSwitcherConfig(
+        // The multi-switcher combines organization and user switching
+        // into a unified, beautifully animated component.
+        // When configured, it replaces the separate org switcher and user profile.
+        multiSwitcher: VooMultiSwitcherConfig(
+          // Organization data
           organizations: _organizations,
           selectedOrganization: _selectedOrganization,
           onOrganizationChanged: _onOrganizationChanged,
           onCreateOrganization: _onCreateOrganization,
-          showCreateButton: true,
-          createButtonLabel: 'New Organization',
-          tooltip: 'Switch organization',
+          createOrganizationLabel: 'New Organization',
+
+          // User data
+          userName: 'John Doe',
+          userEmail: 'john@example.com',
+          initials: 'JD',
+          status: VooUserStatus.online,
+
+          // Actions
+          onSettingsTap: _onSettingsTap,
+          onLogout: _onLogout,
+
+          // Display options
+          showOrganizationSection: true,
+          showUserSection: true,
+          showSearch: true,
+          organizationSectionTitle: 'Workspaces',
+          userSectionTitle: 'Account',
         ),
-        organizationSwitcherPosition: VooOrganizationSwitcherPosition.footer,
+        multiSwitcherPosition: VooMultiSwitcherPosition.footer,
+
+        // Disable old switchers when using multi-switcher
+        showUserProfile: false,
+        organizationSwitcher: null,
 
         // Search bar configuration
         searchBar: VooSearchBarConfig(hintText: 'Search...', onSearch: _onSearch, enableKeyboardShortcut: true, keyboardShortcutHint: '⌘K'),

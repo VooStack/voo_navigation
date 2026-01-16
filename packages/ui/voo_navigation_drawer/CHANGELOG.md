@@ -1,3 +1,20 @@
+## 0.2.0
+
+### Added
+- **VooMultiSwitcher Integration**: Unified organization and user switching in drawer footer
+  - `VooDrawerMultiSwitcher` - Drawer wrapper with `forPosition()` factory method
+  - Replaces separate org switcher and user profile with single animated component
+  - Slides up as overlay within drawer using Flutter's `Overlay` system
+  - Tap outside to dismiss modal
+- **VooAdaptiveNavigationDrawer** now renders `VooMultiSwitcher` when configured
+  - Backwards compatible - existing org switcher and user profile still work
+  - Set `multiSwitcher` config and `showUserProfile: false` to use new component
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.0
+
+---
+
 ## 0.1.4
 
 ### Improved

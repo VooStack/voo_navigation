@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/voo_multi_switcher.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_organization_switcher.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
 import 'package:voo_navigation_core/src/presentation/utils/voo_collapse_state.dart';
@@ -199,8 +201,11 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
                 },
               ),
 
-            // Unified footer section for org switcher and profile
-            if (orgSwitcherInFooter != null || widget.config.showUserProfile)
+            // Unified footer section for org switcher, profile, or multi-switcher
+            if (orgSwitcherInFooter != null ||
+                widget.config.showUserProfile ||
+                (widget.config.multiSwitcher != null &&
+                 widget.config.multiSwitcherPosition == VooMultiSwitcherPosition.footer))
               _DrawerFooterSection(
                 config: widget.config,
                 orgSwitcher: orgSwitcherInFooter,
@@ -225,7 +230,7 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
   }
 }
 
-/// Unified footer section containing org switcher and profile
+/// Unified footer section containing org switcher and profile, or multi-switcher
 class _DrawerFooterSection extends StatelessWidget {
   final VooNavigationConfig config;
   final Widget? orgSwitcher;
@@ -243,6 +248,32 @@ class _DrawerFooterSection extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final spacing = context.vooSpacing;
 
+    // If multi-switcher is configured for footer position, use it instead
+    if (config.multiSwitcher != null &&
+        config.multiSwitcherPosition == VooMultiSwitcherPosition.footer) {
+      return Container(
+        margin: EdgeInsets.only(
+          left: spacing.sm,
+          right: spacing.sm,
+          top: spacing.sm,
+          bottom: spacing.sm,
+        ),
+        padding: EdgeInsets.all(spacing.xs),
+        decoration: BoxDecoration(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.03)
+              : Colors.black.withValues(alpha: 0.02),
+          borderRadius: BorderRadius.circular(context.vooRadius.md),
+          border: Border.all(
+            color: theme.dividerColor.withValues(alpha: 0.08),
+            width: 1,
+          ),
+        ),
+        child: VooMultiSwitcher(config: config.multiSwitcher!),
+      );
+    }
+
+    // Traditional org switcher + profile layout
     return Container(
       margin: EdgeInsets.only(
         left: spacing.sm,

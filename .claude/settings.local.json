@@ -12,7 +12,8 @@
       "Bash(flutter test:*)",
       "Bash(cat:*)",
       "Bash(dart pub publish:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(find:*)"
     ]
   }
 }

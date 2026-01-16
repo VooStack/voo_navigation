@@ -1,6 +1,6 @@
 # voo_navigation_drawer
 
-[![Version](https://img.shields.io/badge/version-0.1.4-blue)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/version-0.2.0-blue)](pubspec.yaml)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.0.0-blue)](https://flutter.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -8,6 +8,7 @@ Navigation drawer components for Flutter - part of the voo_navigation package ec
 
 ## Features
 
+- **Multi-Switcher**: Unified organization and user switching with animated overlay
 - Expandable sections with smooth animations
 - User profile footer integration
 - Custom header and footer widgets
@@ -19,14 +20,14 @@ Navigation drawer components for Flutter - part of the voo_navigation package ec
 
 ```yaml
 dependencies:
-  voo_navigation_drawer: ^0.1.4
+  voo_navigation_drawer: ^0.2.0
 ```
 
 Or use the main package which includes all navigation components:
 
 ```yaml
 dependencies:
-  voo_navigation: ^1.2.6
+  voo_navigation: ^1.3.0
 ```
 
 ## Components
@@ -40,6 +41,7 @@ dependencies:
 | `VooDrawerExpandableSection` | Expandable section with children |
 | `VooDrawerDefaultHeader` | Default header component for drawer |
 | `VooDrawerModernBadge` | Badge component specific to drawer styling |
+| `VooDrawerMultiSwitcher` | Multi-switcher wrapper for drawer |
 
 ## Usage
 
@@ -178,6 +180,40 @@ VooNavigationItem(
   icon: Icons.notifications_outlined,
   badgeText: 'NEW', // Shows custom text
   badgeColor: Colors.orange,
+)
+```
+
+### With Multi-Switcher (Unified Org + User)
+
+Replace separate org switcher and user profile with the new unified multi-switcher:
+
+```dart
+VooAdaptiveNavigationDrawer(
+  config: VooNavigationConfig(
+    items: items,
+    selectedId: selectedId,
+    onNavigationItemSelected: (id) {},
+
+    // Multi-switcher replaces org switcher + user profile
+    multiSwitcher: VooMultiSwitcherConfig(
+      organizations: [
+        VooOrganization(id: 'acme', name: 'ACME Corp'),
+        VooOrganization(id: 'startup', name: 'Startup Inc'),
+      ],
+      selectedOrganization: currentOrg,
+      onOrganizationChanged: (org) => setState(() => currentOrg = org),
+      userName: 'John Doe',
+      userEmail: 'john@example.com',
+      status: VooUserStatus.online,
+      onSettingsTap: () => openSettings(),
+      onLogout: () => logout(),
+    ),
+    multiSwitcherPosition: VooMultiSwitcherPosition.footer,
+
+    // Disable old components when using multi-switcher
+    showUserProfile: false,
+    organizationSwitcher: null,
+  ),
 )
 ```
 

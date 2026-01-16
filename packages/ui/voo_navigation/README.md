@@ -1,6 +1,6 @@
 # VooNavigation
 
-[![Version](https://img.shields.io/badge/version-1.2.6-blue)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue)](pubspec.yaml)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.0.0-blue)](https://flutter.dev)
 [![Material 3](https://img.shields.io/badge/Material%203-compliant-green)](https://m3.material.io)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -18,6 +18,7 @@ A comprehensive, adaptive navigation package for Flutter that automatically adju
 - **🔄 Collapsible Drawer**: Desktop drawer can collapse to a rail with animated toggle
 - **📄 Per-Page Overrides**: Customize scaffold elements (FAB, app bar, etc.) on individual pages with `VooPage`
 - **🎨 Theme Presets**: Six distinct visual styles - Glassmorphism, Liquid Glass, Blurry, Neomorphism, Material 3, Minimal
+- **🔀 Multi-Switcher**: Unified organization and user switching with animated overlay
 - **👤 User Profile Footer**: Built-in user profile component with avatar, name, and status
 - **📁 Navigation Sections**: Group items into collapsible sections with headers
 - **🚀 go_router Integration**: Native integration with StatefulNavigationShell
@@ -34,7 +35,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  voo_navigation: ^1.2.6
+  voo_navigation: ^1.3.0
   # Or for local development:
   # voo_navigation:
   #   path: packages/ui/voo_navigation
@@ -536,6 +537,55 @@ VooNavigationConfig(
 | **Material 3** | Opaque | Elevation shadow | None | Pill |
 | **Minimal** | Opaque | None | Thin outline | Line |
 
+## 🔀 Multi-Switcher (Unified Org + User)
+
+The new multi-switcher combines organization switching and user profile into a single, beautifully animated component:
+
+```dart
+VooNavigationConfig(
+  // ... other config
+
+  multiSwitcher: VooMultiSwitcherConfig(
+    // Organizations
+    organizations: [
+      VooOrganization(id: 'acme', name: 'ACME Corp', subtitle: '12 members'),
+      VooOrganization(id: 'startup', name: 'Startup Inc', subtitle: '5 members'),
+    ],
+    selectedOrganization: currentOrg,
+    onOrganizationChanged: (org) => setState(() => currentOrg = org),
+    onCreateOrganization: () => showCreateOrgDialog(),
+
+    // User
+    userName: 'John Doe',
+    userEmail: 'john@example.com',
+    avatarUrl: 'https://example.com/avatar.jpg',
+    status: VooUserStatus.online,
+
+    // Actions
+    onSettingsTap: () => openSettings(),
+    onLogout: () => logout(),
+
+    // Display options
+    showOrganizationSection: true,
+    showUserSection: true,
+    showSearch: true,
+    organizationSectionTitle: 'Workspaces',
+    userSectionTitle: 'Account',
+  ),
+  multiSwitcherPosition: VooMultiSwitcherPosition.footer,
+
+  // Disable old components when using multi-switcher
+  showUserProfile: false,
+  organizationSwitcher: null,
+)
+```
+
+The multi-switcher features:
+- **Card State**: Stacked avatars showing current org and user
+- **Modal State**: Slides up as overlay with organization list and user actions
+- **Smooth Animation**: Spring physics with `Curves.easeOutBack`
+- **Customizable**: Use `cardBuilder` and `modalBuilder` for full control
+
 ## 👤 User Profile Footer
 
 Show a user profile in the drawer/rail footer:
@@ -650,6 +700,12 @@ This package is part of the VooFlutter ecosystem.
 
 ## 📊 Version History
 
+- **1.3.0** - Multi-Switcher
+  - New `VooMultiSwitcher` component for unified organization and user switching
+  - Animated overlay modal with spring physics
+  - Stacked avatars in card state
+  - Full customization via builders
+  - Replaces separate org switcher and user profile
 - **1.2.6** - Design system consistency
   - Centralized `VooNavigationTokens` for consistent styling across all components
   - Theme-aware floating navigation (no more hardcoded colors)
@@ -688,7 +744,31 @@ See [CHANGELOG.md](CHANGELOG.md) for detailed version history.
 
 Contributions are welcome! Please read our contributing guidelines and follow the code style defined in `rules.md`.
 
-## 🆕 What's New in v1.2.6
+## 🆕 What's New in v1.3.0
+
+### Multi-Switcher Component
+A unified organization and user switching component that replaces the separate org switcher and user profile:
+
+- **Card State**: Shows stacked avatars (org + user) with chevron indicator
+- **Modal State**: Slides up as overlay with organization list and user actions
+- **Smooth Animation**: Spring physics using `Curves.easeOutBack` (300ms)
+- **Tap Outside**: Dismiss modal by tapping outside
+- **Full Customization**: Use `cardBuilder` and `modalBuilder` for custom UI
+
+```dart
+multiSwitcher: VooMultiSwitcherConfig(
+  organizations: myOrgs,
+  selectedOrganization: currentOrg,
+  onOrganizationChanged: handleOrgChange,
+  userName: 'John Doe',
+  userEmail: 'john@example.com',
+  onLogout: handleLogout,
+),
+```
+
+---
+
+## What's New in v1.2.6
 
 ### Design System Tokens
 Centralized design tokens ensure consistent styling across all navigation components:

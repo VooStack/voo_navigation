@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/breadcrumb_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/breakpoint.dart';
+import 'package:voo_navigation_core/src/domain/entities/multi_switcher_config.dart';
+import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_section.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
@@ -266,6 +268,12 @@ class VooNavigationConfig {
   /// Whether to show breadcrumbs in the app bar
   final bool showBreadcrumbsInAppBar;
 
+  /// Multi-switcher configuration (replaces org switcher + user profile when set)
+  final VooMultiSwitcherConfig? multiSwitcher;
+
+  /// Position of the multi-switcher
+  final VooMultiSwitcherPosition multiSwitcherPosition;
+
   VooNavigationConfig({
     required this.items,
     this.selectedId,
@@ -348,6 +356,8 @@ class VooNavigationConfig {
     this.quickActionsPosition = VooQuickActionsPosition.fab,
     this.breadcrumbs,
     this.showBreadcrumbsInAppBar = true,
+    this.multiSwitcher,
+    this.multiSwitcherPosition = VooMultiSwitcherPosition.footer,
   }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints;
 
   /// Creates a copy of this configuration with the given fields replaced
@@ -435,6 +445,8 @@ class VooNavigationConfig {
     VooQuickActionsPosition? quickActionsPosition,
     VooBreadcrumbsConfig? breadcrumbs,
     bool? showBreadcrumbsInAppBar,
+    VooMultiSwitcherConfig? multiSwitcher,
+    VooMultiSwitcherPosition? multiSwitcherPosition,
   }) =>
       VooNavigationConfig(
         items: items ?? this.items,
@@ -542,6 +554,9 @@ class VooNavigationConfig {
         breadcrumbs: breadcrumbs ?? this.breadcrumbs,
         showBreadcrumbsInAppBar:
             showBreadcrumbsInAppBar ?? this.showBreadcrumbsInAppBar,
+        multiSwitcher: multiSwitcher ?? this.multiSwitcher,
+        multiSwitcherPosition:
+            multiSwitcherPosition ?? this.multiSwitcherPosition,
       );
 
   /// Gets the current navigation type based on screen width
