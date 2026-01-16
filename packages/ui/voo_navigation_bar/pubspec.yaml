@@ -28,7 +28,7 @@ dependencies:
     sdk: flutter
 
   # Core navigation foundation
-  voo_navigation_core: ^0.1.4
+  voo_navigation_core: ^0.2.0
 
   # Design System
   voo_tokens: ^0.0.8
