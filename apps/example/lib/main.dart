@@ -247,6 +247,7 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       // Header configuration - simplified API for title and logo
       headerConfig: const VooHeaderConfig(
         title: 'HRISELINK',
+        tagline: 'Enterprise Platform',
         logoIcon: Icons.person_outline,
       ),
 

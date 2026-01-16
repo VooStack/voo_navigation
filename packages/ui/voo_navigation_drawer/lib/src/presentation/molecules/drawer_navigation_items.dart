@@ -100,9 +100,9 @@ class VooDrawerNavigationItems extends StatelessWidget {
         );
       }
 
-      // Add small spacing between items (except for the last one)
+      // Add spacing between items (except for the last one)
       if (i < visibleItems.length - 1 && !visibleItems[i + 1].isDivider) {
-        widgets.add(SizedBox(height: context.vooSpacing.xxs));
+        widgets.add(SizedBox(height: context.vooSpacing.xs));
       }
     }
 

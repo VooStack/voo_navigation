@@ -98,13 +98,13 @@ class VooDrawerNavigationItem extends StatelessWidget {
 
           // Modern badge
           if (item.hasBadge) ...[
-            const SizedBox(width: 8),
+            SizedBox(width: context.vooSpacing.xs),
             VooDrawerModernBadge(item: item, isSelected: isSelected),
           ],
 
           // Trailing widget
           if (item.trailingWidget != null) ...[
-            const SizedBox(width: 8),
+            SizedBox(width: context.vooSpacing.xs),
             item.trailingWidget!,
           ],
         ],

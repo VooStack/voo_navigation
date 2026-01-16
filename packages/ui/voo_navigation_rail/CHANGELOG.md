@@ -1,3 +1,16 @@
+## 0.2.1
+
+### Improved
+- **Tagline Layout**: Updated `VooRailDefaultHeader` to display tagline below title (when extended)
+  - Title and tagline now render as two separate lines in a Column
+  - Both texts limited to single line with ellipsis overflow
+  - Consistent styling with drawer header
+
+### Fixed
+- **Header Height Alignment**: Header height now uses `kToolbarHeight + spacing.sm` to align with `VooAdaptiveAppBar`
+
+---
+
 ## 0.2.0
 
 ### Dependencies

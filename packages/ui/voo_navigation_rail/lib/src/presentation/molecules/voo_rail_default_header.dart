@@ -7,6 +7,9 @@ import 'package:voo_tokens/voo_tokens.dart';
 /// Shows an icon with optional title in a row layout.
 /// Use [VooNavigationConfig.drawerHeader] to provide a custom header widget,
 /// or [VooNavigationConfig.headerConfig] for simpler customization.
+///
+/// The header is designed to align with the app bar height (kToolbarHeight = 56dp)
+/// for visual consistency when the rail is placed next to the main content.
 class VooRailDefaultHeader extends StatelessWidget {
   /// Title text displayed next to the icon
   final String? title;
@@ -26,6 +29,9 @@ class VooRailDefaultHeader extends StatelessWidget {
   /// Background color for the logo container
   final Color? logoBackgroundColor;
 
+  /// Height of the header. Defaults to kToolbarHeight (56dp) to align with app bar.
+  final double? height;
+
   const VooRailDefaultHeader({
     super.key,
     this.title = 'Navigation',
@@ -34,6 +40,7 @@ class VooRailDefaultHeader extends StatelessWidget {
     this.config,
     this.logo,
     this.logoBackgroundColor,
+    this.height,
   });
 
   /// Creates a header from a VooHeaderConfig
@@ -54,7 +61,6 @@ class VooRailDefaultHeader extends StatelessWidget {
     final theme = Theme.of(context);
     final spacing = context.vooSpacing;
     final radius = context.vooRadius;
-    final size = context.vooSize;
 
     // Use config values if provided, otherwise use direct parameters
     final effectiveTitle = config?.title ?? title;
@@ -63,71 +69,96 @@ class VooRailDefaultHeader extends StatelessWidget {
     final effectiveShowTitle = config?.showTitle ?? showTitle;
     final effectiveLogoBackground = config?.logoBackgroundColor ??
         logoBackgroundColor ??
-        theme.colorScheme.onSurface.withValues(alpha: 0.12);
-    // Top padding calculated to align logo center with app bar title center
-    // App bar title centered at ~32dp, logo is 40dp tall, so logo top = 32 - 20 = 12dp
-    final topPadding = spacing.sm + spacing.xs; // 12dp
-    final effectivePadding = config?.padding ??
-        EdgeInsets.fromLTRB(spacing.md, topPadding, spacing.md, spacing.md);
+        (theme.brightness == Brightness.light
+            ? const Color(0xFFF0F0F0)
+            : theme.colorScheme.onSurface.withValues(alpha: 0.12));
+
+    // Use 40dp logo for visual balance in kToolbarHeight
+    const double logoSize = 40;
+    const double iconSize = 22;
 
     // Build the logo widget
     Widget logoWidget;
     if (effectiveLogo != null) {
       logoWidget = SizedBox(
-        width: size.avatarMedium,
-        height: size.avatarMedium,
+        width: logoSize,
+        height: logoSize,
         child: effectiveLogo,
       );
     } else {
       logoWidget = Container(
-        width: size.avatarMedium,
-        height: size.avatarMedium,
+        width: logoSize,
+        height: logoSize,
         decoration: BoxDecoration(
           color: effectiveLogoBackground,
-          borderRadius: BorderRadius.circular(radius.md),
+          borderRadius: BorderRadius.circular(radius.sm),
         ),
         child: Icon(
           effectiveIcon,
           color: theme.colorScheme.onSurface,
-          size: size.iconMedium,
+          size: iconSize,
         ),
       );
     }
 
     final effectiveTagline = config?.tagline;
 
+    // Header height matches VooAdaptiveAppBar for alignment
+    // VooAdaptiveAppBar uses toolbarHeight: kToolbarHeight + spacing.sm
+    final effectiveHeight = height ?? config?.height ?? (kToolbarHeight + spacing.sm);
+
+    // Check if using custom padding from config
+    final customPadding = config?.padding;
+
     return GestureDetector(
       onTap: config?.onTap,
-      child: Padding(
-        padding: effectivePadding,
+      child: Container(
+        height: effectiveHeight,
+        padding: customPadding ?? EdgeInsets.symmetric(horizontal: spacing.sm),
         child: Row(
           children: [
             logoWidget,
             if (effectiveShowTitle && effectiveTitle != null) ...[
               SizedBox(width: spacing.sm),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      effectiveTitle,
-                      style: config?.titleStyle ?? theme.textTheme.titleMedium?.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontWeight: FontWeight.w600,
+                child: effectiveTagline != null
+                    ? Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            effectiveTitle,
+                            style: config?.titleStyle ??
+                                theme.textTheme.titleMedium?.copyWith(
+                                  color: theme.colorScheme.onSurface,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                          Text(
+                            effectiveTagline,
+                            style: config?.taglineStyle ??
+                                theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurface
+                                      .withValues(alpha: 0.6),
+                                  fontWeight: FontWeight.w400,
+                                ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ],
+                      )
+                    : Text(
+                        effectiveTitle,
+                        style: config?.titleStyle ??
+                            theme.textTheme.titleMedium?.copyWith(
+                              color: theme.colorScheme.onSurface,
+                              fontWeight: FontWeight.w600,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    if (effectiveTagline != null)
-                      Text(
-                        effectiveTagline,
-                        style: config?.taglineStyle ?? theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-                          fontWeight: FontWeight.w400,
-                        ),
-                      ),
-                  ],
-                ),
               ),
             ],
           ],

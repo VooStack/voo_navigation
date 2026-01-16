@@ -1,3 +1,17 @@
+## 0.2.1
+
+### Improved
+- **Tagline Layout**: Updated `VooDrawerDefaultHeader` to display tagline below title
+  - Title and tagline now render as two separate lines in a Column
+  - Both texts limited to single line with ellipsis overflow
+  - Title uses `titleMedium` style with weight 600
+  - Tagline uses `bodySmall` style with 60% opacity
+
+### Fixed
+- **Header Height Alignment**: Header height now uses `kToolbarHeight + spacing.sm` to align with `VooAdaptiveAppBar`
+
+---
+
 ## 0.2.0
 
 ### Added

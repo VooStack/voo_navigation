@@ -48,21 +48,30 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
     final unselectedColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
     final selectedColor = config.selectedItemColor ?? theme.colorScheme.primary;
 
+    // Calculate line position to align with parent icon center
+    // Parent icon center = itemPaddingHorizontal + iconSizeDefault/2
+    // Line center should be at the same position
+    const double lineWidth = 2;
+    const double lineMarginLeft = VooNavigationTokens.iconSizeDefault / 2 - lineWidth / 2; // 8dp
+
     return MouseRegion(
       onEnter: (_) => onHoverChanged(true),
       onExit: (_) => onHoverChanged(false),
       child: Padding(
-        padding: const EdgeInsets.only(left: 8),
+        padding: const EdgeInsets.only(left: VooNavigationTokens.itemPaddingHorizontal),
         child: IntrinsicHeight(
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // Thin vertical line indicator - highlights when selected
-              // Positioned to align with section icon center (8px padding + 9px = 17px from left)
+              // Positioned to align with section icon center
               if (showVerticalLine)
                 Container(
-                  width: 2,
-                  margin: const EdgeInsets.only(left: 9, right: 8, top: 0, bottom: 0),
+                  width: lineWidth,
+                  margin: EdgeInsets.only(
+                    left: lineMarginLeft,
+                    right: context.vooSpacing.xs,
+                  ),
                   decoration: BoxDecoration(
                     color: isSelected
                         ? selectedColor

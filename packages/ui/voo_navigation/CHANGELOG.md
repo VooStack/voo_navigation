@@ -1,3 +1,17 @@
+## 1.3.2
+
+### Fixed
+- **Drawer Header Alignment**: Fixed drawer header title not aligning with app bar title on desktop
+  - Added matching top padding to navigation in `VooDesktopScaffold` to account for content margin + app bar margin
+  - Navigation now receives `effectiveContentMargin.top + spacing.sm` padding to match app bar offset
+  - Applies to both `appBarAlongsideRail` and standard layout modes
+
+### Dependencies
+- Updated `voo_navigation_drawer` to ^0.2.1
+- Updated `voo_navigation_rail` to ^0.2.1
+
+---
+
 ## 1.3.1
 
 ### Fixed

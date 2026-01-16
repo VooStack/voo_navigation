@@ -276,8 +276,14 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
         key: widget.scaffoldKey,
         backgroundColor: widget.backgroundColor,
         body: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            navigation,
+            // Apply same top margin to navigation for header alignment
+            // Content has effectiveContentMargin.top + AppBar has spacing.sm margin
+            Padding(
+              padding: EdgeInsets.only(top: effectiveContentMargin.top + context.vooSpacing.sm),
+              child: navigation,
+            ),
             Expanded(
               child: Container(
                 margin: effectiveContentMargin,
@@ -342,8 +348,13 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
             ))
           : null,
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          navigation,
+          // Apply same top margin to navigation for header alignment
+          Padding(
+            padding: EdgeInsets.only(top: effectiveContentMargin.top),
+            child: navigation,
+          ),
           Expanded(
             child: Container(
               margin: effectiveContentMargin,

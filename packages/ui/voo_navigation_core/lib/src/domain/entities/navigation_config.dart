@@ -933,6 +933,9 @@ class VooHeaderConfig {
   final EdgeInsets? padding;
   final VoidCallback? onTap;
 
+  /// Height of the header. Defaults to kToolbarHeight (56dp) to align with app bar.
+  final double? height;
+
   const VooHeaderConfig({
     this.title,
     this.tagline,
@@ -944,6 +947,7 @@ class VooHeaderConfig {
     this.taglineStyle,
     this.padding,
     this.onTap,
+    this.height,
   });
 
   VooHeaderConfig copyWith({
@@ -957,6 +961,7 @@ class VooHeaderConfig {
     TextStyle? taglineStyle,
     EdgeInsets? padding,
     VoidCallback? onTap,
+    double? height,
   }) =>
       VooHeaderConfig(
         title: title ?? this.title,
@@ -969,6 +974,7 @@ class VooHeaderConfig {
         taglineStyle: taglineStyle ?? this.taglineStyle,
         padding: padding ?? this.padding,
         onTap: onTap ?? this.onTap,
+        height: height ?? this.height,
       );
 }
 

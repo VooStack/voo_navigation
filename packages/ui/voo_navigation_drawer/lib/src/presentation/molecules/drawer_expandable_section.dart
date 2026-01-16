@@ -3,6 +3,7 @@ import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_child_navigation_item.dart';
+import 'package:voo_tokens/voo_tokens.dart';
 
 /// Expandable section widget for drawer navigation with children
 class VooDrawerExpandableSection extends StatelessWidget {
@@ -60,10 +61,10 @@ class VooDrawerExpandableSection extends StatelessWidget {
             onTap: () => onItemTap(item),
             borderRadius: BorderRadius.circular(6),
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 150),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 10,
+              duration: context.vooAnimation.durationFast,
+              padding: EdgeInsets.symmetric(
+                horizontal: VooNavigationTokens.itemPaddingHorizontal,
+                vertical: VooNavigationTokens.itemPaddingVertical,
               ),
               decoration: BoxDecoration(
                 color: isHovered
@@ -77,9 +78,9 @@ class VooDrawerExpandableSection extends StatelessWidget {
                   Icon(
                     item.icon,
                     color: sectionColor.withValues(alpha: 0.7),
-                    size: 18,
+                    size: VooNavigationTokens.iconSizeDefault,
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
                   Expanded(
                     child: Text(
                       item.label,
@@ -111,15 +112,20 @@ class VooDrawerExpandableSection extends StatelessWidget {
                 // Section header widget (e.g., project selector)
                 if (item.sectionHeaderWidget != null)
                   Padding(
-                    padding: const EdgeInsets.only(left: 8),
+                    // Use same padding as parent item for alignment
+                    padding: const EdgeInsets.only(left: VooNavigationTokens.itemPaddingHorizontal),
                     child: IntrinsicHeight(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           // Vertical line to match child items - uses custom color if provided
+                          // Line center aligns with parent icon center (iconSizeDefault/2 - lineWidth/2 = 8dp)
                           Container(
                             width: 2,
-                            margin: const EdgeInsets.only(left: 9, right: 8),
+                            margin: EdgeInsets.only(
+                              left: VooNavigationTokens.iconSizeDefault / 2 - 1, // 8dp
+                              right: context.vooSpacing.xs,
+                            ),
                             decoration: BoxDecoration(
                               color: item.sectionHeaderLineColor ??
                                   sectionColor.withValues(
@@ -131,7 +137,7 @@ class VooDrawerExpandableSection extends StatelessWidget {
                           // Section header content
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              padding: EdgeInsets.symmetric(vertical: context.vooSpacing.xxs),
                               child: item.sectionHeaderWidget!,
                             ),
                           ),

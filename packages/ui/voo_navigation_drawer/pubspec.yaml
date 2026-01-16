@@ -1,6 +1,6 @@
 name: voo_navigation_drawer
 description: Navigation drawer components for Flutter - part of the voo_navigation package ecosystem.
-version: 0.2.0
+version: 0.2.1
 homepage: https://voostack.com/packages/voo_navigation_drawer
 repository: https://github.com/voostack/voo_navigation/tree/main/packages/ui/voo_navigation_drawer
 issue_tracker: https://github.com/voostack/voo_navigation/issues

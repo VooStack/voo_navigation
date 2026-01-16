@@ -1,0 +1,22 @@
+name: voo_navigation_core_example
+description: Example app demonstrating voo_navigation_core components including context switcher.
+version: 1.0.0
+publish_to: 'none'
+resolution: workspace
+
+environment:
+  sdk: '>=3.8.1 <4.0.0'
+  flutter: '>=3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  voo_navigation_core:
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

@@ -6,9 +6,13 @@ dev_dependencies:
   melos: ^7.1.1
 workspace:
   - packages/ui/voo_navigation_core
+  - packages/ui/voo_navigation_core/example
   - packages/ui/voo_navigation_rail
+  - packages/ui/voo_navigation_rail/example
   - packages/ui/voo_navigation_drawer
+  - packages/ui/voo_navigation_drawer/example
   - packages/ui/voo_navigation_bar
+  - packages/ui/voo_navigation_bar/example
   - packages/ui/voo_navigation
   - packages/ui/voo_navigation/example
   - apps/example
