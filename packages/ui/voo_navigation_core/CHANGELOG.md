@@ -1,3 +1,19 @@
+## 0.2.1
+
+### Changed
+- **VooNavigationItem**: Removed strict assertion requiring `route`, `destination`, `onTap`, or `children`
+  - Items can now be created without navigation callbacks when using scaffold-level `onNavigationItemSelected`
+  - Cleaned up `VooNavigationItem.divider()` factory to no longer require unnecessary `onTap`
+
+### Added
+- **VooNavigationConfig**: Added validation that ensures navigation is properly configured
+  - When `onNavigationItemSelected` is provided, items don't need individual navigation callbacks
+  - When `onNavigationItemSelected` is NOT provided, items must have `route`, `destination`, `onTap`, or `children`
+  - Dividers are automatically skipped during validation
+  - Recursive validation for nested children items
+
+---
+
 ## 0.2.0
 
 ### Added

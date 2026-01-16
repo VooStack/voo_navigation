@@ -119,13 +119,7 @@ class VooNavigationItem extends Equatable {
     this.sortOrder = 0,
     this.mobilePriority = false,
     this.key,
-  }) : assert(
-         route != null ||
-             destination != null ||
-             onTap != null ||
-             children != null,
-         'Navigation item must have either a route, destination, onTap callback, or children',
-       );
+  });
 
   @override
   List<Object?> get props => [
@@ -239,7 +233,6 @@ class VooNavigationItem extends Equatable {
     id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}',
     label: '',
     icon: Icons.remove,
-    onTap: () {},
   );
 
   /// Convenience factory for creating a section header

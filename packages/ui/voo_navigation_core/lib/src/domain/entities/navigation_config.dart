@@ -368,7 +368,33 @@ class VooNavigationConfig {
     this.multiSwitcherPosition = VooMultiSwitcherPosition.footer,
     this.contextSwitcher,
     this.contextSwitcherPosition = VooContextSwitcherPosition.beforeItems,
-  }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints;
+  }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints,
+       assert(
+         onNavigationItemSelected != null || _allItemsHaveNavigation(items),
+         'When onNavigationItemSelected is not provided, each navigation item must have '
+         'either a route, destination, onTap callback, or children',
+       );
+
+  /// Checks if all items (and their children) have navigation defined
+  static bool _allItemsHaveNavigation(List<VooNavigationItem> items) {
+    for (final item in items) {
+      // Skip dividers - they don't need navigation
+      if (item.isDivider) continue;
+
+      final hasNavigation = item.route != null ||
+          item.destination != null ||
+          item.onTap != null ||
+          item.children != null;
+
+      if (!hasNavigation) return false;
+
+      // Recursively check children
+      if (item.children != null && !_allItemsHaveNavigation(item.children!)) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   /// Creates a copy of this configuration with the given fields replaced
   VooNavigationConfig copyWith({

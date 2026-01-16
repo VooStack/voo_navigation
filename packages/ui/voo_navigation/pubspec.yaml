@@ -28,7 +28,7 @@ dependencies:
     sdk: flutter
 
   # Navigation sub-packages (re-export voo_navigation_core)
-  voo_navigation_core: ^0.2.0
+  voo_navigation_core: ^0.2.1
   voo_navigation_rail: ^0.2.1
   voo_navigation_drawer: ^0.2.1
   voo_navigation_bar: ^0.1.2
