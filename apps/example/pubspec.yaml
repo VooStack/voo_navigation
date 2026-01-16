@@ -18,7 +18,7 @@ dependencies:
   # Voo Navigation Packages (resolved via workspace)
   voo_navigation: ^1.3.0
   voo_navigation_core: ^0.2.0
-  voo_navigation_rail: ^0.1.0
+  voo_navigation_rail: ^0.2.0
   voo_navigation_drawer: ^0.2.0
   voo_navigation_bar: ^0.1.0
 

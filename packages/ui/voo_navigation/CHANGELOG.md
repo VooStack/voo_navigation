@@ -1,3 +1,11 @@
+## 1.3.1
+
+### Fixed
+- **Dependency Resolution**: Fixed version conflict where `voo_navigation_rail ^0.1.2` required `voo_navigation_core ^0.1.4`
+  - Updated `voo_navigation_rail` dependency to ^0.2.0
+
+---
+
 ## 1.3.0
 
 ### Added
@@ -80,6 +88,7 @@ VooNavigationConfig(
 ### Dependencies
 - Updated `voo_navigation_core` to ^0.2.0
 - Updated `voo_navigation_drawer` to ^0.2.0
+- Updated `voo_navigation_rail` to ^0.2.0
 
 ---
 
