@@ -1,6 +1,12 @@
 ## 0.2.0
 
 ### Added
+- **VooContextSwitcher Integration**: Inline context/project switching within expandable sections
+  - `VooDrawerContextSwitcher` - Drawer wrapper with `forPosition()` factory method
+  - `VooDrawerExpandableSection` now renders `sectionHeaderWidget` with vertical line
+  - Vertical line color can match selected context via `sectionHeaderLineColor`
+  - Seamlessly integrates with dynamic navigation items pattern
+
 - **VooMultiSwitcher Integration**: Unified organization and user switching in drawer footer
   - `VooDrawerMultiSwitcher` - Drawer wrapper with `forPosition()` factory method
   - Replaces separate org switcher and user profile with single animated component

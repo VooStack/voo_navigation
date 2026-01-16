@@ -15,6 +15,88 @@ class HRISELinkApp extends StatefulWidget {
 
 class _HRISELinkAppState extends State<HRISELinkApp> {
   String _selectedId = 'employee';
+  VooContextItem? _selectedProject;
+
+  // Sample projects for context switcher
+  List<VooContextItem> get _projects => [
+    VooContextItem(
+      id: 'proj-1',
+      name: 'Marketing Website',
+      icon: Icons.web,
+      color: const Color(0xFF6366F1),
+      subtitle: '12 tasks',
+    ),
+    VooContextItem(
+      id: 'proj-2',
+      name: 'Mobile App',
+      icon: Icons.phone_android,
+      color: const Color(0xFF10B981),
+      subtitle: '8 tasks',
+    ),
+    VooContextItem(
+      id: 'proj-3',
+      name: 'API Development',
+      icon: Icons.api,
+      color: const Color(0xFFF59E0B),
+      subtitle: '23 tasks',
+    ),
+    VooContextItem(
+      id: 'proj-4',
+      name: 'Design System',
+      icon: Icons.palette,
+      color: const Color(0xFFEC4899),
+      subtitle: '5 tasks',
+    ),
+  ];
+
+  // Project-specific navigation items (changes based on selected project)
+  List<VooNavigationItem> get _projectNavigationItems {
+    if (_selectedProject == null) {
+      // Return empty when no project selected - user should select from context switcher
+      return [];
+    }
+
+    // Navigation items that change based on selected project
+    return [
+      VooNavigationItem(
+        id: 'project-overview',
+        label: 'Overview',
+        icon: Icons.dashboard_outlined,
+        selectedIcon: Icons.dashboard,
+        mobilePriority: true,
+        route: '/projects/${_selectedProject!.id}/overview',
+      ),
+      VooNavigationItem(
+        id: 'project-tasks',
+        label: 'Tasks',
+        icon: Icons.check_circle_outline,
+        selectedIcon: Icons.check_circle,
+        mobilePriority: true,
+        route: '/projects/${_selectedProject!.id}/tasks',
+      ),
+      VooNavigationItem(
+        id: 'project-files',
+        label: 'Files',
+        icon: Icons.folder_outlined,
+        selectedIcon: Icons.folder,
+        route: '/projects/${_selectedProject!.id}/files',
+      ),
+      VooNavigationItem(
+        id: 'project-team',
+        label: 'Team',
+        icon: Icons.people_outline,
+        selectedIcon: Icons.people,
+        route: '/projects/${_selectedProject!.id}/team',
+      ),
+      VooNavigationItem(
+        id: 'project-timeline',
+        label: 'Timeline',
+        icon: Icons.timeline_outlined,
+        selectedIcon: Icons.timeline,
+        route: '/projects/${_selectedProject!.id}/timeline',
+      ),
+    ];
+  }
 
   // Navigation items - use route for leaf items
   List<VooNavigationItem> get _navigationItems => [
@@ -31,6 +113,45 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       label: 'Teams',
       icon: Icons.language,
       route: '/teams',
+    ),
+    // Projects section - with embedded context switcher
+    VooNavigationItem(
+      id: 'projects-section',
+      label: 'Projects',
+      icon: Icons.folder_special_outlined,
+      selectedIcon: Icons.folder_special,
+      isExpanded: true,
+      // Line color matches selected project
+      sectionHeaderLineColor: _selectedProject?.color,
+      // Embed project selector inside the section
+      sectionHeaderWidget: VooContextSwitcher(
+        config: VooContextSwitcherConfig(
+          items: _projects,
+          selectedItem: _selectedProject,
+          onContextChanged: (project) {
+            setState(() => _selectedProject = project);
+          },
+          showSearch: true,
+          searchHint: 'Search projects...',
+          placeholder: 'Select project',
+          onCreateContext: () {
+            // Handle create new project
+          },
+          createContextLabel: 'New Project',
+        ),
+      ),
+      children: _projectNavigationItems.isNotEmpty
+          ? _projectNavigationItems
+          : [
+              // Placeholder item when no project selected
+              VooNavigationItem(
+                id: 'select-project-hint',
+                label: 'No project selected',
+                icon: Icons.info_outline,
+                route: '/projects',
+                isEnabled: false,
+              ),
+            ],
     ),
     VooNavigationItem(
       id: 'employee-section',
@@ -178,6 +299,9 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       ),
       searchBarPosition: VooSearchBarPosition.header,
 
+      // Context switcher disabled - we'll embed it in the Projects section instead
+      // contextSwitcher: VooContextSwitcherConfig(...),
+
       // Mobile
       floatingBottomNav: true,
 
@@ -199,6 +323,12 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         return const EmployeePage();
       case 'dashboard':
         return const DashboardPage();
+      case 'project-overview':
+      case 'project-tasks':
+      case 'project-files':
+      case 'project-team':
+      case 'project-timeline':
+        return ProjectPage(project: _selectedProject!, section: _selectedId);
       default:
         return PlaceholderPage(title: _getPageTitle());
     }
@@ -461,6 +591,142 @@ class DashboardPage extends StatelessWidget {
           Text('Welcome back!', style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Text('Here\'s what\'s happening with your team today.', style: theme.textTheme.bodyLarge?.copyWith(color: Colors.grey)),
+        ],
+      ),
+    );
+  }
+}
+
+/// Project Page - demonstrates dynamic content based on selected context
+class ProjectPage extends StatelessWidget {
+  final VooContextItem project;
+  final String section;
+
+  const ProjectPage({super.key, required this.project, required this.section});
+
+  String get _sectionTitle => switch (section) {
+    'project-overview' => 'Overview',
+    'project-tasks' => 'Tasks',
+    'project-files' => 'Files',
+    'project-team' => 'Team',
+    'project-timeline' => 'Timeline',
+    _ => 'Project',
+  };
+
+  IconData get _sectionIcon => switch (section) {
+    'project-overview' => Icons.dashboard,
+    'project-tasks' => Icons.check_circle,
+    'project-files' => Icons.folder,
+    'project-team' => Icons.people,
+    'project-timeline' => Icons.timeline,
+    _ => Icons.folder_special,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Project header with color accent
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: project.color?.withValues(alpha: 0.15) ?? theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                  project.icon ?? Icons.folder,
+                  color: project.color ?? theme.colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      project.name,
+                      style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    if (project.subtitle != null)
+                      Text(
+                        project.subtitle!,
+                        style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                      ),
+                  ],
+                ),
+              ),
+              // Color indicator
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: project.color,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+          const Divider(),
+          const SizedBox(height: 24),
+          // Section content
+          Row(
+            children: [
+              Icon(_sectionIcon, color: project.color ?? theme.colorScheme.primary),
+              const SizedBox(width: 12),
+              Text(
+                _sectionTitle,
+                style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // Placeholder content
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: (project.color ?? theme.colorScheme.primary).withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: (project.color ?? theme.colorScheme.primary).withValues(alpha: 0.2),
+                ),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _sectionIcon,
+                      size: 64,
+                      color: (project.color ?? theme.colorScheme.primary).withValues(alpha: 0.5),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '${project.name} - $_sectionTitle',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: project.color ?? theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Project content would appear here',
+                      style: theme.textTheme.bodyMedium?.copyWith(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

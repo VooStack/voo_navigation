@@ -57,6 +57,15 @@ class VooNavigationItem extends Equatable {
   /// Custom trailing widget (in addition to badges)
   final Widget? trailingWidget;
 
+  /// Custom widget to display at the top of children section when expanded.
+  /// Use this to embed dropdowns, selectors, or other widgets inside
+  /// an expandable navigation section.
+  final Widget? sectionHeaderWidget;
+
+  /// Color for the vertical line next to the section header widget.
+  /// Use this to match the line color to a selected context/project.
+  final Color? sectionHeaderLineColor;
+
   /// Custom color for the icon
   final Color? iconColor;
 
@@ -100,6 +109,8 @@ class VooNavigationItem extends Equatable {
     this.onTap,
     this.leadingWidget,
     this.trailingWidget,
+    this.sectionHeaderWidget,
+    this.sectionHeaderLineColor,
     this.iconColor,
     this.selectedIconColor,
     this.labelStyle,
@@ -158,6 +169,8 @@ class VooNavigationItem extends Equatable {
     VoidCallback? onTap,
     Widget? leadingWidget,
     Widget? trailingWidget,
+    Widget? sectionHeaderWidget,
+    Color? sectionHeaderLineColor,
     Color? iconColor,
     Color? selectedIconColor,
     TextStyle? labelStyle,
@@ -185,6 +198,8 @@ class VooNavigationItem extends Equatable {
     onTap: onTap ?? this.onTap,
     leadingWidget: leadingWidget ?? this.leadingWidget,
     trailingWidget: trailingWidget ?? this.trailingWidget,
+    sectionHeaderWidget: sectionHeaderWidget ?? this.sectionHeaderWidget,
+    sectionHeaderLineColor: sectionHeaderLineColor ?? this.sectionHeaderLineColor,
     iconColor: iconColor ?? this.iconColor,
     selectedIconColor: selectedIconColor ?? this.selectedIconColor,
     labelStyle: labelStyle ?? this.labelStyle,

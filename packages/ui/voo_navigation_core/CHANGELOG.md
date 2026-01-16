@@ -1,6 +1,20 @@
 ## 0.2.0
 
 ### Added
+- **VooContextSwitcher**: Inline context/project switching component for dynamic navigation
+  - `VooContextItem` - Entity representing a switchable context (project, workspace, environment)
+  - `VooContextSwitcherConfig` - Main configuration class with items, callbacks, and customization
+  - `VooContextSwitcherStyle` - Style configuration for card, modal, and item appearance
+  - `VooContextSwitcherPosition` - Enum for positioning (beforeItems, afterHeader)
+- **Context Switcher Widgets**:
+  - `VooContextSwitcher` - Main widget combining card and modal with overlay animation
+  - `VooContextSwitcherCard` - Elegant pill-style selector with color indicator dot
+  - `VooContextSwitcherModal` - Dropdown modal with context list, search, and create button
+- **Navigation Item Enhancement**:
+  - `sectionHeaderWidget` - Embed custom widgets (like context switcher) inside expandable sections
+  - `sectionHeaderLineColor` - Custom color for the vertical line next to section header widgets
+- **Custom Builders**: Full customization support with `cardBuilder` and `modalBuilder`
+
 - **VooMultiSwitcher**: Unified organization and user switching component
   - `VooMultiSwitcherConfig` - Main configuration class for the multi-switcher
   - `VooMultiSwitcherUser` - Entity representing a switchable user account

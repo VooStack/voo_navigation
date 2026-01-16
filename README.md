@@ -11,6 +11,8 @@ A comprehensive, adaptive navigation package suite for Flutter that automaticall
 
 - **Fully Adaptive**: Automatically switches between Bottom Navigation, Navigation Rail, and Navigation Drawer based on screen size
 - **Material 3 Compliant**: Built with Material 3 design guidelines
+- **Context Switcher**: Inline project/workspace switching with dynamic navigation items
+- **Multi-Switcher**: Unified organization and user switching with animated overlay
 - **Theme Presets**: Glassmorphism, Liquid Glass, Blurry, Neomorphism, Material 3 Enhanced, Minimal Modern
 - **GoRouter Integration**: Native integration with StatefulNavigationShell
 - **Per-Page Customization**: Override scaffold elements on individual pages
@@ -96,6 +98,86 @@ VooAdaptiveScaffold(
     },
   ),
   body: YourPageContent(),
+)
+```
+
+## Context Switcher
+
+Embed inline context/project switchers in navigation sections with dynamic items:
+
+```dart
+// Define contexts (projects, workspaces, environments, etc.)
+final projects = [
+  VooContextItem(
+    id: 'proj-1',
+    name: 'Marketing Website',
+    icon: Icons.web,
+    color: Colors.blue,
+    subtitle: '12 tasks',
+  ),
+  VooContextItem(
+    id: 'proj-2',
+    name: 'Mobile App',
+    icon: Icons.phone_android,
+    color: Colors.green,
+    subtitle: '8 tasks',
+  ),
+];
+
+// Navigation items that change based on selected context
+List<VooNavigationItem> getProjectItems(VooContextItem? project) {
+  if (project == null) return [
+    VooNavigationItem(id: 'hint', label: 'Select a project', icon: Icons.info, route: '/'),
+  ];
+  return [
+    VooNavigationItem(id: 'overview', label: 'Overview', icon: Icons.dashboard, route: '/projects/${project.id}/overview'),
+    VooNavigationItem(id: 'tasks', label: 'Tasks', icon: Icons.check_circle, route: '/projects/${project.id}/tasks'),
+    VooNavigationItem(id: 'files', label: 'Files', icon: Icons.folder, route: '/projects/${project.id}/files'),
+  ];
+}
+
+// Embed in expandable navigation section
+VooNavigationItem(
+  id: 'projects-section',
+  label: 'Projects',
+  icon: Icons.folder_special,
+  isExpanded: true,
+  sectionHeaderLineColor: selectedProject?.color, // Vertical line matches project color
+  sectionHeaderWidget: VooContextSwitcher(
+    config: VooContextSwitcherConfig(
+      items: projects,
+      selectedItem: selectedProject,
+      onContextChanged: (project) => setState(() => selectedProject = project),
+      showSearch: true,
+      searchHint: 'Search projects...',
+      placeholder: 'Select project',
+      onCreateContext: () => showCreateProjectDialog(),
+      createContextLabel: 'New Project',
+    ),
+  ),
+  children: getProjectItems(selectedProject),
+)
+```
+
+## Multi-Switcher
+
+Combine organization and user switching into a single animated component:
+
+```dart
+VooNavigationConfig(
+  // ... other config
+  multiSwitcher: VooMultiSwitcherConfig(
+    organizations: myOrganizations,
+    selectedOrganization: currentOrg,
+    onOrganizationChanged: (org) => setState(() => currentOrg = org),
+    userName: 'John Doe',
+    userEmail: 'john@example.com',
+    userAvatarUrl: 'https://example.com/avatar.jpg',
+    status: VooUserStatus.online,
+    onSettingsTap: () => openSettings(),
+    onLogout: () => logout(),
+  ),
+  multiSwitcherPosition: VooMultiSwitcherPosition.footer,
 )
 ```
 

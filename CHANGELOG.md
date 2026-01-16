@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **VooContextSwitcher**: Inline context/project switching for dynamic navigation
+  - Embed context switchers inside expandable navigation sections
+  - Navigation items dynamically change based on selected context
+  - Elegant pill-style card with color indicator and dropdown modal
+  - Vertical line color syncs with selected context
+- **VooMultiSwitcher**: Unified organization and user switching component
+  - Combines org switching and user profile into single animated widget
+  - Card shows stacked avatars, modal slides up as overlay
 - Comprehensive README documentation for all packages
 - LICENSE files for all packages (MIT)
 - CHANGELOG files for workspace and example apps

@@ -10,6 +10,9 @@ export 'src/domain/tokens/voo_navigation_tokens.dart';
 // Domain Entities
 export 'src/domain/entities/breadcrumb_item.dart';
 export 'src/domain/entities/breakpoint.dart';
+export 'src/domain/entities/context_switcher_config.dart';
+export 'src/domain/entities/context_switcher_item.dart';
+export 'src/domain/entities/context_switcher_style.dart';
 export 'src/domain/entities/multi_switcher_config.dart';
 export 'src/domain/entities/multi_switcher_style.dart';
 export 'src/domain/entities/multi_switcher_user.dart';
@@ -55,6 +58,8 @@ export 'src/presentation/atoms/voo_text_badge.dart';
 export 'src/presentation/atoms/voo_themed_indicator.dart';
 
 // Presentation - Molecules
+export 'src/presentation/molecules/context_switcher_card.dart';
+export 'src/presentation/molecules/context_switcher_modal.dart';
 export 'src/presentation/molecules/multi_switcher_card.dart';
 export 'src/presentation/molecules/multi_switcher_modal.dart';
 export 'src/presentation/molecules/multi_switcher_sections.dart';
@@ -67,6 +72,7 @@ export 'src/presentation/molecules/voo_dropdown_child_item.dart';
 export 'src/presentation/molecules/voo_dropdown_children.dart';
 export 'src/presentation/molecules/voo_dropdown_header.dart';
 export 'src/presentation/molecules/voo_mobile_app_bar.dart';
+export 'src/presentation/molecules/voo_context_switcher.dart';
 export 'src/presentation/molecules/voo_multi_switcher.dart';
 export 'src/presentation/molecules/voo_navigation_badge.dart';
 export 'src/presentation/molecules/voo_navigation_item_widget.dart';

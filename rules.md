@@ -817,6 +817,130 @@ class _MyPageContent extends StatelessWidget {
 }
 ```
 
+## Navigation Components (voo_navigation)
+
+### Multi-Switcher
+The Multi-Switcher combines organization and user switching into a single, animated component for the navigation drawer footer.
+
+**Key Files:**
+- Entity: `multi_switcher_config.dart`, `multi_switcher_style.dart`, `multi_switcher_user.dart`
+- Widgets: `voo_multi_switcher.dart`, `multi_switcher_card.dart`, `multi_switcher_modal.dart`
+- Drawer wrapper: `drawer_multi_switcher.dart`
+
+**Usage:**
+```dart
+VooNavigationConfig(
+  multiSwitcher: VooMultiSwitcherConfig(
+    organizations: myOrganizations,
+    selectedOrganization: currentOrg,
+    onOrganizationChanged: (org) => setState(() => currentOrg = org),
+    userName: 'John Doe',
+    userEmail: 'john@example.com',
+    status: VooUserStatus.online,
+    onSettingsTap: () => openSettings(),
+    onLogout: () => logout(),
+  ),
+  multiSwitcherPosition: VooMultiSwitcherPosition.footer,
+)
+```
+
+### Context Switcher
+The Context Switcher allows users to switch between contexts (projects, workspaces, environments) and dynamically changes the navigation items based on the selected context.
+
+**Key Files:**
+- Entity: `context_switcher_item.dart`, `context_switcher_config.dart`, `context_switcher_style.dart`
+- Widgets: `voo_context_switcher.dart`, `context_switcher_card.dart`, `context_switcher_modal.dart`
+- Drawer wrapper: `drawer_context_switcher.dart`
+
+**Key Difference from Multi-Switcher:**
+- Modal appears **below** the card (dropdown style) vs. Multi-Switcher which appears **above**
+- Supports `itemsBuilder` callback for dynamic navigation items based on selected context
+- Can be positioned at top OR embedded inside a navigation section
+
+**Usage Option 1: Embedded in Navigation Section (Recommended)**
+
+Use `sectionHeaderWidget` on `VooNavigationItem` to embed the context switcher inside an expandable section:
+
+```dart
+VooNavigationItem(
+  id: 'projects-section',
+  label: 'Projects',
+  icon: Icons.folder_special_outlined,
+  isExpanded: true,
+  // Embed project selector inside the section
+  sectionHeaderWidget: VooContextSwitcher(
+    config: VooContextSwitcherConfig(
+      items: projects,
+      selectedItem: selectedProject,
+      onContextChanged: (project) => setState(() => selectedProject = project),
+      showSearch: true,
+      placeholder: 'Select project',
+    ),
+  ),
+  children: selectedProject != null
+      ? [
+          VooNavigationItem(id: 'overview', label: 'Overview', icon: Icons.dashboard, route: '/projects/${selectedProject.id}/overview'),
+          VooNavigationItem(id: 'tasks', label: 'Tasks', icon: Icons.check_circle, route: '/projects/${selectedProject.id}/tasks'),
+        ]
+      : [
+          VooNavigationItem(id: 'hint', label: 'Select a project above', icon: Icons.info, route: '/projects'),
+        ],
+),
+```
+
+This creates a structure like:
+```
+Projects ▼
+├── [Select project ▼]  ← Context switcher embedded here
+├── Overview
+├── Tasks
+└── Files
+```
+
+**Usage Option 2: Top-Level Position**
+
+Use `contextSwitcher` in `VooNavigationConfig` for top-level positioning:
+
+```dart
+VooNavigationConfig(
+  contextSwitcher: VooContextSwitcherConfig(
+    items: projects,
+    selectedItem: selectedProject,
+    onContextChanged: (context) => setState(() => selectedProject = context),
+    sectionTitle: 'PROJECTS',
+    showSearch: true,
+  ),
+  contextSwitcherPosition: VooContextSwitcherPosition.beforeItems,
+)
+```
+
+**Position Options (for top-level):**
+- `VooContextSwitcherPosition.beforeItems` - After search bar, before navigation items
+- `VooContextSwitcherPosition.afterHeader` - Immediately after the header
+
+### Section Header Widget
+The `sectionHeaderWidget` property on `VooNavigationItem` allows embedding any widget at the top of an expandable section's children. This is useful for:
+- Project/workspace selectors inside a "Projects" section
+- Filters or toggles inside a section
+- Custom controls contextually placed with related navigation items
+
+```dart
+VooNavigationItem(
+  id: 'my-section',
+  label: 'My Section',
+  icon: Icons.folder,
+  sectionHeaderWidget: MyCustomWidget(), // Rendered above children when expanded
+  children: [...],
+)
+```
+
+**Overlay Pattern:**
+Both Multi-Switcher and Context Switcher use Flutter's Overlay system with `LayerLink` + `CompositedTransformFollower` for proper modal positioning and hit testing. This ensures:
+- Modal can overflow parent bounds
+- Touch/click events work correctly inside the modal
+- Search input fields function properly
+- Scrolling works inside modal content
+
 ## Testing Requirements
 
 ### Test Coverage

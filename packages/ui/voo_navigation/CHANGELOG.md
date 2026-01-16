@@ -1,6 +1,56 @@
 ## 1.3.0
 
 ### Added
+- **VooContextSwitcher**: New inline context/project switching component for dynamic navigation
+  - Embed inside expandable navigation sections via `sectionHeaderWidget`
+  - Elegant pill-style card with color indicator dot and dropdown chevron
+  - Dropdown modal with search, context list, and create button
+  - Dynamic navigation items that change based on selected context
+  - Vertical line color syncs with selected context color
+
+### Context Switcher Usage
+```dart
+// Define contexts (projects, workspaces, etc.)
+final projects = [
+  VooContextItem(id: 'proj-1', name: 'Marketing Website', color: Colors.blue),
+  VooContextItem(id: 'proj-2', name: 'Mobile App', color: Colors.green),
+];
+
+// Navigation items that change based on selected context
+List<VooNavigationItem> getProjectItems(VooContextItem? project) {
+  if (project == null) return [];
+  return [
+    VooNavigationItem(id: 'overview', label: 'Overview', icon: Icons.dashboard, route: '/projects/${project.id}/overview'),
+    VooNavigationItem(id: 'tasks', label: 'Tasks', icon: Icons.check_circle, route: '/projects/${project.id}/tasks'),
+  ];
+}
+
+// Embed in navigation config
+VooNavigationConfig(
+  items: [
+    VooNavigationItem(
+      id: 'projects-section',
+      label: 'Projects',
+      icon: Icons.folder_special,
+      isExpanded: true,
+      sectionHeaderLineColor: selectedProject?.color, // Line matches project color
+      sectionHeaderWidget: VooContextSwitcher(
+        config: VooContextSwitcherConfig(
+          items: projects,
+          selectedItem: selectedProject,
+          onContextChanged: (project) => setState(() => selectedProject = project),
+          showSearch: true,
+          placeholder: 'Select project',
+          onCreateContext: () => showCreateDialog(),
+          createContextLabel: 'New Project',
+        ),
+      ),
+      children: getProjectItems(selectedProject),
+    ),
+  ],
+)
+```
+
 - **VooMultiSwitcher**: New unified organization and user switching component
   - Combines organization switching and user profile into a single, beautifully animated widget
   - Card state shows stacked avatars (org + user) with current selection

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
@@ -9,6 +10,7 @@ import 'package:voo_navigation_core/src/presentation/molecules/voo_multi_switche
 import 'package:voo_navigation_core/src/presentation/molecules/voo_organization_switcher.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_user_profile_footer.dart';
 import 'package:voo_navigation_core/src/presentation/utils/voo_collapse_state.dart';
+import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_context_switcher.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_footer_items.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_header.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_navigation_items.dart';
@@ -145,6 +147,8 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
     final searchBarBeforeItems = VooDrawerSearchBar.forPosition(context: context, config: widget.config, position: VooSearchBarPosition.beforeItems);
     final orgSwitcherBeforeItems = VooDrawerOrganizationSwitcher.forPosition(config: widget.config, position: VooOrganizationSwitcherPosition.beforeItems);
     final orgSwitcherInFooter = VooDrawerOrganizationSwitcher.forPosition(config: widget.config, position: VooOrganizationSwitcherPosition.footer);
+    final contextSwitcherAfterHeader = VooDrawerContextSwitcher.forPosition(config: widget.config, position: VooContextSwitcherPosition.afterHeader);
+    final contextSwitcherBeforeItems = VooDrawerContextSwitcher.forPosition(config: widget.config, position: VooContextSwitcherPosition.beforeItems);
 
     // Wrap content with VooCollapseState so children can auto-detect collapse mode
     // Drawer is always expanded (not collapsed)
@@ -162,11 +166,17 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
             // Search bar in header position
             if (searchBarInHeader != null) searchBarInHeader,
 
+            // Context switcher after header position
+            if (contextSwitcherAfterHeader != null) contextSwitcherAfterHeader,
+
             // Organization switcher before items
             if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
 
             // Search bar before items
             if (searchBarBeforeItems != null) searchBarBeforeItems,
+
+            // Context switcher before items position
+            if (contextSwitcherBeforeItems != null) contextSwitcherBeforeItems,
 
             // Navigation items
             Expanded(

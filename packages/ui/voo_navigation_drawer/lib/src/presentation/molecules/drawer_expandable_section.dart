@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_child_navigation_item.dart';
 
 /// Expandable section widget for drawer navigation with children
@@ -106,20 +107,52 @@ class VooDrawerExpandableSection extends StatelessWidget {
           SizeTransition(
             sizeFactor: expansionAnimation!,
             child: Column(
-              children: item.children!
-                  .map(
-                    (child) => VooDrawerChildNavigationItem(
-                      item: child,
-                      config: config,
-                      selectedId: selectedId,
-                      onItemTap: onItemTap,
-                      isHovered: hoveredItems[child.id] == true,
-                      onHoverChanged: (isHovered) =>
-                          onHoverChanged(child.id, isHovered),
-                      showVerticalLine: true,
+              children: [
+                // Section header widget (e.g., project selector)
+                if (item.sectionHeaderWidget != null)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Vertical line to match child items - uses custom color if provided
+                          Container(
+                            width: 2,
+                            margin: const EdgeInsets.only(left: 9, right: 8),
+                            decoration: BoxDecoration(
+                              color: item.sectionHeaderLineColor ??
+                                  sectionColor.withValues(
+                                      alpha: VooNavigationTokens
+                                          .opacityBorderSubtle),
+                              borderRadius: BorderRadius.circular(1),
+                            ),
+                          ),
+                          // Section header content
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 2),
+                              child: item.sectionHeaderWidget!,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  )
-                  .toList(),
+                  ),
+                // Child items
+                ...item.children!.map(
+                  (child) => VooDrawerChildNavigationItem(
+                    item: child,
+                    config: config,
+                    selectedId: selectedId,
+                    onItemTap: onItemTap,
+                    isHovered: hoveredItems[child.id] == true,
+                    onHoverChanged: (isHovered) =>
+                        onHoverChanged(child.id, isHovered),
+                    showVerticalLine: true,
+                  ),
+                ),
+              ],
             ),
           ),
       ],

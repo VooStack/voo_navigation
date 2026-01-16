@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/breadcrumb_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/breakpoint.dart';
+import 'package:voo_navigation_core/src/domain/entities/context_switcher_config.dart';
+import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
@@ -274,6 +276,12 @@ class VooNavigationConfig {
   /// Position of the multi-switcher
   final VooMultiSwitcherPosition multiSwitcherPosition;
 
+  /// Context switcher configuration for switching between contexts (projects, workspaces, etc.)
+  final VooContextSwitcherConfig? contextSwitcher;
+
+  /// Position of the context switcher
+  final VooContextSwitcherPosition contextSwitcherPosition;
+
   VooNavigationConfig({
     required this.items,
     this.selectedId,
@@ -358,6 +366,8 @@ class VooNavigationConfig {
     this.showBreadcrumbsInAppBar = true,
     this.multiSwitcher,
     this.multiSwitcherPosition = VooMultiSwitcherPosition.footer,
+    this.contextSwitcher,
+    this.contextSwitcherPosition = VooContextSwitcherPosition.beforeItems,
   }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints;
 
   /// Creates a copy of this configuration with the given fields replaced
@@ -447,6 +457,8 @@ class VooNavigationConfig {
     bool? showBreadcrumbsInAppBar,
     VooMultiSwitcherConfig? multiSwitcher,
     VooMultiSwitcherPosition? multiSwitcherPosition,
+    VooContextSwitcherConfig? contextSwitcher,
+    VooContextSwitcherPosition? contextSwitcherPosition,
   }) =>
       VooNavigationConfig(
         items: items ?? this.items,
@@ -557,6 +569,9 @@ class VooNavigationConfig {
         multiSwitcher: multiSwitcher ?? this.multiSwitcher,
         multiSwitcherPosition:
             multiSwitcherPosition ?? this.multiSwitcherPosition,
+        contextSwitcher: contextSwitcher ?? this.contextSwitcher,
+        contextSwitcherPosition:
+            contextSwitcherPosition ?? this.contextSwitcherPosition,
       );
 
   /// Gets the current navigation type based on screen width

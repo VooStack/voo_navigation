@@ -9,6 +9,7 @@ export 'package:voo_navigation_core/voo_navigation_core.dart';
 
 // Molecules
 export 'src/presentation/molecules/drawer_child_navigation_item.dart';
+export 'src/presentation/molecules/drawer_context_switcher.dart';
 export 'src/presentation/molecules/drawer_default_header.dart';
 export 'src/presentation/molecules/drawer_expandable_section.dart';
 export 'src/presentation/molecules/drawer_modern_badge.dart';
