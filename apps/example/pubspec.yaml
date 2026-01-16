@@ -20,7 +20,7 @@ dependencies:
   voo_navigation_core: ^0.2.1
   voo_navigation_rail: ^0.2.1
   voo_navigation_drawer: ^0.2.1
-  voo_navigation_bar: ^0.1.2
+  voo_navigation_bar: ^0.1.3
 
 dev_dependencies:
   flutter_test:

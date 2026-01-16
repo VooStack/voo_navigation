@@ -1,6 +1,6 @@
 # voo_navigation_core
 
-[![Version](https://img.shields.io/badge/version-0.2.0-blue)](pubspec.yaml)
+[![Version](https://img.shields.io/badge/version-0.2.1-blue)](pubspec.yaml)
 [![Flutter](https://img.shields.io/badge/Flutter-%E2%89%A53.0.0-blue)](https://flutter.dev)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -19,7 +19,7 @@ This package provides the foundational building blocks used by all voo_navigatio
 
 ```yaml
 dependencies:
-  voo_navigation_core: ^0.2.0
+  voo_navigation_core: ^0.2.1
 ```
 
 > **Note**: You typically don't need to install this package directly. It's automatically included when using the main `voo_navigation` package or any of its sub-packages (`voo_navigation_rail`, `voo_navigation_drawer`, `voo_navigation_bar`).

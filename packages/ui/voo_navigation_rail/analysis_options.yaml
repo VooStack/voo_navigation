@@ -5,3 +5,4 @@ linter:
     # Allow importing from lib/src of voo_navigation_core (same ecosystem)
     implementation_imports: false
     unnecessary_library_name: false
+    sort_child_properties_last: false

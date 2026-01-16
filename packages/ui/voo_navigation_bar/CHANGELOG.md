@@ -1,3 +1,10 @@
+## 0.1.3
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.1 for flexible navigation item validation
+
+---
+
 ## 0.1.2
 
 ### Fixed
