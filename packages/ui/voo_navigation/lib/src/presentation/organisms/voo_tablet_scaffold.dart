@@ -115,30 +115,12 @@ class VooTabletScaffold extends StatelessWidget {
       PreferredSizeWidget? effectiveAppBar;
       if (showAppBar) {
         if (appBar != null) {
-          // Wrap custom app bar in a container with margin to match VooAdaptiveAppBar styling
-          effectiveAppBar = PreferredSize(
-            preferredSize: appBar!.preferredSize,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: context.vooTokens.spacing.sm,
-                left: context.vooTokens.spacing.sm,
-                right: context.vooTokens.spacing.sm,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(context.vooRadius.md),
-                child: appBar,
-              ),
-            ),
-          );
+          effectiveAppBar = appBar;
         } else {
           effectiveAppBar = VooAdaptiveAppBar(
             config: config,
             selectedId: selectedId,
             showMenuButton: false,
-            margin: EdgeInsets.only(
-              right: context.vooRadius.sm,
-              top: context.vooTokens.spacing.sm,
-            ),
           );
         }
       }

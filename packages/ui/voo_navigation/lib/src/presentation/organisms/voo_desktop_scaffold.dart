@@ -242,21 +242,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       PreferredSizeWidget? effectiveAppBar;
       if (widget.showAppBar) {
         if (widget.appBar != null) {
-          // Wrap custom app bar in a container with margin to match VooAdaptiveAppBar styling
-          effectiveAppBar = PreferredSize(
-            preferredSize: widget.appBar!.preferredSize,
-            child: Padding(
-              padding: EdgeInsets.only(
-                top: context.vooTokens.spacing.sm,
-                left: context.vooTokens.spacing.sm,
-                right: context.vooTokens.spacing.sm,
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(context.vooRadius.md),
-                child: widget.appBar,
-              ),
-            ),
-          );
+          effectiveAppBar = widget.appBar;
         } else {
           effectiveAppBar = VooAdaptiveAppBar(
             config: widget.config,
@@ -265,9 +251,6 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
             title: widget.pageConfig?.appBarTitle,
             leading: widget.pageConfig?.appBarLeading,
             additionalActions: widget.pageConfig?.additionalAppBarActions,
-            margin: EdgeInsets.only(
-              top: context.vooTokens.spacing.sm,
-            ),
           );
         }
       }
@@ -279,9 +262,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Apply same top margin to navigation for header alignment
-            // Content has effectiveContentMargin.top + AppBar has spacing.sm margin
             Padding(
-              padding: EdgeInsets.only(top: effectiveContentMargin.top + context.vooSpacing.sm),
+              padding: EdgeInsets.only(top: effectiveContentMargin.top),
               child: navigation,
             ),
             Expanded(

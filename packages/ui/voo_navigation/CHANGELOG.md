@@ -1,3 +1,16 @@
+## 1.3.3
+
+### Fixed
+- **App Bar Visual Artifact**: Fixed "double app bar" visual issue where a light strip appeared above the app bar when scrolling
+  - Removed unnecessary top margin from `VooAdaptiveAppBar` in `VooDesktopScaffold` and `VooTabletScaffold`
+  - Removed redundant `Padding` and `ClipRRect` wrapper around custom app bars
+  - Custom app bars now render flush with the content container without gaps
+- **Navigation Header Alignment**: Fixed navigation header (branding) becoming misaligned with app bar title after margin removal
+  - Updated navigation top padding to match content container margin only (`effectiveContentMargin.top`)
+  - Removed extra `spacing.sm` padding that was causing misalignment
+
+---
+
 ## 1.3.2
 
 ### Fixed
