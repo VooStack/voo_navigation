@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:voo_navigation_drawer/voo_navigation_drawer.dart';
 import 'package:voo_navigation_rail/voo_navigation_rail.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_adaptive_app_bar.dart';
-import 'package:voo_tokens/voo_tokens.dart';
 
 /// Desktop scaffold with navigation drawer that can collapse to a rail
 class VooDesktopScaffold extends StatefulWidget {
@@ -131,18 +130,10 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
 
   Widget _getCollapseToggle() {
     if (widget.config.collapseToggleBuilder != null) {
-      return widget.config.collapseToggleBuilder!(
-        !_isCollapsed,
-        _toggleCollapse,
-      );
+      return widget.config.collapseToggleBuilder!(!_isCollapsed, _toggleCollapse);
     }
 
-    return VooCollapseToggle(
-      isExpanded: !_isCollapsed,
-      onToggle: _toggleCollapse,
-      iconColor: widget.config.unselectedItemColor,
-      hoverColor: widget.config.selectedItemColor,
-    );
+    return VooCollapseToggle(isExpanded: !_isCollapsed, onToggle: _toggleCollapse, iconColor: widget.config.unselectedItemColor, hoverColor: widget.config.selectedItemColor);
   }
 
   Widget _getNavigation() {
@@ -150,11 +141,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
 
     // If collapsible rail is not enabled, just show the drawer
     if (!widget.config.enableCollapsibleRail) {
-      return VooAdaptiveNavigationDrawer(
-        config: widget.config,
-        selectedId: widget.selectedId,
-        onNavigationItemSelected: widget.onNavigationItemSelected,
-      );
+      return VooAdaptiveNavigationDrawer(config: widget.config, selectedId: widget.selectedId, onNavigationItemSelected: widget.onNavigationItemSelected);
     }
 
     // Instant switch - each widget handles its own internal animations
@@ -184,8 +171,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
 
   Widget? _buildQuickActionsFab() {
     final quickActionsConfig = widget.config.quickActions;
-    if (quickActionsConfig == null ||
-        widget.config.quickActionsPosition != VooQuickActionsPosition.fab) {
+    if (quickActionsConfig == null || widget.config.quickActionsPosition != VooQuickActionsPosition.fab) {
       return null;
     }
 
@@ -207,34 +193,26 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     final navigation = _getNavigation();
 
     // Determine FAB visibility and widget based on page config overrides
-    final showFab = widget.pageConfig?.showFloatingActionButton ??
-        widget.config.showFloatingActionButton;
+    final showFab = widget.pageConfig?.showFloatingActionButton ?? widget.config.showFloatingActionButton;
     // Use quick actions FAB if configured, otherwise fall back to custom FAB
     final quickActionsFab = _buildQuickActionsFab();
-    final fabWidget = quickActionsFab ??
-        widget.pageConfig?.floatingActionButton ??
-        widget.config.floatingActionButton;
-    final fabLocation = widget.pageConfig?.floatingActionButtonLocation ??
-        widget.config.floatingActionButtonLocation;
-    final fabAnimator = widget.pageConfig?.floatingActionButtonAnimator ??
-        widget.config.floatingActionButtonAnimator;
+    final fabWidget = quickActionsFab ?? widget.pageConfig?.floatingActionButton ?? widget.config.floatingActionButton;
+    final fabLocation = widget.pageConfig?.floatingActionButtonLocation ?? widget.config.floatingActionButtonLocation;
+    final fabAnimator = widget.pageConfig?.floatingActionButtonAnimator ?? widget.config.floatingActionButtonAnimator;
 
     final navTheme = widget.config.effectiveTheme;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
     // Calculate content area margin - only top margin for visual separation
-    final effectiveContentMargin = widget.config.contentAreaMargin ??
-        const EdgeInsets.only(top: 8);
+    final effectiveContentMargin = widget.config.contentAreaMargin ?? const EdgeInsets.only(top: 8);
 
     // Calculate content area border radius - only top-left corner rounded
-    final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ??
-        const BorderRadius.only(topLeft: Radius.circular(12));
+    final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ?? const BorderRadius.only(topLeft: Radius.circular(12));
 
     // Content area background - use surfaceContainerLow for visible distinction from navigation
     final isDark = theme.brightness == Brightness.dark;
-    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ??
-        (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
+    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ?? (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
 
     // When app bar is alongside drawer/rail, wrap the content area with its own scaffold
     if (widget.config.appBarAlongsideRail) {
@@ -272,14 +250,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
                 decoration: BoxDecoration(
                   borderRadius: effectiveContentBorderRadius,
                   border: Border(
-                    left: BorderSide(
-                      color: theme.dividerColor.withValues(alpha: 0.15),
-                      width: 1,
-                    ),
-                    top: BorderSide(
-                      color: theme.dividerColor.withValues(alpha: 0.15),
-                      width: 1,
-                    ),
+                    left: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
+                    top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
                   ),
                 ),
                 child: VooThemedNavContainer(
@@ -320,14 +292,15 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       key: widget.scaffoldKey,
       backgroundColor: widget.backgroundColor,
       appBar: widget.showAppBar
-          ? (widget.appBar ?? VooAdaptiveAppBar(
-              config: widget.config,
-              selectedId: widget.selectedId,
-              showMenuButton: false,
-              title: widget.pageConfig?.appBarTitle,
-              leading: widget.pageConfig?.appBarLeading,
-              additionalActions: widget.pageConfig?.additionalAppBarActions,
-            ))
+          ? (widget.appBar ??
+                VooAdaptiveAppBar(
+                  config: widget.config,
+                  selectedId: widget.selectedId,
+                  showMenuButton: false,
+                  title: widget.pageConfig?.appBarTitle,
+                  leading: widget.pageConfig?.appBarLeading,
+                  additionalActions: widget.pageConfig?.additionalAppBarActions,
+                ))
           : null,
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,14 +316,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
               decoration: BoxDecoration(
                 borderRadius: effectiveContentBorderRadius,
                 border: Border(
-                  left: BorderSide(
-                    color: theme.dividerColor.withValues(alpha: 0.15),
-                    width: 1,
-                  ),
-                  top: BorderSide(
-                    color: theme.dividerColor.withValues(alpha: 0.15),
-                    width: 1,
-                  ),
+                  left: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
+                  top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
                 ),
               ),
               child: VooThemedNavContainer(

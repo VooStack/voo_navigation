@@ -1,3 +1,12 @@
+## 1.3.4
+
+### Changed
+- **Example App**: Removed default settings footer navigation item from example app
+  - Example now starts with an empty `footerItems` list
+  - Developers can add their own footer items as needed
+
+---
+
 ## 1.3.3
 
 ### Fixed

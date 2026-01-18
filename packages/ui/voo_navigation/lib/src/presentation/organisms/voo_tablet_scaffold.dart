@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_rail/voo_navigation_rail.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_adaptive_app_bar.dart';
-import 'package:voo_tokens/voo_tokens.dart';
 
 /// Tablet scaffold with navigation rail
 class VooTabletScaffold extends StatelessWidget {
@@ -92,22 +91,13 @@ class VooTabletScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final navigationRail = VooAdaptiveNavigationRail(
-      config: config,
-      selectedId: selectedId,
-      onNavigationItemSelected: onNavigationItemSelected,
-      extended: extended,
-    );
+    final navigationRail = VooAdaptiveNavigationRail(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected, extended: extended);
 
     // Determine FAB visibility and widget based on page config overrides
-    final showFab = pageConfig?.showFloatingActionButton ??
-        config.showFloatingActionButton;
-    final fabWidget = pageConfig?.floatingActionButton ??
-        config.floatingActionButton;
-    final fabLocation = pageConfig?.floatingActionButtonLocation ??
-        config.floatingActionButtonLocation;
-    final fabAnimator = pageConfig?.floatingActionButtonAnimator ??
-        config.floatingActionButtonAnimator;
+    final showFab = pageConfig?.showFloatingActionButton ?? config.showFloatingActionButton;
+    final fabWidget = pageConfig?.floatingActionButton ?? config.floatingActionButton;
+    final fabLocation = pageConfig?.floatingActionButtonLocation ?? config.floatingActionButtonLocation;
+    final fabAnimator = pageConfig?.floatingActionButtonAnimator ?? config.floatingActionButtonAnimator;
 
     // When app bar is alongside rail, wrap the content area with its own scaffold
     if (config.appBarAlongsideRail) {
@@ -117,19 +107,14 @@ class VooTabletScaffold extends StatelessWidget {
         if (appBar != null) {
           effectiveAppBar = appBar;
         } else {
-          effectiveAppBar = VooAdaptiveAppBar(
-            config: config,
-            selectedId: selectedId,
-            showMenuButton: false,
-          );
+          effectiveAppBar = VooAdaptiveAppBar(config: config, selectedId: selectedId, showMenuButton: false);
         }
       }
 
       final navTheme = config.effectiveTheme;
       final colorScheme = Theme.of(context).colorScheme;
       final isDark = Theme.of(context).brightness == Brightness.dark;
-      final effectiveContentBackgroundColor = config.contentAreaBackgroundColor ??
-          (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
+      final effectiveContentBackgroundColor = config.contentAreaBackgroundColor ?? (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
 
       return Scaffold(
         key: scaffoldKey,
@@ -143,14 +128,8 @@ class VooTabletScaffold extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
                   border: Border(
-                    left: BorderSide(
-                      color: theme.dividerColor.withValues(alpha: 0.15),
-                      width: 1,
-                    ),
-                    top: BorderSide(
-                      color: theme.dividerColor.withValues(alpha: 0.15),
-                      width: 1,
-                    ),
+                    left: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
+                    top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
                   ),
                 ),
                 child: VooThemedNavContainer(
@@ -191,15 +170,12 @@ class VooTabletScaffold extends StatelessWidget {
     final navTheme = config.effectiveTheme;
     final colorScheme2 = Theme.of(context).colorScheme;
     final isDark2 = Theme.of(context).brightness == Brightness.dark;
-    final effectiveContentBackgroundColor2 = config.contentAreaBackgroundColor ??
-        (isDark2 ? colorScheme2.surfaceContainerLow : const Color(0xFFF5F5F5));
+    final effectiveContentBackgroundColor2 = config.contentAreaBackgroundColor ?? (isDark2 ? colorScheme2.surfaceContainerLow : const Color(0xFFF5F5F5));
 
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: backgroundColor,
-      appBar: showAppBar
-          ? (appBar ?? VooAdaptiveAppBar(config: config, selectedId: selectedId, showMenuButton: false))
-          : null,
+      appBar: showAppBar ? (appBar ?? VooAdaptiveAppBar(config: config, selectedId: selectedId, showMenuButton: false)) : null,
       body: Row(
         children: [
           navigationRail,
@@ -209,14 +185,8 @@ class VooTabletScaffold extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(topLeft: Radius.circular(12)),
                 border: Border(
-                  left: BorderSide(
-                    color: theme.dividerColor.withValues(alpha: 0.15),
-                    width: 1,
-                  ),
-                  top: BorderSide(
-                    color: theme.dividerColor.withValues(alpha: 0.15),
-                    width: 1,
-                  ),
+                  left: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
+                  top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
                 ),
               ),
               child: VooThemedNavContainer(
