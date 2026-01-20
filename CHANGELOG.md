@@ -5,6 +5,22 @@ All notable changes to the voo_navigation workspace will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.5]
+
+### Added
+- **VooPageConfig**: Added `shouldShowBackButton` property for per-page back button visibility control
+  - `null` (default): Auto behavior based on `Navigator.canPop()`
+  - `true`: Always show the back button
+  - `false`: Never show the back button
+- **VooPageConfig**: Added `wrapInScaffold` property for simple scaffold wrapping
+  - When `true`, wraps page child in basic `Scaffold(body: child)`
+  - Simpler alternative to `useCustomScaffold` + `scaffoldBuilder`
+
+### Changed
+- **Example Apps**: Removed Settings from footer items in all example apps
+
+---
+
 ## [Unreleased]
 
 ### Added
@@ -39,11 +55,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Package | Current Version |
 |---------|-----------------|
-| voo_navigation | 1.2.0 |
-| voo_navigation_core | 0.1.0 |
-| voo_navigation_rail | 0.1.0 |
-| voo_navigation_drawer | 0.1.0 |
-| voo_navigation_bar | 0.1.0 |
+| voo_navigation | 1.3.5 |
+| voo_navigation_core | 0.2.2 |
+| voo_navigation_rail | 0.2.1 |
+| voo_navigation_drawer | 0.2.1 |
+| voo_navigation_bar | 0.1.3 |
 
 ---
 

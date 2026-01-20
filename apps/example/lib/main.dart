@@ -190,11 +190,7 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
   ];
 
   // Footer items
-  List<VooNavigationItem> get _footerItems => [
-    VooNavigationItem(id: 'settings', label: 'Settings', icon: Icons.settings_outlined, selectedIcon: Icons.settings, route: '/settings'),
-    VooNavigationItem(id: 'integrations', label: 'Integrations', icon: Icons.extension_outlined, selectedIcon: Icons.extension, route: '/integrations'),
-    VooNavigationItem(id: 'help', label: 'Help and support', icon: Icons.help_outline, selectedIcon: Icons.help, route: '/help'),
-  ];
+  List<VooNavigationItem> get _footerItems => [];
 
   void _onNavigationItemSelected(String itemId) {
     setState(() => _selectedId = itemId);

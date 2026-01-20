@@ -1,3 +1,18 @@
+## 1.3.5
+
+### Added
+- **VooPageConfig**: Added `shouldShowBackButton` property for per-page back button visibility control
+- **VooPageConfig**: Added `wrapInScaffold` property for simple scaffold wrapping without `scaffoldBuilder`
+- **VooAdaptiveAppBar**: Now reads `pageConfig` from `VooPageScope` and passes to `VooAppBarLeading`
+
+### Changed
+- **Example Apps**: Removed Settings from footer items in all example apps (drawer, rail, apps/example)
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.2
+
+---
+
 ## 1.3.4
 
 ### Changed

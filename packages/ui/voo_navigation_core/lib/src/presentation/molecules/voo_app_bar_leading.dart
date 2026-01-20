@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
+import 'package:voo_navigation_core/src/domain/entities/page_config.dart';
 
 /// App bar leading widget that handles menu, back button, or custom widget
 class VooAppBarLeading extends StatelessWidget {
@@ -13,11 +14,15 @@ class VooAppBarLeading extends StatelessWidget {
   /// Currently selected navigation item ID
   final String? selectedId;
 
+  /// Page configuration for per-page overrides
+  final VooPageConfig? pageConfig;
+
   const VooAppBarLeading({
     super.key,
     required this.showMenuButton,
     this.config,
     this.selectedId,
+    this.pageConfig,
   });
 
   @override
@@ -45,8 +50,16 @@ class VooAppBarLeading extends StatelessWidget {
       );
     }
 
-    // Show back button if can pop
-    if (Navigator.of(context).canPop()) {
+    // Check shouldShowBackButton from page config
+    final shouldShowBackButton = pageConfig?.shouldShowBackButton;
+
+    // If explicitly set to false, don't show back button
+    if (shouldShowBackButton == false) {
+      return const SizedBox.shrink();
+    }
+
+    // Show back button if explicitly true OR if can pop (auto behavior)
+    if (shouldShowBackButton == true || Navigator.of(context).canPop()) {
       return IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {

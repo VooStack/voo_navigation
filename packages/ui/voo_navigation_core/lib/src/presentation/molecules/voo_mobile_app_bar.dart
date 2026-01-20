@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/page_config.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_app_bar_leading.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_app_bar_title.dart';
 
@@ -44,6 +45,9 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Custom toolbar height
   final double? toolbarHeight;
 
+  /// Page configuration for per-page overrides
+  final VooPageConfig? pageConfig;
+
   const VooMobileAppBar({
     super.key,
     this.config,
@@ -58,6 +62,7 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.foregroundColor,
     this.showMenuButton = false,
     this.toolbarHeight,
+    this.pageConfig,
   });
 
   @override
@@ -82,7 +87,11 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
         leading ??
         config?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
         (showMenuButton
-            ? VooAppBarLeading(showMenuButton: true, config: config)
+            ? VooAppBarLeading(
+                showMenuButton: true,
+                config: config,
+                pageConfig: pageConfig,
+              )
             : null);
 
     final effectiveCenterTitle = centerTitle ?? config?.centerAppBarTitle ?? false;

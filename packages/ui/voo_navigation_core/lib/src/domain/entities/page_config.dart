@@ -82,6 +82,20 @@ class VooPageConfig {
   /// Custom title widget for the app bar.
   final Widget? appBarTitle;
 
+  /// Whether to show the back button in the app bar.
+  ///
+  /// When null (default), uses automatic behavior based on Navigator.canPop().
+  /// When true, always shows the back button.
+  /// When false, never shows the back button.
+  final bool? shouldShowBackButton;
+
+  /// Whether to wrap the page content in a basic Scaffold.
+  ///
+  /// This provides a simpler alternative to [useCustomScaffold] + [scaffoldBuilder]
+  /// when you just need a basic Scaffold wrapper without custom configuration.
+  /// When true, the child is wrapped in `Scaffold(body: child)`.
+  final bool wrapInScaffold;
+
   /// Whether this page uses a completely custom scaffold.
   ///
   /// When true, the [VooPage.child] is rendered directly without
@@ -127,6 +141,8 @@ class VooPageConfig {
     this.additionalAppBarActions,
     this.appBarLeading,
     this.appBarTitle,
+    this.shouldShowBackButton,
+    this.wrapInScaffold = false,
     this.useCustomScaffold = false,
     this.scaffoldBuilder,
     this.bodyPadding,
@@ -154,6 +170,8 @@ class VooPageConfig {
         additionalAppBarActions = null,
         appBarLeading = null,
         appBarTitle = null,
+        shouldShowBackButton = false,
+        wrapInScaffold = false,
         useCustomScaffold = false,
         scaffoldBuilder = null,
         bodyPadding = null,
@@ -180,6 +198,8 @@ class VooPageConfig {
         additionalAppBarActions = null,
         appBarLeading = null,
         appBarTitle = null,
+        shouldShowBackButton = false,
+        wrapInScaffold = false,
         useCustomScaffold = false,
         scaffoldBuilder = null,
         bodyPadding = null,
@@ -206,6 +226,8 @@ class VooPageConfig {
     List<Widget>? additionalAppBarActions,
     Widget? appBarLeading,
     Widget? appBarTitle,
+    bool? shouldShowBackButton,
+    bool? wrapInScaffold,
     bool? useCustomScaffold,
     Widget Function(BuildContext context, Widget child)? scaffoldBuilder,
     EdgeInsetsGeometry? bodyPadding,
@@ -238,6 +260,8 @@ class VooPageConfig {
           additionalAppBarActions ?? this.additionalAppBarActions,
       appBarLeading: appBarLeading ?? this.appBarLeading,
       appBarTitle: appBarTitle ?? this.appBarTitle,
+      shouldShowBackButton: shouldShowBackButton ?? this.shouldShowBackButton,
+      wrapInScaffold: wrapInScaffold ?? this.wrapInScaffold,
       useCustomScaffold: useCustomScaffold ?? this.useCustomScaffold,
       scaffoldBuilder: scaffoldBuilder ?? this.scaffoldBuilder,
       bodyPadding: bodyPadding ?? this.bodyPadding,
@@ -266,6 +290,8 @@ class VooPageConfig {
       additionalAppBarActions != null ||
       appBarLeading != null ||
       appBarTitle != null ||
+      shouldShowBackButton != null ||
+      wrapInScaffold ||
       useCustomScaffold ||
       scaffoldBuilder != null ||
       bodyPadding != null ||

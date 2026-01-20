@@ -1,3 +1,18 @@
+## 0.2.2
+
+### Added
+- **VooPageConfig**: Added `shouldShowBackButton` property for per-page back button control
+  - `null` (default): Auto behavior based on `Navigator.canPop()`
+  - `true`: Always show the back button
+  - `false`: Never show the back button
+- **VooPageConfig**: Added `wrapInScaffold` property for simple scaffold wrapping
+  - When `true`, wraps the page child in a basic `Scaffold(body: child)`
+  - Simpler alternative to `useCustomScaffold` + `scaffoldBuilder`
+- **VooAppBarLeading**: Added `pageConfig` parameter to pass `VooPageConfig` for back button control
+- **VooMobileAppBar**: Added `pageConfig` parameter to pass to `VooAppBarLeading`
+
+---
+
 ## 0.2.1
 
 ### Changed

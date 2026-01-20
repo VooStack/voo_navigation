@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
+import 'package:voo_navigation/src/presentation/utils/voo_page_scope.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Adaptive app bar that adjusts based on screen size and navigation type
@@ -137,10 +138,19 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       effectiveTitle = const Text('');
     }
 
+    // Get page config from scope for back button control
+    final pageConfig = VooPageScope.configOf(context);
+
     final effectiveLeading =
         leading ??
         effectiveConfig?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
-        (showMenuButton ? VooAppBarLeading(showMenuButton: showMenuButton, config: effectiveConfig) : null);
+        (showMenuButton
+            ? VooAppBarLeading(
+                showMenuButton: showMenuButton,
+                config: effectiveConfig,
+                pageConfig: pageConfig,
+              )
+            : null);
 
     // Build actions with integrated components
     List<Widget>? effectiveActions;

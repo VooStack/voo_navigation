@@ -183,6 +183,11 @@ class _VooPageState extends State<VooPage> {
       return widget.config.scaffoldBuilder!(context, widget.child);
     }
 
+    // If wrapInScaffold is true, wrap in a basic Scaffold
+    if (widget.config.wrapInScaffold) {
+      return Scaffold(body: widget.child);
+    }
+
     return widget.child;
   }
 }

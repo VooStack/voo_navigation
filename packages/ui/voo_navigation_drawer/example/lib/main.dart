@@ -128,15 +128,7 @@ class _NavigationDrawerExampleState extends State<NavigationDrawerExample> {
     ),
   ];
 
-  final List<VooNavigationItem> _footerItems = [
-    const VooNavigationItem(
-      id: 'settings',
-      label: 'Settings',
-      icon: Icons.settings_outlined,
-      selectedIcon: Icons.settings,
-      route: '/settings',
-    ),
-  ];
+  final List<VooNavigationItem> _footerItems = [];
 
   void _onNavigationItemSelected(String itemId) {
     setState(() {
