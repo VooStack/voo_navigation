@@ -136,6 +136,22 @@ class VooMultiSwitcherConfig {
   final String? tooltip;
 
   // ============================================================================
+  // MOBILE NAV ITEM OPTIONS
+  // ============================================================================
+
+  /// Whether to show as a navigation item in rail/bottom nav.
+  final bool showAsNavItem;
+
+  /// Whether to include in mobile bottom navigation (max 5 items).
+  final bool mobilePriority;
+
+  /// Sort order for nav item positioning in mobile bottom navigation.
+  final int navItemSortOrder;
+
+  /// Label for the nav item. Defaults to user name or 'Account'.
+  final String? navItemLabel;
+
+  // ============================================================================
   // CUSTOM BUILDERS
   // ============================================================================
 
@@ -193,6 +209,11 @@ class VooMultiSwitcherConfig {
     this.style,
     this.compact,
     this.tooltip,
+    // Mobile nav item options
+    this.showAsNavItem = false,
+    this.mobilePriority = false,
+    this.navItemSortOrder = 0,
+    this.navItemLabel,
     // Custom builders
     this.cardBuilder,
     this.modalBuilder,
@@ -235,6 +256,11 @@ class VooMultiSwitcherConfig {
     VooMultiSwitcherStyle? style,
     bool? compact,
     String? tooltip,
+    // Mobile nav item options
+    bool? showAsNavItem,
+    bool? mobilePriority,
+    int? navItemSortOrder,
+    String? navItemLabel,
     // Custom builders
     Widget Function(BuildContext context, VooMultiSwitcherCardData data)?
         cardBuilder,
@@ -278,6 +304,10 @@ class VooMultiSwitcherConfig {
         style: style ?? this.style,
         compact: compact ?? this.compact,
         tooltip: tooltip ?? this.tooltip,
+        showAsNavItem: showAsNavItem ?? this.showAsNavItem,
+        mobilePriority: mobilePriority ?? this.mobilePriority,
+        navItemSortOrder: navItemSortOrder ?? this.navItemSortOrder,
+        navItemLabel: navItemLabel ?? this.navItemLabel,
         cardBuilder: cardBuilder ?? this.cardBuilder,
         modalBuilder: modalBuilder ?? this.modalBuilder,
         organizationSectionBuilder:

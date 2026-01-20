@@ -18,6 +18,9 @@ class VooRailNavigationItem extends StatefulWidget {
   /// Callback when item is tapped
   final VoidCallback? onTap;
 
+  /// Callback when item is long-pressed
+  final VoidCallback? onLongPress;
+
   /// Optional animation controller
   final AnimationController? animationController;
 
@@ -33,6 +36,7 @@ class VooRailNavigationItem extends StatefulWidget {
     required this.isSelected,
     required this.extended,
     this.onTap,
+    this.onLongPress,
     this.animationController,
     this.selectedItemColor,
     this.unselectedItemColor,
@@ -144,7 +148,8 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
       child: Padding(
         key: widget.item.key,
         padding: EdgeInsets.symmetric(
-          horizontal: spacing.sm,
+          // Less horizontal padding in compact mode for better centering
+          horizontal: widget.extended ? spacing.sm : spacing.xs,
           vertical: spacing.xxs,
         ),
         child: MouseRegion(
@@ -155,6 +160,7 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
               : SystemMouseCursors.basic,
           child: InkWell(
             onTap: widget.item.isEnabled ? widget.onTap : null,
+            onLongPress: widget.item.isEnabled ? widget.onLongPress : null,
             borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
             child: itemContent,
           ),

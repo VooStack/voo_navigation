@@ -619,6 +619,23 @@ class VooNavigationConfig {
   List<VooNavigationItem> get mobilePriorityItems {
     final priorityItems = <VooNavigationItem>[];
 
+    // Add context switcher as nav item if configured with mobilePriority
+    if (contextSwitcher != null &&
+        contextSwitcher!.showAsNavItem &&
+        contextSwitcher!.mobilePriority &&
+        contextSwitcherPosition == VooContextSwitcherPosition.asNavItem) {
+      priorityItems.add(_createContextSwitcherNavItem());
+    }
+
+    // Add multi-switcher as nav item if configured with mobilePriority
+    // Note: Unlike context switcher, multi-switcher shows in mobile nav regardless
+    // of its desktop position (header/footer/asNavItem) when mobilePriority is true
+    if (multiSwitcher != null &&
+        multiSwitcher!.showAsNavItem &&
+        multiSwitcher!.mobilePriority) {
+      priorityItems.add(_createMultiSwitcherNavItem());
+    }
+
     for (final item in items) {
       if (item.isVisible && item.mobilePriority) {
         priorityItems.add(item);
@@ -645,6 +662,40 @@ class VooNavigationConfig {
 
     priorityItems.sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
     return priorityItems.take(5).toList();
+  }
+
+  /// Creates a pseudo-navigation item for the context switcher.
+  /// This item is used in bottom navigation to render the context switcher.
+  VooNavigationItem _createContextSwitcherNavItem() {
+    final selected = contextSwitcher?.selectedItem;
+    return VooNavigationItem(
+      id: '_context_switcher_nav',
+      label: contextSwitcher?.navItemLabel ??
+          selected?.name ??
+          contextSwitcher?.placeholder ??
+          'Context',
+      icon: selected?.icon ?? Icons.layers_outlined,
+      sortOrder: contextSwitcher?.navItemSortOrder ?? 0,
+      mobilePriority: true,
+      isVisible: true,
+      isEnabled: true,
+    );
+  }
+
+  /// Creates a pseudo-navigation item for the multi-switcher.
+  /// This item is used in bottom navigation to render the multi-switcher.
+  VooNavigationItem _createMultiSwitcherNavItem() {
+    return VooNavigationItem(
+      id: '_multi_switcher_nav',
+      label: multiSwitcher?.navItemLabel ??
+          multiSwitcher?.userName ??
+          'Account',
+      icon: Icons.account_circle_outlined,
+      sortOrder: multiSwitcher?.navItemSortOrder ?? 0,
+      mobilePriority: true,
+      isVisible: true,
+      isEnabled: true,
+    );
   }
 
   /// Gets the selected navigation item

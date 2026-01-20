@@ -61,6 +61,46 @@ class VooRailThemedContainer extends StatelessWidget {
     );
     final orgSwitcherInFooter = VooRailOrganizationSwitcher.forPosition(context: context, config: config, extended: extended, position: VooOrganizationSwitcherPosition.footer);
 
+    // Context switcher components
+    final contextSwitcherAfterHeader = VooRailContextSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooContextSwitcherPosition.afterHeader,
+    );
+    final contextSwitcherBeforeItems = VooRailContextSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooContextSwitcherPosition.beforeItems,
+    );
+    final contextSwitcherAsNavItem = VooRailContextSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooContextSwitcherPosition.asNavItem,
+    );
+
+    // Multi-switcher components
+    final multiSwitcherHeader = VooRailMultiSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooMultiSwitcherPosition.header,
+    );
+    final multiSwitcherFooter = VooRailMultiSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooMultiSwitcherPosition.footer,
+    );
+    final multiSwitcherAsNavItem = VooRailMultiSwitcher.forPosition(
+      context: context,
+      config: config,
+      extended: extended,
+      position: VooMultiSwitcherPosition.asNavItem,
+    );
+
     // Wrap content with VooCollapseState so children can auto-detect collapse mode
     // Rail is collapsed when not extended
     Widget content = VooCollapseState(
@@ -80,11 +120,26 @@ class VooRailThemedContainer extends StatelessWidget {
             // Organization switcher in header position
             if (orgSwitcherInHeader != null) orgSwitcherInHeader,
 
+            // Multi-switcher in header position
+            if (multiSwitcherHeader != null) multiSwitcherHeader,
+
+            // Context switcher after header position
+            if (contextSwitcherAfterHeader != null) contextSwitcherAfterHeader,
+
             // Search bar in header position
             if (searchBarInHeader != null) searchBarInHeader,
 
             // Organization switcher before items
             if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
+
+            // Context switcher before items position
+            if (contextSwitcherBeforeItems != null) contextSwitcherBeforeItems,
+
+            // Context switcher as nav item (before main items)
+            if (contextSwitcherAsNavItem != null) contextSwitcherAsNavItem,
+
+            // Multi-switcher as nav item (before main items)
+            if (multiSwitcherAsNavItem != null) multiSwitcherAsNavItem,
 
             // Search bar before items
             if (searchBarBeforeItems != null) searchBarBeforeItems,
@@ -93,7 +148,11 @@ class VooRailThemedContainer extends StatelessWidget {
             Expanded(
               child: ListView(
                 controller: config.drawerScrollController,
-                padding: EdgeInsets.symmetric(vertical: context.vooSpacing.xs, horizontal: context.vooSpacing.sm),
+                padding: EdgeInsets.symmetric(
+                  vertical: context.vooSpacing.xs,
+                  // Less horizontal padding in compact mode for better centering
+                  horizontal: extended ? context.vooSpacing.sm : context.vooSpacing.xs,
+                ),
                 physics: const ClampingScrollPhysics(),
                 children: [
                   VooRailNavigationItems(
@@ -122,6 +181,9 @@ class VooRailThemedContainer extends StatelessWidget {
 
             // Organization switcher in footer position
             if (orgSwitcherInFooter != null) orgSwitcherInFooter,
+
+            // Multi-switcher in footer position
+            if (multiSwitcherFooter != null) multiSwitcherFooter,
 
             // User profile footer when enabled
             if (config.showUserProfile) VooRailUserProfile(config: config, extended: extended),

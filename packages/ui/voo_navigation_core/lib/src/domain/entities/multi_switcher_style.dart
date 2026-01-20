@@ -221,4 +221,7 @@ enum VooMultiSwitcherPosition {
 
   /// In the footer area (default, recommended)
   footer,
+
+  /// Render as a navigation item in rail/bottom nav.
+  asNavItem,
 }

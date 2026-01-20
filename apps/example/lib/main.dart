@@ -17,6 +17,40 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
   String _selectedId = 'employee';
   VooContextItem? _selectedProject;
 
+  @override
+  void initState() {
+    super.initState();
+    _selectedOrganization = VooOrganization(
+      id: 'org-1',
+      name: 'Wishbone Inc',
+      subtitle: 'Enterprise',
+      avatarColor: const Color(0xFF10B981),
+    );
+  }
+
+  // Sample organizations for multi-switcher
+  late VooOrganization _selectedOrganization;
+  List<VooOrganization> get _organizations => [
+    VooOrganization(
+      id: 'org-1',
+      name: 'Wishbone Inc',
+      subtitle: 'Enterprise',
+      avatarColor: const Color(0xFF10B981),
+    ),
+    VooOrganization(
+      id: 'org-2',
+      name: 'Acme Corp',
+      subtitle: 'Startup',
+      avatarColor: const Color(0xFF6366F1),
+    ),
+    VooOrganization(
+      id: 'org-3',
+      name: 'Tech Labs',
+      subtitle: 'Research',
+      avatarColor: const Color(0xFFF59E0B),
+    ),
+  ];
+
   // Sample projects for context switcher
   List<VooContextItem> get _projects => [
     VooContextItem(
@@ -279,14 +313,35 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       // Collapsible rail
       enableCollapsibleRail: true,
 
-      // User profile - uses simplified config API
-      showUserProfile: true,
-      userProfileConfig: VooUserProfileConfig(
-        userName: 'Wishbone',
-        userEmail: '61 members',
-        initials: 'WB',
-        onTap: () {},
+      // User profile - disabled since we use multiSwitcher
+      showUserProfile: false,
+
+      // Multi-switcher (org/user) - shows in footer on rail, bottom nav on mobile
+      multiSwitcher: VooMultiSwitcherConfig(
+        organizations: _organizations,
+        selectedOrganization: _selectedOrganization,
+        onOrganizationChanged: (org) {
+          setState(() => _selectedOrganization = org);
+        },
+        userName: 'John Doe',
+        userEmail: 'john@wishbone.inc',
+        initials: 'JD',
+        status: VooUserStatus.online,
+        showSearch: true,
+        searchHint: 'Search organizations...',
+        onSettingsTap: () {
+          // Handle settings tap
+        },
+        onLogout: () {
+          // Handle logout
+        },
+        // Mobile nav item options
+        showAsNavItem: true,
+        mobilePriority: true,
+        navItemSortOrder: 1, // After context switcher
+        navItemLabel: 'Account',
       ),
+      multiSwitcherPosition: VooMultiSwitcherPosition.footer,
 
       // Search bar - uses built-in API (shortcut: Ctrl+K or ⌘K)
       searchBar: VooSearchBarConfig(
@@ -296,8 +351,29 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       ),
       searchBarPosition: VooSearchBarPosition.header,
 
-      // Context switcher disabled - we'll embed it in the Projects section instead
-      // contextSwitcher: VooContextSwitcherConfig(...),
+      // Context switcher - shows as a nav item on mobile bottom nav
+      // Tap or long-press opens a bottom sheet modal to switch projects
+      contextSwitcher: VooContextSwitcherConfig(
+        items: _projects,
+        selectedItem: _selectedProject,
+        onContextChanged: (project) {
+          setState(() => _selectedProject = project);
+        },
+        showSearch: true,
+        searchHint: 'Search projects...',
+        placeholder: 'Select project',
+        sectionTitle: 'Projects',
+        onCreateContext: () {
+          // Handle create new project
+        },
+        createContextLabel: 'New Project',
+        // NEW: Mobile nav item options
+        showAsNavItem: true,
+        mobilePriority: true,
+        navItemSortOrder: 0, // First item in bottom nav
+        navItemLabel: 'Projects',
+      ),
+      contextSwitcherPosition: VooContextSwitcherPosition.asNavItem,
 
       // Mobile
       floatingBottomNav: true,

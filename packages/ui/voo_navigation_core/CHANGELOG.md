@@ -1,3 +1,24 @@
+## 0.2.3
+
+### Added
+- **VooMultiSwitcherNavItem**: Mobile navigation support for the multi-switcher (org/user switcher)
+  - Displays stacked avatars (organization + user) in compact form
+  - Supports `isCompact`, `useFloatingStyle`, `enableHapticFeedback` properties
+  - Opens `VooMultiSwitcherBottomSheet` on tap with combined organization and user sections
+- **VooMultiSwitcherBottomSheet**: Bottom sheet modal for mobile multi-switcher interaction
+  - Shows organization section with search (if enabled)
+  - Shows user section with account info, multi-account list, settings, and logout
+  - Reuses existing `VooMultiSwitcherOrganizationSection` and `VooMultiSwitcherUserSection`
+- **VooMultiSwitcherConfig**: Added mobile nav item properties
+  - `showAsNavItem` - Whether to show as navigation item
+  - `mobilePriority` - Include in mobile priority items (max 5)
+  - `navItemSortOrder` - Sort order among priority items
+  - `navItemLabel` - Optional label for the nav item
+- **VooMultiSwitcherPosition**: Added `asNavItem` position for rendering as navigation item
+- **VooNavigationConfig**: Updated `mobilePriorityItems` getter to include multi-switcher when configured with `mobilePriority: true`
+
+---
+
 ## 0.2.2
 
 ### Added

@@ -1,3 +1,20 @@
+## 0.2.2
+
+### Added
+- **VooRailMultiSwitcher**: Rail support for multi-switcher (org/user switcher)
+  - Follows existing `VooRailContextSwitcher` pattern
+  - `forPosition()` factory method for position-based rendering
+  - Supports `header`, `footer`, and `asNavItem` positions
+- **Rail Container Integration**: `VooRailThemedContainer` now renders multi-switcher in all positions
+  - Header position (after organization switcher)
+  - Footer position (before user profile)
+  - As nav item (before main navigation items)
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.3
+
+---
+
 ## 0.2.1
 
 ### Improved

@@ -38,6 +38,9 @@ class VooCustomNavigationItem extends StatelessWidget {
   /// Callback when item is selected
   final VoidCallback? onTap;
 
+  /// Callback when item is long-pressed
+  final VoidCallback? onLongPress;
+
   /// Total number of items in the navigation bar
   final int itemCount;
 
@@ -53,6 +56,7 @@ class VooCustomNavigationItem extends StatelessWidget {
     required this.showSelectedLabels,
     required this.enableFeedback,
     required this.onTap,
+    this.onLongPress,
     this.itemCount = 4,
   });
 
@@ -76,6 +80,14 @@ class VooCustomNavigationItem extends StatelessWidget {
                 HapticFeedback.lightImpact();
               }
               onTap?.call();
+            }
+          : null,
+      onLongPress: item.isEnabled && onLongPress != null
+          ? () {
+              if (enableFeedback) {
+                HapticFeedback.mediumImpact();
+              }
+              onLongPress?.call();
             }
           : null,
       borderRadius: BorderRadius.circular(context.vooRadius.lg),

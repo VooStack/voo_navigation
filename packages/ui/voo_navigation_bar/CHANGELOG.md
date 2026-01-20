@@ -1,3 +1,16 @@
+## 0.1.4
+
+### Added
+- **VooMultiSwitcherNavItem Integration**: Bottom navigation bars now support multi-switcher nav items
+  - `VooFloatingBottomNavigation` renders `VooMultiSwitcherNavItem` for `_multi_switcher_nav` items
+  - `VooCustomNavigationBar` renders `VooMultiSwitcherNavItem` for `_multi_switcher_nav` items
+  - Stacked avatars display (org + user) with floating style
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.3
+
+---
+
 ## 0.1.3
 
 ### Dependencies

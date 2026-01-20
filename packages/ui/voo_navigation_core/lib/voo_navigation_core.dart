@@ -58,10 +58,14 @@ export 'src/presentation/atoms/voo_text_badge.dart';
 export 'src/presentation/atoms/voo_themed_indicator.dart';
 
 // Presentation - Molecules
+export 'src/presentation/molecules/context_switcher_bottom_sheet.dart';
 export 'src/presentation/molecules/context_switcher_card.dart';
 export 'src/presentation/molecules/context_switcher_modal.dart';
+export 'src/presentation/molecules/context_switcher_nav_item.dart';
+export 'src/presentation/molecules/multi_switcher_bottom_sheet.dart';
 export 'src/presentation/molecules/multi_switcher_card.dart';
 export 'src/presentation/molecules/multi_switcher_modal.dart';
+export 'src/presentation/molecules/multi_switcher_nav_item.dart';
 export 'src/presentation/molecules/multi_switcher_sections.dart';
 export 'src/presentation/molecules/multi_switcher_tiles.dart';
 export 'src/presentation/molecules/voo_app_bar_actions.dart';

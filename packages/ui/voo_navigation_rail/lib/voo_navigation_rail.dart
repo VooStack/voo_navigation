@@ -11,6 +11,8 @@ export 'package:voo_navigation_core/voo_navigation_core.dart';
 export 'src/presentation/atoms/voo_rail_modern_badge.dart';
 
 // Molecules
+export 'src/presentation/molecules/rail_context_switcher.dart';
+export 'src/presentation/molecules/rail_multi_switcher.dart';
 export 'src/presentation/molecules/voo_rail_default_header.dart';
 export 'src/presentation/molecules/voo_rail_navigation_item.dart';
 export 'src/presentation/molecules/voo_rail_section_header.dart';

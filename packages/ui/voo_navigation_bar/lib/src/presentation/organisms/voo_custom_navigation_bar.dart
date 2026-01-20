@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/context_switcher_nav_item.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/multi_switcher_nav_item.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_custom_navigation_item.dart';
 
 /// Custom navigation bar with modern design
@@ -83,6 +85,34 @@ class VooCustomNavigationBar extends StatelessWidget {
           final index = entry.key;
           final item = entry.value;
           final isSelected = index == selectedIndex;
+
+          // Check if this is the context switcher nav item
+          if (item.id == VooContextSwitcherNavItem.navItemId &&
+              config.contextSwitcher != null) {
+            return Expanded(
+              child: VooContextSwitcherNavItem(
+                config: config.contextSwitcher!,
+                isSelected: false, // Context switcher is never "selected"
+                isCompact: true,
+                useFloatingStyle: true, // Match clean icon style of nav items
+                enableHapticFeedback: enableFeedback,
+              ),
+            );
+          }
+
+          // Check if this is the multi-switcher nav item
+          if (item.id == VooMultiSwitcherNavItem.navItemId &&
+              config.multiSwitcher != null) {
+            return Expanded(
+              child: VooMultiSwitcherNavItem(
+                config: config.multiSwitcher!,
+                isSelected: false, // Multi-switcher is never "selected"
+                isCompact: true,
+                useFloatingStyle: true, // Match clean icon style of nav items
+                enableHapticFeedback: enableFeedback,
+              ),
+            );
+          }
 
           return Expanded(
             child: VooCustomNavigationItem(

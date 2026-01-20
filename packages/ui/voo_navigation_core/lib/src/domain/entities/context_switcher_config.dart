@@ -101,6 +101,26 @@ class VooContextSwitcherConfig {
   final String? tooltip;
 
   // ============================================================================
+  // MOBILE NAV ITEM OPTIONS
+  // ============================================================================
+
+  /// Whether to show as a navigation item in rail/bottom nav.
+  /// When true, the context switcher appears as a nav item with the current
+  /// context's avatar instead of as a card widget.
+  final bool showAsNavItem;
+
+  /// Whether to include in mobile bottom navigation (max 5 items).
+  /// Only relevant when [showAsNavItem] is true.
+  final bool mobilePriority;
+
+  /// Sort order for nav item positioning in mobile bottom navigation.
+  /// Lower values appear first. Only relevant when [showAsNavItem] is true.
+  final int navItemSortOrder;
+
+  /// Label for the nav item. Defaults to selected context name or [placeholder].
+  final String? navItemLabel;
+
+  // ============================================================================
   // CUSTOM BUILDERS
   // ============================================================================
 
@@ -133,6 +153,10 @@ class VooContextSwitcherConfig {
     this.style,
     this.compact,
     this.tooltip,
+    this.showAsNavItem = false,
+    this.mobilePriority = false,
+    this.navItemSortOrder = 0,
+    this.navItemLabel,
     this.cardBuilder,
     this.modalBuilder,
     this.itemBuilder,
@@ -153,6 +177,10 @@ class VooContextSwitcherConfig {
     VooContextSwitcherStyle? style,
     bool? compact,
     String? tooltip,
+    bool? showAsNavItem,
+    bool? mobilePriority,
+    int? navItemSortOrder,
+    String? navItemLabel,
     Widget Function(BuildContext context, VooContextSwitcherCardData data)?
         cardBuilder,
     Widget Function(BuildContext context, VooContextSwitcherModalData data)?
@@ -174,6 +202,10 @@ class VooContextSwitcherConfig {
         style: style ?? this.style,
         compact: compact ?? this.compact,
         tooltip: tooltip ?? this.tooltip,
+        showAsNavItem: showAsNavItem ?? this.showAsNavItem,
+        mobilePriority: mobilePriority ?? this.mobilePriority,
+        navItemSortOrder: navItemSortOrder ?? this.navItemSortOrder,
+        navItemLabel: navItemLabel ?? this.navItemLabel,
         cardBuilder: cardBuilder ?? this.cardBuilder,
         modalBuilder: modalBuilder ?? this.modalBuilder,
         itemBuilder: itemBuilder ?? this.itemBuilder,

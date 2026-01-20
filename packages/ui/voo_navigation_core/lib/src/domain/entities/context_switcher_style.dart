@@ -182,4 +182,9 @@ enum VooContextSwitcherPosition {
 
   /// After the header section
   afterHeader,
+
+  /// Render as a navigation item in rail/bottom nav.
+  /// When using this position, the context switcher appears as a nav item
+  /// with the current context's avatar, and opens a bottom sheet modal on tap.
+  asNavItem,
 }

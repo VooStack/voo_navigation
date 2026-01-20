@@ -13,11 +13,15 @@ class VooFloatingNavItem extends StatelessWidget {
   /// Callback when the item is tapped
   final VoidCallback onTap;
 
+  /// Callback when the item is long-pressed
+  final VoidCallback? onLongPress;
+
   const VooFloatingNavItem({
     super.key,
     required this.item,
     required this.isSelected,
     required this.onTap,
+    this.onLongPress,
   });
 
   @override
@@ -27,6 +31,7 @@ class VooFloatingNavItem extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPress,
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
         width: 52,
