@@ -1,3 +1,10 @@
+## 0.2.2
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.3
+
+---
+
 ## 0.2.1
 
 ### Improved

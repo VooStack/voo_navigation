@@ -1,3 +1,13 @@
+## 1.3.6
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.3
+- Updated `voo_navigation_rail` to ^0.2.2
+- Updated `voo_navigation_drawer` to ^0.2.2
+- Updated `voo_navigation_bar` to ^0.1.4
+
+---
+
 ## 1.3.5
 
 ### Added
