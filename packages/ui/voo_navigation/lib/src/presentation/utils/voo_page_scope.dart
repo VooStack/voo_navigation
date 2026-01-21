@@ -72,7 +72,9 @@ class VooPageController extends ChangeNotifier {
 
   void _notifyChange() {
     if (_onConfigChanged != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Use scheduleMicrotask for faster notification than postFrameCallback.
+      // This ensures config changes are reflected in the same frame when possible.
+      Future.microtask(() {
         _onConfigChanged?.call();
       });
     }

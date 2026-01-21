@@ -168,12 +168,9 @@ class _VooPageState extends State<VooPage> {
   void _registerConfig() {
     if (_routePath == null) return;
 
-    // Use microtask to ensure we're outside of build/layout phase
-    final route = _routePath!;
-    Future.microtask(() {
-      if (!mounted) return;
-      _controller?.setConfigForRoute(route, widget.config);
-    });
+    // Register config immediately so it's available for the current build cycle.
+    // The controller will handle async notification to trigger scaffold rebuild.
+    _controller?.setConfigForRoute(_routePath!, widget.config);
   }
 
   @override
