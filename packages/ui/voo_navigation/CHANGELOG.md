@@ -1,3 +1,13 @@
+## 1.3.8
+
+### Fixed
+- **shouldShowBackButton Delayed Update**: Fixed `shouldShowBackButton` not updating until the second rebuild on some screens
+  - Made page config registration synchronous in `VooPage` for immediate availability
+  - Changed notification mechanism from `addPostFrameCallback` to `scheduleMicrotask` for faster scaffold rebuilds
+  - Reduces config propagation delay from 2 frames to 1 microtask
+
+---
+
 ## 1.3.7
 
 ### Fixed

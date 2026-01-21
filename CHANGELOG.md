@@ -55,7 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Package | Current Version |
 |---------|-----------------|
-| voo_navigation | 1.3.5 |
+| voo_navigation | 1.3.8 |
 | voo_navigation_core | 0.2.2 |
 | voo_navigation_rail | 0.2.1 |
 | voo_navigation_drawer | 0.2.1 |
