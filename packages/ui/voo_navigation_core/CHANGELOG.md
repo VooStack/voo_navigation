@@ -1,3 +1,13 @@
+## 0.2.4
+
+### Fixed
+- **shouldShowBackButton Not Working**: Fixed `VooPageConfig.shouldShowBackButton` not showing the back button
+  - `VooAppBarLeading.build()` was short-circuiting on `!showMenuButton` before checking `shouldShowBackButton`
+  - Reordered logic so `shouldShowBackButton` is evaluated even when `showMenuButton=false`
+  - `VooMobileAppBar` now always creates `VooAppBarLeading` so back button logic can run
+
+---
+
 ## 0.2.3
 
 ### Added

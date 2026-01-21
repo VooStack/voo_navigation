@@ -27,27 +27,27 @@ class VooAppBarLeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!showMenuButton) return const SizedBox.shrink();
-
-    // Try to get custom leading from builder
+    // Try to get custom leading from builder first
     final customLeading = config?.appBarLeadingBuilder?.call(selectedId);
     if (customLeading != null) {
       return customLeading;
     }
 
-    // Show menu button for drawer on mobile
-    final scaffoldState = Scaffold.maybeOf(context);
-    if (scaffoldState != null && scaffoldState.hasDrawer) {
-      return IconButton(
-        icon: const Icon(Icons.menu),
-        onPressed: () {
-          scaffoldState.openDrawer();
-          if (config?.enableHapticFeedback ?? true) {
-            HapticFeedback.lightImpact();
-          }
-        },
-        tooltip: 'Open navigation menu',
-      );
+    // Show menu button for drawer on mobile (only if showMenuButton is true)
+    if (showMenuButton) {
+      final scaffoldState = Scaffold.maybeOf(context);
+      if (scaffoldState != null && scaffoldState.hasDrawer) {
+        return IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            scaffoldState.openDrawer();
+            if (config?.enableHapticFeedback ?? true) {
+              HapticFeedback.lightImpact();
+            }
+          },
+          tooltip: 'Open navigation menu',
+        );
+      }
     }
 
     // Check shouldShowBackButton from page config

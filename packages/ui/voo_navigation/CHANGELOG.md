@@ -1,3 +1,15 @@
+## 1.3.7
+
+### Fixed
+- **shouldShowBackButton Not Working**: Fixed `VooPageConfig.shouldShowBackButton` not showing the back button on desktop
+  - `VooAdaptiveAppBar` now always creates `VooAppBarLeading` so back button logic can run
+  - Previously, when `showMenuButton=false` (desktop), `VooAppBarLeading` was never instantiated
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.4
+
+---
+
 ## 1.3.6
 
 ### Dependencies

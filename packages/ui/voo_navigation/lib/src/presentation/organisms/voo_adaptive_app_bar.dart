@@ -144,13 +144,11 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     final effectiveLeading =
         leading ??
         effectiveConfig?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
-        (showMenuButton
-            ? VooAppBarLeading(
-                showMenuButton: showMenuButton,
-                config: effectiveConfig,
-                pageConfig: pageConfig,
-              )
-            : null);
+        VooAppBarLeading(
+          showMenuButton: showMenuButton,
+          config: effectiveConfig,
+          pageConfig: pageConfig,
+        );
 
     // Build actions with integrated components
     List<Widget>? effectiveActions;
@@ -185,7 +183,7 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: effectiveTitle,
           ),
           leading: effectiveLeading,
-          automaticallyImplyLeading: effectiveLeading != null,
+          automaticallyImplyLeading: true,
           actions: effectiveActions?.isNotEmpty == true ? [...effectiveActions!, SizedBox(width: context.vooSpacing.md)] : null,
           centerTitle: effectiveCenterTitle,
           backgroundColor: Colors.transparent,

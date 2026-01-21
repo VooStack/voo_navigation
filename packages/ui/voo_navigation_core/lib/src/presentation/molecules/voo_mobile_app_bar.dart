@@ -86,13 +86,11 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
     final effectiveLeading =
         leading ??
         config?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
-        (showMenuButton
-            ? VooAppBarLeading(
-                showMenuButton: true,
-                config: config,
-                pageConfig: pageConfig,
-              )
-            : null);
+        VooAppBarLeading(
+          showMenuButton: showMenuButton,
+          config: config,
+          pageConfig: pageConfig,
+        );
 
     final effectiveCenterTitle = centerTitle ?? config?.centerAppBarTitle ?? false;
 
@@ -138,7 +136,7 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: effectiveTitle,
           ),
           leading: effectiveLeading,
-          automaticallyImplyLeading: effectiveLeading != null,
+          automaticallyImplyLeading: true,
           actions: effectiveActions?.isNotEmpty == true
               ? [...effectiveActions!, SizedBox(width: context.vooSpacing.md)]
               : null,
