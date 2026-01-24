@@ -1,3 +1,16 @@
+## 1.3.9
+
+### Fixed
+- **Empty Leading Widget Taking Up Space**: Fixed app bar leading widget reserving space even when no content is shown
+  - `VooAdaptiveAppBar` now sets `leadingWidth: 0` when the leading widget would be empty
+  - Uses new `VooAppBarLeading.wouldShowContent()` helper to check if content would be rendered
+  - Prevents empty gap on left side of app bar title when no back button or menu button is needed
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.5
+
+---
+
 ## 1.3.8
 
 ### Fixed

@@ -25,6 +25,47 @@ class VooAppBarLeading extends StatelessWidget {
     this.pageConfig,
   });
 
+  /// Checks if this widget would render actual content (not an empty SizedBox)
+  ///
+  /// This is useful to determine if [leadingWidth] should be set to 0 in the AppBar
+  /// to avoid empty space when no leading content is shown.
+  static bool wouldShowContent({
+    required BuildContext context,
+    required bool showMenuButton,
+    VooNavigationConfig? config,
+    String? selectedId,
+    VooPageConfig? pageConfig,
+  }) {
+    // Check for custom leading from builder
+    final customLeading = config?.appBarLeadingBuilder?.call(selectedId);
+    if (customLeading != null) {
+      return true;
+    }
+
+    // Check for menu button (drawer)
+    if (showMenuButton) {
+      final scaffoldState = Scaffold.maybeOf(context);
+      if (scaffoldState != null && scaffoldState.hasDrawer) {
+        return true;
+      }
+    }
+
+    // Check shouldShowBackButton from page config
+    final shouldShowBackButton = pageConfig?.shouldShowBackButton;
+
+    // If explicitly set to false, don't show
+    if (shouldShowBackButton == false) {
+      return false;
+    }
+
+    // Show if explicitly true OR if can pop
+    if (shouldShowBackButton == true || Navigator.of(context).canPop()) {
+      return true;
+    }
+
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     // Try to get custom leading from builder first

@@ -141,14 +141,25 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     // Get page config from scope for back button control
     final pageConfig = VooPageScope.configOf(context);
 
-    final effectiveLeading =
-        leading ??
-        effectiveConfig?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
-        VooAppBarLeading(
+    // Check if the leading widget would actually show content
+    final wouldShowLeading = leading != null ||
+        effectiveConfig?.appBarLeadingBuilder?.call(effectiveSelectedId) != null ||
+        VooAppBarLeading.wouldShowContent(
+          context: context,
           showMenuButton: showMenuButton,
           config: effectiveConfig,
           pageConfig: pageConfig,
         );
+
+    final Widget? effectiveLeading = wouldShowLeading
+        ? (leading ??
+            effectiveConfig?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
+            VooAppBarLeading(
+              showMenuButton: showMenuButton,
+              config: effectiveConfig,
+              pageConfig: pageConfig,
+            ))
+        : null;
 
     // Build actions with integrated components
     List<Widget>? effectiveActions;
@@ -183,7 +194,8 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: effectiveTitle,
           ),
           leading: effectiveLeading,
-          automaticallyImplyLeading: true,
+          leadingWidth: wouldShowLeading ? null : 0,
+          automaticallyImplyLeading: false,
           actions: effectiveActions?.isNotEmpty == true ? [...effectiveActions!, SizedBox(width: context.vooSpacing.md)] : null,
           centerTitle: effectiveCenterTitle,
           backgroundColor: Colors.transparent,

@@ -1,3 +1,11 @@
+## 0.2.5
+
+### Added
+- **VooAppBarLeading.wouldShowContent()**: New static helper method to check if the leading widget would render actual content
+  - Useful for determining if `leadingWidth` should be set to 0 in AppBar to avoid empty space
+
+---
+
 ## 0.2.4
 
 ### Fixed
