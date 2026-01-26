@@ -1,3 +1,14 @@
+## 1.3.11
+
+### Fixed
+- **Mobile App Bar Leading Widget Taking Up Space**: Fixed leading widget reserving space on mobile even when no content is shown
+  - Applies the same `wouldShowContent()` + `leadingWidth: 0` fix from `VooAdaptiveAppBar` to `VooMobileAppBar`
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.7
+
+---
+
 ## 1.3.10
 
 ### Added

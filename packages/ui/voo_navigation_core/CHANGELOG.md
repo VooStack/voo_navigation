@@ -1,3 +1,14 @@
+## 0.2.7
+
+### Fixed
+- **Mobile App Bar Leading Widget Taking Up Space**: Fixed `VooMobileAppBar` reserving space for the leading widget even when no content is shown
+  - Uses `VooAppBarLeading.wouldShowContent()` to check if content would be rendered before building
+  - Sets `leadingWidth: 0` when no leading content exists
+  - Changed `automaticallyImplyLeading` to `false` to prevent Flutter from implying a leading widget
+  - Mirrors the fix already applied to `VooAdaptiveAppBar` in v0.2.5
+
+---
+
 ## 0.2.6
 
 ### Added
