@@ -1,3 +1,13 @@
+## 0.2.8
+
+### Fixed
+- **Floating Nav Background Color**: Changed `floatingNavBackground` token from `surfaceContainerHighest` to `surface`
+  - Floating bottom navigation bar now renders with a clean white background in light mode instead of noticeable grey
+  - Dark mode continues to work correctly with the dark surface color
+  - Shadow contrast is improved since the background is no longer grey
+
+---
+
 ## 0.2.7
 
 ### Fixed
@@ -136,7 +146,7 @@
     - `context.navSelectedBackground([customColor])` - Selected item background with 10% opacity
     - `context.navHoverBackground` - Hover background with 4% opacity
     - `context.navMutedIconColor` - Muted icon color with 70% opacity
-    - `context.floatingNavBackground` - Theme-aware floating nav background (surfaceContainerHighest)
+    - `context.floatingNavBackground` - Theme-aware floating nav background (surface)
     - `context.floatingNavForeground` - Floating nav foreground color
     - `context.floatingNavSelectedColor` - Primary color for selected floating nav items
     - `context.navDividerColor` - Divider color with proper opacity

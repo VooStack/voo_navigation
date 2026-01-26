@@ -108,10 +108,10 @@ extension VooNavigationTokensTheme on BuildContext {
 
   /// Theme-aware floating navigation background color.
   ///
-  /// Uses surfaceContainerHighest for a slightly elevated surface appearance
+  /// Uses surface for a clean white background in light mode
   /// that works in both light and dark modes.
   Color get floatingNavBackground {
-    return Theme.of(this).colorScheme.surfaceContainerHighest;
+    return Theme.of(this).colorScheme.surface;
   }
 
   /// Theme-aware floating navigation foreground color.

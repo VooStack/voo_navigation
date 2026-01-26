@@ -1,3 +1,14 @@
+## 1.3.12
+
+### Fixed
+- **Floating Nav Background Color**: Floating bottom navigation bar now has a clean white background in light mode instead of grey
+  - Changed `floatingNavBackground` token from `surfaceContainerHighest` to `surface`
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.8
+
+---
+
 ## 1.3.11
 
 ### Fixed
