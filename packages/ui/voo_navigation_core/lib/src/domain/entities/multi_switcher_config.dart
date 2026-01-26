@@ -135,6 +135,10 @@ class VooMultiSwitcherConfig {
   /// Tooltip text when hovering over the card
   final String? tooltip;
 
+  /// Whether the switcher is in a loading state.
+  /// When true, shows a loading indicator on the card and disables interaction.
+  final bool isLoading;
+
   // ============================================================================
   // MOBILE NAV ITEM OPTIONS
   // ============================================================================
@@ -209,6 +213,7 @@ class VooMultiSwitcherConfig {
     this.style,
     this.compact,
     this.tooltip,
+    this.isLoading = false,
     // Mobile nav item options
     this.showAsNavItem = false,
     this.mobilePriority = false,
@@ -256,6 +261,7 @@ class VooMultiSwitcherConfig {
     VooMultiSwitcherStyle? style,
     bool? compact,
     String? tooltip,
+    bool? isLoading,
     // Mobile nav item options
     bool? showAsNavItem,
     bool? mobilePriority,
@@ -304,6 +310,7 @@ class VooMultiSwitcherConfig {
         style: style ?? this.style,
         compact: compact ?? this.compact,
         tooltip: tooltip ?? this.tooltip,
+        isLoading: isLoading ?? this.isLoading,
         showAsNavItem: showAsNavItem ?? this.showAsNavItem,
         mobilePriority: mobilePriority ?? this.mobilePriority,
         navItemSortOrder: navItemSortOrder ?? this.navItemSortOrder,
@@ -345,6 +352,9 @@ class VooMultiSwitcherCardData {
   /// Whether the modal is currently expanded
   final bool isExpanded;
 
+  /// Whether the switcher is in a loading state
+  final bool isLoading;
+
   /// Callback to toggle the modal open/closed
   final VoidCallback onTap;
 
@@ -357,6 +367,7 @@ class VooMultiSwitcherCardData {
     this.initials,
     this.status,
     required this.isExpanded,
+    this.isLoading = false,
     required this.onTap,
   });
 }
@@ -393,6 +404,9 @@ class VooMultiSwitcherModalData {
   /// Current user's online status
   final VooUserStatus? status;
 
+  /// Whether the switcher is in a loading state
+  final bool isLoading;
+
   /// Callback to close the modal
   final VoidCallback onClose;
 
@@ -427,6 +441,7 @@ class VooMultiSwitcherModalData {
     this.avatarUrl,
     this.initials,
     this.status,
+    this.isLoading = false,
     required this.onClose,
     required this.onOrganizationSelected,
     this.onUserSelected,

@@ -54,6 +54,7 @@ class _VooMultiSwitcherCardState extends State<VooMultiSwitcherCard> {
           initials: widget.config.initials,
           status: widget.config.status,
           isExpanded: widget.isExpanded,
+          isLoading: widget.config.isLoading,
           onTap: widget.onTap,
         ),
       );
@@ -72,7 +73,7 @@ class _VooMultiSwitcherCardState extends State<VooMultiSwitcherCard> {
           onEnter: (_) => setState(() => _isHovered = true),
           onExit: (_) => setState(() => _isHovered = false),
           child: GestureDetector(
-            onTap: widget.onTap,
+            onTap: widget.config.isLoading ? null : widget.onTap,
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               padding: const EdgeInsets.all(4),
@@ -103,7 +104,7 @@ class _VooMultiSwitcherCardState extends State<VooMultiSwitcherCard> {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: widget.onTap,
+          onTap: widget.config.isLoading ? null : widget.onTap,
           borderRadius: style.cardBorderRadius ??
               BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
           child: AnimatedContainer(
@@ -166,16 +167,26 @@ class _VooMultiSwitcherCardState extends State<VooMultiSwitcherCard> {
                     ],
                   ),
                 ),
-                // Chevron indicator
-                AnimatedRotation(
-                  turns: widget.isExpanded ? 0.5 : 0,
-                  duration: const Duration(milliseconds: 200),
-                  child: Icon(
-                    Icons.keyboard_arrow_down_rounded,
-                    size: VooNavigationTokens.chevronSize,
-                    color: theme.colorScheme.onSurfaceVariant,
+                // Chevron indicator or loading spinner
+                if (widget.config.isLoading)
+                  SizedBox(
+                    width: VooNavigationTokens.chevronSize,
+                    height: VooNavigationTokens.chevronSize,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  )
+                else
+                  AnimatedRotation(
+                    turns: widget.isExpanded ? 0.5 : 0,
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      size: VooNavigationTokens.chevronSize,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                ),
               ],
             ),
           ),

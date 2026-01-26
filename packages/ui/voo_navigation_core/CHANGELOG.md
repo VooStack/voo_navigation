@@ -1,3 +1,13 @@
+## 0.2.6
+
+### Added
+- **VooMultiSwitcherConfig.isLoading**: New `isLoading` field for the multi-switcher (user/org switcher)
+  - Shows a `CircularProgressIndicator` in place of the chevron on the card when loading
+  - Disables tap interaction on the card while loading
+  - Passed through to `VooMultiSwitcherCardData` and `VooMultiSwitcherModalData` for custom builders
+
+---
+
 ## 0.2.5
 
 ### Added

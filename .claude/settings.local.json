@@ -21,7 +21,8 @@
       "Bash(dir \"C:\\\\Users\\\\cbris\\\\GitHub\\\\voo_navigation\\\\packages\\\\ui\\\\voo_navigation_core\\\\lib\\\\src\\\\domain\\\\entities\\\\multi_switcher_config.dart\")",
       "Bash(git checkout:*)",
       "Bash(python3:*)",
-      "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(dart analyze:*)"
     ]
   }
 }

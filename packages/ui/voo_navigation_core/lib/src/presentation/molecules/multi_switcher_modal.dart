@@ -82,6 +82,7 @@ class _VooMultiSwitcherModalState extends State<VooMultiSwitcherModal> {
                 avatarUrl: widget.config.avatarUrl,
                 initials: widget.config.initials,
                 status: widget.config.status,
+                isLoading: widget.config.isLoading,
                 onClose: widget.onClose,
                 onOrganizationSelected: widget.onOrganizationSelected,
                 onUserSelected: widget.config.onUserChanged,
