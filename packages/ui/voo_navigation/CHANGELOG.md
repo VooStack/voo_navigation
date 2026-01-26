@@ -1,3 +1,15 @@
+## 1.3.10
+
+### Added
+- **VooMultiSwitcher isLoading**: New `isLoading` field on the multi-switcher (user/org switcher)
+  - Shows a loading indicator on the card and disables interaction while loading
+  - Available via `VooMultiSwitcherConfig.isLoading`
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.6
+
+---
+
 ## 1.3.9
 
 ### Fixed
