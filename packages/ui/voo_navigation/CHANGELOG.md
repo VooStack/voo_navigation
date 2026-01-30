@@ -1,3 +1,13 @@
+## 1.3.19
+
+### Fixed
+- **StatelessWidget Parent Compatibility**: Fixed body not rendering when `VooAdaptiveScaffold` is used inside a `StatelessWidget` parent
+  - Added `didUpdateWidget` to sync `_selectedId` when `config.selectedId` changes from parent rebuilds
+  - Previously, external navigation changes (e.g., via `StatefulNavigationShell.goBranch`) weren't reflected in internal state
+  - This caused issues when parent widgets used `context.watch` or other rebuild-triggering patterns
+
+---
+
 ## 1.3.18
 
 ### Fixed

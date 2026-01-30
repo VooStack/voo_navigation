@@ -136,6 +136,16 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(VooAdaptiveScaffold oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Sync selectedId when config changes from parent
+    if (widget.config.selectedId != null &&
+        widget.config.selectedId != oldWidget.config.selectedId) {
+      _selectedId = widget.config.selectedId!;
+    }
+  }
+
   void _onPageConfigChanged() {
     if (mounted) {
       setState(() {});
