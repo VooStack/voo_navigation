@@ -147,12 +147,12 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem> with Single
           List<Widget> rowChildren;
           if (isLabelStart) {
             rowChildren = [
+              SizedBox(width: animatedSpacing),
               SizedBox(width: animatedTextPadding),
               SizedBox(
                 width: animatedLabelWidth,
                 child: Align(alignment: Alignment.centerRight, child: label),
               ),
-              SizedBox(width: animatedSpacing),
               buildIconCircle(),
             ];
           } else {
@@ -164,6 +164,7 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem> with Single
                 child: Align(alignment: Alignment.centerLeft, child: label),
               ),
               SizedBox(width: animatedTextPadding),
+              SizedBox(width: animatedSpacing),
             ];
           }
 
@@ -175,7 +176,7 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem> with Single
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: [Row(mainAxisAlignment: MainAxisAlignment.center, children: rowChildren)],
+              children: [Row(crossAxisAlignment: CrossAxisAlignment.center, children: rowChildren)],
             ),
           );
         },
