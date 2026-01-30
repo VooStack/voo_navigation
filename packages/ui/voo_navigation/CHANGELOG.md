@@ -1,3 +1,15 @@
+## 1.3.14
+
+### Changed
+- **Navigation Icons**: Updated to use `Icon` widgets instead of `IconData` for icons and selectedIcons
+  - Enables full `IconTheme` support for consistent styling across navigation components
+  - Applies to `VooNavigationSection`, `VooIconWithBadge`, `VooModernIcon`, and related components
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.11
+
+---
+
 ## 1.3.13
 
 ### Changed
