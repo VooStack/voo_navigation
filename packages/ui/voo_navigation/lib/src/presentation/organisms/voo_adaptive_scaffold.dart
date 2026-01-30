@@ -120,13 +120,17 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
     _pageController = VooPageController();
     _pageController.setOnConfigChanged(_onPageConfigChanged);
 
-    _animationController = AnimationController(duration: widget.config.animationDuration, vsync: this);
+    // Start animation at completed state (value: 1.0) so body is visible immediately
+    // Animations will play on navigation changes, not on initial load
+    _animationController = AnimationController(
+      duration: widget.config.animationDuration,
+      vsync: this,
+      value: 1.0,
+    );
 
     _fadeAnimation = CurvedAnimation(parent: _animationController, curve: widget.config.animationCurve);
 
     _slideAnimation = Tween<Offset>(begin: const Offset(0.0, 0.05), end: Offset.zero).animate(CurvedAnimation(parent: _animationController, curve: widget.config.animationCurve));
-
-    _animationController.forward();
   }
 
   @override

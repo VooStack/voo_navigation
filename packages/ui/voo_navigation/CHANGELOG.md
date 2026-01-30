@@ -1,10 +1,17 @@
+## 1.3.20
+
+### Fixed
+- **Body Not Rendering**: Fixed body content not displaying when `VooAdaptiveScaffold` is used inside a `StatelessWidget` parent
+  - Animation controller now starts at completed state (`value: 1.0`) so body is visible immediately
+  - Previously, animation started at opacity 0 and if State was recreated before completing, body stayed invisible
+  - Animations still play on navigation changes, just not on initial load
+
+---
+
 ## 1.3.19
 
 ### Fixed
-- **StatelessWidget Parent Compatibility**: Fixed body not rendering when `VooAdaptiveScaffold` is used inside a `StatelessWidget` parent
-  - Added `didUpdateWidget` to sync `_selectedId` when `config.selectedId` changes from parent rebuilds
-  - Previously, external navigation changes (e.g., via `StatefulNavigationShell.goBranch`) weren't reflected in internal state
-  - This caused issues when parent widgets used `context.watch` or other rebuild-triggering patterns
+- **StatelessWidget Parent Compatibility**: Added `didUpdateWidget` to sync `_selectedId` when `config.selectedId` changes from parent rebuilds
 
 ---
 
