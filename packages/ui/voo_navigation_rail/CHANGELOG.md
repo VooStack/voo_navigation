@@ -1,3 +1,15 @@
+## 0.2.4
+
+### Changed
+- **Widget Icon Support**: Updated to support `Widget` type for icons (instead of `IconData`)
+  - Enables full `IconTheme` support for consistent styling
+  - Compatible with `Icon`, `ImageIcon`, or any custom widget
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.11
+
+---
+
 ## 0.2.3
 
 ### Changed

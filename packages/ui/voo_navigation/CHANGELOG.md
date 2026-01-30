@@ -1,3 +1,12 @@
+## 1.3.15
+
+### Dependencies
+- Updated `voo_navigation_rail` to ^0.2.4 (Widget icon support)
+- Updated `voo_navigation_drawer` to ^0.2.4 (Widget icon support)
+- Updated `voo_navigation_bar` to ^0.1.7 (Widget icon support)
+
+---
+
 ## 1.3.14
 
 ### Changed
