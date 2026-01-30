@@ -6,26 +6,26 @@ import '../../../helpers/test_helpers.dart';
 
 void main() {
   group('VooAdaptiveScaffold', () {
-    late List<VooNavigationItem> navigationItems;
+    late List<VooNavigationDestination> navigationItems;
     late VooNavigationConfig config;
 
     setUp(() {
       // Reset view to a default size that doesn't interfere with tests
       // Each test should set its own view size if needed
       navigationItems = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
           route: '/home',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'search',
           label: 'Search',
           icon: Icons.search,
           route: '/search',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,
@@ -80,7 +80,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Should find bottom navigation
-        expect(find.byType(VooAdaptiveBottomNavigation), findsOneWidget);
+        expect(find.byType(VooNavigationBar), findsOneWidget);
         expect(find.byType(VooAdaptiveNavigationRail), findsNothing);
         expect(find.byType(VooAdaptiveNavigationDrawer), findsNothing);
       },
@@ -106,7 +106,7 @@ void main() {
 
       // Should find navigation rail
       expect(find.byType(VooAdaptiveNavigationRail), findsOneWidget);
-      expect(find.byType(VooAdaptiveBottomNavigation), findsNothing);
+      expect(find.byType(VooNavigationBar), findsNothing);
       expect(find.byType(VooAdaptiveNavigationDrawer), findsNothing);
     });
 
@@ -130,7 +130,7 @@ void main() {
 
       // Should find navigation drawer
       expect(find.byType(VooAdaptiveNavigationDrawer), findsOneWidget);
-      expect(find.byType(VooAdaptiveBottomNavigation), findsNothing);
+      expect(find.byType(VooNavigationBar), findsNothing);
       expect(find.byType(VooAdaptiveNavigationRail), findsNothing);
     });
 
@@ -203,7 +203,7 @@ void main() {
 
       // Should show rail even on mobile size
       expect(find.byType(VooAdaptiveNavigationRail), findsOneWidget);
-      expect(find.byType(VooAdaptiveBottomNavigation), findsNothing);
+      expect(find.byType(VooNavigationBar), findsNothing);
     });
 
     testWidgets(
@@ -217,19 +217,19 @@ void main() {
 
         // Create navigation items with onTap callbacks for testing
         final testItems = [
-          VooNavigationItem(
+          VooNavigationDestination(
             id: 'home',
             label: 'Home',
             icon: Icons.home,
             onTap: () {},
           ),
-          VooNavigationItem(
+          VooNavigationDestination(
             id: 'search',
             label: 'Search',
             icon: Icons.search,
             onTap: () {},
           ),
-          VooNavigationItem(
+          VooNavigationDestination(
             id: 'settings',
             label: 'Settings',
             icon: Icons.settings,

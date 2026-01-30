@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/entities/page_config.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_app_bar_leading.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_app_bar_title.dart';
@@ -13,7 +13,7 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VooNavigationConfig? config;
 
   /// Currently selected navigation item
-  final VooNavigationItem? selectedItem;
+  final VooNavigationDestination? selectedItem;
 
   /// Currently selected navigation item ID
   final String? selectedId;

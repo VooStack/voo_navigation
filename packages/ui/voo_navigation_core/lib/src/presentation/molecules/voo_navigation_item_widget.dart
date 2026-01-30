@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 
 /// Reusable navigation item widget
-class VooNavigationItemWidget extends StatelessWidget {
-  final VooNavigationItem item;
+class VooNavigationDestinationWidget extends StatelessWidget {
+  final VooNavigationDestination item;
   final bool isSelected;
   final VoidCallback? onTap;
 
-  const VooNavigationItemWidget({
+  const VooNavigationDestinationWidget({
     super.key,
     required this.item,
     required this.isSelected,

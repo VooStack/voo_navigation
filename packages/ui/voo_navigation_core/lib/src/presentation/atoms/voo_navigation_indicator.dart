@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_background_indicator.dart';
-import 'package:voo_navigation_core/src/presentation/atoms/voo_custom_indicator.dart';
+import 'package:voo_navigation_core/src/presentation/atoms/voo_scale_indicator.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_line_indicator.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_pill_indicator.dart';
 
@@ -109,7 +109,7 @@ class VooNavigationIndicator extends StatelessWidget {
           child: child,
         );
       case VooIndicatorType.custom:
-        return VooCustomIndicator(
+        return VooScaleIndicator(
           isSelected: isSelected,
           padding: effectivePadding,
           duration: effectiveDuration,

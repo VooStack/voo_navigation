@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Section header with expansion tile for navigation rail
 class VooRailSectionHeader extends StatelessWidget {
   /// Navigation item representing the section
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Child widgets for the expanded section
   final List<Widget> children;

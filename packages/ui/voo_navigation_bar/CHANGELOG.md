@@ -1,3 +1,22 @@
+## 0.1.6
+
+### Changed
+- **VooNavigationBar**: Now uses expandable pill-shaped design as the default
+  - Pill-shaped dark container with subtle border
+  - Selected item expands to show colored circle icon + label
+  - Unselected items display as dark circles with muted icons
+  - Supports optional action item with custom modal (e.g., + button)
+- **Consolidated Components**: Merged multiple navigation bar variants into single `VooNavigationBar`
+  - Removed `VooExpandableBottomNavigation` - use `VooNavigationBar` instead
+  - Removed `VooAdaptiveBottomNavigation` - use `VooNavigationBar` instead
+  - Removed `VooCustomNavigationBar` - use `VooNavigationBar` instead
+- **VooNavigationItem**: Renamed from `VooCustomNavigationItem` for consistency
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.10
+
+---
+
 ## 0.1.5
 
 ### Improved

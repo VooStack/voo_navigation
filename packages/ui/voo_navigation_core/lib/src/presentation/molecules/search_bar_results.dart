@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/search_bar_result_item.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/search_bar_section_header.dart';
@@ -19,7 +19,7 @@ class VooSearchBarResults extends StatelessWidget {
   final List<String>? recentSearches;
 
   /// Filtered navigation items
-  final List<VooNavigationItem> filteredNavItems;
+  final List<VooNavigationDestination> filteredNavItems;
 
   /// Filtered search actions
   final List<VooSearchAction> filteredActions;
@@ -34,13 +34,13 @@ class VooSearchBarResults extends StatelessWidget {
   final ValueChanged<String> onRecentSearchSelected;
 
   /// Callback when a navigation item is selected
-  final ValueChanged<VooNavigationItem> onNavigationItemSelected;
+  final ValueChanged<VooNavigationDestination> onNavigationItemSelected;
 
   /// Callback when a search action is selected
   final ValueChanged<VooSearchAction> onSearchActionSelected;
 
   /// Custom builder for filtered items
-  final Widget Function(VooNavigationItem, VoidCallback onTap)? filteredItemBuilder;
+  final Widget Function(VooNavigationDestination, VoidCallback onTap)? filteredItemBuilder;
 
   /// Custom builder for actions
   final Widget Function(VooSearchAction, VoidCallback onTap)? actionBuilder;

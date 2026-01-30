@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_modern_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
@@ -8,7 +8,7 @@ import 'package:voo_tokens/voo_tokens.dart';
 /// Navigation item widget for drawer
 class VooDrawerNavigationItem extends StatelessWidget {
   /// The navigation item
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Navigation configuration
   final VooNavigationConfig config;
@@ -17,7 +17,7 @@ class VooDrawerNavigationItem extends StatelessWidget {
   final String selectedId;
 
   /// Callback when an item is tapped
-  final void Function(VooNavigationItem item) onItemTap;
+  final void Function(VooNavigationDestination item) onItemTap;
 
   /// Whether this item is hovered
   final bool isHovered;

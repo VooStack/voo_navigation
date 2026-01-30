@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_child_navigation_item.dart';
 import 'package:voo_tokens/voo_tokens.dart';
@@ -8,7 +8,7 @@ import 'package:voo_tokens/voo_tokens.dart';
 /// Expandable section widget for drawer navigation with children
 class VooDrawerExpandableSection extends StatelessWidget {
   /// The navigation item with children
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Navigation configuration
   final VooNavigationConfig config;
@@ -17,7 +17,7 @@ class VooDrawerExpandableSection extends StatelessWidget {
   final String selectedId;
 
   /// Callback when an item is tapped
-  final void Function(VooNavigationItem item) onItemTap;
+  final void Function(VooNavigationDestination item) onItemTap;
 
   /// Map of hovered item states
   final Map<String, bool> hoveredItems;

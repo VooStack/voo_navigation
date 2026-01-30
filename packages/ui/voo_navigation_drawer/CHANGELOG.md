@@ -1,3 +1,13 @@
+## 0.2.3
+
+### Changed
+- **NavigationDestination Support**: Updated to use renamed `VooNavigationDestination` from core
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.10
+
+---
+
 ## 0.2.2
 
 ### Dependencies

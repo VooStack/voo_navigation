@@ -16,7 +16,6 @@ class HRISELinkApp extends StatefulWidget {
 class _HRISELinkAppState extends State<HRISELinkApp> {
   String _selectedId = 'employee';
   VooContextItem? _selectedProject;
-  bool _useExpandableNav = false; // Toggle to demo expandable bottom nav
 
   @override
   void initState() {
@@ -85,7 +84,7 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
   ];
 
   // Project-specific navigation items (changes based on selected project)
-  List<VooNavigationItem> get _projectNavigationItems {
+  List<VooNavigationDestination> get _projectNavigationItems {
     if (_selectedProject == null) {
       // Return empty when no project selected - user should select from context switcher
       return [];
@@ -93,7 +92,7 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
 
     // Navigation items that change based on selected project
     return [
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'project-overview',
         label: 'Overview',
         icon: Icons.dashboard_outlined,
@@ -101,7 +100,7 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         mobilePriority: true,
         route: '/projects/${_selectedProject!.id}/overview',
       ),
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'project-tasks',
         label: 'Tasks',
         icon: Icons.check_circle_outline,
@@ -109,21 +108,21 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         mobilePriority: true,
         route: '/projects/${_selectedProject!.id}/tasks',
       ),
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'project-files',
         label: 'Files',
         icon: Icons.folder_outlined,
         selectedIcon: Icons.folder,
         route: '/projects/${_selectedProject!.id}/files',
       ),
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'project-team',
         label: 'Team',
         icon: Icons.people_outline,
         selectedIcon: Icons.people,
         route: '/projects/${_selectedProject!.id}/team',
       ),
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'project-timeline',
         label: 'Timeline',
         icon: Icons.timeline_outlined,
@@ -134,8 +133,8 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
   }
 
   // Navigation items - use route for leaf items
-  List<VooNavigationItem> get _navigationItems => [
-    VooNavigationItem(
+  List<VooNavigationDestination> get _navigationItems => [
+    VooNavigationDestination(
       id: 'dashboard',
       label: 'Dashboard',
       icon: Icons.home_outlined,
@@ -143,14 +142,14 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       mobilePriority: true,
       route: '/dashboard',
     ),
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'teams',
       label: 'Teams',
       icon: Icons.language,
       route: '/teams',
     ),
     // Projects section - with embedded context switcher
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'projects-section',
       label: 'Projects',
       icon: Icons.folder_special_outlined,
@@ -179,7 +178,7 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
           ? _projectNavigationItems
           : [
               // Placeholder item when no project selected
-              VooNavigationItem(
+              VooNavigationDestination(
                 id: 'select-project-hint',
                 label: 'No project selected',
                 icon: Icons.info_outline,
@@ -188,44 +187,44 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
               ),
             ],
     ),
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'employee-section',
       label: 'Employee',
       icon: Icons.person_outline,
       selectedIcon: Icons.person,
       children: [
-        VooNavigationItem(id: 'employee', label: 'Employee', icon: Icons.badge_outlined, mobilePriority: true, route: '/employee'),
-        VooNavigationItem(id: 'attendance', label: 'Attendance', icon: Icons.access_time, mobilePriority: true, route: '/attendance'),
-        VooNavigationItem(id: 'checklist', label: 'Checklist', icon: Icons.checklist, route: '/checklist'),
-        VooNavigationItem(id: 'time-off', label: 'Time off', icon: Icons.event_busy_outlined, route: '/time-off'),
+        VooNavigationDestination(id: 'employee', label: 'Employee', icon: Icons.badge_outlined, mobilePriority: true, route: '/employee'),
+        VooNavigationDestination(id: 'attendance', label: 'Attendance', icon: Icons.access_time, mobilePriority: true, route: '/attendance'),
+        VooNavigationDestination(id: 'checklist', label: 'Checklist', icon: Icons.checklist, route: '/checklist'),
+        VooNavigationDestination(id: 'time-off', label: 'Time off', icon: Icons.event_busy_outlined, route: '/time-off'),
       ],
     ),
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'hire-section',
       label: 'Hire',
       icon: Icons.work_outline,
       selectedIcon: Icons.work,
       children: [
-        VooNavigationItem(id: 'hiring', label: 'Hiring', icon: Icons.person_add_outlined, route: '/hiring'),
-        VooNavigationItem(id: 'onboarding', label: 'Onboarding', icon: Icons.flight_takeoff, route: '/onboarding'),
-        VooNavigationItem(id: 'hiring-handbook', label: 'Hiring handbook', icon: Icons.menu_book_outlined, route: '/hiring-handbook'),
+        VooNavigationDestination(id: 'hiring', label: 'Hiring', icon: Icons.person_add_outlined, route: '/hiring'),
+        VooNavigationDestination(id: 'onboarding', label: 'Onboarding', icon: Icons.flight_takeoff, route: '/onboarding'),
+        VooNavigationDestination(id: 'hiring-handbook', label: 'Hiring handbook', icon: Icons.menu_book_outlined, route: '/hiring-handbook'),
       ],
     ),
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'finance-section',
       label: 'Finance',
       icon: Icons.attach_money,
       children: [
-        VooNavigationItem(id: 'payroll', label: 'Payroll', icon: Icons.payments_outlined, route: '/payroll'),
-        VooNavigationItem(id: 'expenses', label: 'Expenses', icon: Icons.receipt_long_outlined, route: '/expenses'),
-        VooNavigationItem(id: 'incentives', label: 'Incentives', icon: Icons.card_giftcard_outlined, route: '/incentives'),
-        VooNavigationItem(id: 'payment-info', label: 'Payment information', icon: Icons.credit_card_outlined, route: '/payment-info'),
+        VooNavigationDestination(id: 'payroll', label: 'Payroll', icon: Icons.payments_outlined, route: '/payroll'),
+        VooNavigationDestination(id: 'expenses', label: 'Expenses', icon: Icons.receipt_long_outlined, route: '/expenses'),
+        VooNavigationDestination(id: 'incentives', label: 'Incentives', icon: Icons.card_giftcard_outlined, route: '/incentives'),
+        VooNavigationDestination(id: 'payment-info', label: 'Payment information', icon: Icons.credit_card_outlined, route: '/payment-info'),
       ],
     ),
   ];
 
   // Footer items
-  List<VooNavigationItem> get _footerItems => [];
+  List<VooNavigationDestination> get _footerItems => [];
 
   void _onNavigationItemSelected(String itemId) {
     setState(() => _selectedId = itemId);
@@ -298,12 +297,6 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       ),
       appBarActionsBuilder: (_) => [
-        // Toggle between regular and expandable bottom nav (visible on mobile)
-        IconButton(
-          icon: Icon(_useExpandableNav ? Icons.navigation : Icons.radio_button_checked),
-          onPressed: () => setState(() => _useExpandableNav = !_useExpandableNav),
-          tooltip: _useExpandableNav ? 'Switch to floating nav' : 'Switch to expandable nav',
-        ),
         IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}, tooltip: 'Messages'),
         IconButton(icon: const Icon(Icons.notifications_outlined), onPressed: () {}, tooltip: 'Notifications'),
         const SizedBox(width: 12),
@@ -381,107 +374,6 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         navItemLabel: 'Projects',
       ),
       contextSwitcherPosition: VooContextSwitcherPosition.asNavItem,
-
-      // Mobile - demo expandable bottom navigation
-      floatingBottomNav: !_useExpandableNav,
-      useExpandableBottomNav: _useExpandableNav,
-      expandableNavSelectedColor: const Color(0xFF10B981),
-
-      // Action item for expandable nav (plus button with modal)
-      actionItem: _useExpandableNav
-          ? VooActionNavigationItem(
-              id: 'quick-add',
-              icon: Icons.add,
-              activeIcon: Icons.close,
-              backgroundColor: const Color(0xFF10B981),
-              tooltip: 'Quick Actions',
-              modalBuilder: (context, close) => Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                    child: Row(
-                      children: [
-                        Text(
-                          'Quick Actions',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white54),
-                          onPressed: close,
-                          iconSize: 20,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Divider(color: Colors.white24, height: 1),
-                  ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF6366F1).withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.person_add, color: Color(0xFF6366F1)),
-                    ),
-                    title: const Text('Add Employee'),
-                    subtitle: const Text('Create a new employee record'),
-                    onTap: () {
-                      close();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Add Employee tapped')),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF10B981).withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.task_alt, color: Color(0xFF10B981)),
-                    ),
-                    title: const Text('Create Task'),
-                    subtitle: const Text('Add a new task to a project'),
-                    onTap: () {
-                      close();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Create Task tapped')),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    leading: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF59E0B).withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(Icons.event, color: Color(0xFFF59E0B)),
-                    ),
-                    title: const Text('Schedule Meeting'),
-                    subtitle: const Text('Set up a team meeting'),
-                    onTap: () {
-                      close();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Schedule Meeting tapped')),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-              modalMaxHeight: 350,
-            )
-          : null,
 
       // Animations
       enableAnimations: true,

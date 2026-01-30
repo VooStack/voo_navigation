@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_animated_icon.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Material 3 navigation bar wrapper
 class VooMaterial3NavigationBar extends StatelessWidget {
   /// Navigation items to display
-  final List<VooNavigationItem> items;
+  final List<VooNavigationDestination> items;
 
   /// Currently selected index
   final int selectedIndex;

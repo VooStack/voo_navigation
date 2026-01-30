@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_search_field.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/search_bar_results.dart';
@@ -14,10 +14,10 @@ class VooSearchBar extends StatefulWidget {
   final FocusNode? focusNode;
 
   /// Navigation items to filter
-  final List<VooNavigationItem>? navigationItems;
+  final List<VooNavigationDestination>? navigationItems;
 
   /// Callback when filtered items change
-  final ValueChanged<List<VooNavigationItem>>? onFilteredItemsChanged;
+  final ValueChanged<List<VooNavigationDestination>>? onFilteredItemsChanged;
 
   /// Callback when search text changes
   final ValueChanged<String>? onSearch;
@@ -47,13 +47,13 @@ class VooSearchBar extends StatefulWidget {
   final bool expanded;
 
   /// Custom builder for filtered navigation items
-  final Widget Function(VooNavigationItem, VoidCallback onTap)? filteredItemBuilder;
+  final Widget Function(VooNavigationDestination, VoidCallback onTap)? filteredItemBuilder;
 
   /// Custom builder for search actions
   final Widget Function(VooSearchAction, VoidCallback onTap)? actionBuilder;
 
   /// Callback when a navigation item is selected
-  final ValueChanged<VooNavigationItem>? onNavigationItemSelected;
+  final ValueChanged<VooNavigationDestination>? onNavigationItemSelected;
 
   /// Callback when a search action is selected
   final ValueChanged<VooSearchAction>? onSearchActionSelected;
@@ -108,7 +108,7 @@ class _VooSearchBarState extends State<VooSearchBar> {
   int _selectedIndex = -1;
   String _query = '';
 
-  List<VooNavigationItem> get _filteredNavItems {
+  List<VooNavigationDestination> get _filteredNavItems {
     if (_query.isEmpty || widget.navigationItems == null) return [];
     final query = _query.toLowerCase();
     return widget.navigationItems!.where((item) {

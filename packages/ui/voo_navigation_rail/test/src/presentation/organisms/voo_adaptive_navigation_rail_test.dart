@@ -7,19 +7,19 @@ import '../../../helpers/test_helpers.dart';
 
 void main() {
   group('VooAdaptiveNavigationRail', () {
-    late List<VooNavigationItem> navigationItems;
+    late List<VooNavigationDestination> navigationItems;
     late VooNavigationConfig config;
 
     setUp(() {
       navigationItems = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'dashboard',
           label: 'Dashboard',
           icon: Icons.dashboard_outlined,
           selectedIcon: Icons.dashboard,
           route: '/dashboard',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'analytics',
           label: 'Analytics',
           icon: Icons.analytics_outlined,
@@ -27,7 +27,7 @@ void main() {
           route: '/analytics',
           badgeCount: 5,
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings_outlined,
@@ -318,16 +318,16 @@ void main() {
 
     testWidgets('should handle section headers', (WidgetTester tester) async {
       final sectionItems = [
-        VooNavigationItem.section(
+        VooNavigationDestination.section(
           label: 'Main',
           children: const [
-            VooNavigationItem(
+            VooNavigationDestination(
               id: 'home',
               label: 'Home',
               icon: Icons.home,
               route: '/home',
             ),
-            VooNavigationItem(
+            VooNavigationDestination(
               id: 'search',
               label: 'Search',
               icon: Icons.search,

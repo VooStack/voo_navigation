@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_multi_switcher.dart';
@@ -97,7 +97,7 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
     super.dispose();
   }
 
-  void _handleItemTap(VooNavigationItem item) {
+  void _handleItemTap(VooNavigationDestination item) {
     if (widget.config.enableHapticFeedback) {
       HapticFeedback.lightImpact();
     }

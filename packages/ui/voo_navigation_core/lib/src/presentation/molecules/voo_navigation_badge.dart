@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_dot_badge.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_text_badge.dart';
 
 /// Badge widget for navigation items
 class VooNavigationBadge extends StatelessWidget {
   /// The navigation item containing badge data
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Navigation configuration for styling
   final VooNavigationConfig config;

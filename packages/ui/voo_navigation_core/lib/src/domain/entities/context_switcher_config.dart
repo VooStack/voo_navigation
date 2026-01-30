@@ -1,13 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 
 /// Callback that builds navigation items based on the selected context.
 ///
 /// This is the key feature of the context switcher - when the context changes,
 /// this callback is invoked to get the new navigation items for that context.
-typedef VooContextItemsBuilder = List<VooNavigationItem> Function(
+typedef VooContextItemsBuilder = List<VooNavigationDestination> Function(
     VooContextItem? context);
 
 /// Configuration for the context switcher component.
@@ -61,10 +61,10 @@ class VooContextSwitcherConfig {
   /// Example:
   /// ```dart
   /// itemsBuilder: (project) {
-  ///   if (project == null) return [VooNavigationItem(...)];
+  ///   if (project == null) return [VooNavigationDestination(...)];
   ///   return [
-  ///     VooNavigationItem(id: 'overview', label: 'Overview', route: '/projects/${project.id}/overview'),
-  ///     VooNavigationItem(id: 'tasks', label: 'Tasks', route: '/projects/${project.id}/tasks'),
+  ///     VooNavigationDestination(id: 'overview', label: 'Overview', route: '/projects/${project.id}/overview'),
+  ///     VooNavigationDestination(id: 'tasks', label: 'Tasks', route: '/projects/${project.id}/tasks'),
   ///   ];
   /// }
   /// ```

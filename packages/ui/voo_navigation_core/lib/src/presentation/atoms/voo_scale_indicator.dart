@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Custom indicator widget with scale animation
-class VooCustomIndicator extends StatelessWidget {
+class VooScaleIndicator extends StatelessWidget {
   /// Whether the indicator is selected
   final bool isSelected;
 
@@ -20,7 +20,7 @@ class VooCustomIndicator extends StatelessWidget {
   /// Whether to animate the indicator
   final bool animate;
 
-  const VooCustomIndicator({
+  const VooScaleIndicator({
     super.key,
     required this.isSelected,
     required this.child,

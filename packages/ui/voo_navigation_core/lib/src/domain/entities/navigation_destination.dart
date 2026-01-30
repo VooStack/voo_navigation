@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-/// Represents a single navigation item with support for badges, dropdowns, and customization
-class VooNavigationItem extends Equatable {
+/// Represents a single navigation destination with support for badges, dropdowns, and customization
+class VooNavigationDestination extends Equatable {
   /// Unique identifier for the navigation item
   final String id;
 
@@ -34,7 +34,7 @@ class VooNavigationItem extends Equatable {
   final bool showDot;
 
   /// Child navigation items for dropdown/submenu
-  final List<VooNavigationItem>? children;
+  final List<VooNavigationDestination>? children;
 
   /// Whether this item is initially expanded (for items with children)
   final bool isExpanded;
@@ -90,7 +90,7 @@ class VooNavigationItem extends Equatable {
   /// Custom key for the widget
   final Key? key;
 
-  const VooNavigationItem({
+  const VooNavigationDestination({
     required this.id,
     required this.label,
     required this.icon,
@@ -144,7 +144,7 @@ class VooNavigationItem extends Equatable {
   ];
 
   /// Creates a copy of this item with the given fields replaced
-  VooNavigationItem copyWith({
+  VooNavigationDestination copyWith({
     String? id,
     String? label,
     IconData? icon,
@@ -155,7 +155,7 @@ class VooNavigationItem extends Equatable {
     String? badgeText,
     Color? badgeColor,
     bool? showDot,
-    List<VooNavigationItem>? children,
+    List<VooNavigationDestination>? children,
     bool? isExpanded,
     bool? isEnabled,
     bool? isVisible,
@@ -173,7 +173,7 @@ class VooNavigationItem extends Equatable {
     int? sortOrder,
     bool? mobilePriority,
     Key? key,
-  }) => VooNavigationItem(
+  }) => VooNavigationDestination(
     id: id ?? this.id,
     label: label ?? this.label,
     icon: icon ?? this.icon,
@@ -229,10 +229,10 @@ class VooNavigationItem extends Equatable {
   bool get isDivider => label.isEmpty && icon == Icons.remove;
 
   /// Convenience factory for creating a divider item
-  factory VooNavigationItem.divider({String? id}) => VooNavigationItem(id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}', label: '', icon: Icons.remove);
+  factory VooNavigationDestination.divider({String? id}) => VooNavigationDestination(id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}', label: '', icon: Icons.remove);
 
   /// Convenience factory for creating a section header
-  factory VooNavigationItem.section({required String label, String? id, List<VooNavigationItem>? children, bool isExpanded = true}) => VooNavigationItem(
+  factory VooNavigationDestination.section({required String label, String? id, List<VooNavigationDestination>? children, bool isExpanded = true}) => VooNavigationDestination(
     id: id ?? 'section_${label.toLowerCase().replaceAll(' ', '_')}',
     label: label,
     icon: Icons.folder_outlined,

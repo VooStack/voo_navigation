@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Single footer item widget for navigation drawer
 class VooDrawerFooterItem extends StatelessWidget {
   /// The navigation item
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Navigation configuration
   final VooNavigationConfig config;
@@ -16,7 +16,7 @@ class VooDrawerFooterItem extends StatelessWidget {
   final String selectedId;
 
   /// Callback when item is tapped
-  final void Function(VooNavigationItem item) onItemTap;
+  final void Function(VooNavigationDestination item) onItemTap;
 
   /// Whether the item is currently hovered
   final bool isHovered;

@@ -88,24 +88,8 @@ class VooMobileScaffold extends StatelessWidget {
     // Get the selected item from the config
     final selectedItem = config.items.firstWhere((item) => item.id == selectedId, orElse: () => config.items.first);
 
-    // Determine which bottom navigation style to use
-    final useExpandable = config.useExpandableBottomNav;
-
-    // Build the appropriate bottom navigation
-    Widget bottomNav;
-    if (useExpandable) {
-      bottomNav = VooExpandableBottomNavigation(
-        config: config,
-        selectedId: selectedId,
-        onNavigationItemSelected: onNavigationItemSelected,
-        actionItem: config.actionItem,
-        bottomMargin: config.floatingBottomNavBottomMargin,
-        selectedColor: config.expandableNavSelectedColor,
-        enableHapticFeedback: config.enableHapticFeedback,
-      );
-    } else {
-      bottomNav = VooAdaptiveBottomNavigation(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected);
-    }
+    // Build the bottom navigation
+    final bottomNav = VooNavigationBar(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected);
 
     // Determine FAB visibility and widget based on page config overrides
     final showFab = pageConfig?.showFloatingActionButton ?? config.showFloatingActionButton;
@@ -138,8 +122,7 @@ class VooMobileScaffold extends StatelessWidget {
       drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      // Extend body when using floating or expandable nav for proper appearance
-      extendBody: useExpandable || extendBody,
+      extendBody: extendBody,
       extendBodyBehindAppBar: extendBodyBehindAppBar,
       bottomSheet: bottomSheet,
       persistentFooterButtons: persistentFooterButtons,

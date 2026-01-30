@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_modern_icon.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
-class VooCustomNavigationItem extends StatelessWidget {
-  final VooNavigationItem item;
+/// A navigation item widget for the bottom navigation bar.
+class VooNavigationItem extends StatelessWidget {
+  final VooNavigationDestination item;
 
   final bool isSelected;
 
@@ -29,7 +30,7 @@ class VooCustomNavigationItem extends StatelessWidget {
 
   final int itemCount;
 
-  const VooCustomNavigationItem({
+  const VooNavigationItem({
     super.key,
     required this.item,
     required this.isSelected,

@@ -64,7 +64,7 @@ class _CoreComponentsExampleState extends State<CoreComponentsExample> {
   ];
 
   // Navigation items that change based on context
-  List<VooNavigationItem> _navigationItems = [];
+  List<VooNavigationDestination> _navigationItems = [];
 
   @override
   void initState() {
@@ -73,17 +73,17 @@ class _CoreComponentsExampleState extends State<CoreComponentsExample> {
     _navigationItems = _getNavigationItemsForContext(_selectedContext);
   }
 
-  List<VooNavigationItem> _getNavigationItemsForContext(VooContextItem context) {
+  List<VooNavigationDestination> _getNavigationItemsForContext(VooContextItem context) {
     // Generate different navigation items based on the selected context
     return [
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'overview',
         label: 'Overview',
         icon: Icons.dashboard_outlined,
         selectedIcon: Icons.dashboard,
         route: '/projects/${context.id}/overview',
       ),
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'tasks',
         label: 'Tasks',
         icon: Icons.task_outlined,
@@ -91,14 +91,14 @@ class _CoreComponentsExampleState extends State<CoreComponentsExample> {
         route: '/projects/${context.id}/tasks',
         badgeCount: context.id == 'project-1' ? 5 : null,
       ),
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'files',
         label: 'Files',
         icon: Icons.folder_outlined,
         selectedIcon: Icons.folder,
         route: '/projects/${context.id}/files',
       ),
-      VooNavigationItem(
+      VooNavigationDestination(
         id: 'settings',
         label: 'Settings',
         icon: Icons.settings_outlined,

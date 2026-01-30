@@ -23,7 +23,8 @@
       "Bash(python3:*)",
       "Bash(git stash:*)",
       "Bash(dart analyze:*)",
-      "Bash(flutter build:*)"
+      "Bash(flutter build:*)",
+      "Bash(git mv:*)"
     ]
   }
 }

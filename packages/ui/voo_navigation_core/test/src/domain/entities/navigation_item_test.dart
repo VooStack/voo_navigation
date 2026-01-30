@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
 
 void main() {
-  group('VooNavigationItem', () {
+  group('VooNavigationDestination', () {
     test('should create basic navigation item', () {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'home',
         label: 'Home',
         icon: Icons.home,
@@ -22,7 +22,7 @@ void main() {
     });
 
     test('should create navigation item with all properties', () {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'dashboard',
         label: 'Dashboard',
         icon: Icons.dashboard_outlined,
@@ -68,7 +68,7 @@ void main() {
     });
 
     test('should create divider', () {
-      final divider = VooNavigationItem.divider();
+      final divider = VooNavigationDestination.divider();
 
       expect(divider.id, startsWith('divider_'));
       expect(divider.label, '');
@@ -81,16 +81,16 @@ void main() {
     });
 
     test('should create section', () {
-      final section = VooNavigationItem.section(
+      final section = VooNavigationDestination.section(
         label: 'Settings',
         children: const [
-          VooNavigationItem(
+          VooNavigationDestination(
             id: 'general',
             label: 'General',
             icon: Icons.settings,
             route: '/general',
           ),
-          VooNavigationItem(
+          VooNavigationDestination(
             id: 'privacy',
             label: 'Privacy',
             icon: Icons.lock,
@@ -112,7 +112,7 @@ void main() {
     });
 
     test('effectiveSelectedIcon should return correct icon', () {
-      const itemWithSelected = VooNavigationItem(
+      const itemWithSelected = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home_outlined,
@@ -120,7 +120,7 @@ void main() {
         route: '/test',
       );
 
-      const itemWithoutSelected = VooNavigationItem(
+      const itemWithoutSelected = VooNavigationDestination(
         id: 'test2',
         label: 'Test2',
         icon: Icons.settings,
@@ -132,7 +132,7 @@ void main() {
     });
 
     test('effectiveTooltip should return correct tooltip', () {
-      const itemWithTooltip = VooNavigationItem(
+      const itemWithTooltip = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -140,7 +140,7 @@ void main() {
         route: '/test',
       );
 
-      const itemWithoutTooltip = VooNavigationItem(
+      const itemWithoutTooltip = VooNavigationDestination(
         id: 'test2',
         label: 'Test Label',
         icon: Icons.settings,
@@ -152,7 +152,7 @@ void main() {
     });
 
     test('hasBadge should return correct value', () {
-      const itemWithCount = VooNavigationItem(
+      const itemWithCount = VooNavigationDestination(
         id: 'test1',
         label: 'Test1',
         icon: Icons.home,
@@ -160,7 +160,7 @@ void main() {
         badgeCount: 5,
       );
 
-      const itemWithText = VooNavigationItem(
+      const itemWithText = VooNavigationDestination(
         id: 'test2',
         label: 'Test2',
         icon: Icons.home,
@@ -168,7 +168,7 @@ void main() {
         badgeText: 'NEW',
       );
 
-      const itemWithDot = VooNavigationItem(
+      const itemWithDot = VooNavigationDestination(
         id: 'test3',
         label: 'Test3',
         icon: Icons.home,
@@ -176,7 +176,7 @@ void main() {
         showDot: true,
       );
 
-      const itemWithoutBadge = VooNavigationItem(
+      const itemWithoutBadge = VooNavigationDestination(
         id: 'test4',
         label: 'Test4',
         icon: Icons.home,
@@ -190,12 +190,12 @@ void main() {
     });
 
     test('hasChildren should return correct value', () {
-      const itemWithChildren = VooNavigationItem(
+      const itemWithChildren = VooNavigationDestination(
         id: 'parent',
         label: 'Parent',
         icon: Icons.folder,
         children: [
-          VooNavigationItem(
+          VooNavigationDestination(
             id: 'child',
             label: 'Child',
             icon: Icons.file_copy,
@@ -204,14 +204,14 @@ void main() {
         ],
       );
 
-      const itemWithEmptyChildren = VooNavigationItem(
+      const itemWithEmptyChildren = VooNavigationDestination(
         id: 'parent2',
         label: 'Parent2',
         icon: Icons.folder,
         children: [],
       );
 
-      const itemWithoutChildren = VooNavigationItem(
+      const itemWithoutChildren = VooNavigationDestination(
         id: 'single',
         label: 'Single',
         icon: Icons.home,
@@ -224,7 +224,7 @@ void main() {
     });
 
     test('props should include all properties for Equatable', () {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -240,21 +240,21 @@ void main() {
     });
 
     test('should be equal when properties are same', () {
-      const item1 = VooNavigationItem(
+      const item1 = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
         route: '/test',
       );
 
-      const item2 = VooNavigationItem(
+      const item2 = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
         route: '/test',
       );
 
-      const item3 = VooNavigationItem(
+      const item3 = VooNavigationDestination(
         id: 'different',
         label: 'Test',
         icon: Icons.home,

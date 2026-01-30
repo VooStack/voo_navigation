@@ -1,3 +1,17 @@
+## 1.3.13
+
+### Changed
+- **Simplified Navigation Bar**: Updated to use new unified `VooNavigationBar` component
+- **NavigationDestination Support**: Updated scaffolds to use renamed `VooNavigationDestination` from core
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.10
+- Updated `voo_navigation_rail` to ^0.2.3
+- Updated `voo_navigation_drawer` to ^0.2.3
+- Updated `voo_navigation_bar` to ^0.1.6
+
+---
+
 ## 1.3.12
 
 ### Fixed

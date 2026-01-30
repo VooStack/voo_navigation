@@ -1,3 +1,17 @@
+## 0.2.10
+
+### Changed
+- **NavigationItem → NavigationDestination**: Renamed `VooNavigationItem` to `VooNavigationDestination` for clarity
+  - File renamed from `navigation_item.dart` to `navigation_destination.dart`
+  - All usages updated across the package
+- **VooCustomIndicator → VooScaleIndicator**: Renamed indicator for clarity
+  - File renamed from `voo_custom_indicator.dart` to `voo_scale_indicator.dart`
+
+### Updated
+- Various component improvements and refinements
+
+---
+
 ## 0.2.9
 
 ### Improved

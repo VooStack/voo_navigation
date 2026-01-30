@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_animated_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
@@ -12,7 +12,7 @@ class VooThemedDrawerItem extends StatefulWidget {
   final VooNavigationTheme theme;
 
   /// The navigation item data
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Whether this item is currently selected
   final bool isSelected;

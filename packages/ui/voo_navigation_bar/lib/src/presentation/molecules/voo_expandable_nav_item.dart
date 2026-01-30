@@ -16,7 +16,7 @@ enum VooExpandableLabelPosition {
 /// The icon stays centered within its circle, and the background pill expands
 /// to accommodate the label.
 class VooExpandableNavItem extends StatefulWidget {
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
   final bool isSelected;
   final VoidCallback onTap;
   final Color? selectedColor;

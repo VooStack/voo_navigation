@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Modern badge display for navigation rail items with animations
 class VooRailModernBadge extends StatefulWidget {
   /// Navigation item containing badge data
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Whether the item is selected
   final bool isSelected;

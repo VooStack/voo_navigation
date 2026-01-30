@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Modern badge widget for navigation items
 class VooModernBadge extends StatelessWidget {
   /// Navigation item containing badge data
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Whether the parent item is selected
   final bool isSelected;

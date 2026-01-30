@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 import 'package:voo_navigation_rail/src/presentation/atoms/voo_rail_modern_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
@@ -7,7 +7,7 @@ import 'package:voo_tokens/voo_tokens.dart';
 /// Navigation item widget for rail layout
 class VooRailNavigationItem extends StatefulWidget {
   /// Navigation item data
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Whether this item is selected
   final bool isSelected;
@@ -172,7 +172,7 @@ class _VooRailNavigationItemState extends State<VooRailNavigationItem>
 }
 
 class _ExtendedItemContent extends StatelessWidget {
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
   final bool isSelected;
   final Color iconColor;
   final Color? selectedItemColor;
@@ -242,7 +242,7 @@ class _ExtendedItemContent extends StatelessWidget {
 }
 
 class _CompactItemContent extends StatelessWidget {
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
   final bool isSelected;
   final Color iconColor;
 

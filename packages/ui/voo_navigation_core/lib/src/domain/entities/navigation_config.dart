@@ -6,7 +6,7 @@ import 'package:voo_navigation_core/src/domain/entities/context_switcher_config.
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_section.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_type.dart';
@@ -19,7 +19,7 @@ import 'package:voo_navigation_core/src/domain/entities/user_profile_config.dart
 /// Configuration for the adaptive navigation system
 class VooNavigationConfig {
   /// List of navigation items to display
-  final List<VooNavigationItem> items;
+  final List<VooNavigationDestination> items;
 
   /// Currently selected navigation item ID
   final String? selectedId;
@@ -194,7 +194,7 @@ class VooNavigationConfig {
   final List<VooNavigationSection>? sections;
 
   /// Footer items displayed at the bottom of the navigation rail/drawer
-  final List<VooNavigationItem>? footerItems;
+  final List<VooNavigationDestination>? footerItems;
 
   /// Callback when the navigation collapse state changes
   final void Function(bool isCollapsed)? onCollapseChanged;
@@ -214,28 +214,11 @@ class VooNavigationConfig {
   /// Horizontal margin for floating bottom navigation
   final double? floatingBottomNavMargin;
 
-  /// Bottom margin for floating bottom navigation
-  final double? floatingBottomNavBottomMargin;
-
-  /// Whether to use expandable style for bottom navigation.
-  ///
-  /// When true, uses [VooExpandableBottomNavigation] which features:
-  /// - Dark pill-shaped container with subtle border
-  /// - Selected item expands to show colored circle icon + label
-  /// - Unselected items display as dark circles with muted icons
-  /// - Optional action item with modal popup
-  final bool useExpandableBottomNav;
-
-  /// Action item configuration for expandable bottom navigation.
+  /// Action item configuration for bottom navigation.
   ///
   /// This creates a special button (e.g., plus button) that opens a modal
-  /// with custom content when tapped. Only used when [useExpandableBottomNav] is true.
+  /// with custom content when tapped.
   final VooActionNavigationItem? actionItem;
-
-  /// Custom color for the selected item circle in expandable bottom navigation.
-  ///
-  /// Defaults to the theme's primary color.
-  final Color? expandableNavSelectedColor;
 
   /// Whether to show user profile in drawer/rail footer
   final bool showUserProfile;
@@ -364,10 +347,7 @@ class VooNavigationConfig {
     this.loadingWidget,
     this.floatingBottomNav = true,
     this.floatingBottomNavMargin,
-    this.floatingBottomNavBottomMargin,
-    this.useExpandableBottomNav = false,
     this.actionItem,
-    this.expandableNavSelectedColor,
     this.showUserProfile = true,
     this.userProfileWidget,
     this.userProfileConfig,
@@ -400,7 +380,7 @@ class VooNavigationConfig {
        );
 
   /// Checks if all items (and their children) have navigation defined
-  static bool _allItemsHaveNavigation(List<VooNavigationItem> items) {
+  static bool _allItemsHaveNavigation(List<VooNavigationDestination> items) {
     for (final item in items) {
       // Skip dividers - they don't need navigation
       if (item.isDivider) continue;
@@ -422,7 +402,7 @@ class VooNavigationConfig {
 
   /// Creates a copy of this configuration with the given fields replaced
   VooNavigationConfig copyWith({
-    List<VooNavigationItem>? items,
+    List<VooNavigationDestination>? items,
     String? selectedId,
     List<VooBreakpoint>? breakpoints,
     bool? isAdaptive,
@@ -476,17 +456,14 @@ class VooNavigationConfig {
     Duration? badgeAnimationDuration,
     bool? groupItemsBySections,
     List<VooNavigationSection>? sections,
-    List<VooNavigationItem>? footerItems,
+    List<VooNavigationDestination>? footerItems,
     void Function(bool isCollapsed)? onCollapseChanged,
     Widget? emptyStateWidget,
     Widget Function(Object error)? errorBuilder,
     Widget? loadingWidget,
     bool? floatingBottomNav,
     double? floatingBottomNavMargin,
-    double? floatingBottomNavBottomMargin,
-    bool? useExpandableBottomNav,
     VooActionNavigationItem? actionItem,
-    Color? expandableNavSelectedColor,
     bool? showUserProfile,
     Widget? userProfileWidget,
     VooUserProfileConfig? userProfileConfig,
@@ -591,13 +568,7 @@ class VooNavigationConfig {
         floatingBottomNav: floatingBottomNav ?? this.floatingBottomNav,
         floatingBottomNavMargin:
             floatingBottomNavMargin ?? this.floatingBottomNavMargin,
-        floatingBottomNavBottomMargin:
-            floatingBottomNavBottomMargin ?? this.floatingBottomNavBottomMargin,
-        useExpandableBottomNav:
-            useExpandableBottomNav ?? this.useExpandableBottomNav,
         actionItem: actionItem ?? this.actionItem,
-        expandableNavSelectedColor:
-            expandableNavSelectedColor ?? this.expandableNavSelectedColor,
         showUserProfile: showUserProfile ?? this.showUserProfile,
         userProfileWidget: userProfileWidget ?? this.userProfileWidget,
         userProfileConfig: userProfileConfig ?? this.userProfileConfig,
@@ -643,13 +614,13 @@ class VooNavigationConfig {
   }
 
   /// Gets visible navigation items
-  List<VooNavigationItem> get visibleItems =>
+  List<VooNavigationDestination> get visibleItems =>
       items.where((item) => item.isVisible).toList()
         ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
 
   /// Gets mobile priority navigation items (max 5 items for bottom navigation)
-  List<VooNavigationItem> get mobilePriorityItems {
-    final priorityItems = <VooNavigationItem>[];
+  List<VooNavigationDestination> get mobilePriorityItems {
+    final priorityItems = <VooNavigationDestination>[];
 
     // Add context switcher as nav item if configured with mobilePriority
     if (contextSwitcher != null &&
@@ -682,7 +653,7 @@ class VooNavigationConfig {
     }
 
     if (priorityItems.isEmpty) {
-      final fallbackItems = <VooNavigationItem>[];
+      final fallbackItems = <VooNavigationDestination>[];
       for (final item in items) {
         if (item.isVisible && !item.hasChildren) {
           fallbackItems.add(item);
@@ -698,9 +669,9 @@ class VooNavigationConfig {
 
   /// Creates a pseudo-navigation item for the context switcher.
   /// This item is used in bottom navigation to render the context switcher.
-  VooNavigationItem _createContextSwitcherNavItem() {
+  VooNavigationDestination _createContextSwitcherNavItem() {
     final selected = contextSwitcher?.selectedItem;
-    return VooNavigationItem(
+    return VooNavigationDestination(
       id: '_context_switcher_nav',
       label: contextSwitcher?.navItemLabel ??
           selected?.name ??
@@ -716,8 +687,8 @@ class VooNavigationConfig {
 
   /// Creates a pseudo-navigation item for the multi-switcher.
   /// This item is used in bottom navigation to render the multi-switcher.
-  VooNavigationItem _createMultiSwitcherNavItem() {
-    return VooNavigationItem(
+  VooNavigationDestination _createMultiSwitcherNavItem() {
+    return VooNavigationDestination(
       id: '_multi_switcher_nav',
       label: multiSwitcher?.navItemLabel ??
           multiSwitcher?.userName ??
@@ -731,7 +702,7 @@ class VooNavigationConfig {
   }
 
   /// Gets the selected navigation item
-  VooNavigationItem? get selectedItem {
+  VooNavigationDestination? get selectedItem {
     if (selectedId == null) return null;
     try {
       return items.firstWhere((item) => item.id == selectedId);
@@ -741,8 +712,8 @@ class VooNavigationConfig {
   }
 
   /// Gets all navigation items including those from sections
-  List<VooNavigationItem> get allItems {
-    final allItemsList = <VooNavigationItem>[...items];
+  List<VooNavigationDestination> get allItems {
+    final allItemsList = <VooNavigationDestination>[...items];
 
     if (sections != null) {
       for (final section in sections!) {
@@ -763,7 +734,7 @@ class VooNavigationConfig {
   }
 
   /// Gets visible footer items sorted by sortOrder
-  List<VooNavigationItem> get visibleFooterItems {
+  List<VooNavigationDestination> get visibleFooterItems {
     if (footerItems == null) return [];
     return footerItems!.where((item) => item.isVisible).toList()
       ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
@@ -833,8 +804,8 @@ class VooOrganizationSwitcherConfig {
 
 /// Configuration for the search bar
 class VooSearchBarConfig {
-  final List<VooNavigationItem>? navigationItems;
-  final ValueChanged<List<VooNavigationItem>>? onFilteredItemsChanged;
+  final List<VooNavigationDestination>? navigationItems;
+  final ValueChanged<List<VooNavigationDestination>>? onFilteredItemsChanged;
   final ValueChanged<String>? onSearch;
   final VoidCallback? onSearchSubmit;
   final List<VooSearchAction>? searchActions;
@@ -844,7 +815,7 @@ class VooSearchBarConfig {
   final String? keyboardShortcutHint;
   final VooSearchBarStyle? style;
   final bool expanded;
-  final ValueChanged<VooNavigationItem>? onNavigationItemSelected;
+  final ValueChanged<VooNavigationDestination>? onNavigationItemSelected;
   final ValueChanged<VooSearchAction>? onSearchActionSelected;
 
   const VooSearchBarConfig({
@@ -864,8 +835,8 @@ class VooSearchBarConfig {
   });
 
   VooSearchBarConfig copyWith({
-    List<VooNavigationItem>? navigationItems,
-    ValueChanged<List<VooNavigationItem>>? onFilteredItemsChanged,
+    List<VooNavigationDestination>? navigationItems,
+    ValueChanged<List<VooNavigationDestination>>? onFilteredItemsChanged,
     ValueChanged<String>? onSearch,
     VoidCallback? onSearchSubmit,
     List<VooSearchAction>? searchActions,
@@ -875,7 +846,7 @@ class VooSearchBarConfig {
     String? keyboardShortcutHint,
     VooSearchBarStyle? style,
     bool? expanded,
-    ValueChanged<VooNavigationItem>? onNavigationItemSelected,
+    ValueChanged<VooNavigationDestination>? onNavigationItemSelected,
     ValueChanged<VooSearchAction>? onSearchActionSelected,
   }) =>
       VooSearchBarConfig(

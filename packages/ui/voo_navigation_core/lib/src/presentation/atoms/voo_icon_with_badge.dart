@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_navigation_badge.dart';
 
 /// Icon with optional badge widget for navigation items
 class VooIconWithBadge extends StatelessWidget {
   /// Navigation item containing icon and badge data
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Whether this item is selected
   final bool isSelected;

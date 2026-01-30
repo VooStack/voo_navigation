@@ -15,7 +15,7 @@ import 'package:voo_navigation_bar/src/presentation/molecules/voo_action_nav_ite
 ///
 /// Example:
 /// ```dart
-/// VooExpandableBottomNavigation(
+/// VooNavigationBar(
 ///   config: config,
 ///   selectedId: 'home',
 ///   onNavigationItemSelected: (id) => setState(() => _selectedId = id),
@@ -31,7 +31,7 @@ import 'package:voo_navigation_bar/src/presentation/molecules/voo_action_nav_ite
 ///   ),
 /// )
 /// ```
-class VooExpandableBottomNavigation extends StatelessWidget {
+class VooNavigationBar extends StatelessWidget {
   /// Navigation configuration containing the items to display
   final VooNavigationConfig config;
 
@@ -57,12 +57,12 @@ class VooExpandableBottomNavigation extends StatelessWidget {
   final Color? selectedColor;
 
   /// Whether to enable haptic feedback on item selection
-  final bool enableHapticFeedback;
+  final bool enableFeedback;
 
   /// Horizontal margin for the navigation bar
   final double horizontalMargin;
 
-  const VooExpandableBottomNavigation({
+  const VooNavigationBar({
     super.key,
     required this.config,
     required this.selectedId,
@@ -72,7 +72,7 @@ class VooExpandableBottomNavigation extends StatelessWidget {
     this.backgroundColor,
     this.borderColor,
     this.selectedColor,
-    this.enableHapticFeedback = true,
+    this.enableFeedback = true,
     this.horizontalMargin = 16.0,
   });
 
@@ -129,7 +129,7 @@ class VooExpandableBottomNavigation extends StatelessWidget {
 
   List<Widget> _buildNavigationItems(
     BuildContext context,
-    List<VooNavigationItem> items,
+    List<VooNavigationDestination> items,
   ) {
     final widgets = <Widget>[];
 
@@ -171,7 +171,7 @@ class VooExpandableBottomNavigation extends StatelessWidget {
             isSelected: false,
             isCompact: true,
             useFloatingStyle: true,
-            enableHapticFeedback: enableHapticFeedback,
+            enableHapticFeedback: enableFeedback,
           ),
         );
       } else if (item.id == VooMultiSwitcherNavItem.navItemId &&
@@ -182,7 +182,7 @@ class VooExpandableBottomNavigation extends StatelessWidget {
             isSelected: false,
             isCompact: true,
             useFloatingStyle: true,
-            enableHapticFeedback: enableHapticFeedback,
+            enableHapticFeedback: enableFeedback,
           ),
         );
       } else {
@@ -194,7 +194,7 @@ class VooExpandableBottomNavigation extends StatelessWidget {
             selectedColor: selectedColor,
             labelPosition: labelPosition,
             onTap: () {
-              if (enableHapticFeedback) {
+              if (enableFeedback) {
                 HapticFeedback.lightImpact();
               }
               onNavigationItemSelected(item.id);
@@ -215,7 +215,7 @@ class VooExpandableBottomNavigation extends StatelessWidget {
   Widget _buildActionItem(BuildContext context) {
     return VooActionNavItem(
       actionItem: actionItem!,
-      enableHapticFeedback: enableHapticFeedback,
+      enableHapticFeedback: enableFeedback,
       circleColor: selectedColor,
     );
   }

@@ -7,7 +7,7 @@ import '../../../helpers/test_helpers.dart';
 void main() {
   group('VooNavigationBadge', () {
     testWidgets('should show count badge', (WidgetTester tester) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -35,7 +35,7 @@ void main() {
     });
 
     testWidgets('should show text badge', (WidgetTester tester) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -62,7 +62,7 @@ void main() {
     });
 
     testWidgets('should show dot indicator', (WidgetTester tester) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -100,7 +100,7 @@ void main() {
     });
 
     testWidgets('should format large count', (WidgetTester tester) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -127,7 +127,7 @@ void main() {
     });
 
     testWidgets('should hide when no badge data', (WidgetTester tester) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -154,7 +154,7 @@ void main() {
     });
 
     testWidgets('should use custom badge color', (WidgetTester tester) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -208,7 +208,7 @@ void main() {
     });
 
     testWidgets('should animate badge appearance', (WidgetTester tester) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,
@@ -239,7 +239,7 @@ void main() {
     testWidgets('should not animate when animations disabled', (
       WidgetTester tester,
     ) async {
-      const item = VooNavigationItem(
+      const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
         icon: Icons.home,

@@ -143,7 +143,7 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
   }
 
   /// Recursively finds an item by ID, including items nested in sections
-  VooNavigationItem? _findItemById(List<VooNavigationItem> items, String itemId) {
+  VooNavigationDestination? _findItemById(List<VooNavigationDestination> items, String itemId) {
     for (final item in items) {
       if (item.id == itemId) return item;
       if (item.children != null) {

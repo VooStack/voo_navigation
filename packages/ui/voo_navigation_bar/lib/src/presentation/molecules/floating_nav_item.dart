@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
 
 /// Single navigation item for the floating bottom navigation bar
 class VooFloatingNavItem extends StatelessWidget {
   /// The navigation item data
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Whether this item is currently selected
   final bool isSelected;

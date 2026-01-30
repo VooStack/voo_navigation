@@ -133,18 +133,18 @@ void main() {
   });
 
   group('Body layout in scaffolds', () {
-    late List<VooNavigationItem> navigationItems;
+    late List<VooNavigationDestination> navigationItems;
     late VooNavigationConfig config;
 
     setUp(() {
       navigationItems = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
           route: '/home',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,

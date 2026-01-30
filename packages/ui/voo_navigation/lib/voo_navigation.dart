@@ -11,13 +11,13 @@ library;
 // Re-export all sub-packages for convenience
 export 'package:voo_navigation_core/voo_navigation_core.dart';
 export 'package:voo_navigation_rail/voo_navigation_rail.dart'
-    hide VooNavigationConfig, VooNavigationItem, VooNavigationType,
+    hide VooNavigationConfig, VooNavigationDestination, VooNavigationType,
          VooNavigationTheme, VooBreakpoint, VooNavigationSection, VooPageConfig;
 export 'package:voo_navigation_drawer/voo_navigation_drawer.dart'
-    hide VooNavigationConfig, VooNavigationItem, VooNavigationType,
+    hide VooNavigationConfig, VooNavigationDestination, VooNavigationType,
          VooNavigationTheme, VooBreakpoint, VooNavigationSection, VooPageConfig;
 export 'package:voo_navigation_bar/voo_navigation_bar.dart'
-    hide VooNavigationConfig, VooNavigationItem, VooNavigationType,
+    hide VooNavigationConfig, VooNavigationDestination, VooNavigationType,
          VooNavigationTheme, VooBreakpoint, VooNavigationSection, VooPageConfig;
 
 // Presentation - Organisms (Orchestration layer - stays in voo_navigation)

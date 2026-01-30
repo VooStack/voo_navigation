@@ -6,7 +6,7 @@ void main() {
   group('VooNavigationConfig', () {
     test('should create config with required parameters', () {
       final items = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
@@ -28,13 +28,13 @@ void main() {
 
     test('should create config with all parameters', () {
       final items = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
           route: '/test',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,
@@ -112,20 +112,20 @@ void main() {
 
     test('visibleItems should filter out invisible items', () {
       final items = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
           route: '/test',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'hidden',
           label: 'Hidden',
           icon: Icons.visibility_off,
           route: '/test',
           isVisible: false,
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,
@@ -145,13 +145,13 @@ void main() {
 
     test('selectedId should work correctly', () {
       final items = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
           route: '/test',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,
@@ -182,13 +182,13 @@ void main() {
     });
 
     test('selectedItem should return correct item or null', () {
-      const homeItem = VooNavigationItem(
+      const homeItem = VooNavigationDestination(
         id: 'home',
         label: 'Home',
         icon: Icons.home,
         route: '/test',
       );
-      const settingsItem = VooNavigationItem(
+      const settingsItem = VooNavigationDestination(
         id: 'settings',
         label: 'Settings',
         icon: Icons.settings,
@@ -215,7 +215,7 @@ void main() {
 
     test('copyWith should create new instance with updated values', () {
       final items = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
@@ -230,7 +230,7 @@ void main() {
       );
 
       final newItems = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,
@@ -252,13 +252,13 @@ void main() {
 
     test('configuration callback should be called', () {
       final items = [
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'home',
           label: 'Home',
           icon: Icons.home,
           route: '/test',
         ),
-        const VooNavigationItem(
+        const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
           icon: Icons.settings,

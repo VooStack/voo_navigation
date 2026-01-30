@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_dropdown_children.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_dropdown_header.dart';
 
 /// Dropdown navigation component for expandable menu items
 class VooNavigationDropdown extends StatefulWidget {
   /// Parent navigation item with children
-  final VooNavigationItem item;
+  final VooNavigationDestination item;
 
   /// Currently selected item ID
   final String? selectedId;

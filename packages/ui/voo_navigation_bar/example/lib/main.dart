@@ -32,8 +32,8 @@ class BottomNavigationExample extends StatefulWidget {
 class _BottomNavigationExampleState extends State<BottomNavigationExample> {
   String _selectedId = 'home';
 
-  final List<VooNavigationItem> _items = const [
-    VooNavigationItem(
+  final List<VooNavigationDestination> _items = const [
+    VooNavigationDestination(
       id: 'home',
       label: 'Home',
       icon: Icons.home_outlined,
@@ -41,7 +41,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
       route: '/home',
       mobilePriority: true,
     ),
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'search',
       label: 'Search',
       icon: Icons.search_outlined,
@@ -49,7 +49,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
       route: '/search',
       mobilePriority: true,
     ),
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'notifications',
       label: 'Alerts',
       icon: Icons.notifications_outlined,
@@ -57,7 +57,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
       route: '/notifications',
       mobilePriority: true,
     ),
-    VooNavigationItem(
+    VooNavigationDestination(
       id: 'profile',
       label: 'Profile',
       icon: Icons.person_outlined,
@@ -155,18 +155,18 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
           ],
         ),
       ),
-      bottomNavigationBar: VooExpandableBottomNavigation(
+      bottomNavigationBar: VooNavigationBar(
         config: _config,
         selectedId: _selectedId,
         onNavigationItemSelected: _onItemSelected,
         actionItem: _actionItem,
         selectedColor: const Color(0xFF10B981),
-        enableHapticFeedback: true,
+        enableFeedback: true,
       ),
     );
   }
 
-  VooNavigationItem? _findItemById(String id) {
+  VooNavigationDestination? _findItemById(String id) {
     for (final item in _items) {
       if (item.id == id) return item;
     }

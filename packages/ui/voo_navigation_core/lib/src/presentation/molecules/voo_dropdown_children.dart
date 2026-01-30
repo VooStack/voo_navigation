@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_dropdown_child_item.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Dropdown children widget that displays child navigation items
 class VooDropdownChildren extends StatelessWidget {
   /// Parent navigation item with children
-  final VooNavigationItem parentItem;
+  final VooNavigationDestination parentItem;
 
   /// Navigation configuration
   final VooNavigationConfig config;

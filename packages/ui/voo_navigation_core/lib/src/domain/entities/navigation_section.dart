@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 
 /// Represents a group of navigation items with a title and optional styling.
 ///
@@ -13,8 +13,8 @@ import 'package:voo_navigation_core/src/domain/entities/navigation_item.dart';
 ///   id: 'main_section',
 ///   title: 'Main',
 ///   items: [
-///     VooNavigationItem(id: 'home', label: 'Home', icon: Icons.home, route: '/'),
-///     VooNavigationItem(id: 'dashboard', label: 'Dashboard', icon: Icons.dashboard, route: '/dashboard'),
+///     VooNavigationDestination(id: 'home', label: 'Home', icon: Icons.home, route: '/'),
+///     VooNavigationDestination(id: 'dashboard', label: 'Dashboard', icon: Icons.dashboard, route: '/dashboard'),
 ///   ],
 /// )
 /// ```
@@ -29,7 +29,7 @@ class VooNavigationSection extends Equatable {
   final IconData? icon;
 
   /// Navigation items within this section
-  final List<VooNavigationItem> items;
+  final List<VooNavigationDestination> items;
 
   /// Whether the section is initially expanded
   final bool isExpanded;
@@ -97,7 +97,7 @@ class VooNavigationSection extends Equatable {
     String? id,
     String? title,
     IconData? icon,
-    List<VooNavigationItem>? items,
+    List<VooNavigationDestination>? items,
     bool? isExpanded,
     bool? isCollapsible,
     bool? showDividerBefore,
@@ -134,14 +134,14 @@ class VooNavigationSection extends Equatable {
   bool get hasVisibleItems => items.any((item) => item.isVisible);
 
   /// Gets visible items in this section
-  List<VooNavigationItem> get visibleItems =>
+  List<VooNavigationDestination> get visibleItems =>
       items.where((item) => item.isVisible).toList()
         ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
 
-  /// Converts this section to a VooNavigationItem for backward compatibility
+  /// Converts this section to a VooNavigationDestination for backward compatibility
   ///
   /// This allows sections to be used with existing code that expects items
-  VooNavigationItem toNavigationItem() => VooNavigationItem(
+  VooNavigationDestination toNavigationItem() => VooNavigationDestination(
         id: id,
         label: title,
         icon: icon ?? Icons.folder_outlined,

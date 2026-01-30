@@ -62,27 +62,27 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
     _selectedOrganization = _organizations.first;
   }
 
-  final List<VooNavigationItem> _items = [
-    const VooNavigationItem(
+  final List<VooNavigationDestination> _items = [
+    const VooNavigationDestination(
       id: 'dashboard',
       label: 'Dashboard',
       icon: Icons.dashboard_outlined,
       selectedIcon: Icons.dashboard,
       route: '/dashboard',
     ),
-    VooNavigationItem.section(
+    VooNavigationDestination.section(
       label: 'Teams',
       id: 'teams',
       isExpanded: true,
       children: const [
-        VooNavigationItem(
+        VooNavigationDestination(
           id: 'team_overview',
           label: 'Overview',
           icon: Icons.groups_outlined,
           selectedIcon: Icons.groups,
           route: '/teams/overview',
         ),
-        VooNavigationItem(
+        VooNavigationDestination(
           id: 'team_members',
           label: 'Members',
           icon: Icons.person_outline,
@@ -91,14 +91,14 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
         ),
       ],
     ),
-    const VooNavigationItem(
+    const VooNavigationDestination(
       id: 'analytics',
       label: 'Analytics',
       icon: Icons.analytics_outlined,
       selectedIcon: Icons.analytics,
       route: '/analytics',
     ),
-    const VooNavigationItem(
+    const VooNavigationDestination(
       id: 'notifications',
       label: 'Notifications',
       icon: Icons.notifications_outlined,
@@ -108,7 +108,7 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
     ),
   ];
 
-  final List<VooNavigationItem> _footerItems = [];
+  final List<VooNavigationDestination> _footerItems = [];
 
   void _onNavigationItemSelected(String itemId) {
     setState(() {
@@ -286,7 +286,7 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
     );
   }
 
-  VooNavigationItem? _findItemById(String id) {
+  VooNavigationDestination? _findItemById(String id) {
     final allItems = [..._items, ..._footerItems];
     for (final item in allItems) {
       if (item.id == id) return item;
