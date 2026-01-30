@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:voo_navigation_core/voo_navigation_core.dart';
+import 'package:voo_navigation_bar/voo_navigation_bar.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_scaffold_builder.dart';
 import 'package:voo_navigation/src/presentation/utils/voo_page_scope.dart';
 import 'package:voo_responsive/voo_responsive.dart';
@@ -155,9 +155,13 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
   }
 
   void _onNavigationItemSelected(String itemId) {
+    // Check if this is a special nav item (user profile, etc.)
+    final isSpecialItem = itemId == VooUserProfileNavItem.navItemId;
+
     final item = _findItemById(widget.config.items, itemId);
 
-    if (item == null || !item.isEnabled) return;
+    // For regular items, validate the item exists and is enabled
+    if (!isSpecialItem && (item == null || !item.isEnabled)) return;
 
     if (widget.config.enableHapticFeedback) {
       HapticFeedback.lightImpact();
@@ -167,13 +171,15 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
       _selectedId = itemId;
     });
 
-    // Handle navigation
-    if (item.route != null && context.mounted) {
-      Navigator.of(context).pushNamed(item.route!);
+    // Handle navigation for regular items
+    if (item?.route != null && context.mounted) {
+      Navigator.of(context).pushNamed(item!.route!);
     }
 
-    // Call custom callback
-    item.onTap?.call();
+    // Call custom callback for regular items
+    item?.onTap?.call();
+
+    // Always call the config callback (handles both regular and special items)
     widget.config.onNavigationItemSelected?.call(itemId);
 
     // Animate content change if enabled

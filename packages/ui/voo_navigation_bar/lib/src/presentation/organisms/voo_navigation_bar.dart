@@ -292,6 +292,9 @@ class VooNavigationBar extends StatelessWidget {
           isSelected: selectedId == VooUserProfileNavItem.navItemId,
           labelPosition: VooExpandableLabelPosition.start,
           maxLabelWidth: maxLabelWidth,
+          onNavigationSelected: () {
+            onNavigationItemSelected(VooUserProfileNavItem.navItemId);
+          },
         ),
       );
     }

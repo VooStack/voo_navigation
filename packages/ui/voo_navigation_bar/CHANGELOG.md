@@ -1,3 +1,12 @@
+## 0.1.10
+
+### Fixed
+- **VooUserProfileNavItem**: Fixed expand/collapse animation not triggering when tapped without a modal builder
+  - Added `onNavigationSelected` callback parameter to notify the navigation bar of selection changes
+  - `VooNavigationBar` now passes this callback to update the selection state, enabling proper expand animation
+
+---
+
 ## 0.1.9
 
 ### Fixed

@@ -1,3 +1,15 @@
+## 1.3.18
+
+### Fixed
+- **User Profile Selection Animation**: Fixed expand/collapse animation not playing when user profile nav item is tapped
+  - `VooAdaptiveScaffold` now properly handles special nav items (user profile) in selection state updates
+  - Selection state now correctly updates to `_user_profile_nav` ID, triggering the expand animation
+
+### Dependencies
+- Updated `voo_navigation_bar` to ^0.1.10 (User profile selection fix)
+
+---
+
 ## 1.3.17
 
 ### Fixed

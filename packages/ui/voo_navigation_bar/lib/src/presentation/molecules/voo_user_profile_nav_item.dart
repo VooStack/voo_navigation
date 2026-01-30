@@ -34,6 +34,11 @@ class VooUserProfileNavItem extends StatefulWidget {
   /// Maximum width for the label. Defaults to 60dp.
   final double maxLabelWidth;
 
+  /// Callback when this item is selected as a navigation item.
+  /// Called alongside config.onTap when no modalBuilder is provided.
+  /// This is used by VooNavigationBar to update the selection state.
+  final VoidCallback? onNavigationSelected;
+
   /// Navigation item ID for this profile item
   static const String navItemId = '_user_profile_nav';
 
@@ -49,6 +54,7 @@ class VooUserProfileNavItem extends StatefulWidget {
     ),
     this.animationCurve = Curves.easeOutCubic,
     this.maxLabelWidth = 60.0,
+    this.onNavigationSelected,
   });
 
   @override
@@ -129,7 +135,9 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
         openModal(_buildModalContent);
       }
     } else {
-      // Otherwise call onTap (consumer controls selection state)
+      // Notify navigation bar of selection (for selection state/animation)
+      widget.onNavigationSelected?.call();
+      // Also call user's custom onTap
       widget.config.onTap?.call();
     }
   }
