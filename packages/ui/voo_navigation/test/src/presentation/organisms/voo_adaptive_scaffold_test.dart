@@ -16,19 +16,19 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/home',
         ),
         const VooNavigationDestination(
           id: 'search',
           label: 'Search',
-          icon: Icons.search,
+          icon: Icon(Icons.search),
           route: '/search',
         ),
         const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
-          icon: Icons.settings,
+          icon: Icon(Icons.settings),
           route: '/settings',
         ),
       ];
@@ -220,19 +220,19 @@ void main() {
           VooNavigationDestination(
             id: 'home',
             label: 'Home',
-            icon: Icons.home,
+            icon: const Icon(Icons.home),
             onTap: () {},
           ),
           VooNavigationDestination(
             id: 'search',
             label: 'Search',
-            icon: Icons.search,
+            icon: const Icon(Icons.search),
             onTap: () {},
           ),
           VooNavigationDestination(
             id: 'settings',
             label: 'Settings',
-            icon: Icons.settings,
+            icon: const Icon(Icons.settings),
             onTap: () {},
           ),
         ];

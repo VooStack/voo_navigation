@@ -32,11 +32,13 @@ class VooModernIcon extends StatelessWidget {
       transitionBuilder: (child, animation) {
         return ScaleTransition(scale: animation, child: child);
       },
-      child: Icon(
-        isSelected ? item.effectiveSelectedIcon : item.icon,
+      child: IconTheme(
         key: ValueKey(isSelected),
-        color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.8),
-        size: isSelected ? selectedSize : unselectedSize,
+        data: IconThemeData(
+          color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.8),
+          size: isSelected ? selectedSize : unselectedSize,
+        ),
+        child: isSelected ? item.effectiveSelectedIcon : item.icon,
       ),
     );
 

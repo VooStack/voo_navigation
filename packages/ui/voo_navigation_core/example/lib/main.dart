@@ -79,30 +79,30 @@ class _CoreComponentsExampleState extends State<CoreComponentsExample> {
       VooNavigationDestination(
         id: 'overview',
         label: 'Overview',
-        icon: Icons.dashboard_outlined,
-        selectedIcon: Icons.dashboard,
+        icon: const Icon(Icons.dashboard_outlined),
+        selectedIcon: const Icon(Icons.dashboard),
         route: '/projects/${context.id}/overview',
       ),
       VooNavigationDestination(
         id: 'tasks',
         label: 'Tasks',
-        icon: Icons.task_outlined,
-        selectedIcon: Icons.task,
+        icon: const Icon(Icons.task_outlined),
+        selectedIcon: const Icon(Icons.task),
         route: '/projects/${context.id}/tasks',
         badgeCount: context.id == 'project-1' ? 5 : null,
       ),
       VooNavigationDestination(
         id: 'files',
         label: 'Files',
-        icon: Icons.folder_outlined,
-        selectedIcon: Icons.folder,
+        icon: const Icon(Icons.folder_outlined),
+        selectedIcon: const Icon(Icons.folder),
         route: '/projects/${context.id}/files',
       ),
       VooNavigationDestination(
         id: 'settings',
         label: 'Settings',
-        icon: Icons.settings_outlined,
-        selectedIcon: Icons.settings,
+        icon: const Icon(Icons.settings_outlined),
+        selectedIcon: const Icon(Icons.settings),
         route: '/projects/${context.id}/settings',
       ),
     ];
@@ -203,7 +203,10 @@ class _CoreComponentsExampleState extends State<CoreComponentsExample> {
               child: Column(
                 children: _navigationItems.map((item) {
                   return ListTile(
-                    leading: Icon(item.icon, color: colorScheme.primary),
+                    leading: IconTheme(
+                      data: IconThemeData(color: colorScheme.primary),
+                      child: item.icon,
+                    ),
                     title: Text(item.label),
                     subtitle: Text(item.route ?? ''),
                     trailing: item.badgeCount != null

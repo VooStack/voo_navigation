@@ -141,13 +141,13 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/home',
         ),
         const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
-          icon: Icons.settings,
+          icon: Icon(Icons.settings),
           route: '/settings',
         ),
       ];

@@ -208,11 +208,13 @@ class _ExtendedItemContent extends StatelessWidget {
         else
           AnimatedSwitcher(
             duration: context.vooAnimation.durationFast,
-            child: Icon(
-              isSelected ? item.effectiveSelectedIcon : item.icon,
+            child: IconTheme(
               key: ValueKey(isSelected),
-              color: iconColor,
-              size: VooNavigationTokens.iconSizeDefault,
+              data: IconThemeData(
+                color: iconColor,
+                size: VooNavigationTokens.iconSizeDefault,
+              ),
+              child: isSelected ? item.effectiveSelectedIcon : item.icon,
             ),
           ),
         const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
@@ -264,11 +266,13 @@ class _CompactItemContent extends StatelessWidget {
           else
             AnimatedSwitcher(
               duration: context.vooAnimation.durationFast,
-              child: Icon(
-                isSelected ? item.effectiveSelectedIcon : item.icon,
+              child: IconTheme(
                 key: ValueKey(isSelected),
-                color: iconColor,
-                size: VooNavigationTokens.iconSizeCompact,
+                data: IconThemeData(
+                  color: iconColor,
+                  size: VooNavigationTokens.iconSizeCompact,
+                ),
+                child: isSelected ? item.effectiveSelectedIcon : item.icon,
               ),
             ),
           if (item.hasBadge)

@@ -44,21 +44,25 @@ class VooIconWithBadge extends StatelessWidget {
         config.unselectedItemColor ??
         colorScheme.onSurfaceVariant;
 
+    final iconWidget = useSelectedIcon ? item.effectiveSelectedIcon : item.icon;
     final icon = AnimatedSwitcher(
       duration: const Duration(milliseconds: 250),
       transitionBuilder: (child, animation) => FadeTransition(
         opacity: animation,
         child: ScaleTransition(scale: animation, child: child),
       ),
-      child:
-          item.leadingWidget ??
-          Icon(
-            useSelectedIcon ? item.effectiveSelectedIcon : item.icon,
+      child: item.leadingWidget ??
+          KeyedSubtree(
             key: ValueKey('${item.id}_${useSelectedIcon}_$isSelected'),
-            color: isSelected
-                ? (item.selectedIconColor ?? effectiveSelectedColor)
-                : (item.iconColor ?? effectiveUnselectedColor),
-            size: isSelected ? 28 : 24,
+            child: IconTheme(
+              data: IconThemeData(
+                color: isSelected
+                    ? (item.selectedIconColor ?? effectiveSelectedColor)
+                    : (item.iconColor ?? effectiveUnselectedColor),
+                size: isSelected ? 28 : 24,
+              ),
+              child: iconWidget,
+            ),
           ),
     );
 

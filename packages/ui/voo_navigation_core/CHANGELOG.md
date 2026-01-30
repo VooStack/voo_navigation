@@ -1,3 +1,24 @@
+## 0.2.11
+
+### Changed
+- **VooNavigationDestination**: Icon type changed from `IconData` to `Widget`
+  - Now accepts `Icon` widgets directly instead of `IconData`
+  - Enables full customization of icon size, color, and other properties at definition time
+  - Components use `IconTheme` to apply default styling when needed
+  - `effectiveSelectedIcon` getter now returns `Widget` instead of `IconData`
+
+### Added
+- **VooUserProfileConfig**: Added mobile bottom navigation support
+  - `mobilePriority` - Include user profile in mobile bottom navigation
+  - `modalBuilder` - Custom modal builder for profile tap action in bottom nav
+  - `navItemSortOrder` - Control positioning in bottom navigation
+  - `navItemLabel` - Custom label for the nav item
+  - `effectiveInitials` - Getter to derive initials from userName
+  - `effectiveNavItemLabel` - Getter for resolved nav item label
+- **VooUserProfileModalData**: Data class for modal builder callback
+
+---
+
 ## 0.2.10
 
 ### Changed

@@ -30,10 +30,12 @@ class VooFloatingNavItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            isSelected ? item.effectiveSelectedIcon : item.icon,
-            color: isSelected ? selectedColor : foreground.withValues(alpha: VooNavigationTokens.opacityDisabled),
-            size: VooNavigationTokens.iconSizeCompact,
+          IconTheme(
+            data: IconThemeData(
+              color: isSelected ? selectedColor : foreground.withValues(alpha: VooNavigationTokens.opacityDisabled),
+              size: VooNavigationTokens.iconSizeCompact,
+            ),
+            child: isSelected ? item.effectiveSelectedIcon : item.icon,
           ),
         ],
       ),

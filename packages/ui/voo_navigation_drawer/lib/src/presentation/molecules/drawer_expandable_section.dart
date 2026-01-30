@@ -75,10 +75,12 @@ class VooDrawerExpandableSection extends StatelessWidget {
               child: Row(
                 children: [
                   // Section icon
-                  Icon(
-                    item.icon,
-                    color: sectionColor.withValues(alpha: 0.7),
-                    size: VooNavigationTokens.iconSizeDefault,
+                  IconTheme(
+                    data: IconThemeData(
+                      color: sectionColor.withValues(alpha: 0.7),
+                      size: VooNavigationTokens.iconSizeDefault,
+                    ),
+                    child: item.icon,
                   ),
                   const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
                   Expanded(

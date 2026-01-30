@@ -100,14 +100,16 @@ class VooRailSectionHeader extends StatelessWidget {
                     : Colors.transparent,
               ),
               child: Center(
-                child: Icon(
-                  hasSelectedChild || item.isExpanded
+                child: IconTheme(
+                  data: IconThemeData(
+                    color: hasSelectedChild
+                        ? effectiveSelectedColor
+                        : effectiveUnselectedColor,
+                    size: 24,
+                  ),
+                  child: hasSelectedChild || item.isExpanded
                       ? item.selectedIcon ?? item.icon
                       : item.icon,
-                  color: hasSelectedChild
-                      ? effectiveSelectedColor
-                      : effectiveUnselectedColor,
-                  size: 24,
                 ),
               ),
             ),

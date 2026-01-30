@@ -10,7 +10,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         badgeCount: 5,
       );
@@ -38,7 +38,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         badgeText: 'NEW',
       );
@@ -65,7 +65,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         showDot: true,
       );
@@ -103,7 +103,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         badgeCount: 150,
       );
@@ -130,7 +130,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
       );
 
@@ -157,7 +157,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         badgeCount: 3,
         badgeColor: Colors.green,
@@ -211,7 +211,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         badgeCount: 5,
       );
@@ -242,7 +242,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         badgeCount: 5,
       );

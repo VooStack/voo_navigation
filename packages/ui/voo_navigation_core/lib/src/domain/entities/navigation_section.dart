@@ -144,8 +144,8 @@ class VooNavigationSection extends Equatable {
   VooNavigationDestination toNavigationItem() => VooNavigationDestination(
         id: id,
         label: title,
-        icon: icon ?? Icons.folder_outlined,
-        selectedIcon: icon ?? Icons.folder,
+        icon: icon != null ? Icon(icon) : const Icon(Icons.folder_outlined),
+        selectedIcon: icon != null ? Icon(icon) : const Icon(Icons.folder),
         children: items,
         isExpanded: isExpanded,
         isVisible: isVisible,

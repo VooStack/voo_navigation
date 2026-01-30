@@ -138,10 +138,12 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
           shape: BoxShape.circle,
         ),
         child: Center(
-          child: Icon(
-            icon,
-            color: iconColor,
-            size: VooNavigationTokens.iconSizeCompact,
+          child: IconTheme(
+            data: IconThemeData(
+              color: iconColor,
+              size: VooNavigationTokens.iconSizeCompact,
+            ),
+            child: icon,
           ),
         ),
       );

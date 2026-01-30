@@ -1,3 +1,23 @@
+## 0.1.7
+
+### Fixed
+- **Bottom Navigation Bar Padding**: Reduced default bottom margin from 24px to 8px
+  - Bottom navigation bar now sits closer to the bottom on devices with home indicator
+  - Total bottom spacing = 8px margin + safe area inset (~42px total on iPhone)
+  - Modal positioning updated to match new margin
+
+### Added
+- **VooUserProfileNavItem**: User profile avatar in bottom navigation
+  - Displays user avatar image, or initials if no image provided
+  - Opens custom modal when `modalBuilder` is configured in `VooUserProfileConfig`
+  - Falls back to `onTap` callback when no modal builder provided
+  - Integrates with `VooNavigationBar` automatically when `mobilePriority` is enabled
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.11
+
+---
+
 ## 0.1.6
 
 ### Changed

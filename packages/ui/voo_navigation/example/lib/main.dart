@@ -45,14 +45,14 @@ class _NavigationExampleState extends State<NavigationExample> {
   }
 
   final List<VooNavigationDestination> _items = [
-    const VooNavigationDestination(id: 'dashboard', label: 'Dashboard', icon: Icons.dashboard_outlined, selectedIcon: Icons.dashboard, mobilePriority: true, route: '/dashboard'),
+    const VooNavigationDestination(id: 'dashboard', label: 'Dashboard', icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), mobilePriority: true, route: '/dashboard'),
     VooNavigationDestination.section(
       label: 'Teams',
       id: 'teams',
       isExpanded: false,
       children: const [
-        VooNavigationDestination(id: 'team_overview', label: 'Overview', icon: Icons.groups_outlined, selectedIcon: Icons.groups, route: '/teams/overview'),
-        VooNavigationDestination(id: 'team_members', label: 'Members', icon: Icons.person_outline, selectedIcon: Icons.person, route: '/teams/members'),
+        VooNavigationDestination(id: 'team_overview', label: 'Overview', icon: Icon(Icons.groups_outlined), selectedIcon: Icon(Icons.groups), route: '/teams/overview'),
+        VooNavigationDestination(id: 'team_members', label: 'Members', icon: Icon(Icons.person_outline), selectedIcon: Icon(Icons.person), route: '/teams/members'),
       ],
     ),
     VooNavigationDestination.section(
@@ -60,16 +60,16 @@ class _NavigationExampleState extends State<NavigationExample> {
       id: 'employee',
       isExpanded: true,
       children: const [
-        VooNavigationDestination(id: 'attendance', label: 'Attendance', icon: Icons.access_time_outlined, selectedIcon: Icons.access_time, route: '/employee/attendance'),
-        VooNavigationDestination(id: 'checklist', label: 'Checklist', icon: Icons.checklist_outlined, selectedIcon: Icons.checklist, route: '/employee/checklist'),
-        VooNavigationDestination(id: 'time_off', label: 'Time off', icon: Icons.beach_access_outlined, selectedIcon: Icons.beach_access, route: '/employee/time-off'),
+        VooNavigationDestination(id: 'attendance', label: 'Attendance', icon: Icon(Icons.access_time_outlined), selectedIcon: Icon(Icons.access_time), route: '/employee/attendance'),
+        VooNavigationDestination(id: 'checklist', label: 'Checklist', icon: Icon(Icons.checklist_outlined), selectedIcon: Icon(Icons.checklist), route: '/employee/checklist'),
+        VooNavigationDestination(id: 'time_off', label: 'Time off', icon: Icon(Icons.beach_access_outlined), selectedIcon: Icon(Icons.beach_access), route: '/employee/time-off'),
       ],
     ),
     const VooNavigationDestination(
       id: 'notifications',
       label: 'Notifications',
-      icon: Icons.notifications_outlined,
-      selectedIcon: Icons.notifications,
+      icon: Icon(Icons.notifications_outlined),
+      selectedIcon: Icon(Icons.notifications),
       mobilePriority: true,
       badgeCount: 3,
       route: '/notifications',
@@ -179,7 +179,10 @@ class _NavigationExampleState extends State<NavigationExample> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(_getIconForId(_selectedId), size: 64, color: Theme.of(context).colorScheme.primary),
+          IconTheme(
+            data: IconThemeData(size: 64, color: Theme.of(context).colorScheme.primary),
+            child: _getIconForId(_selectedId),
+          ),
           const SizedBox(height: 16),
           Text(_getLabelForId(_selectedId), style: Theme.of(context).textTheme.headlineMedium),
           const SizedBox(height: 8),
@@ -208,7 +211,7 @@ class _NavigationExampleState extends State<NavigationExample> {
     return null;
   }
 
-  IconData _getIconForId(String id) {
+  Widget _getIconForId(String id) {
     final item = _findItemById(id) ?? _items.first;
     return item.selectedIcon ?? item.icon;
   }

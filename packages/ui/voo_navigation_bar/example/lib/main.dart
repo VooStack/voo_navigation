@@ -32,36 +32,36 @@ class BottomNavigationExample extends StatefulWidget {
 class _BottomNavigationExampleState extends State<BottomNavigationExample> {
   String _selectedId = 'home';
 
-  final List<VooNavigationDestination> _items = const [
-    VooNavigationDestination(
+  final List<VooNavigationDestination> _items = [
+    const VooNavigationDestination(
       id: 'home',
       label: 'Home',
-      icon: Icons.home_outlined,
-      selectedIcon: Icons.home,
+      icon: Icon(Icons.home_outlined),
+      selectedIcon: Icon(Icons.home),
       route: '/home',
       mobilePriority: true,
     ),
-    VooNavigationDestination(
+    const VooNavigationDestination(
       id: 'search',
       label: 'Search',
-      icon: Icons.search_outlined,
-      selectedIcon: Icons.search,
+      icon: Icon(Icons.search_outlined),
+      selectedIcon: Icon(Icons.search),
       route: '/search',
       mobilePriority: true,
     ),
-    VooNavigationDestination(
+    const VooNavigationDestination(
       id: 'notifications',
       label: 'Alerts',
-      icon: Icons.notifications_outlined,
-      selectedIcon: Icons.notifications,
+      icon: Icon(Icons.notifications_outlined),
+      selectedIcon: Icon(Icons.notifications),
       route: '/notifications',
       mobilePriority: true,
     ),
-    VooNavigationDestination(
+    const VooNavigationDestination(
       id: 'profile',
       label: 'Profile',
-      icon: Icons.person_outlined,
-      selectedIcon: Icons.person,
+      icon: Icon(Icons.person_outlined),
+      selectedIcon: Icon(Icons.person),
       route: '/profile',
       mobilePriority: true,
     ),
@@ -124,10 +124,12 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
                 color: const Color(0xFF10B981).withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Icon(
-                _getIconForId(_selectedId),
-                size: 40,
-                color: const Color(0xFF10B981),
+              child: IconTheme(
+                data: const IconThemeData(
+                  size: 40,
+                  color: Color(0xFF10B981),
+                ),
+                child: _getIconForId(_selectedId),
               ),
             ),
             const SizedBox(height: 16),
@@ -173,7 +175,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
     return null;
   }
 
-  IconData _getIconForId(String id) {
+  Widget _getIconForId(String id) {
     final item = _findItemById(id) ?? _items.first;
     return item.selectedIcon ?? item.icon;
   }

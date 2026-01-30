@@ -80,10 +80,12 @@ class VooDrawerFooterItem extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(
-                  isSelected ? item.effectiveSelectedIcon : item.icon,
-                  color: iconColor,
-                  size: VooNavigationTokens.iconSizeDefault,
+                IconTheme(
+                  data: IconThemeData(
+                    color: iconColor,
+                    size: VooNavigationTokens.iconSizeDefault,
+                  ),
+                  child: isSelected ? item.effectiveSelectedIcon : item.icon,
                 ),
                 const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
                 Expanded(

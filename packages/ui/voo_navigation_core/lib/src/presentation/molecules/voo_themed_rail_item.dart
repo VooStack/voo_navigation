@@ -102,12 +102,14 @@ class _VooThemedRailItemState extends State<VooThemedRailItem> {
                       Stack(
                         clipBehavior: Clip.none,
                         children: [
-                          Icon(
-                            widget.isSelected
+                          IconTheme(
+                            data: IconThemeData(
+                              color: effectiveColor,
+                              size: 24,
+                            ),
+                            child: widget.isSelected
                                 ? widget.item.effectiveSelectedIcon
                                 : widget.item.icon,
-                            color: effectiveColor,
-                            size: 24,
                           ),
                           if (widget.item.hasBadge)
                             Positioned(

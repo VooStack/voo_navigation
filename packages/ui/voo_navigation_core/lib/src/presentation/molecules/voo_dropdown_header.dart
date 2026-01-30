@@ -63,16 +63,18 @@ class VooDropdownHeader extends StatelessWidget {
             // Icon
             AnimatedSwitcher(
               duration: context.vooAnimation.durationFast,
-              child: Icon(
-                isExpanded ? item.effectiveSelectedIcon : item.icon,
+              child: IconTheme(
                 key: ValueKey('${item.id}_icon_$isExpanded'),
-                color: isHighlighted
-                    ? (item.selectedIconColor ??
-                          config.selectedItemColor ??
-                          colorScheme.primary)
-                    : (item.iconColor ??
-                          config.unselectedItemColor ??
-                          colorScheme.onSurfaceVariant),
+                data: IconThemeData(
+                  color: isHighlighted
+                      ? (item.selectedIconColor ??
+                            config.selectedItemColor ??
+                            colorScheme.primary)
+                      : (item.iconColor ??
+                            config.unselectedItemColor ??
+                            colorScheme.onSurfaceVariant),
+                ),
+                child: isExpanded ? item.effectiveSelectedIcon : item.icon,
               ),
             ),
 

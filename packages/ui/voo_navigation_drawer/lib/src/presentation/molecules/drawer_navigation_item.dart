@@ -77,11 +77,13 @@ class VooDrawerNavigationItem extends StatelessWidget {
           else
             AnimatedSwitcher(
               duration: context.vooAnimation.durationFast,
-              child: Icon(
-                isSelected ? item.effectiveSelectedIcon : item.icon,
+              child: IconTheme(
                 key: ValueKey(isSelected),
-                color: iconColor,
-                size: VooNavigationTokens.iconSizeDefault,
+                data: IconThemeData(
+                  color: iconColor,
+                  size: VooNavigationTokens.iconSizeDefault,
+                ),
+                child: isSelected ? item.effectiveSelectedIcon : item.icon,
               ),
             ),
 

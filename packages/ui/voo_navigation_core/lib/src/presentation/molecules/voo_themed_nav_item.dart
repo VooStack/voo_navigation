@@ -141,13 +141,15 @@ class _VooThemedNavItemState extends State<VooThemedNavItem>
           duration: widget.theme.animationDuration,
           switchInCurve: widget.theme.animationCurve,
           switchOutCurve: Curves.easeIn,
-          child: Icon(
-            widget.isSelected
+          child: IconTheme(
+            key: ValueKey(widget.isSelected),
+            data: IconThemeData(
+              color: effectiveColor,
+              size: 24,
+            ),
+            child: widget.isSelected
                 ? widget.item.effectiveSelectedIcon
                 : widget.item.icon,
-            key: ValueKey(widget.isSelected),
-            color: effectiveColor,
-            size: 24,
           ),
         ),
         if (widget.item.hasBadge)

@@ -66,8 +66,8 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
     const VooNavigationDestination(
       id: 'dashboard',
       label: 'Dashboard',
-      icon: Icons.dashboard_outlined,
-      selectedIcon: Icons.dashboard,
+      icon: Icon(Icons.dashboard_outlined),
+      selectedIcon: Icon(Icons.dashboard),
       route: '/dashboard',
     ),
     VooNavigationDestination.section(
@@ -78,15 +78,15 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
         VooNavigationDestination(
           id: 'team_overview',
           label: 'Overview',
-          icon: Icons.groups_outlined,
-          selectedIcon: Icons.groups,
+          icon: Icon(Icons.groups_outlined),
+          selectedIcon: Icon(Icons.groups),
           route: '/teams/overview',
         ),
         VooNavigationDestination(
           id: 'team_members',
           label: 'Members',
-          icon: Icons.person_outline,
-          selectedIcon: Icons.person,
+          icon: Icon(Icons.person_outline),
+          selectedIcon: Icon(Icons.person),
           route: '/teams/members',
         ),
       ],
@@ -94,15 +94,15 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
     const VooNavigationDestination(
       id: 'analytics',
       label: 'Analytics',
-      icon: Icons.analytics_outlined,
-      selectedIcon: Icons.analytics,
+      icon: Icon(Icons.analytics_outlined),
+      selectedIcon: Icon(Icons.analytics),
       route: '/analytics',
     ),
     const VooNavigationDestination(
       id: 'notifications',
       label: 'Notifications',
-      icon: Icons.notifications_outlined,
-      selectedIcon: Icons.notifications,
+      icon: Icon(Icons.notifications_outlined),
+      selectedIcon: Icon(Icons.notifications),
       badgeCount: 5,
       route: '/notifications',
     ),
@@ -233,10 +233,12 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          _getIconForId(_selectedId),
-                          size: 64,
-                          color: colorScheme.primary,
+                        IconTheme(
+                          data: IconThemeData(
+                            size: 64,
+                            color: colorScheme.primary,
+                          ),
+                          child: _getIconForId(_selectedId),
                         ),
                         const SizedBox(height: 16),
                         Text(
@@ -299,7 +301,7 @@ class _NavigationRailExampleState extends State<NavigationRailExample> {
     return null;
   }
 
-  IconData _getIconForId(String id) {
+  Widget _getIconForId(String id) {
     final item = _findItemById(id) ?? _items.first;
     return item.selectedIcon ?? item.icon;
   }

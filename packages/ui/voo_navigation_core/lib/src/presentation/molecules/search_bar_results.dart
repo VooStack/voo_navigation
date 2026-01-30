@@ -118,7 +118,7 @@ class VooSearchBarResults extends StatelessWidget {
 
             return VooSearchBarResultItem(
               style: style,
-              icon: item.icon,
+              iconWidget: item.icon,
               label: item.label,
               subtitle: item.route,
               isSelected: offsetIndex == selectedIndex,

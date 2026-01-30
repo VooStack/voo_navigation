@@ -17,6 +17,7 @@ export 'src/presentation/molecules/voo_expandable_nav_modal.dart';
 export 'src/presentation/molecules/voo_multi_switcher_nav_item.dart';
 export 'src/presentation/molecules/voo_navigation_item.dart';
 export 'src/presentation/molecules/voo_navigation_dropdown.dart';
+export 'src/presentation/molecules/voo_user_profile_nav_item.dart';
 
 // Organisms
 export 'src/presentation/organisms/voo_navigation_bar.dart';

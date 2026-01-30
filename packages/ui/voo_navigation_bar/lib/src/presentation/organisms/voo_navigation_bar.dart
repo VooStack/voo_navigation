@@ -6,6 +6,7 @@ import 'package:voo_navigation_bar/src/presentation/molecules/voo_action_nav_ite
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_context_switcher_nav_item.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_multi_switcher_nav_item.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_combined_switcher_nav_item.dart';
+import 'package:voo_navigation_bar/src/presentation/molecules/voo_user_profile_nav_item.dart';
 
 /// An expandable bottom navigation bar with pill-shaped design.
 ///
@@ -89,7 +90,7 @@ class VooNavigationBar extends StatelessWidget {
     final bgColor = backgroundColor ?? context.expandableNavBackground;
     final border = borderColor ?? context.expandableNavBorder;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    final margin = bottomMargin ?? 24.0;
+    final margin = bottomMargin ?? 8.0;
 
     // Build the list of nav item widgets
     final navWidgets = _buildNavigationItems(context, items);
@@ -139,17 +140,20 @@ class VooNavigationBar extends StatelessWidget {
     // Determine action item position
     final actionPosition = actionItem?.position ?? VooActionItemPosition.center;
 
-    // Check if switchers are present (they'll be added at the end)
+    // Check if special items are present (they'll be added at the end)
     final hasContextSwitcher = config.contextSwitcher != null &&
         items.any((item) => item.id == VooContextSwitcherNavItem.navItemId);
     final hasMultiSwitcher = config.multiSwitcher != null &&
         items.any((item) => item.id == VooMultiSwitcherNavItem.navItemId);
+    final hasUserProfile = config.userProfileConfig != null &&
+        items.any((item) => item.id == VooUserProfileNavItem.navItemId);
     final shouldCombineSwitchers = hasContextSwitcher && hasMultiSwitcher;
 
-    // Filter out switcher items - they'll be added at the end
+    // Filter out special items - they'll be added at the end
     final regularItems = items.where((item) =>
         item.id != VooContextSwitcherNavItem.navItemId &&
-        item.id != VooMultiSwitcherNavItem.navItemId).toList();
+        item.id != VooMultiSwitcherNavItem.navItemId &&
+        item.id != VooUserProfileNavItem.navItemId).toList();
 
     // Calculate center index based on regular items only
     final centerIndex = regularItems.length ~/ 2;
@@ -232,6 +236,17 @@ class VooNavigationBar extends StatelessWidget {
           ),
         );
       }
+    }
+
+    // Add user profile at the end if configured
+    if (hasUserProfile) {
+      widgets.add(
+        VooUserProfileNavItem(
+          config: config.userProfileConfig!,
+          enableHapticFeedback: enableFeedback,
+          avatarColor: selectedColor,
+        ),
+      );
     }
 
     return widgets;

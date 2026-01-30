@@ -8,13 +8,13 @@ void main() {
       const item = VooNavigationDestination(
         id: 'home',
         label: 'Home',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
       );
 
       expect(item.id, 'home');
       expect(item.label, 'Home');
-      expect(item.icon, Icons.home);
+      expect(item.icon, isA<Icon>());
       expect(item.selectedIcon, isNull);
       expect(item.route, '/test');
       expect(item.isEnabled, isTrue);
@@ -25,8 +25,8 @@ void main() {
       const item = VooNavigationDestination(
         id: 'dashboard',
         label: 'Dashboard',
-        icon: Icons.dashboard_outlined,
-        selectedIcon: Icons.dashboard,
+        icon: Icon(Icons.dashboard_outlined),
+        selectedIcon: Icon(Icons.dashboard),
         route: '/dashboard',
         tooltip: 'Go to dashboard',
         badgeCount: 5,
@@ -47,8 +47,8 @@ void main() {
 
       expect(item.id, 'dashboard');
       expect(item.label, 'Dashboard');
-      expect(item.icon, Icons.dashboard_outlined);
-      expect(item.selectedIcon, Icons.dashboard);
+      expect(item.icon, isA<Icon>());
+      expect(item.selectedIcon, isA<Icon>());
       expect(item.route, '/dashboard');
       expect(item.tooltip, 'Go to dashboard');
       expect(item.badgeCount, 5);
@@ -72,7 +72,7 @@ void main() {
 
       expect(divider.id, startsWith('divider_'));
       expect(divider.label, '');
-      expect(divider.icon, Icons.remove);
+      expect(divider.icon, isA<Icon>());
       expect(
         divider.isEnabled,
         isTrue,
@@ -87,13 +87,13 @@ void main() {
           VooNavigationDestination(
             id: 'general',
             label: 'General',
-            icon: Icons.settings,
+            icon: Icon(Icons.settings),
             route: '/general',
           ),
           VooNavigationDestination(
             id: 'privacy',
             label: 'Privacy',
-            icon: Icons.lock,
+            icon: Icon(Icons.lock),
             route: '/privacy',
           ),
         ],
@@ -104,8 +104,8 @@ void main() {
         section.id,
         'section_settings',
       ); // factory method generates 'section_' prefix
-      expect(section.icon, Icons.folder_outlined);
-      expect(section.selectedIcon, Icons.folder);
+      expect(section.icon, isA<Icon>());
+      expect(section.selectedIcon, isA<Icon>());
       expect(section.children?.length, 2);
       expect(section.hasChildren, isTrue);
       expect(section.isExpanded, isTrue);
@@ -115,27 +115,28 @@ void main() {
       const itemWithSelected = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home_outlined,
-        selectedIcon: Icons.home,
+        icon: Icon(Icons.home_outlined),
+        selectedIcon: Icon(Icons.home),
         route: '/test',
       );
 
       const itemWithoutSelected = VooNavigationDestination(
         id: 'test2',
         label: 'Test2',
-        icon: Icons.settings,
+        icon: Icon(Icons.settings),
         route: '/test2',
       );
 
-      expect(itemWithSelected.effectiveSelectedIcon, Icons.home);
-      expect(itemWithoutSelected.effectiveSelectedIcon, Icons.settings);
+      expect(itemWithSelected.effectiveSelectedIcon, isA<Icon>());
+      expect(itemWithSelected.effectiveSelectedIcon, itemWithSelected.selectedIcon);
+      expect(itemWithoutSelected.effectiveSelectedIcon, itemWithoutSelected.icon);
     });
 
     test('effectiveTooltip should return correct tooltip', () {
       const itemWithTooltip = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         tooltip: 'Custom tooltip',
         route: '/test',
       );
@@ -143,7 +144,7 @@ void main() {
       const itemWithoutTooltip = VooNavigationDestination(
         id: 'test2',
         label: 'Test Label',
-        icon: Icons.settings,
+        icon: Icon(Icons.settings),
         route: '/test2',
       );
 
@@ -155,7 +156,7 @@ void main() {
       const itemWithCount = VooNavigationDestination(
         id: 'test1',
         label: 'Test1',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test1',
         badgeCount: 5,
       );
@@ -163,7 +164,7 @@ void main() {
       const itemWithText = VooNavigationDestination(
         id: 'test2',
         label: 'Test2',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test2',
         badgeText: 'NEW',
       );
@@ -171,7 +172,7 @@ void main() {
       const itemWithDot = VooNavigationDestination(
         id: 'test3',
         label: 'Test3',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test3',
         showDot: true,
       );
@@ -179,7 +180,7 @@ void main() {
       const itemWithoutBadge = VooNavigationDestination(
         id: 'test4',
         label: 'Test4',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test4',
       );
 
@@ -193,12 +194,12 @@ void main() {
       const itemWithChildren = VooNavigationDestination(
         id: 'parent',
         label: 'Parent',
-        icon: Icons.folder,
+        icon: Icon(Icons.folder),
         children: [
           VooNavigationDestination(
             id: 'child',
             label: 'Child',
-            icon: Icons.file_copy,
+            icon: Icon(Icons.file_copy),
             route: '/child',
           ),
         ],
@@ -207,14 +208,14 @@ void main() {
       const itemWithEmptyChildren = VooNavigationDestination(
         id: 'parent2',
         label: 'Parent2',
-        icon: Icons.folder,
+        icon: Icon(Icons.folder),
         children: [],
       );
 
       const itemWithoutChildren = VooNavigationDestination(
         id: 'single',
         label: 'Single',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/single',
       );
 
@@ -227,7 +228,7 @@ void main() {
       const item = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
         badgeCount: 5,
       );
@@ -235,7 +236,6 @@ void main() {
       expect(item.props.length, greaterThan(0));
       expect(item.props, contains('test'));
       expect(item.props, contains('Test'));
-      expect(item.props, contains(Icons.home));
       expect(item.props, contains(5));
     });
 
@@ -243,21 +243,21 @@ void main() {
       const item1 = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
       );
 
       const item2 = VooNavigationDestination(
         id: 'test',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
       );
 
       const item3 = VooNavigationDestination(
         id: 'different',
         label: 'Test',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/different',
       );
 

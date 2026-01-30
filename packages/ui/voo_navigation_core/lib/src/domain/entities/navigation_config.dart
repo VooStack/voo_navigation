@@ -639,6 +639,11 @@ class VooNavigationConfig {
       priorityItems.add(_createMultiSwitcherNavItem());
     }
 
+    // Add user profile as nav item if configured with mobilePriority
+    if (userProfileConfig != null && userProfileConfig!.mobilePriority) {
+      priorityItems.add(_createUserProfileNavItem());
+    }
+
     for (final item in items) {
       if (item.isVisible && item.mobilePriority) {
         priorityItems.add(item);
@@ -677,7 +682,7 @@ class VooNavigationConfig {
           selected?.name ??
           contextSwitcher?.placeholder ??
           'Context',
-      icon: selected?.icon ?? Icons.layers_outlined,
+      icon: Icon(selected?.icon ?? Icons.layers_outlined),
       sortOrder: contextSwitcher?.navItemSortOrder ?? 0,
       mobilePriority: true,
       isVisible: true,
@@ -693,8 +698,22 @@ class VooNavigationConfig {
       label: multiSwitcher?.navItemLabel ??
           multiSwitcher?.userName ??
           'Account',
-      icon: Icons.account_circle_outlined,
+      icon: const Icon(Icons.account_circle_outlined),
       sortOrder: multiSwitcher?.navItemSortOrder ?? 0,
+      mobilePriority: true,
+      isVisible: true,
+      isEnabled: true,
+    );
+  }
+
+  /// Creates a pseudo-navigation item for the user profile.
+  /// This item is used in bottom navigation to render the user profile avatar.
+  VooNavigationDestination _createUserProfileNavItem() {
+    return VooNavigationDestination(
+      id: '_user_profile_nav',
+      label: userProfileConfig?.effectiveNavItemLabel ?? 'Profile',
+      icon: const Icon(Icons.person_outlined),
+      sortOrder: userProfileConfig?.navItemSortOrder ?? 0,
       mobilePriority: true,
       isVisible: true,
       isEnabled: true,

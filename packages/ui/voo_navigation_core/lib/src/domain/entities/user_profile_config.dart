@@ -58,6 +58,42 @@ class VooUserProfileConfig {
   /// Whether to show the chevron/dropdown indicator
   final bool showDropdownIndicator;
 
+  // ============================================================================
+  // MOBILE NAV ITEM OPTIONS
+  // ============================================================================
+
+  /// Whether to include in mobile bottom navigation (max 5 items).
+  /// When true, the user profile appears as a nav item showing the avatar
+  /// or initials.
+  final bool mobilePriority;
+
+  /// Sort order for nav item positioning in mobile bottom navigation.
+  /// Lower values appear first. Only relevant when [mobilePriority] is true.
+  final int navItemSortOrder;
+
+  /// Label for the nav item. Defaults to [userName] or 'Profile'.
+  final String? navItemLabel;
+
+  // ============================================================================
+  // CUSTOM BUILDERS
+  // ============================================================================
+
+  /// Custom builder for the modal (open state) in bottom navigation.
+  /// When provided, tapping the profile nav item opens this modal instead
+  /// of calling [onTap].
+  ///
+  /// Example:
+  /// ```dart
+  /// modalBuilder: (context, data) => Column(
+  ///   children: [
+  ///     ListTile(title: Text('Settings'), onTap: () { data.onClose(); }),
+  ///     ListTile(title: Text('Logout'), onTap: () { data.onClose(); }),
+  ///   ],
+  /// ),
+  /// ```
+  final Widget Function(BuildContext context, VooUserProfileModalData data)?
+      modalBuilder;
+
   const VooUserProfileConfig({
     this.userName,
     this.userEmail,
@@ -70,7 +106,25 @@ class VooUserProfileConfig {
     this.onLogout,
     this.menuItems,
     this.showDropdownIndicator = true,
+    this.mobilePriority = false,
+    this.navItemSortOrder = 0,
+    this.navItemLabel,
+    this.modalBuilder,
   });
+
+  /// Gets the effective initials (derived from userName if not provided)
+  String? get effectiveInitials {
+    if (initials != null) return initials;
+    if (userName == null || userName!.isEmpty) return null;
+    final parts = userName!.trim().split(' ');
+    if (parts.length >= 2) {
+      return '${parts.first[0]}${parts.last[0]}'.toUpperCase();
+    }
+    return userName![0].toUpperCase();
+  }
+
+  /// Gets the effective nav item label
+  String get effectiveNavItemLabel => navItemLabel ?? userName ?? 'Profile';
 
   /// Creates a copy with the given fields replaced
   VooUserProfileConfig copyWith({
@@ -85,6 +139,11 @@ class VooUserProfileConfig {
     VoidCallback? onLogout,
     List<VooProfileMenuItem>? menuItems,
     bool? showDropdownIndicator,
+    bool? mobilePriority,
+    int? navItemSortOrder,
+    String? navItemLabel,
+    Widget Function(BuildContext context, VooUserProfileModalData data)?
+        modalBuilder,
   }) => VooUserProfileConfig(
     userName: userName ?? this.userName,
     userEmail: userEmail ?? this.userEmail,
@@ -97,5 +156,58 @@ class VooUserProfileConfig {
     onLogout: onLogout ?? this.onLogout,
     menuItems: menuItems ?? this.menuItems,
     showDropdownIndicator: showDropdownIndicator ?? this.showDropdownIndicator,
+    mobilePriority: mobilePriority ?? this.mobilePriority,
+    navItemSortOrder: navItemSortOrder ?? this.navItemSortOrder,
+    navItemLabel: navItemLabel ?? this.navItemLabel,
+    modalBuilder: modalBuilder ?? this.modalBuilder,
   );
+}
+
+/// Data passed to custom modal builder for user profile.
+///
+/// This class provides all the information needed to build a custom modal
+/// for the user profile's open state in bottom navigation.
+class VooUserProfileModalData {
+  /// User's display name
+  final String? userName;
+
+  /// User's email address
+  final String? userEmail;
+
+  /// User's avatar image URL or asset path
+  final String? avatarUrl;
+
+  /// Custom avatar widget
+  final Widget? avatarWidget;
+
+  /// Initials to show if no avatar is provided
+  final String? initials;
+
+  /// Status indicator
+  final VooUserStatus? status;
+
+  /// Callback to close the modal
+  final VoidCallback onClose;
+
+  /// Callback when settings is tapped
+  final VoidCallback? onSettingsTap;
+
+  /// Callback when logout is tapped
+  final VoidCallback? onLogout;
+
+  /// Custom menu items
+  final List<VooProfileMenuItem>? menuItems;
+
+  const VooUserProfileModalData({
+    this.userName,
+    this.userEmail,
+    this.avatarUrl,
+    this.avatarWidget,
+    this.initials,
+    this.status,
+    required this.onClose,
+    this.onSettingsTap,
+    this.onLogout,
+    this.menuItems,
+  });
 }

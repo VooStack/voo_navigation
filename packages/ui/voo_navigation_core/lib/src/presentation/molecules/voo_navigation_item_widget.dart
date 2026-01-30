@@ -16,7 +16,7 @@ class VooNavigationDestinationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-    leading: Icon(isSelected ? item.effectiveSelectedIcon : item.icon),
+    leading: isSelected ? item.effectiveSelectedIcon : item.icon,
     title: Text(item.label),
     selected: isSelected,
     onTap: item.isEnabled ? onTap : null,

@@ -9,7 +9,7 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/test',
         ),
       ];
@@ -31,13 +31,13 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/test',
         ),
         const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
-          icon: Icons.settings,
+          icon: Icon(Icons.settings),
           route: '/test',
         ),
       ];
@@ -115,20 +115,20 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/test',
         ),
         const VooNavigationDestination(
           id: 'hidden',
           label: 'Hidden',
-          icon: Icons.visibility_off,
+          icon: Icon(Icons.visibility_off),
           route: '/test',
           isVisible: false,
         ),
         const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
-          icon: Icons.settings,
+          icon: Icon(Icons.settings),
           route: '/test',
         ),
       ];
@@ -148,13 +148,13 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/test',
         ),
         const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
-          icon: Icons.settings,
+          icon: Icon(Icons.settings),
           route: '/test',
         ),
       ];
@@ -185,13 +185,13 @@ void main() {
       const homeItem = VooNavigationDestination(
         id: 'home',
         label: 'Home',
-        icon: Icons.home,
+        icon: Icon(Icons.home),
         route: '/test',
       );
       const settingsItem = VooNavigationDestination(
         id: 'settings',
         label: 'Settings',
-        icon: Icons.settings,
+        icon: Icon(Icons.settings),
         route: '/test',
       );
 
@@ -218,7 +218,7 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/test',
         ),
       ];
@@ -233,7 +233,7 @@ void main() {
         const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
-          icon: Icons.settings,
+          icon: Icon(Icons.settings),
           route: '/test',
         ),
       ];
@@ -255,13 +255,13 @@ void main() {
         const VooNavigationDestination(
           id: 'home',
           label: 'Home',
-          icon: Icons.home,
+          icon: Icon(Icons.home),
           route: '/test',
         ),
         const VooNavigationDestination(
           id: 'settings',
           label: 'Settings',
-          icon: Icons.settings,
+          icon: Icon(Icons.settings),
           route: '/test',
         ),
       ];

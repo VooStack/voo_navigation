@@ -60,16 +60,18 @@ class VooDropdownChildItem extends StatelessWidget {
         child: Row(
           children: [
             // Icon
-            Icon(
-              isSelected ? item.effectiveSelectedIcon : item.icon,
-              size: context.vooSize.checkboxSize,
-              color: isSelected
-                  ? (item.selectedIconColor ??
-                        config.selectedItemColor ??
-                        colorScheme.primary)
-                  : (item.iconColor ??
-                        config.unselectedItemColor ??
-                        colorScheme.onSurfaceVariant),
+            IconTheme(
+              data: IconThemeData(
+                size: context.vooSize.checkboxSize,
+                color: isSelected
+                    ? (item.selectedIconColor ??
+                          config.selectedItemColor ??
+                          colorScheme.primary)
+                    : (item.iconColor ??
+                          config.unselectedItemColor ??
+                          colorScheme.onSurfaceVariant),
+              ),
+              child: isSelected ? item.effectiveSelectedIcon : item.icon,
             ),
 
             SizedBox(width: context.vooSpacing.sm + context.vooSpacing.xs),

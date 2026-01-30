@@ -9,11 +9,11 @@ class VooNavigationDestination extends Equatable {
   /// Display label for the navigation item
   final String label;
 
-  /// Icon for the navigation item
-  final IconData icon;
+  /// Icon widget for the navigation item
+  final Widget icon;
 
-  /// Selected/active icon (optional, defaults to icon)
-  final IconData? selectedIcon;
+  /// Selected/active icon widget (optional, defaults to icon)
+  final Widget? selectedIcon;
 
   /// Route path associated with this item
   final String? route;
@@ -147,8 +147,8 @@ class VooNavigationDestination extends Equatable {
   VooNavigationDestination copyWith({
     String? id,
     String? label,
-    IconData? icon,
-    IconData? selectedIcon,
+    Widget? icon,
+    Widget? selectedIcon,
     String? route,
     Widget? destination,
     int? badgeCount,
@@ -222,21 +222,30 @@ class VooNavigationDestination extends Equatable {
     return label;
   }
 
-  /// Gets the effective selected icon
-  IconData get effectiveSelectedIcon => selectedIcon ?? icon;
+  /// Gets the effective selected icon widget
+  Widget get effectiveSelectedIcon => selectedIcon ?? icon;
 
   /// Whether this item is a divider
-  bool get isDivider => label.isEmpty && icon == Icons.remove;
+  bool get isDivider => label.isEmpty && id.startsWith('divider_');
 
   /// Convenience factory for creating a divider item
-  factory VooNavigationDestination.divider({String? id}) => VooNavigationDestination(id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}', label: '', icon: Icons.remove);
+  factory VooNavigationDestination.divider({String? id}) => VooNavigationDestination(
+    id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}',
+    label: '',
+    icon: const Icon(Icons.remove),
+  );
 
   /// Convenience factory for creating a section header
-  factory VooNavigationDestination.section({required String label, String? id, List<VooNavigationDestination>? children, bool isExpanded = true}) => VooNavigationDestination(
+  factory VooNavigationDestination.section({
+    required String label,
+    String? id,
+    List<VooNavigationDestination>? children,
+    bool isExpanded = true,
+  }) => VooNavigationDestination(
     id: id ?? 'section_${label.toLowerCase().replaceAll(' ', '_')}',
     label: label,
-    icon: Icons.folder_outlined,
-    selectedIcon: Icons.folder,
+    icon: const Icon(Icons.folder_outlined),
+    selectedIcon: const Icon(Icons.folder),
     children: children,
     isExpanded: isExpanded,
   );

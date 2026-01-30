@@ -118,7 +118,7 @@ class _VooActionNavItemState extends State<VooActionNavItem>
 
     // Position modal above the nav bar
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-    final navBarHeight = VooNavigationTokens.expandableNavBarHeight + 24 + bottomPadding;
+    final navBarHeight = VooNavigationTokens.expandableNavBarHeight + 8 + bottomPadding;
     final modalBottom = navBarHeight + 8;
 
     return AnimatedBuilder(
