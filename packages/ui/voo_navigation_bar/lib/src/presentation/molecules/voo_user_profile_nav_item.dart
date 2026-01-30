@@ -56,7 +56,7 @@ class VooUserProfileNavItem extends StatefulWidget {
 }
 
 class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
-    with SingleTickerProviderStateMixin, ExpandableNavModalMixin {
+    with TickerProviderStateMixin, ExpandableNavModalMixin {
   late AnimationController _controller;
   late Animation<double> _expandAnimation;
   late Animation<double> _labelOpacity;

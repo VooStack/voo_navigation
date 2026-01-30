@@ -31,7 +31,7 @@ class VooMultiSwitcherExpandableNavItem extends StatefulWidget {
 
 class _VooMultiSwitcherExpandableNavItemState
     extends State<VooMultiSwitcherExpandableNavItem>
-    with SingleTickerProviderStateMixin, ExpandableNavModalMixin {
+    with TickerProviderStateMixin, ExpandableNavModalMixin {
   @override
   void initState() {
     super.initState();

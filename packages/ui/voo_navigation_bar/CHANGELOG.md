@@ -1,3 +1,14 @@
+## 0.1.9
+
+### Fixed
+- **ExpandableNavModalMixin**: Changed mixin constraint from `SingleTickerProviderStateMixin` to `TickerProviderStateMixin` to support states that need multiple animation controllers
+- **VooUserProfileNavItem**: Fixed "multiple tickers created" assertion error when using expand/collapse animation alongside modal animation
+- **VooContextSwitcherExpandableNavItem**: Updated to use `TickerProviderStateMixin`
+- **VooCombinedSwitcherNavItem**: Updated to use `TickerProviderStateMixin`
+- **VooMultiSwitcherExpandableNavItem**: Updated to use `TickerProviderStateMixin`
+
+---
+
 ## 0.1.8
 
 ### Improved

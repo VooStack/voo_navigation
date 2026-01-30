@@ -198,7 +198,7 @@ class _PositionedArrowPainter extends CustomPainter {
 }
 
 /// Helper mixin for nav items that show overlay modals
-mixin ExpandableNavModalMixin<T extends StatefulWidget> on State<T>, SingleTickerProviderStateMixin<T> {
+mixin ExpandableNavModalMixin<T extends StatefulWidget> on State<T>, TickerProviderStateMixin<T> {
   late AnimationController modalAnimationController;
   OverlayEntry? overlayEntry;
   bool isModalOpen = false;

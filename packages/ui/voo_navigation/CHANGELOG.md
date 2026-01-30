@@ -1,3 +1,13 @@
+## 1.3.17
+
+### Fixed
+- **Multiple Tickers Assertion**: Fixed "SingleTickerProviderStateMixin but multiple tickers were created" error in user profile and switcher nav items
+
+### Dependencies
+- Updated `voo_navigation_bar` to ^0.1.9 (TickerProviderStateMixin fix)
+
+---
+
 ## 1.3.16
 
 ### Improved
