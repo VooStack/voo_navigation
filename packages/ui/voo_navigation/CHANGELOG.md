@@ -1,3 +1,15 @@
+## 1.3.16
+
+### Improved
+- **User Profile Nav Item**: Now expands like other nav items with avatar + label animation
+- **Navigation Bar Overflow**: Added overflow prevention with FittedBox and dynamic label width calculation
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.12 (User profile label fallback)
+- Updated `voo_navigation_bar` to ^0.1.8 (Expandable nav improvements)
+
+---
+
 ## 1.3.15
 
 ### Dependencies

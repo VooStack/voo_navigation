@@ -1,3 +1,27 @@
+## 0.1.8
+
+### Improved
+- **VooExpandableNavItem**: Enhanced expand/collapse animations and layout
+  - Labels now expand to the right by default (unless action item is present)
+  - Synced collapse animation with expand animation for smoother transitions
+  - Collapse uses `easeInCubic` curve to free up space quickly as new item expands
+  - Label opacity fades out faster during collapse (first 50% of animation)
+  - Consistent 6dp padding around icon circle on all sides (top, left, bottom, right)
+  - Added `maxLabelWidth` parameter for dynamic label width limits
+- **VooUserProfileNavItem**: Matching expand animation improvements
+  - Same synced animation curves as VooExpandableNavItem
+  - Consistent padding and spacing with other nav items
+  - Added `maxLabelWidth` parameter
+- **VooNavigationBar**: Overflow prevention and dynamic sizing
+  - Uses `FittedBox` with `scaleDown` to prevent overflow on narrow screens
+  - Dynamically calculates `maxLabelWidth` based on available space and item count
+  - Proper label position logic: right (end) by default, left (start) after action item
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.12
+
+---
+
 ## 0.1.7
 
 ### Fixed

@@ -1,3 +1,12 @@
+## 0.2.12
+
+### Changed
+- **VooUserProfileConfig**: Updated `effectiveNavItemLabel` fallback priority
+  - Now returns `navItemLabel ?? userEmail ?? userName ?? 'Profile'`
+  - Email is now preferred over userName when no explicit label is set
+
+---
+
 ## 0.2.11
 
 ### Changed
