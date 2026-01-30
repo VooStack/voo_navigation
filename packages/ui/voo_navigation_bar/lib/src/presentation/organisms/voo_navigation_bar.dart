@@ -95,6 +95,13 @@ class VooNavigationBar extends StatelessWidget {
     // Build the list of nav item widgets
     final navWidgets = _buildNavigationItems(context, items);
 
+    final borderRadius = BorderRadius.circular(
+      VooNavigationTokens.expandableNavBorderRadius,
+    );
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final maxBarWidth = screenWidth - (horizontalMargin * 2);
+
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
@@ -103,34 +110,37 @@ class VooNavigationBar extends StatelessWidget {
           left: horizontalMargin,
           right: horizontalMargin,
         ),
-        child: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Container(
-            height: VooNavigationTokens.expandableNavBarHeight,
-            padding: EdgeInsets.symmetric(
-              horizontal: VooNavigationTokens.expandableNavBarPaddingHorizontal,
-              vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
-            ),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(
-                VooNavigationTokens.expandableNavBorderRadius,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: maxBarWidth),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Container(
+              height: VooNavigationTokens.expandableNavBarHeight,
+              padding: EdgeInsets.symmetric(
+                horizontal:
+                    VooNavigationTokens.expandableNavBarPaddingHorizontal,
+                vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
               ),
-              border: Border.all(
-                color: border,
-                width: VooNavigationTokens.expandableNavBorderWidth,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: borderRadius,
+                border: Border.all(
+                  color: border,
+                  width: VooNavigationTokens.expandableNavBorderWidth,
                 ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: _addSpacingBetweenItems(navWidgets),
+                boxShadow: [
+                  BoxShadow(
+                    color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                    blurRadius: 16,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: _addSpacingBetweenItems(navWidgets),
+              ),
             ),
           ),
         ),
@@ -162,12 +172,38 @@ class VooNavigationBar extends StatelessWidget {
         item.id != VooMultiSwitcherNavItem.navItemId &&
         item.id != VooUserProfileNavItem.navItemId).toList();
 
+    // Calculate available space for label expansion
+    final screenWidth = MediaQuery.of(context).size.width;
+    final availableWidth = screenWidth -
+        (horizontalMargin * 2) -
+        (VooNavigationTokens.expandableNavBarPaddingHorizontal * 2);
+
+    // Count total items (regular + special + action)
+    var totalItems = regularItems.length;
+    if (actionItem != null) totalItems++;
+    if (shouldCombineSwitchers) {
+      totalItems++;
+    } else {
+      if (hasContextSwitcher) totalItems++;
+      if (hasMultiSwitcher) totalItems++;
+    }
+    if (hasUserProfile) totalItems++;
+
+    // Calculate space used by collapsed items and spacing
+    const circleSize = 40.0; // VooNavigationTokens.expandableNavSelectedCircleSize + padding
+    const spacing = 12.0;
+    final collapsedWidth = (totalItems * circleSize) + ((totalItems - 1) * spacing);
+
+    // Remaining space for label (with buffer for animation smoothness)
+    final maxLabelWidth = ((availableWidth - collapsedWidth) * 0.8).clamp(40.0, 80.0);
+
     // Calculate center index based on regular items only
     final centerIndex = regularItems.length ~/ 2;
 
     // Track whether we've passed the action item (for label positioning)
-    bool passedActionItem = actionItem == null ||
-        actionPosition == VooActionItemPosition.end;
+    // Default: labels expand right (end)
+    // After passing action item: labels expand left (start)
+    bool passedActionItem = false;
 
     for (var i = 0; i < regularItems.length; i++) {
       final item = regularItems[i];
@@ -197,6 +233,7 @@ class VooNavigationBar extends StatelessWidget {
           isSelected: isSelected,
           selectedColor: selectedColor,
           labelPosition: labelPosition,
+          maxLabelWidth: maxLabelWidth,
           onTap: () {
             if (enableFeedback) {
               HapticFeedback.lightImpact();
@@ -254,6 +291,7 @@ class VooNavigationBar extends StatelessWidget {
           avatarColor: selectedColor,
           isSelected: selectedId == VooUserProfileNavItem.navItemId,
           labelPosition: VooExpandableLabelPosition.start,
+          maxLabelWidth: maxLabelWidth,
         ),
       );
     }

@@ -31,6 +31,9 @@ class VooUserProfileNavItem extends StatefulWidget {
   /// Curve for the expand/collapse animation
   final Curve animationCurve;
 
+  /// Maximum width for the label. Defaults to 60dp.
+  final double maxLabelWidth;
+
   /// Navigation item ID for this profile item
   static const String navItemId = '_user_profile_nav';
 
@@ -45,6 +48,7 @@ class VooUserProfileNavItem extends StatefulWidget {
       milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs,
     ),
     this.animationCurve = Curves.easeOutCubic,
+    this.maxLabelWidth = 60.0,
   });
 
   @override
@@ -67,14 +71,20 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
       vsync: this,
     );
 
+    // Use different curves for expand vs collapse to sync animations:
+    // - Expand (forward): easeOutCubic - slow start, fast finish
+    // - Collapse (reverse): easeInCubic - fast start, slow finish
+    // This ensures collapsing item frees up space as expanding item grows
     _expandAnimation = CurvedAnimation(
       parent: _controller,
       curve: widget.animationCurve,
+      reverseCurve: Curves.easeInCubic,
     );
 
     _labelOpacity = CurvedAnimation(
       parent: _controller,
       curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
+      reverseCurve: const Interval(0.0, 0.5, curve: Curves.easeIn),
     );
 
     // Only expand if selected AND no modal builder (modal takes priority)
@@ -155,19 +165,19 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
       textDirection: TextDirection.ltr,
     )..layout();
 
-    return (textPainter.width.ceilToDouble() + 2).clamp(0.0, 100.0);
+    return (textPainter.width.ceilToDouble() + 2).clamp(0.0, widget.maxLabelWidth);
   }
 
   @override
   Widget build(BuildContext context) {
     final circleSize = VooNavigationTokens.expandableNavSelectedCircleSize;
-    final containerHeight = circleSize + 4;
+    const circlePadding = 4.0; // Constant padding around circle (both sides)
+    final containerHeight = circleSize + (circlePadding * 2);
     final theme = Theme.of(context);
 
     final labelWidth = _measureLabelWidth();
-    const spacing = 12.0; // Space between circle and text
-    const circlePadding = 4.0; // Space from circle to edge of pill
-    const textPadding = 16.0; // Space from text to edge of pill
+    const spacing = 8.0; // Space between circle and text
+    const textPadding = 12.0; // Space from text to edge of pill
 
     final isLabelStart =
         widget.labelPosition == VooExpandableLabelPosition.start;
@@ -182,10 +192,9 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
           final progress = _expandAnimation.value.clamp(0.0, 1.0);
           final labelProgress = _labelOpacity.value.clamp(0.0, 1.0);
 
-          // Calculate animated values
+          // Calculate animated values (circlePadding stays constant for symmetry)
           final animatedLabelWidth = labelWidth * progress;
           final animatedSpacing = spacing * progress;
-          final animatedCirclePadding = circlePadding * progress;
           final animatedTextPadding = textPadding * progress;
 
           // Build label widget
@@ -204,6 +213,7 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
           );
 
           // Build row contents based on label position
+          // Avatar always has consistent padding on both sides
           List<Widget> rowChildren;
           if (isLabelStart) {
             // Label on left, avatar on right
@@ -217,14 +227,16 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
                 ),
               ),
               SizedBox(width: animatedSpacing),
+              const SizedBox(width: circlePadding),
               _buildAvatar(context, circleSize, theme),
-              SizedBox(width: animatedCirclePadding),
+              const SizedBox(width: circlePadding),
             ];
           } else {
             // Avatar on left, label on right
             rowChildren = [
-              SizedBox(width: animatedCirclePadding),
+              const SizedBox(width: circlePadding),
               _buildAvatar(context, circleSize, theme),
+              const SizedBox(width: circlePadding),
               SizedBox(width: animatedSpacing),
               SizedBox(
                 width: animatedLabelWidth,

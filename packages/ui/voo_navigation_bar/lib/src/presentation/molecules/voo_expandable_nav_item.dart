@@ -24,6 +24,9 @@ class VooExpandableNavItem extends StatefulWidget {
   final Duration animationDuration;
   final Curve animationCurve;
 
+  /// Maximum width for the label. Defaults to 60dp.
+  final double maxLabelWidth;
+
   const VooExpandableNavItem({
     super.key,
     required this.item,
@@ -35,6 +38,7 @@ class VooExpandableNavItem extends StatefulWidget {
       milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs,
     ),
     this.animationCurve = Curves.easeOutCubic,
+    this.maxLabelWidth = 60.0,
   });
 
   @override
@@ -55,14 +59,20 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
       vsync: this,
     );
 
+    // Use different curves for expand vs collapse to sync animations:
+    // - Expand (forward): easeOutCubic - slow start, fast finish
+    // - Collapse (reverse): easeInCubic - fast start, slow finish
+    // This ensures collapsing item frees up space as expanding item grows
     _expandAnimation = CurvedAnimation(
       parent: _controller,
       curve: widget.animationCurve,
+      reverseCurve: Curves.easeInCubic,
     );
 
     _labelOpacity = CurvedAnimation(
       parent: _controller,
       curve: const Interval(0.3, 1.0, curve: Curves.easeOut),
+      reverseCurve: const Interval(0.0, 0.5, curve: Curves.easeIn),
     );
 
     if (widget.isSelected) {
@@ -101,7 +111,7 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
       textDirection: TextDirection.ltr,
     )..layout();
 
-    return (textPainter.width.ceilToDouble() + 2).clamp(0.0, 100.0);
+    return (textPainter.width.ceilToDouble() + 2).clamp(0.0, widget.maxLabelWidth);
   }
 
   @override
@@ -121,12 +131,12 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
         : widget.item.icon;
 
     final labelWidth = _measureLabelWidth();
-    const spacing = 12.0;      // Space between circle and text
-    const circlePadding = 4.0; // Space from circle to edge of pill
-    const textPadding = 16.0;  // Space from text to edge of pill
+    const spacing = 8.0;       // Space between circle and text
+    const circlePadding = 4.0; // Constant padding around circle (both sides)
+    const textPadding = 12.0;  // Space from text to edge of pill
 
     final isLabelStart = widget.labelPosition == VooExpandableLabelPosition.start;
-    final containerHeight = circleSize + 4;
+    final containerHeight = circleSize + (circlePadding * 2);
 
     // Build the icon circle widget
     Widget buildIconCircle() {
@@ -158,10 +168,9 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
           final progress = _expandAnimation.value.clamp(0.0, 1.0);
           final labelProgress = _labelOpacity.value.clamp(0.0, 1.0);
 
-          // Calculate animated values
+          // Calculate animated values (circlePadding stays constant for symmetry)
           final animatedLabelWidth = labelWidth * progress;
           final animatedSpacing = spacing * progress;
-          final animatedCirclePadding = circlePadding * progress;
           final animatedTextPadding = textPadding * progress;
 
           // Build label widget
@@ -180,6 +189,7 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
           );
 
           // Build row contents based on label position
+          // Circle always has consistent padding on both sides
           List<Widget> rowChildren;
           if (isLabelStart) {
             // Label on left, circle on right
@@ -193,14 +203,16 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
                 ),
               ),
               SizedBox(width: animatedSpacing),
+              const SizedBox(width: circlePadding),
               buildIconCircle(),
-              SizedBox(width: animatedCirclePadding),
+              const SizedBox(width: circlePadding),
             ];
           } else {
             // Circle on left, label on right
             rowChildren = [
-              SizedBox(width: animatedCirclePadding),
+              const SizedBox(width: circlePadding),
               buildIconCircle(),
+              const SizedBox(width: circlePadding),
               SizedBox(width: animatedSpacing),
               SizedBox(
                 width: animatedLabelWidth,
