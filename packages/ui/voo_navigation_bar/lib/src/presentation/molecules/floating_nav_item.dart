@@ -16,13 +16,7 @@ class VooFloatingNavItem extends StatelessWidget {
   /// Callback when the item is long-pressed
   final VoidCallback? onLongPress;
 
-  const VooFloatingNavItem({
-    super.key,
-    required this.item,
-    required this.isSelected,
-    required this.onTap,
-    this.onLongPress,
-  });
+  const VooFloatingNavItem({super.key, required this.item, required this.isSelected, required this.onTap, this.onLongPress});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +35,7 @@ class VooFloatingNavItem extends StatelessWidget {
           children: [
             Icon(
               isSelected ? item.effectiveSelectedIcon : item.icon,
-              color: isSelected
-                  ? selectedColor
-                  : foreground.withValues(alpha: VooNavigationTokens.opacityDisabled),
+              color: isSelected ? selectedColor : foreground.withValues(alpha: VooNavigationTokens.opacityDisabled),
               size: VooNavigationTokens.iconSizeCompact,
             ),
           ],

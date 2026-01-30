@@ -7,7 +7,6 @@ import 'package:voo_navigation_core/src/presentation/molecules/context_switcher_
 import 'package:voo_navigation_core/src/presentation/molecules/multi_switcher_nav_item.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
-/// Floating bottom navigation bar with pill shape design
 class VooFloatingBottomNavigation extends StatelessWidget {
   final VooNavigationConfig config;
   final String selectedId;
@@ -46,39 +45,29 @@ class VooFloatingBottomNavigation extends StatelessWidget {
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(VooNavigationTokens.floatingNavBorderRadius),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            boxShadow: [BoxShadow(color: theme.colorScheme.shadow.withValues(alpha: 0.2), blurRadius: 16, offset: const Offset(0, 4))],
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: items.map((item) {
               final isSelected = item.id == selectedId;
 
-              // Check if this is the context switcher nav item
-              if (item.id == VooContextSwitcherNavItem.navItemId &&
-                  config.contextSwitcher != null) {
+              if (item.id == VooContextSwitcherNavItem.navItemId && config.contextSwitcher != null) {
                 return VooContextSwitcherNavItem(
                   config: config.contextSwitcher!,
-                  isSelected: false, // Context switcher is never "selected"
+                  isSelected: false,
                   isCompact: true,
-                  useFloatingStyle: true, // Match floating nav icon style
+                  useFloatingStyle: true,
                   enableHapticFeedback: enableHapticFeedback,
                 );
               }
 
-              // Check if this is the multi-switcher nav item
-              if (item.id == VooMultiSwitcherNavItem.navItemId &&
-                  config.multiSwitcher != null) {
+              if (item.id == VooMultiSwitcherNavItem.navItemId && config.multiSwitcher != null) {
                 return VooMultiSwitcherNavItem(
                   config: config.multiSwitcher!,
-                  isSelected: false, // Multi-switcher is never "selected"
+                  isSelected: false,
                   isCompact: true,
-                  useFloatingStyle: true, // Match floating nav icon style
+                  useFloatingStyle: true,
                   enableHapticFeedback: enableHapticFeedback,
                 );
               }

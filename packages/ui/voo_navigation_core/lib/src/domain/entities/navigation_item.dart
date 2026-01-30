@@ -229,19 +229,10 @@ class VooNavigationItem extends Equatable {
   bool get isDivider => label.isEmpty && icon == Icons.remove;
 
   /// Convenience factory for creating a divider item
-  factory VooNavigationItem.divider({String? id}) => VooNavigationItem(
-    id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}',
-    label: '',
-    icon: Icons.remove,
-  );
+  factory VooNavigationItem.divider({String? id}) => VooNavigationItem(id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}', label: '', icon: Icons.remove);
 
   /// Convenience factory for creating a section header
-  factory VooNavigationItem.section({
-    required String label,
-    String? id,
-    List<VooNavigationItem>? children,
-    bool isExpanded = true,
-  }) => VooNavigationItem(
+  factory VooNavigationItem.section({required String label, String? id, List<VooNavigationItem>? children, bool isExpanded = true}) => VooNavigationItem(
     id: id ?? 'section_${label.toLowerCase().replaceAll(' ', '_')}',
     label: label,
     icon: Icons.folder_outlined,

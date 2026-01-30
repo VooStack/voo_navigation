@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Creates a MaterialApp with VooTokensTheme configured for testing
@@ -9,16 +8,6 @@ Widget createTestApp({required Widget child, ThemeData? theme}) {
       extensions: [VooTokensTheme.standard()],
     ),
     home: child,
-  );
-}
-
-/// Creates a MaterialApp.router with VooTokensTheme configured for testing
-Widget createTestRouterApp({required GoRouter routerConfig, ThemeData? theme}) {
-  return MaterialApp.router(
-    theme: (theme ?? ThemeData()).copyWith(
-      extensions: [VooTokensTheme.standard()],
-    ),
-    routerConfig: routerConfig,
   );
 }
 

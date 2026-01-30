@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_scaffold_builder.dart';
 import 'package:voo_navigation/src/presentation/utils/voo_page_scope.dart';
@@ -185,14 +184,8 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
 
   /// Updates the active route on the page controller
   void _updateActiveRoute(BuildContext context) {
-    try {
-      final location = GoRouterState.of(context).uri.path;
-      _pageController.setActiveRoute(location);
-    } catch (_) {
-      // GoRouter not available, try ModalRoute
-      final route = ModalRoute.of(context);
-      _pageController.setActiveRoute(route?.settings.name);
-    }
+    final route = ModalRoute.of(context);
+    _pageController.setActiveRoute(route?.settings.name);
   }
 
   @override

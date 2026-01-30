@@ -16,6 +16,7 @@ class HRISELinkApp extends StatefulWidget {
 class _HRISELinkAppState extends State<HRISELinkApp> {
   String _selectedId = 'employee';
   VooContextItem? _selectedProject;
+  bool _useExpandableNav = false; // Toggle to demo expandable bottom nav
 
   @override
   void initState() {
@@ -297,6 +298,12 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
         style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
       ),
       appBarActionsBuilder: (_) => [
+        // Toggle between regular and expandable bottom nav (visible on mobile)
+        IconButton(
+          icon: Icon(_useExpandableNav ? Icons.navigation : Icons.radio_button_checked),
+          onPressed: () => setState(() => _useExpandableNav = !_useExpandableNav),
+          tooltip: _useExpandableNav ? 'Switch to floating nav' : 'Switch to expandable nav',
+        ),
         IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}, tooltip: 'Messages'),
         IconButton(icon: const Icon(Icons.notifications_outlined), onPressed: () {}, tooltip: 'Notifications'),
         const SizedBox(width: 12),
@@ -375,8 +382,106 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       ),
       contextSwitcherPosition: VooContextSwitcherPosition.asNavItem,
 
-      // Mobile
-      floatingBottomNav: true,
+      // Mobile - demo expandable bottom navigation
+      floatingBottomNav: !_useExpandableNav,
+      useExpandableBottomNav: _useExpandableNav,
+      expandableNavSelectedColor: const Color(0xFF10B981),
+
+      // Action item for expandable nav (plus button with modal)
+      actionItem: _useExpandableNav
+          ? VooActionNavigationItem(
+              id: 'quick-add',
+              icon: Icons.add,
+              activeIcon: Icons.close,
+              backgroundColor: const Color(0xFF10B981),
+              tooltip: 'Quick Actions',
+              modalBuilder: (context, close) => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Quick Actions',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white54),
+                          onPressed: close,
+                          iconSize: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(color: Colors.white24, height: 1),
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF6366F1).withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.person_add, color: Color(0xFF6366F1)),
+                    ),
+                    title: const Text('Add Employee'),
+                    subtitle: const Text('Create a new employee record'),
+                    onTap: () {
+                      close();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Add Employee tapped')),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF10B981).withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.task_alt, color: Color(0xFF10B981)),
+                    ),
+                    title: const Text('Create Task'),
+                    subtitle: const Text('Add a new task to a project'),
+                    onTap: () {
+                      close();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Create Task tapped')),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    leading: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF59E0B).withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(Icons.event, color: Color(0xFFF59E0B)),
+                    ),
+                    title: const Text('Schedule Meeting'),
+                    subtitle: const Text('Set up a team meeting'),
+                    onTap: () {
+                      close();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Schedule Meeting tapped')),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
+              modalMaxHeight: 350,
+            )
+          : null,
 
       // Animations
       enableAnimations: true,

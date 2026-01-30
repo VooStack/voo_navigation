@@ -88,18 +88,36 @@ class VooMobileScaffold extends StatelessWidget {
     // Get the selected item from the config
     final selectedItem = config.items.firstWhere((item) => item.id == selectedId, orElse: () => config.items.first);
 
-    // Use floating bottom navigation if configured
+    // Determine which bottom navigation style to use
+    final useExpandable = config.useExpandableBottomNav;
     final useFloating = config.floatingBottomNav;
 
     // Build the appropriate bottom navigation
-    final bottomNav = useFloating
-        ? VooFloatingBottomNavigation(
-            config: config,
-            selectedId: selectedId,
-            onNavigationItemSelected: onNavigationItemSelected,
-            bottomMargin: config.floatingBottomNavBottomMargin,
-          )
-        : VooAdaptiveBottomNavigation(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected);
+    Widget bottomNav;
+    if (useExpandable) {
+      bottomNav = VooExpandableBottomNavigation(
+        config: config,
+        selectedId: selectedId,
+        onNavigationItemSelected: onNavigationItemSelected,
+        actionItem: config.actionItem,
+        bottomMargin: config.floatingBottomNavBottomMargin,
+        selectedColor: config.expandableNavSelectedColor,
+        enableHapticFeedback: config.enableHapticFeedback,
+      );
+    } else if (useFloating) {
+      bottomNav = VooFloatingBottomNavigation(
+        config: config,
+        selectedId: selectedId,
+        onNavigationItemSelected: onNavigationItemSelected,
+        bottomMargin: config.floatingBottomNavBottomMargin,
+      );
+    } else {
+      bottomNav = VooAdaptiveBottomNavigation(
+        config: config,
+        selectedId: selectedId,
+        onNavigationItemSelected: onNavigationItemSelected,
+      );
+    }
 
     // Determine FAB visibility and widget based on page config overrides
     final showFab = pageConfig?.showFloatingActionButton ?? config.showFloatingActionButton;
@@ -129,8 +147,8 @@ class VooMobileScaffold extends StatelessWidget {
       drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      // Extend body when using floating nav for proper appearance
-      extendBody: useFloating || extendBody,
+      // Extend body when using floating or expandable nav for proper appearance
+      extendBody: useFloating || useExpandable || extendBody,
       extendBodyBehindAppBar: extendBodyBehindAppBar,
       bottomSheet: bottomSheet,
       persistentFooterButtons: persistentFooterButtons,

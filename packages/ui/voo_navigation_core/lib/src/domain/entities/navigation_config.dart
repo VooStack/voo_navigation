@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/domain/entities/action_navigation_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/breadcrumb_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/breakpoint.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_config.dart';
@@ -216,6 +217,26 @@ class VooNavigationConfig {
   /// Bottom margin for floating bottom navigation
   final double? floatingBottomNavBottomMargin;
 
+  /// Whether to use expandable style for bottom navigation.
+  ///
+  /// When true, uses [VooExpandableBottomNavigation] which features:
+  /// - Dark pill-shaped container with subtle border
+  /// - Selected item expands to show colored circle icon + label
+  /// - Unselected items display as dark circles with muted icons
+  /// - Optional action item with modal popup
+  final bool useExpandableBottomNav;
+
+  /// Action item configuration for expandable bottom navigation.
+  ///
+  /// This creates a special button (e.g., plus button) that opens a modal
+  /// with custom content when tapped. Only used when [useExpandableBottomNav] is true.
+  final VooActionNavigationItem? actionItem;
+
+  /// Custom color for the selected item circle in expandable bottom navigation.
+  ///
+  /// Defaults to the theme's primary color.
+  final Color? expandableNavSelectedColor;
+
   /// Whether to show user profile in drawer/rail footer
   final bool showUserProfile;
 
@@ -344,6 +365,9 @@ class VooNavigationConfig {
     this.floatingBottomNav = true,
     this.floatingBottomNavMargin,
     this.floatingBottomNavBottomMargin,
+    this.useExpandableBottomNav = false,
+    this.actionItem,
+    this.expandableNavSelectedColor,
     this.showUserProfile = true,
     this.userProfileWidget,
     this.userProfileConfig,
@@ -460,6 +484,9 @@ class VooNavigationConfig {
     bool? floatingBottomNav,
     double? floatingBottomNavMargin,
     double? floatingBottomNavBottomMargin,
+    bool? useExpandableBottomNav,
+    VooActionNavigationItem? actionItem,
+    Color? expandableNavSelectedColor,
     bool? showUserProfile,
     Widget? userProfileWidget,
     VooUserProfileConfig? userProfileConfig,
@@ -566,6 +593,11 @@ class VooNavigationConfig {
             floatingBottomNavMargin ?? this.floatingBottomNavMargin,
         floatingBottomNavBottomMargin:
             floatingBottomNavBottomMargin ?? this.floatingBottomNavBottomMargin,
+        useExpandableBottomNav:
+            useExpandableBottomNav ?? this.useExpandableBottomNav,
+        actionItem: actionItem ?? this.actionItem,
+        expandableNavSelectedColor:
+            expandableNavSelectedColor ?? this.expandableNavSelectedColor,
         showUserProfile: showUserProfile ?? this.showUserProfile,
         userProfileWidget: userProfileWidget ?? this.userProfileWidget,
         userProfileConfig: userProfileConfig ?? this.userProfileConfig,

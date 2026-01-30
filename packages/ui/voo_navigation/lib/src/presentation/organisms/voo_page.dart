@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation/src/presentation/utils/voo_page_scope.dart';
 
@@ -154,15 +153,9 @@ class _VooPageState extends State<VooPage> {
 
   /// Get the current route path for this page
   void _updateRoutePath() {
-    try {
-      // Try to get route from GoRouter
-      final goRouterState = GoRouterState.of(context);
-      _routePath = goRouterState.uri.path;
-    } catch (_) {
-      // Fallback: use ModalRoute name or generate a unique path
-      final modalRoute = ModalRoute.of(context);
-      _routePath = modalRoute?.settings.name ?? 'page_${identityHashCode(this)}';
-    }
+    // Use ModalRoute name or generate a unique path
+    final modalRoute = ModalRoute.of(context);
+    _routePath = modalRoute?.settings.name ?? 'page_${identityHashCode(this)}';
   }
 
   void _registerConfig() {

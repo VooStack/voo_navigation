@@ -8,6 +8,7 @@ library voo_navigation_core;
 export 'src/domain/tokens/voo_navigation_tokens.dart';
 
 // Domain Entities
+export 'src/domain/entities/action_navigation_item.dart';
 export 'src/domain/entities/breadcrumb_item.dart';
 export 'src/domain/entities/breakpoint.dart';
 export 'src/domain/entities/context_switcher_config.dart';
@@ -18,7 +19,6 @@ export 'src/domain/entities/multi_switcher_style.dart';
 export 'src/domain/entities/multi_switcher_user.dart';
 export 'src/domain/entities/navigation_config.dart';
 export 'src/domain/entities/navigation_item.dart';
-export 'src/domain/entities/navigation_route.dart';
 export 'src/domain/entities/navigation_section.dart';
 export 'src/domain/entities/navigation_theme.dart';
 export 'src/domain/entities/navigation_type.dart';

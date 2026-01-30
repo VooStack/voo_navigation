@@ -75,6 +75,58 @@ abstract final class VooNavigationTokens {
 
   /// Badge font size in compact mode
   static const double badgeFontSizeCompact = 10.0;
+
+  // === Expandable Bottom Navigation ===
+  /// Height of the expandable nav bar
+  static const double expandableNavBarHeight = 64.0;
+
+  /// Height/width for unselected expandable nav items (the circle container)
+  static const double expandableNavItemSize = 48.0;
+
+  /// Horizontal padding inside the nav bar
+  static const double expandableNavBarPaddingHorizontal = 8.0;
+
+  /// Vertical padding inside the nav bar
+  static const double expandableNavBarPaddingVertical = 8.0;
+
+  /// Horizontal padding inside expanded selected item container
+  static const double expandableNavSelectedPaddingHorizontal = 4.0;
+
+  /// Vertical padding inside expanded selected item container
+  static const double expandableNavSelectedPaddingVertical = 4.0;
+
+  /// Border radius for expandable nav container (fully rounded)
+  static const double expandableNavBorderRadius = 100.0;
+
+  /// Border radius for selected item background
+  static const double expandableNavSelectedBorderRadius = 28.0;
+
+  /// Border width for expandable nav container
+  static const double expandableNavBorderWidth = 1.0;
+
+  /// Border opacity for expandable nav container
+  static const double expandableNavBorderOpacity = 0.1;
+
+  /// Spacing between icon circle and label in expanded state
+  static const double expandableNavIconLabelSpacing = 10.0;
+
+  /// Label font size for expandable nav items
+  static const double expandableNavLabelFontSize = 14.0;
+
+  /// Label font weight for expandable nav items
+  static const FontWeight expandableNavLabelFontWeight = FontWeight.w500;
+
+  /// Animation duration for expandable nav in milliseconds
+  static const int expandableNavAnimationDurationMs = 300;
+
+  /// Icon size for expandable nav action item
+  static const double expandableNavActionIconSize = 24.0;
+
+  /// Size of the colored circle containing the icon in selected state
+  static const double expandableNavSelectedCircleSize = 44.0;
+
+  /// Minimum spacing between nav items
+  static const double expandableNavItemSpacing = 8.0;
 }
 
 /// Extension methods for applying navigation tokens with theme awareness.
@@ -136,5 +188,57 @@ extension VooNavigationTokensTheme on BuildContext {
   /// Subtle border color.
   Color get navBorderSubtle {
     return Theme.of(this).dividerColor.withValues(alpha: VooNavigationTokens.opacityBorderSubtle);
+  }
+
+  // === Expandable Bottom Navigation Theme Extensions ===
+
+  /// Background color for expandable nav container (dark surface).
+  Color get expandableNavBackground {
+    final isDark = Theme.of(this).brightness == Brightness.dark;
+    return isDark
+        ? const Color(0xFF1C1C1E) // Dark mode: very dark gray
+        : const Color(0xFF2C2C2E); // Light mode: dark charcoal (stays dark)
+  }
+
+  /// Border color for expandable nav container.
+  Color get expandableNavBorder {
+    final onSurface = Theme.of(this).colorScheme.onSurface;
+    return onSurface.withValues(alpha: VooNavigationTokens.expandableNavBorderOpacity);
+  }
+
+  /// Background color for selected item circle in expandable nav.
+  Color expandableNavSelectedCircle([Color? customColor]) {
+    return customColor ?? Theme.of(this).colorScheme.primary;
+  }
+
+  /// Background color for unselected item circles in expandable nav.
+  Color get expandableNavUnselectedCircle {
+    final isDark = Theme.of(this).brightness == Brightness.dark;
+    return isDark
+        ? const Color(0xFF3A3A3C) // Dark mode: medium dark gray
+        : const Color(0xFF3A3A3C); // Light mode: same dark gray
+  }
+
+  /// Background color for the selected item container (rounded rectangle).
+  Color get expandableNavSelectedBackground {
+    final isDark = Theme.of(this).brightness == Brightness.dark;
+    return isDark
+        ? const Color(0xFF38383A) // Dark mode: visible dark gray
+        : const Color(0xFF38383A); // Light mode: same
+  }
+
+  /// Icon color for unselected items in expandable nav.
+  Color get expandableNavUnselectedIcon {
+    return Colors.white.withValues(alpha: 0.7);
+  }
+
+  /// Icon color for selected items in expandable nav (dark, on colored circle).
+  Color get expandableNavSelectedIcon {
+    return const Color(0xFF1A1A1A);
+  }
+
+  /// Label color for selected items in expandable nav.
+  Color get expandableNavSelectedLabel {
+    return Colors.white;
   }
 }
