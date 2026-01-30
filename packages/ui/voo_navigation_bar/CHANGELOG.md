@@ -1,3 +1,19 @@
+## 0.1.5
+
+### Improved
+- **VooExpandableBottomNavigation**: Navigation bar now sizes to fit its contents
+  - Removed forced full-width layout, bar expands/contracts based on items
+  - Fixed 12px spacing between items for consistent layout
+- **VooExpandableNavItem**: Improved spacing and animation
+  - Cleaner spacing: 4px circle padding, 12px icon-to-text gap, 16px text padding
+  - Smoother row-based animation that expands from icon position
+  - Fixed overflow issues during animation
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.9
+
+---
+
 ## 0.1.4
 
 ### Added

@@ -1,3 +1,15 @@
+## 0.2.9
+
+### Improved
+- **Expandable Nav Tokens**: Updated design tokens for expandable bottom navigation
+  - Increased `expandableNavBarHeight` from 56 to 64 for better proportions
+  - Increased `expandableNavSelectedCircleSize` from 38 to 44 for larger tap targets
+  - Increased `expandableNavBarPaddingHorizontal/Vertical` from 6 to 8
+  - Increased `expandableNavAnimationDurationMs` from 250 to 300 for smoother animations
+  - Added `expandableNavItemSpacing` token (8px)
+
+---
+
 ## 0.2.8
 
 ### Fixed
