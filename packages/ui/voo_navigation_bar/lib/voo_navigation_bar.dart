@@ -10,7 +10,11 @@ export 'package:voo_navigation_core/voo_navigation_core.dart';
 // Molecules
 export 'src/presentation/molecules/voo_action_nav_item.dart';
 export 'src/presentation/molecules/voo_action_nav_modal.dart';
+export 'src/presentation/molecules/voo_combined_switcher_nav_item.dart';
+export 'src/presentation/molecules/voo_context_switcher_nav_item.dart';
 export 'src/presentation/molecules/voo_expandable_nav_item.dart';
+export 'src/presentation/molecules/voo_expandable_nav_modal.dart';
+export 'src/presentation/molecules/voo_multi_switcher_nav_item.dart';
 export 'src/presentation/molecules/voo_navigation_item.dart';
 export 'src/presentation/molecules/voo_navigation_dropdown.dart';
 

@@ -6,11 +6,24 @@
   - Selected item expands to show colored circle icon + label
   - Unselected items display as dark circles with muted icons
   - Supports optional action item with custom modal (e.g., + button)
+- **Context Switcher & Multi-Switcher**: Now use consistent expandable nav design
+  - `VooContextSwitcherExpandableNavItem` - Context switcher as dark circle with overlay modal
+  - `VooMultiSwitcherExpandableNavItem` - Org/user switcher as dark circle with stacked avatars and overlay modal
+  - Both use the same modal design as the action item (consistent UI/UX)
+- **Combined Switcher**: When both context switcher and multi-switcher are present, they automatically combine into a single `VooCombinedSwitcherNavItem`
+  - Triple-stacked avatar icon showing context, organization, and user
+  - Unified modal for switching all three in one place
+  - Reduces nav bar clutter by consolidating into one item
 - **Consolidated Components**: Merged multiple navigation bar variants into single `VooNavigationBar`
   - Removed `VooExpandableBottomNavigation` - use `VooNavigationBar` instead
   - Removed `VooAdaptiveBottomNavigation` - use `VooNavigationBar` instead
   - Removed `VooCustomNavigationBar` - use `VooNavigationBar` instead
 - **VooNavigationItem**: Renamed from `VooCustomNavigationItem` for consistency
+
+### Added
+- `VooCombinedSwitcherNavItem` - Combined context + org/profile switcher for when both are present
+- `VooExpandableNavModal` - Shared modal component for expandable nav items
+- `ExpandableNavModalMixin` - Mixin for nav items that show overlay modals
 
 ### Dependencies
 - Updated `voo_navigation_core` to ^0.2.10

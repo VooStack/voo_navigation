@@ -3,6 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_expandable_nav_item.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_action_nav_item.dart';
+import 'package:voo_navigation_bar/src/presentation/molecules/voo_context_switcher_nav_item.dart';
+import 'package:voo_navigation_bar/src/presentation/molecules/voo_multi_switcher_nav_item.dart';
+import 'package:voo_navigation_bar/src/presentation/molecules/voo_combined_switcher_nav_item.dart';
 
 /// An expandable bottom navigation bar with pill-shaped design.
 ///
@@ -135,14 +138,28 @@ class VooNavigationBar extends StatelessWidget {
 
     // Determine action item position
     final actionPosition = actionItem?.position ?? VooActionItemPosition.center;
-    final centerIndex = items.length ~/ 2;
+
+    // Check if switchers are present (they'll be added at the end)
+    final hasContextSwitcher = config.contextSwitcher != null &&
+        items.any((item) => item.id == VooContextSwitcherNavItem.navItemId);
+    final hasMultiSwitcher = config.multiSwitcher != null &&
+        items.any((item) => item.id == VooMultiSwitcherNavItem.navItemId);
+    final shouldCombineSwitchers = hasContextSwitcher && hasMultiSwitcher;
+
+    // Filter out switcher items - they'll be added at the end
+    final regularItems = items.where((item) =>
+        item.id != VooContextSwitcherNavItem.navItemId &&
+        item.id != VooMultiSwitcherNavItem.navItemId).toList();
+
+    // Calculate center index based on regular items only
+    final centerIndex = regularItems.length ~/ 2;
 
     // Track whether we've passed the action item (for label positioning)
     bool passedActionItem = actionItem == null ||
         actionPosition == VooActionItemPosition.end;
 
-    for (var i = 0; i < items.length; i++) {
-      final item = items[i];
+    for (var i = 0; i < regularItems.length; i++) {
+      final item = regularItems[i];
       final isSelected = item.id == selectedId;
 
       // Insert action item at appropriate position
@@ -162,51 +179,59 @@ class VooNavigationBar extends StatelessWidget {
           ? VooExpandableLabelPosition.start
           : VooExpandableLabelPosition.end;
 
-      // Check for special nav items (context switcher, multi-switcher)
-      if (item.id == VooContextSwitcherNavItem.navItemId &&
-          config.contextSwitcher != null) {
+      // Regular navigation item
+      widgets.add(
+        VooExpandableNavItem(
+          item: item,
+          isSelected: isSelected,
+          selectedColor: selectedColor,
+          labelPosition: labelPosition,
+          onTap: () {
+            if (enableFeedback) {
+              HapticFeedback.lightImpact();
+            }
+            onNavigationItemSelected(item.id);
+          },
+        ),
+      );
+    }
+
+    // Add action item at end if configured (before switchers)
+    if (actionItem != null && actionPosition == VooActionItemPosition.end) {
+      widgets.add(_buildActionItem(context));
+    }
+
+    // Add switcher(s) at the very end
+    if (shouldCombineSwitchers) {
+      // Combined switcher when both are present
+      widgets.add(
+        VooCombinedSwitcherNavItem(
+          contextConfig: config.contextSwitcher!,
+          multiConfig: config.multiSwitcher!,
+          enableHapticFeedback: enableFeedback,
+          selectedColor: selectedColor,
+        ),
+      );
+    } else {
+      // Individual switchers (context switcher first, then multi-switcher)
+      if (hasContextSwitcher) {
         widgets.add(
-          VooContextSwitcherNavItem(
+          VooContextSwitcherExpandableNavItem(
             config: config.contextSwitcher!,
-            isSelected: false,
-            isCompact: true,
-            useFloatingStyle: true,
             enableHapticFeedback: enableFeedback,
-          ),
-        );
-      } else if (item.id == VooMultiSwitcherNavItem.navItemId &&
-          config.multiSwitcher != null) {
-        widgets.add(
-          VooMultiSwitcherNavItem(
-            config: config.multiSwitcher!,
-            isSelected: false,
-            isCompact: true,
-            useFloatingStyle: true,
-            enableHapticFeedback: enableFeedback,
-          ),
-        );
-      } else {
-        // Regular navigation item
-        widgets.add(
-          VooExpandableNavItem(
-            item: item,
-            isSelected: isSelected,
             selectedColor: selectedColor,
-            labelPosition: labelPosition,
-            onTap: () {
-              if (enableFeedback) {
-                HapticFeedback.lightImpact();
-              }
-              onNavigationItemSelected(item.id);
-            },
           ),
         );
       }
-    }
-
-    // Add action item at end if configured
-    if (actionItem != null && actionPosition == VooActionItemPosition.end) {
-      widgets.add(_buildActionItem(context));
+      if (hasMultiSwitcher) {
+        widgets.add(
+          VooMultiSwitcherExpandableNavItem(
+            config: config.multiSwitcher!,
+            enableHapticFeedback: enableFeedback,
+            selectedColor: selectedColor,
+          ),
+        );
+      }
     }
 
     return widgets;
