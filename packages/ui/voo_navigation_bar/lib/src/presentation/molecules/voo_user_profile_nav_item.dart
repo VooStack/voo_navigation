@@ -171,13 +171,13 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
   @override
   Widget build(BuildContext context) {
     final circleSize = VooNavigationTokens.expandableNavSelectedCircleSize;
-    const circlePadding = 4.0; // Constant padding around circle (both sides)
+    const circlePadding = 6.0; // Constant padding around circle (all sides)
     final containerHeight = circleSize + (circlePadding * 2);
     final theme = Theme.of(context);
 
     final labelWidth = _measureLabelWidth();
-    const spacing = 8.0; // Space between circle and text
-    const textPadding = 12.0; // Space from text to edge of pill
+    const spacing = 6.0; // Space between circle padding and text
+    const textPadding = 10.0; // Space from text to edge of pill
 
     final isLabelStart =
         widget.labelPosition == VooExpandableLabelPosition.start;
@@ -262,6 +262,7 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: rowChildren,
               ),
             ),

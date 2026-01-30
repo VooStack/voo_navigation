@@ -1,20 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
 
-/// Position of the label relative to the icon in expanded state
-enum VooExpandableLabelPosition {
-  /// Label appears after the icon (to the right in LTR) - expands right
-  end,
+enum VooExpandableLabelPosition { end, start }
 
-  /// Label appears before the icon (to the left in LTR) - expands left
-  start,
-}
-
-/// A navigation item for the expandable bottom navigation bar.
-///
-/// When selected, the item expands to show the label, pushing other items aside.
-/// The icon stays centered within its circle, and the background pill expands
-/// to accommodate the label.
 class VooExpandableNavItem extends StatefulWidget {
   final VooNavigationDestination item;
   final bool isSelected;
@@ -24,7 +12,6 @@ class VooExpandableNavItem extends StatefulWidget {
   final Duration animationDuration;
   final Curve animationCurve;
 
-  /// Maximum width for the label. Defaults to 60dp.
   final double maxLabelWidth;
 
   const VooExpandableNavItem({
@@ -34,9 +21,7 @@ class VooExpandableNavItem extends StatefulWidget {
     required this.onTap,
     this.selectedColor,
     this.labelPosition = VooExpandableLabelPosition.end,
-    this.animationDuration = const Duration(
-      milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs,
-    ),
+    this.animationDuration = const Duration(milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs),
     this.animationCurve = Curves.easeOutCubic,
     this.maxLabelWidth = 60.0,
   });
@@ -45,8 +30,7 @@ class VooExpandableNavItem extends StatefulWidget {
   State<VooExpandableNavItem> createState() => _VooExpandableNavItemState();
 }
 
-class _VooExpandableNavItemState extends State<VooExpandableNavItem>
-    with SingleTickerProviderStateMixin {
+class _VooExpandableNavItemState extends State<VooExpandableNavItem> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _expandAnimation;
   late Animation<double> _labelOpacity;
@@ -54,20 +38,9 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.animationDuration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
 
-    // Use different curves for expand vs collapse to sync animations:
-    // - Expand (forward): easeOutCubic - slow start, fast finish
-    // - Collapse (reverse): easeInCubic - fast start, slow finish
-    // This ensures collapsing item frees up space as expanding item grows
-    _expandAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: widget.animationCurve,
-      reverseCurve: Curves.easeInCubic,
-    );
+    _expandAnimation = CurvedAnimation(parent: _controller, curve: widget.animationCurve, reverseCurve: Curves.easeInCubic);
 
     _labelOpacity = CurvedAnimation(
       parent: _controller,
@@ -102,10 +75,7 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
     final textPainter = TextPainter(
       text: TextSpan(
         text: widget.item.label,
-        style: TextStyle(
-          fontSize: VooNavigationTokens.expandableNavLabelFontSize,
-          fontWeight: VooNavigationTokens.expandableNavLabelFontWeight,
-        ),
+        style: TextStyle(fontSize: VooNavigationTokens.expandableNavLabelFontSize, fontWeight: VooNavigationTokens.expandableNavLabelFontWeight),
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
@@ -118,41 +88,29 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
   Widget build(BuildContext context) {
     final circleSize = VooNavigationTokens.expandableNavSelectedCircleSize;
 
-    final circleColor = widget.isSelected
-        ? context.expandableNavSelectedCircle(widget.selectedColor)
-        : context.expandableNavUnselectedCircle;
+    final circleColor = widget.isSelected ? context.expandableNavSelectedCircle(widget.selectedColor) : context.expandableNavUnselectedCircle;
 
-    final iconColor = widget.isSelected
-        ? context.expandableNavSelectedIcon
-        : context.expandableNavUnselectedIcon;
+    final iconColor = widget.isSelected ? context.expandableNavSelectedIcon : context.expandableNavUnselectedIcon;
 
-    final icon = widget.isSelected
-        ? widget.item.effectiveSelectedIcon
-        : widget.item.icon;
+    final icon = widget.isSelected ? widget.item.effectiveSelectedIcon : widget.item.icon;
 
     final labelWidth = _measureLabelWidth();
-    const spacing = 8.0;       // Space between circle and text
-    const circlePadding = 4.0; // Constant padding around circle (both sides)
-    const textPadding = 12.0;  // Space from text to edge of pill
+    const spacing = 6.0;
+    const circlePadding = 3.0;
+    const textPadding = 10.0;
 
     final isLabelStart = widget.labelPosition == VooExpandableLabelPosition.start;
     final containerHeight = circleSize + (circlePadding * 2);
 
-    // Build the icon circle widget
     Widget buildIconCircle() {
       return Container(
         width: circleSize,
         height: circleSize,
-        decoration: BoxDecoration(
-          color: circleColor,
-          shape: BoxShape.circle,
-        ),
+        margin: EdgeInsets.all(circlePadding),
+        decoration: BoxDecoration(color: circleColor, shape: BoxShape.circle),
         child: Center(
           child: IconTheme(
-            data: IconThemeData(
-              color: iconColor,
-              size: VooNavigationTokens.iconSizeCompact,
-            ),
+            data: IconThemeData(color: iconColor, size: VooNavigationTokens.iconSizeCompact),
             child: icon,
           ),
         ),
@@ -168,12 +126,10 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
           final progress = _expandAnimation.value.clamp(0.0, 1.0);
           final labelProgress = _labelOpacity.value.clamp(0.0, 1.0);
 
-          // Calculate animated values (circlePadding stays constant for symmetry)
           final animatedLabelWidth = labelWidth * progress;
           final animatedSpacing = spacing * progress;
           final animatedTextPadding = textPadding * progress;
 
-          // Build label widget
           final label = Opacity(
             opacity: labelProgress,
             child: Text(
@@ -188,38 +144,24 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
             ),
           );
 
-          // Build row contents based on label position
-          // Circle always has consistent padding on both sides
           List<Widget> rowChildren;
           if (isLabelStart) {
-            // Label on left, circle on right
             rowChildren = [
               SizedBox(width: animatedTextPadding),
               SizedBox(
                 width: animatedLabelWidth,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: label,
-                ),
+                child: Align(alignment: Alignment.centerRight, child: label),
               ),
               SizedBox(width: animatedSpacing),
-              const SizedBox(width: circlePadding),
               buildIconCircle(),
-              const SizedBox(width: circlePadding),
             ];
           } else {
-            // Circle on left, label on right
             rowChildren = [
-              const SizedBox(width: circlePadding),
               buildIconCircle(),
-              const SizedBox(width: circlePadding),
               SizedBox(width: animatedSpacing),
               SizedBox(
                 width: animatedLabelWidth,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: label,
-                ),
+                child: Align(alignment: Alignment.centerLeft, child: label),
               ),
               SizedBox(width: animatedTextPadding),
             ];
@@ -228,14 +170,12 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem>
           return Container(
             height: containerHeight,
             decoration: BoxDecoration(
-              color: progress > 0
-                  ? context.expandableNavSelectedBackground.withValues(alpha: progress)
-                  : Colors.transparent,
+              color: progress > 0 ? context.expandableNavSelectedBackground.withValues(alpha: progress) : Colors.transparent,
               borderRadius: BorderRadius.circular(containerHeight / 2),
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
-              children: rowChildren,
+              children: [Row(mainAxisAlignment: MainAxisAlignment.center, children: rowChildren)],
             ),
           );
         },
