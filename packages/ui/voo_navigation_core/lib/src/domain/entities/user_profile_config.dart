@@ -124,7 +124,8 @@ class VooUserProfileConfig {
   }
 
   /// Gets the effective nav item label
-  String get effectiveNavItemLabel => navItemLabel ?? userName ?? 'Profile';
+  String get effectiveNavItemLabel =>
+      navItemLabel ?? userEmail ?? userName ?? 'Profile';
 
   /// Creates a copy with the given fields replaced
   VooUserProfileConfig copyWith({

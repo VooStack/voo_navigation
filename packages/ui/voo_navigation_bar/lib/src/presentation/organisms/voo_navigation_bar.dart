@@ -98,33 +98,40 @@ class VooNavigationBar extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Padding(
-        padding: EdgeInsets.only(bottom: margin + bottomPadding),
-        child: Container(
-          height: VooNavigationTokens.expandableNavBarHeight,
-          padding: EdgeInsets.symmetric(
-            horizontal: VooNavigationTokens.expandableNavBarPaddingHorizontal,
-            vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
-          ),
-          decoration: BoxDecoration(
-            color: bgColor,
-            borderRadius: BorderRadius.circular(
-              VooNavigationTokens.expandableNavBorderRadius,
+        padding: EdgeInsets.only(
+          bottom: margin + bottomPadding,
+          left: horizontalMargin,
+          right: horizontalMargin,
+        ),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Container(
+            height: VooNavigationTokens.expandableNavBarHeight,
+            padding: EdgeInsets.symmetric(
+              horizontal: VooNavigationTokens.expandableNavBarPaddingHorizontal,
+              vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
             ),
-            border: Border.all(
-              color: border,
-              width: VooNavigationTokens.expandableNavBorderWidth,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: BorderRadius.circular(
+                VooNavigationTokens.expandableNavBorderRadius,
               ),
-            ],
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: _addSpacingBetweenItems(navWidgets),
+              border: Border.all(
+                color: border,
+                width: VooNavigationTokens.expandableNavBorderWidth,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                  blurRadius: 16,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: _addSpacingBetweenItems(navWidgets),
+            ),
           ),
         ),
       ),
@@ -245,6 +252,8 @@ class VooNavigationBar extends StatelessWidget {
           config: config.userProfileConfig!,
           enableHapticFeedback: enableFeedback,
           avatarColor: selectedColor,
+          isSelected: selectedId == VooUserProfileNavItem.navItemId,
+          labelPosition: VooExpandableLabelPosition.start,
         ),
       );
     }
