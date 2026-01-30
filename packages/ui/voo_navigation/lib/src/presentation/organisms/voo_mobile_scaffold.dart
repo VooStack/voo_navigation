@@ -90,7 +90,6 @@ class VooMobileScaffold extends StatelessWidget {
 
     // Determine which bottom navigation style to use
     final useExpandable = config.useExpandableBottomNav;
-    final useFloating = config.floatingBottomNav;
 
     // Build the appropriate bottom navigation
     Widget bottomNav;
@@ -104,19 +103,8 @@ class VooMobileScaffold extends StatelessWidget {
         selectedColor: config.expandableNavSelectedColor,
         enableHapticFeedback: config.enableHapticFeedback,
       );
-    } else if (useFloating) {
-      bottomNav = VooFloatingBottomNavigation(
-        config: config,
-        selectedId: selectedId,
-        onNavigationItemSelected: onNavigationItemSelected,
-        bottomMargin: config.floatingBottomNavBottomMargin,
-      );
     } else {
-      bottomNav = VooAdaptiveBottomNavigation(
-        config: config,
-        selectedId: selectedId,
-        onNavigationItemSelected: onNavigationItemSelected,
-      );
+      bottomNav = VooAdaptiveBottomNavigation(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected);
     }
 
     // Determine FAB visibility and widget based on page config overrides
@@ -128,15 +116,18 @@ class VooMobileScaffold extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: backgroundColor,
-      appBar: showAppBar ? (appBar ?? VooMobileAppBar(
-        config: config,
-        selectedItem: selectedItem,
-        selectedId: selectedId,
-        showMenuButton: false,
-        title: pageConfig?.appBarTitle,
-        leading: pageConfig?.appBarLeading,
-        additionalActions: pageConfig?.additionalAppBarActions,
-      )) : null,
+      appBar: showAppBar
+          ? (appBar ??
+                VooMobileAppBar(
+                  config: config,
+                  selectedItem: selectedItem,
+                  selectedId: selectedId,
+                  showMenuButton: false,
+                  title: pageConfig?.appBarTitle,
+                  leading: pageConfig?.appBarLeading,
+                  additionalActions: pageConfig?.additionalAppBarActions,
+                ))
+          : null,
       body: body,
       bottomNavigationBar: bottomNav,
       floatingActionButton: showFab ? fabWidget : null,
@@ -148,7 +139,7 @@ class VooMobileScaffold extends StatelessWidget {
       endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
       // Extend body when using floating or expandable nav for proper appearance
-      extendBody: useFloating || useExpandable || extendBody,
+      extendBody: useExpandable || extendBody,
       extendBodyBehindAppBar: extendBodyBehindAppBar,
       bottomSheet: bottomSheet,
       persistentFooterButtons: persistentFooterButtons,

@@ -17,13 +17,7 @@ class VooModernIcon extends StatelessWidget {
   /// Custom icon size (optional, defaults to 22/20 based on selection)
   final double? iconSize;
 
-  const VooModernIcon({
-    super.key,
-    required this.item,
-    required this.isSelected,
-    required this.primaryColor,
-    this.iconSize,
-  });
+  const VooModernIcon({super.key, required this.item, required this.isSelected, required this.primaryColor, this.iconSize});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +35,7 @@ class VooModernIcon extends StatelessWidget {
       child: Icon(
         isSelected ? item.effectiveSelectedIcon : item.icon,
         key: ValueKey(isSelected),
-        color: isSelected
-            ? theme.colorScheme.primary
-            : theme.colorScheme.onSurface.withValues(alpha: 0.8),
+        color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface.withValues(alpha: 0.8),
         size: isSelected ? selectedSize : unselectedSize,
       ),
     );
@@ -56,11 +48,7 @@ class VooModernIcon extends StatelessWidget {
           Positioned(
             top: -4,
             right: -4,
-            child: VooModernBadge(
-              item: item,
-              isSelected: isSelected,
-              primaryColor: primaryColor,
-            ),
+            child: VooModernBadge(item: item, isSelected: isSelected, primaryColor: primaryColor),
           ),
         ],
       );

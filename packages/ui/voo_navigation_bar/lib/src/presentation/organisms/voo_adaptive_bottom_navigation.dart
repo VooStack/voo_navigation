@@ -46,17 +46,12 @@ class VooAdaptiveBottomNavigation extends StatefulWidget {
   });
 
   @override
-  State<VooAdaptiveBottomNavigation> createState() =>
-      _VooAdaptiveBottomNavigationState();
+  State<VooAdaptiveBottomNavigation> createState() => _VooAdaptiveBottomNavigationState();
 }
 
-class _VooAdaptiveBottomNavigationState
-    extends State<VooAdaptiveBottomNavigation>
-    with TickerProviderStateMixin {
+class _VooAdaptiveBottomNavigationState extends State<VooAdaptiveBottomNavigation> with TickerProviderStateMixin {
   late List<AnimationController> _itemAnimations;
   late List<Animation<double>> _scaleAnimations;
-  late List<Animation<double>> _rotationAnimations;
-  late AnimationController _rippleController;
   int? _previousIndex;
 
   @override
@@ -67,34 +62,9 @@ class _VooAdaptiveBottomNavigationState
 
   void _initializeAnimations() {
     final itemCount = widget.config.mobilePriorityItems.length;
-    _itemAnimations = List.generate(
-      itemCount,
-      (index) => AnimationController(
-        duration: const Duration(milliseconds: 300),
-        vsync: this,
-      ),
-    );
+    _itemAnimations = List.generate(itemCount, (index) => AnimationController(duration: const Duration(milliseconds: 300), vsync: this));
 
-    _scaleAnimations = _itemAnimations
-        .map(
-          (controller) => Tween<double>(begin: 1.0, end: 1.15).animate(
-            CurvedAnimation(parent: controller, curve: Curves.easeOutBack),
-          ),
-        )
-        .toList();
-
-    _rotationAnimations = _itemAnimations
-        .map(
-          (controller) => Tween<double>(begin: 0.0, end: 0.05).animate(
-            CurvedAnimation(parent: controller, curve: Curves.elasticOut),
-          ),
-        )
-        .toList();
-
-    _rippleController = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      vsync: this,
-    );
+    _scaleAnimations = _itemAnimations.map((controller) => Tween<double>(begin: 1.0, end: 1.08).animate(CurvedAnimation(parent: controller, curve: Curves.easeOutCubic))).toList();
 
     // Animate the initially selected item
     final selectedIndex = _getSelectedIndex();
@@ -108,8 +78,7 @@ class _VooAdaptiveBottomNavigationState
   void didUpdateWidget(VooAdaptiveBottomNavigation oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.config.mobilePriorityItems.length !=
-        oldWidget.config.mobilePriorityItems.length) {
+    if (widget.config.mobilePriorityItems.length != oldWidget.config.mobilePriorityItems.length) {
       _disposeAnimations();
       _initializeAnimations();
     }
@@ -154,7 +123,6 @@ class _VooAdaptiveBottomNavigationState
     for (final controller in _itemAnimations) {
       controller.dispose();
     }
-    _rippleController.dispose();
   }
 
   @override
@@ -172,7 +140,6 @@ class _VooAdaptiveBottomNavigationState
       selectedIndex: selectedIndex,
       config: widget.config,
       scaleAnimations: _scaleAnimations,
-      rotationAnimations: _rotationAnimations,
       height: widget.height,
       showLabels: widget.showLabels,
       showSelectedLabels: widget.showSelectedLabels,
