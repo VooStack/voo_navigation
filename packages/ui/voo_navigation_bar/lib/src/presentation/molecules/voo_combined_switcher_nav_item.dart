@@ -133,49 +133,60 @@ class _VooCombinedSwitcherNavItemState extends State<VooCombinedSwitcherNavItem>
   Widget _buildTripleStackedAvatars(BuildContext context, double size) {
     final contextItem = widget.contextConfig.selectedItem;
     final org = widget.multiConfig.selectedOrganization;
-    final avatarSize = size * 0.52;
+    final avatarSize = size * 0.55;
 
-    // Triangle layout: tight grouping
-    final horizontalOffset = avatarSize * 0.55; // How far apart top two are from center
-    final verticalOffset = avatarSize * 0.45; // How far down the bottom one is
-    final totalWidth = avatarSize + (horizontalOffset * 2);
-    final totalHeight = avatarSize + verticalOffset;
+    // Triangle layout with clear separation
+    final totalWidth = size * 1.15;
+    final totalHeight = size;
 
-    return SizedBox(
-      width: totalWidth,
-      height: totalHeight,
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          // Context indicator (top-left of triangle)
-          Positioned(
-            top: 0,
-            left: 0,
-            child: _buildContextAvatar(context, contextItem, avatarSize),
-          ),
-          // Organization avatar (top-right of triangle)
-          if (org != null)
+    // Calculate centroid offset to center the triangle's centroid within the bounding box
+    // For a triangle with 2 points at top and 1 at bottom:
+    // - Top avatar centers at Y = avatarSize/2
+    // - Bottom avatar center at Y = totalHeight - avatarSize/2
+    // Centroid Y = (avatarSize/2 + avatarSize/2 + (totalHeight - avatarSize/2)) / 3
+    //            = (avatarSize/2 + totalHeight) / 3
+    // To center: we need centroid at totalHeight/2
+    // Offset = totalHeight/2 - centroidY = (totalHeight - avatarSize) / 6
+    final centroidOffsetY = (totalHeight - avatarSize) / 6;
+
+    return Transform.translate(
+      offset: Offset(0, centroidOffsetY), // Shift down to center centroid
+      child: SizedBox(
+        width: totalWidth,
+        height: totalHeight,
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Context indicator (top-left of triangle)
             Positioned(
               top: 0,
-              right: 0,
-              child: _buildOrgAvatar(context, org, avatarSize),
+              left: 0,
+              child: _buildContextAvatar(context, contextItem, avatarSize),
             ),
-          // User avatar (bottom-center of triangle)
-          Positioned(
-            bottom: 0,
-            left: horizontalOffset - 1.5, // Center minus half border
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: context.expandableNavUnselectedCircle,
-                  width: 1.5,
-                ),
+            // Organization avatar (top-right of triangle)
+            if (org != null)
+              Positioned(
+                top: 0,
+                right: 0,
+                child: _buildOrgAvatar(context, org, avatarSize),
               ),
-              child: _buildUserAvatar(context, avatarSize),
+            // User avatar (bottom-center of triangle)
+            Positioned(
+              bottom: 0,
+              left: (totalWidth - avatarSize) / 2,
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: context.expandableNavUnselectedCircle,
+                    width: 1.5,
+                  ),
+                ),
+                child: _buildUserAvatar(context, avatarSize),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
