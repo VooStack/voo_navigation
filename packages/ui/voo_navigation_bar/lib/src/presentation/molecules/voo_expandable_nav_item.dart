@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
+import 'package:voo_navigation_bar/src/presentation/atoms/voo_expandable_nav_item_layout.dart';
 
 enum VooExpandableLabelPosition { end, start }
 
@@ -11,7 +12,6 @@ class VooExpandableNavItem extends StatefulWidget {
   final VooExpandableLabelPosition labelPosition;
   final Duration animationDuration;
   final Curve animationCurve;
-
   final double maxLabelWidth;
 
   const VooExpandableNavItem({
@@ -21,7 +21,9 @@ class VooExpandableNavItem extends StatefulWidget {
     required this.onTap,
     this.selectedColor,
     this.labelPosition = VooExpandableLabelPosition.end,
-    this.animationDuration = const Duration(milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs),
+    this.animationDuration = const Duration(
+      milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs,
+    ),
     this.animationCurve = Curves.easeOutCubic,
     this.maxLabelWidth = 60.0,
   });
@@ -30,7 +32,8 @@ class VooExpandableNavItem extends StatefulWidget {
   State<VooExpandableNavItem> createState() => _VooExpandableNavItemState();
 }
 
-class _VooExpandableNavItemState extends State<VooExpandableNavItem> with SingleTickerProviderStateMixin {
+class _VooExpandableNavItemState extends State<VooExpandableNavItem>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _expandAnimation;
   late Animation<double> _labelOpacity;
@@ -38,9 +41,16 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem> with Single
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
+    _controller = AnimationController(
+      duration: widget.animationDuration,
+      vsync: this,
+    );
 
-    _expandAnimation = CurvedAnimation(parent: _controller, curve: widget.animationCurve, reverseCurve: Curves.easeInCubic);
+    _expandAnimation = CurvedAnimation(
+      parent: _controller,
+      curve: widget.animationCurve,
+      reverseCurve: Curves.easeInCubic,
+    );
 
     _labelOpacity = CurvedAnimation(
       parent: _controller,
@@ -71,51 +81,37 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem> with Single
     super.dispose();
   }
 
-  double _measureLabelWidth() {
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: widget.item.label,
-        style: TextStyle(fontSize: VooNavigationTokens.expandableNavLabelFontSize, fontWeight: VooNavigationTokens.expandableNavLabelFontWeight),
-      ),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    return (textPainter.width.ceilToDouble() + 2).clamp(0.0, widget.maxLabelWidth);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final circleSize = VooNavigationTokens.expandableNavSelectedCircleSize;
+    // Get colors based on selection state
+    final circleColor = widget.isSelected
+        ? context.expandableNavSelectedCircle(widget.selectedColor)
+        : context.expandableNavUnselectedCircle;
 
-    final circleColor = widget.isSelected ? context.expandableNavSelectedCircle(widget.selectedColor) : context.expandableNavUnselectedCircle;
+    final iconColor = widget.isSelected
+        ? context.expandableNavSelectedIcon
+        : context.expandableNavUnselectedIcon;
 
-    final iconColor = widget.isSelected ? context.expandableNavSelectedIcon : context.expandableNavUnselectedIcon;
+    final icon =
+        widget.isSelected ? widget.item.effectiveSelectedIcon : widget.item.icon;
 
-    final icon = widget.isSelected ? widget.item.effectiveSelectedIcon : widget.item.icon;
+    // Measure label width
+    final labelWidth = VooExpandableNavItemLayout.measureLabelWidth(
+      widget.item.label,
+      widget.maxLabelWidth,
+    );
 
-    final labelWidth = _measureLabelWidth();
-    const spacing = 6.0;
-    const circlePadding = 3.0;
-    const textPadding = 10.0;
-
-    final isLabelStart = widget.labelPosition == VooExpandableLabelPosition.start;
-    final containerHeight = circleSize + (circlePadding * 2);
-
-    Widget buildIconCircle() {
-      return Container(
-        width: circleSize,
-        height: circleSize,
-        margin: EdgeInsets.all(circlePadding),
-        decoration: BoxDecoration(color: circleColor, shape: BoxShape.circle),
-        child: Center(
-          child: IconTheme(
-            data: IconThemeData(color: iconColor, size: VooNavigationTokens.iconSizeCompact),
-            child: icon,
-          ),
+    // Build the icon circle using shared layout
+    final circle = VooExpandableNavItemLayout.buildCircle(
+      color: circleColor,
+      child: IconTheme(
+        data: IconThemeData(
+          color: iconColor,
+          size: VooNavigationTokens.iconSizeCompact,
         ),
-      );
-    }
+        child: icon,
+      ),
+    );
 
     return GestureDetector(
       onTap: widget.onTap,
@@ -126,58 +122,36 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem> with Single
           final progress = _expandAnimation.value.clamp(0.0, 1.0);
           final labelProgress = _labelOpacity.value.clamp(0.0, 1.0);
 
-          final animatedLabelWidth = labelWidth * progress;
-          final animatedSpacing = spacing * progress;
-          final animatedTextPadding = textPadding * progress;
+          // Calculate animated values
+          final animatedLabelWidth =
+              labelWidth * progress;
+          final animatedSpacing =
+              VooExpandableNavItemLayout.spacing * progress;
+          final animatedTextPadding =
+              VooExpandableNavItemLayout.textPadding * progress;
 
-          final label = Opacity(
+          // Build label using shared layout
+          final label = VooExpandableNavItemLayout.buildLabel(
+            text: widget.item.label,
             opacity: labelProgress,
-            child: Text(
-              widget.item.label,
-              style: TextStyle(
-                color: context.expandableNavSelectedLabel,
-                fontSize: VooNavigationTokens.expandableNavLabelFontSize,
-                fontWeight: VooNavigationTokens.expandableNavLabelFontWeight,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.clip,
-            ),
+            color: context.expandableNavSelectedLabel,
           );
 
-          List<Widget> rowChildren;
-          if (isLabelStart) {
-            rowChildren = [
-              SizedBox(width: animatedSpacing),
-              SizedBox(width: animatedTextPadding),
-              SizedBox(
-                width: animatedLabelWidth,
-                child: Align(alignment: Alignment.centerRight, child: label),
-              ),
-              buildIconCircle(),
-            ];
-          } else {
-            rowChildren = [
-              buildIconCircle(),
-              SizedBox(width: animatedSpacing),
-              SizedBox(
-                width: animatedLabelWidth,
-                child: Align(alignment: Alignment.centerLeft, child: label),
-              ),
-              SizedBox(width: animatedTextPadding),
-              SizedBox(width: animatedSpacing),
-            ];
-          }
+          // Build row children using shared layout (single source of truth)
+          final rowChildren = VooExpandableNavItemLayout.buildRowChildren(
+            circle: circle,
+            label: label,
+            animatedLabelWidth: animatedLabelWidth,
+            animatedSpacing: animatedSpacing,
+            animatedTextPadding: animatedTextPadding,
+            labelPosition: widget.labelPosition,
+          );
 
-          return Container(
-            height: containerHeight,
-            decoration: BoxDecoration(
-              color: progress > 0 ? context.expandableNavSelectedBackground.withValues(alpha: progress) : Colors.transparent,
-              borderRadius: BorderRadius.circular(containerHeight / 2),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [Row(crossAxisAlignment: CrossAxisAlignment.center, children: rowChildren)],
-            ),
+          // Build container using shared layout
+          return VooExpandableNavItemLayout.buildContainer(
+            rowChildren: rowChildren,
+            progress: progress,
+            selectedBackgroundColor: context.expandableNavSelectedBackground,
           );
         },
       ),

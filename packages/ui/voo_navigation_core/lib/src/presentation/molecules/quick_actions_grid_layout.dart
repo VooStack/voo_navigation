@@ -36,6 +36,11 @@ class VooQuickActionsGridLayout extends StatefulWidget {
   /// Default height for grid items. Defaults to 100.
   final double defaultItemHeight;
 
+  /// Whether items should expand to fill available space.
+  /// When true, items will grow to fill the container height.
+  /// Defaults to false.
+  final bool expandItems;
+
   const VooQuickActionsGridLayout({
     super.key,
     required this.style,
@@ -48,6 +53,7 @@ class VooQuickActionsGridLayout extends StatefulWidget {
     this.padding,
     this.spacing = 8.0,
     this.defaultItemHeight = 100.0,
+    this.expandItems = false,
   });
 
   @override
@@ -62,11 +68,70 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
   EdgeInsets get _effectivePadding =>
       (widget.padding ?? const EdgeInsets.all(16)).resolve(TextDirection.ltr);
 
+  /// Calculates the width of a single column in the grid
+  double _calculateColumnWidth() {
+    final availableWidth =
+        widget.width - _effectivePadding.horizontal;
+    final totalSpacing = (widget.gridColumns - 1) * widget.spacing;
+    return (availableWidth - totalSpacing) / widget.gridColumns;
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final visibleActions = widget.actions.where((a) => !a.isDivider).toList();
+    final columnWidth = _calculateColumnWidth();
+
+    if (widget.expandItems) {
+      // When expandItems is true, use LayoutBuilder to fill available space
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final availableHeight =
+              constraints.maxHeight - _effectivePadding.vertical;
+          final rows = (visibleActions.length / widget.gridColumns).ceil();
+          final totalSpacing = (rows - 1) * widget.spacing;
+          final calculatedItemHeight = rows > 0
+              ? (availableHeight - totalSpacing) / rows
+              : widget.defaultItemHeight;
+
+          return SingleChildScrollView(
+            padding: _effectivePadding,
+            child: StaggeredGrid.count(
+              crossAxisCount: widget.gridColumns,
+              mainAxisSpacing: widget.spacing,
+              crossAxisSpacing: widget.spacing,
+              children: visibleActions.map((action) {
+                final columnSpan =
+                    (action.gridColumnSpan).clamp(1, widget.gridColumns);
+                // Use calculated height for expansion, but respect explicit gridHeight
+                final effectiveHeight = action.gridHeight ?? calculatedItemHeight;
+                final clampedHeight = effectiveHeight.clamp(
+                  widget.defaultItemHeight * 0.5,
+                  double.infinity,
+                );
+                // Calculate item width based on column span
+                final itemWidth = (columnWidth * columnSpan) +
+                    (widget.spacing * (columnSpan - 1));
+
+                return StaggeredGridTile.extent(
+                  crossAxisCellCount: columnSpan,
+                  mainAxisExtent: clampedHeight,
+                  child: _buildActionItem(
+                    action,
+                    theme,
+                    colorScheme,
+                    columnSpan > 1,
+                    itemWidth: itemWidth,
+                    itemHeight: clampedHeight,
+                  ),
+                );
+              }).toList(),
+            ),
+          );
+        },
+      );
+    }
 
     return SingleChildScrollView(
       padding: _effectivePadding,
@@ -75,13 +140,24 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
         mainAxisSpacing: widget.spacing,
         crossAxisSpacing: widget.spacing,
         children: visibleActions.map((action) {
-          final columnSpan = (action.gridColumnSpan).clamp(1, widget.gridColumns);
+          final columnSpan =
+              (action.gridColumnSpan).clamp(1, widget.gridColumns);
           final itemHeight = action.gridHeight ?? widget.defaultItemHeight;
+          // Calculate item width based on column span
+          final itemWidth =
+              (columnWidth * columnSpan) + (widget.spacing * (columnSpan - 1));
 
           return StaggeredGridTile.extent(
             crossAxisCellCount: columnSpan,
             mainAxisExtent: itemHeight,
-            child: _buildActionItem(action, theme, colorScheme, columnSpan > 1),
+            child: _buildActionItem(
+              action,
+              theme,
+              colorScheme,
+              columnSpan > 1,
+              itemWidth: itemWidth,
+              itemHeight: itemHeight,
+            ),
           );
         }).toList(),
       ),
@@ -92,8 +168,10 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     VooQuickAction action,
     ThemeData theme,
     ColorScheme colorScheme,
-    bool isWide,
-  ) {
+    bool isWide, {
+    required double itemWidth,
+    required double itemHeight,
+  }) {
     final canReorder = widget.onReorderActions != null;
 
     final child = _buildGridItem(
@@ -143,8 +221,8 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
             elevation: 8,
             borderRadius: BorderRadius.circular(12),
             child: SizedBox(
-              width: 100,
-              height: 100,
+              width: itemWidth,
+              height: itemHeight,
               child: _buildGridItem(
                 action: action,
                 theme: theme,
@@ -152,7 +230,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
                 isDragging: false,
                 isDragOver: false,
                 isFeedback: true,
-                isWide: false,
+                isWide: isWide,
               ),
             ),
           ),
@@ -211,7 +289,12 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
               : null,
         ),
         child: InkWell(
-          onTap: action.isEnabled ? () => widget.onActionTap(action) : null,
+          onTap: action.isEnabled
+              ? () {
+                  HapticFeedback.lightImpact();
+                  widget.onActionTap(action);
+                }
+              : null,
           borderRadius: BorderRadius.circular(12),
           child: Opacity(
             opacity: action.isEnabled ? 1.0 : 0.5,

@@ -22,13 +22,11 @@ class VooActionNavigationItem {
   ///
   /// The [close] callback should be called when an action is selected
   /// to close the modal.
-  final Widget Function(BuildContext context, VoidCallback close) modalBuilder;
-
-  /// Maximum height of the modal content.
   ///
-  /// The modal will constrain its height to this value.
-  /// Defaults to 300.0.
-  final double modalMaxHeight;
+  /// The modal will size to fit its content by default. To make the modal
+  /// expand to fill available space, use a widget that expands (e.g.,
+  /// `VooQuickActionsMenuContent` with `isExpanded: true`).
+  final Widget Function(BuildContext context, VoidCallback close) modalBuilder;
 
   /// Whether to close the modal when tapping outside of it.
   ///
@@ -59,7 +57,6 @@ class VooActionNavigationItem {
     this.activeIcon,
     required this.modalBuilder,
     this.backgroundColor,
-    this.modalMaxHeight = 300.0,
     this.closeOnTapOutside = true,
     this.tooltip,
     this.sortOrder = 0,
@@ -74,7 +71,6 @@ class VooActionNavigationItem {
     Widget? activeIcon,
     Color? backgroundColor,
     Widget Function(BuildContext context, VoidCallback close)? modalBuilder,
-    double? modalMaxHeight,
     bool? closeOnTapOutside,
     String? tooltip,
     int? sortOrder,
@@ -87,7 +83,6 @@ class VooActionNavigationItem {
       activeIcon: activeIcon ?? this.activeIcon,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       modalBuilder: modalBuilder ?? this.modalBuilder,
-      modalMaxHeight: modalMaxHeight ?? this.modalMaxHeight,
       closeOnTapOutside: closeOnTapOutside ?? this.closeOnTapOutside,
       tooltip: tooltip ?? this.tooltip,
       sortOrder: sortOrder ?? this.sortOrder,

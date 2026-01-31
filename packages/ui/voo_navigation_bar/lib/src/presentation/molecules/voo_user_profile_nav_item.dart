@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
+import 'package:voo_navigation_bar/src/presentation/atoms/voo_expandable_nav_item_layout.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_expandable_nav_item.dart';
 import 'package:voo_navigation_bar/src/presentation/molecules/voo_expandable_nav_modal.dart';
 
@@ -77,10 +78,6 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
       vsync: this,
     );
 
-    // Use different curves for expand vs collapse to sync animations:
-    // - Expand (forward): easeOutCubic - slow start, fast finish
-    // - Collapse (reverse): easeInCubic - fast start, slow finish
-    // This ensures collapsing item frees up space as expanding item grows
     _expandAnimation = CurvedAnimation(
       parent: _controller,
       curve: widget.animationCurve,
@@ -160,35 +157,26 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
     );
   }
 
-  double _measureLabelWidth() {
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: widget.config.effectiveNavItemLabel,
-        style: TextStyle(
-          fontSize: VooNavigationTokens.expandableNavLabelFontSize,
-          fontWeight: VooNavigationTokens.expandableNavLabelFontWeight,
-        ),
-      ),
-      maxLines: 1,
-      textDirection: TextDirection.ltr,
-    )..layout();
-
-    return (textPainter.width.ceilToDouble() + 2).clamp(0.0, widget.maxLabelWidth);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final circleSize = VooNavigationTokens.expandableNavSelectedCircleSize;
-    const circlePadding = 6.0; // Constant padding around circle (all sides)
-    final containerHeight = circleSize + (circlePadding * 2);
     final theme = Theme.of(context);
 
-    final labelWidth = _measureLabelWidth();
-    const spacing = 6.0; // Space between circle padding and text
-    const textPadding = 10.0; // Space from text to edge of pill
+    // Use the same circle colors as VooExpandableNavItem
+    final circleColor = widget.isSelected
+        ? context.expandableNavSelectedCircle(widget.avatarColor)
+        : context.expandableNavUnselectedCircle;
 
-    final isLabelStart =
-        widget.labelPosition == VooExpandableLabelPosition.start;
+    // Measure label width using shared layout
+    final labelWidth = VooExpandableNavItemLayout.measureLabelWidth(
+      widget.config.effectiveNavItemLabel,
+      widget.maxLabelWidth,
+    );
+
+    // Build avatar circle using shared layout
+    final circle = VooExpandableNavItemLayout.buildCircle(
+      color: circleColor,
+      child: _buildAvatarContent(context, theme),
+    );
 
     return GestureDetector(
       key: buttonKey,
@@ -200,79 +188,37 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
           final progress = _expandAnimation.value.clamp(0.0, 1.0);
           final labelProgress = _labelOpacity.value.clamp(0.0, 1.0);
 
-          // Calculate animated values (circlePadding stays constant for symmetry)
+          // Calculate animated values
           final animatedLabelWidth = labelWidth * progress;
-          final animatedSpacing = spacing * progress;
-          final animatedTextPadding = textPadding * progress;
+          final animatedSpacing =
+              VooExpandableNavItemLayout.spacing * progress;
+          final animatedTextPadding =
+              VooExpandableNavItemLayout.textPadding * progress;
 
-          // Build label widget
-          final label = Opacity(
+          // Build label using shared layout
+          final label = VooExpandableNavItemLayout.buildLabel(
+            text: widget.config.effectiveNavItemLabel,
             opacity: labelProgress,
-            child: Text(
-              widget.config.effectiveNavItemLabel,
-              style: TextStyle(
-                color: context.expandableNavSelectedLabel,
-                fontSize: VooNavigationTokens.expandableNavLabelFontSize,
-                fontWeight: VooNavigationTokens.expandableNavLabelFontWeight,
-              ),
-              maxLines: 1,
-              overflow: TextOverflow.clip,
-            ),
+            color: context.expandableNavSelectedLabel,
           );
 
-          // Build row contents based on label position
-          // Avatar always has consistent padding on both sides
-          List<Widget> rowChildren;
-          if (isLabelStart) {
-            // Label on left, avatar on right
-            rowChildren = [
-              SizedBox(width: animatedTextPadding),
-              SizedBox(
-                width: animatedLabelWidth,
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: label,
-                ),
-              ),
-              SizedBox(width: animatedSpacing),
-              const SizedBox(width: circlePadding),
-              _buildAvatar(context, circleSize, theme),
-              const SizedBox(width: circlePadding),
-            ];
-          } else {
-            // Avatar on left, label on right
-            rowChildren = [
-              const SizedBox(width: circlePadding),
-              _buildAvatar(context, circleSize, theme),
-              const SizedBox(width: circlePadding),
-              SizedBox(width: animatedSpacing),
-              SizedBox(
-                width: animatedLabelWidth,
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: label,
-                ),
-              ),
-              SizedBox(width: animatedTextPadding),
-            ];
-          }
+          // Build row children using shared layout (single source of truth)
+          final rowChildren = VooExpandableNavItemLayout.buildRowChildren(
+            circle: circle,
+            label: label,
+            animatedLabelWidth: animatedLabelWidth,
+            animatedSpacing: animatedSpacing,
+            animatedTextPadding: animatedTextPadding,
+            labelPosition: widget.labelPosition,
+          );
 
+          // Build container using shared layout, wrapped in Tooltip
           return Tooltip(
             message: widget.config.effectiveNavItemLabel,
-            child: Container(
-              height: containerHeight,
-              decoration: BoxDecoration(
-                color: progress > 0
-                    ? context.expandableNavSelectedBackground
-                        .withValues(alpha: progress)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(containerHeight / 2),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: rowChildren,
-              ),
+            child: VooExpandableNavItemLayout.buildContainer(
+              rowChildren: rowChildren,
+              progress: progress,
+              selectedBackgroundColor: context.expandableNavSelectedBackground,
             ),
           );
         },
@@ -280,52 +226,66 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
     );
   }
 
-  Widget _buildAvatar(BuildContext context, double size, ThemeData theme) {
+  /// Builds the avatar content that sits inside the circle.
+  /// The content is sized to fit within the circle with some padding.
+  Widget _buildAvatarContent(BuildContext context, ThemeData theme) {
+    final circleSize = VooExpandableNavItemLayout.circleSize;
+    // Inner content size (smaller than circle to show background ring)
+    final contentSize = circleSize * 0.75;
+
     // If custom avatar widget provided, use it
     if (widget.config.avatarWidget != null) {
       return SizedBox(
-        width: size,
-        height: size,
+        width: contentSize,
+        height: contentSize,
         child: ClipOval(child: widget.config.avatarWidget),
       );
     }
 
-    // If avatar URL provided, show image
+    // If avatar URL provided, show image with loading animation
     if (widget.config.avatarUrl != null &&
         widget.config.avatarUrl!.isNotEmpty) {
-      return Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          image: DecorationImage(
+      return ClipOval(
+        child: SizedBox(
+          width: contentSize,
+          height: contentSize,
+          child: Image(
             image: _getImageProvider(widget.config.avatarUrl!),
             fit: BoxFit.cover,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded || frame != null) {
+                return child;
+              }
+              // Show loading animation while image loads
+              return _AvatarLoadingIndicator(size: contentSize);
+            },
+            errorBuilder: (context, error, stackTrace) {
+              // Show initials on error
+              return _buildInitials(context, circleSize);
+            },
           ),
         ),
       );
     }
 
-    // Otherwise show initials
-    final initials = widget.config.effectiveInitials ?? '?';
-    final bgColor = widget.avatarColor ?? theme.colorScheme.primary;
+    // Otherwise show initials (text only, background is the circle)
+    return _buildInitials(context, circleSize);
+  }
 
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        color: bgColor,
-        shape: BoxShape.circle,
-      ),
-      child: Center(
-        child: Text(
-          initials,
-          style: TextStyle(
-            color: theme.colorScheme.onPrimary,
-            fontSize: size * 0.4,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+  /// Builds initials text widget
+  Widget _buildInitials(BuildContext context, double circleSize) {
+    final initials = widget.config.effectiveInitials ?? '?';
+    // Use icon color to match how regular nav items style their icons
+    final textColor = widget.isSelected
+        ? context.expandableNavSelectedIcon
+        : context.expandableNavUnselectedIcon;
+
+    return Text(
+      initials,
+      style: TextStyle(
+        color: textColor,
+        fontSize: circleSize * 0.36,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
@@ -335,5 +295,65 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
       return NetworkImage(url);
     }
     return AssetImage(url);
+  }
+}
+
+/// A pulsing loading indicator for avatar images
+class _AvatarLoadingIndicator extends StatefulWidget {
+  final double size;
+
+  const _AvatarLoadingIndicator({required this.size});
+
+  @override
+  State<_AvatarLoadingIndicator> createState() => _AvatarLoadingIndicatorState();
+}
+
+class _AvatarLoadingIndicatorState extends State<_AvatarLoadingIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    )..repeat(reverse: true);
+
+    _animation = Tween<double>(begin: 0.3, end: 0.7).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animation,
+      builder: (context, child) {
+        return Container(
+          width: widget.size,
+          height: widget.size,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: context.expandableNavUnselectedIcon
+                .withValues(alpha: _animation.value),
+          ),
+          child: Center(
+            child: Icon(
+              Icons.person_outline,
+              size: widget.size * 0.5,
+              color: context.expandableNavUnselectedCircle,
+            ),
+          ),
+        );
+      },
+    );
   }
 }

@@ -13,10 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'VoO Navigation Bar Example',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF10B981)),
-        useMaterial3: true,
-      ),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF10B981)), useMaterial3: true),
       home: const BottomNavigationExample(),
     );
   }
@@ -33,22 +30,8 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
   String _selectedId = 'home';
 
   final List<VooNavigationDestination> _items = [
-    const VooNavigationDestination(
-      id: 'home',
-      label: 'Home',
-      icon: Icon(Icons.home_outlined),
-      selectedIcon: Icon(Icons.home),
-      route: '/home',
-      mobilePriority: true,
-    ),
-    const VooNavigationDestination(
-      id: 'search',
-      label: 'Search',
-      icon: Icon(Icons.search_outlined),
-      selectedIcon: Icon(Icons.search),
-      route: '/search',
-      mobilePriority: true,
-    ),
+    const VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home_outlined), selectedIcon: Icon(Icons.home), route: '/home', mobilePriority: true),
+    const VooNavigationDestination(id: 'search', label: 'Search', icon: Icon(Icons.search_outlined), selectedIcon: Icon(Icons.search), route: '/search', mobilePriority: true),
     const VooNavigationDestination(
       id: 'notifications',
       label: 'Alerts',
@@ -57,14 +40,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
       route: '/notifications',
       mobilePriority: true,
     ),
-    const VooNavigationDestination(
-      id: 'profile',
-      label: 'Profile',
-      icon: Icon(Icons.person_outlined),
-      selectedIcon: Icon(Icons.person),
-      route: '/profile',
-      mobilePriority: true,
-    ),
+    const VooNavigationDestination(id: 'profile', label: 'Profile', icon: Icon(Icons.person_outlined), selectedIcon: Icon(Icons.person), route: '/profile', mobilePriority: true),
   ];
 
   void _onItemSelected(String itemId) {
@@ -73,33 +49,26 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
     });
   }
 
-  VooNavigationConfig get _config => VooNavigationConfig(
-        items: _items,
-        selectedId: _selectedId,
-        onNavigationItemSelected: _onItemSelected,
-      );
+  VooNavigationConfig get _config => VooNavigationConfig(items: _items, selectedId: _selectedId, onNavigationItemSelected: _onItemSelected);
 
   // Action item for the expandable nav
   VooActionNavigationItem get _actionItem => VooActionNavigationItem(
-        id: 'quick-add',
-        icon: const Icon(Icons.add, color: Colors.white),
-        activeIcon: const Icon(Icons.close, color: Colors.white),
-        backgroundColor: const Color(0xFF10B981),
-        tooltip: 'Quick Actions',
-        modalBuilder: (context, close) => _QuickActionsModal(
-          onClose: close,
-          onAction: (action) {
-            close();
-            _showSnackBar(context, '$action tapped');
-          },
-        ),
-        modalMaxHeight: 280,
-      );
+    id: 'quick-add',
+    icon: const Icon(Icons.add, color: Colors.white),
+    activeIcon: const Icon(Icons.close, color: Colors.white),
+    backgroundColor: const Color(0xFF10B981),
+    tooltip: 'Quick Actions',
+    modalBuilder: (context, close) => _QuickActionsModal(
+      onClose: close,
+      onAction: (action) {
+        close();
+        _showSnackBar(context, '$action tapped');
+      },
+    ),
+  );
 
   void _showSnackBar(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -109,10 +78,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
 
     return Scaffold(
       extendBody: true,
-      appBar: AppBar(
-        title: const Text('Expandable Bottom Navigation'),
-        backgroundColor: colorScheme.inversePrimary,
-      ),
+      appBar: AppBar(title: const Text('Expandable Bottom Navigation'), backgroundColor: colorScheme.inversePrimary),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -120,39 +86,18 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
             Container(
               width: 80,
               height: 80,
-              decoration: BoxDecoration(
-                color: const Color(0xFF10B981).withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(20),
-              ),
+              decoration: BoxDecoration(color: const Color(0xFF10B981).withValues(alpha: 0.15), borderRadius: BorderRadius.circular(20)),
               child: IconTheme(
-                data: const IconThemeData(
-                  size: 40,
-                  color: Color(0xFF10B981),
-                ),
+                data: const IconThemeData(size: 40, color: Color(0xFF10B981)),
                 child: _getIconForId(_selectedId),
               ),
             ),
             const SizedBox(height: 16),
-            Text(
-              _getLabelForId(_selectedId),
-              style: theme.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            Text(_getLabelForId(_selectedId), style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(
-              'Selected: $_selectedId',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
+            Text('Selected: $_selectedId', style: theme.textTheme.bodyMedium?.copyWith(color: colorScheme.onSurfaceVariant)),
             const SizedBox(height: 24),
-            Text(
-              'Tap the + button to see the action modal',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
-              ),
-            ),
+            Text('Tap the + button to see the action modal', style: theme.textTheme.bodySmall?.copyWith(color: colorScheme.onSurfaceVariant)),
             const SizedBox(height: 100), // Bottom padding for nav bar
           ],
         ),
@@ -191,10 +136,7 @@ class _QuickActionsModal extends StatelessWidget {
   final VoidCallback onClose;
   final void Function(String action) onAction;
 
-  const _QuickActionsModal({
-    required this.onClose,
-    required this.onAction,
-  });
+  const _QuickActionsModal({required this.onClose, required this.onAction});
 
   @override
   Widget build(BuildContext context) {
@@ -209,10 +151,7 @@ class _QuickActionsModal extends StatelessWidget {
             children: [
               Text(
                 'Quick Actions',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.white, fontWeight: FontWeight.w600),
               ),
               const Spacer(),
               GestureDetector(
@@ -220,15 +159,8 @@ class _QuickActionsModal extends StatelessWidget {
                 child: Container(
                   width: 28,
                   height: 28,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white54,
-                    size: 16,
-                  ),
+                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
+                  child: const Icon(Icons.close, color: Colors.white54, size: 16),
                 ),
               ),
             ],
@@ -239,30 +171,10 @@ class _QuickActionsModal extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _QuickActionButton(
-                icon: Icons.note_add_rounded,
-                label: 'Note',
-                color: const Color(0xFF6366F1),
-                onTap: () => onAction('New Note'),
-              ),
-              _QuickActionButton(
-                icon: Icons.task_alt_rounded,
-                label: 'Task',
-                color: const Color(0xFF10B981),
-                onTap: () => onAction('New Task'),
-              ),
-              _QuickActionButton(
-                icon: Icons.photo_camera_rounded,
-                label: 'Photo',
-                color: const Color(0xFFF59E0B),
-                onTap: () => onAction('Take Photo'),
-              ),
-              _QuickActionButton(
-                icon: Icons.mic_rounded,
-                label: 'Voice',
-                color: const Color(0xFFEF4444),
-                onTap: () => onAction('Voice Note'),
-              ),
+              _QuickActionButton(icon: Icons.note_add_rounded, label: 'Note', color: const Color(0xFF6366F1), onTap: () => onAction('New Note')),
+              _QuickActionButton(icon: Icons.task_alt_rounded, label: 'Task', color: const Color(0xFF10B981), onTap: () => onAction('New Task')),
+              _QuickActionButton(icon: Icons.photo_camera_rounded, label: 'Photo', color: const Color(0xFFF59E0B), onTap: () => onAction('Take Photo')),
+              _QuickActionButton(icon: Icons.mic_rounded, label: 'Voice', color: const Color(0xFFEF4444), onTap: () => onAction('Voice Note')),
             ],
           ),
         ],
@@ -278,12 +190,7 @@ class _QuickActionButton extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
-  const _QuickActionButton({
-    required this.icon,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
+  const _QuickActionButton({required this.icon, required this.label, required this.color, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -298,25 +205,14 @@ class _QuickActionButton extends StatelessWidget {
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(
-                color: color.withValues(alpha: 0.3),
-                width: 1,
-              ),
+              border: Border.all(color: color.withValues(alpha: 0.3), width: 1),
             ),
-            child: Icon(
-              icon,
-              color: color,
-              size: 24,
-            ),
+            child: Icon(icon, color: color, size: 24),
           ),
           const SizedBox(height: 8),
           Text(
             label,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w500),
           ),
         ],
       ),

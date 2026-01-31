@@ -121,8 +121,7 @@ class VooScaffoldBuilder extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     // Use neutral white/dark background to match drawer (no tinted colors)
     final defaultBg = isDark ? const Color(0xFF1A1A1A) : Colors.white;
-    final effectiveBackgroundColor =
-        backgroundColor ?? config.backgroundColor ?? defaultBg;
+    final effectiveBackgroundColor = backgroundColor ?? config.backgroundColor ?? defaultBg;
 
     // Prepare the body - let each scaffold type handle its own padding
     Widget processedBody = body;
@@ -134,9 +133,7 @@ class VooScaffoldBuilder extends StatelessWidget {
       final borderRadius = bodyCardBorderRadius ?? tokens.radius.card;
 
       processedBody = Material(
-        elevation: bodyCardElevation == 0
-            ? tokens.elevation.card
-            : bodyCardElevation,
+        elevation: bodyCardElevation == 0 ? tokens.elevation.card : bodyCardElevation,
         borderRadius: borderRadius,
         color: cardColor,
         child: ClipRRect(borderRadius: borderRadius, child: processedBody),

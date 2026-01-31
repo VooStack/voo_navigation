@@ -24,7 +24,12 @@
       "Bash(git stash:*)",
       "Bash(dart analyze:*)",
       "Bash(flutter build:*)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(melos bootstrap:*)",
+      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation status --porcelain)",
+      "Bash(done)",
+      "Bash(ls:*)",
+      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation log -1 --format=\"%H\" -- packages/ui/voo_navigation_bar/lib/src/presentation/molecules/floating_nav_item.dart)"
     ]
   }
 }

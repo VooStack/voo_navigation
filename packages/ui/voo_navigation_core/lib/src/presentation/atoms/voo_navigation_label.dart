@@ -71,14 +71,10 @@ class VooNavigationLabel extends StatelessWidget {
     final effectiveDuration = duration ?? context.vooAnimation.durationFast;
 
     // Determine effective styles
-    final baseStyle = isSelected
-        ? (selectedStyle ?? defaultStyle.copyWith(fontWeight: FontWeight.w600))
-        : (style ?? defaultStyle);
+    final baseStyle = isSelected ? (selectedStyle ?? defaultStyle.copyWith(fontWeight: FontWeight.w600)) : (style ?? defaultStyle);
 
     // Determine effective color
-    final effectiveColor = isSelected
-        ? (selectedColor ?? colorScheme.primary)
-        : (color ?? colorScheme.onSurfaceVariant);
+    final effectiveColor = isSelected ? (selectedColor ?? colorScheme.primary) : (color ?? colorScheme.onSurfaceVariant);
 
     // Apply color to style
     final effectiveStyle = baseStyle.copyWith(color: effectiveColor);
@@ -91,9 +87,7 @@ class VooNavigationLabel extends StatelessWidget {
       overflow: overflow,
       textAlign: textAlign,
       semanticsLabel: semanticsLabel ?? label,
-      textScaler: scaleText
-          ? MediaQuery.textScalerOf(context)
-          : TextScaler.noScaling,
+      textScaler: scaleText ? MediaQuery.textScalerOf(context) : TextScaler.noScaling,
     );
 
     // Return with or without animation
@@ -111,9 +105,7 @@ class VooNavigationLabel extends StatelessWidget {
         overflow: overflow,
         textAlign: textAlign,
         semanticsLabel: semanticsLabel ?? label,
-        textScaler: scaleText
-            ? MediaQuery.textScalerOf(context)
-            : TextScaler.noScaling,
+        textScaler: scaleText ? MediaQuery.textScalerOf(context) : TextScaler.noScaling,
       ),
     );
   }

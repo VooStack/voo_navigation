@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
 
 /// A single action tile in the quick actions list
@@ -39,7 +40,12 @@ class _VooQuickActionTileState extends State<VooQuickActionTile> {
       child: Opacity(
         opacity: action.isEnabled ? 1.0 : 0.5,
         child: InkWell(
-          onTap: action.isEnabled ? widget.onTap : null,
+          onTap: action.isEnabled
+              ? () {
+                  HapticFeedback.lightImpact();
+                  widget.onTap();
+                }
+              : null,
           child: Container(
             padding: style.itemPadding ??
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

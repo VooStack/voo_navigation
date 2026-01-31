@@ -1,6 +1,5 @@
 name: voo_navigation
-packages:
-  - packages/ui/*
+workspace: true
 
 command:
   bootstrap:

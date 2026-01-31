@@ -120,8 +120,10 @@ class _VooActionNavItemState extends State<VooActionNavItem>
 
     // Position modal above the nav bar
     final bottomPadding = MediaQuery.of(context).padding.bottom;
+    final topPadding = MediaQuery.of(context).padding.top;
     final navBarHeight = VooNavigationTokens.expandableNavBarHeight + 8 + bottomPadding;
     final modalBottom = navBarHeight + 8;
+    final modalTop = topPadding + 16;
 
     return AnimatedBuilder(
       animation: _animationController,
@@ -143,11 +145,12 @@ class _VooActionNavItemState extends State<VooActionNavItem>
                 ),
               ),
 
-            // Modal
+            // Modal - positioned to allow expansion, content controls sizing
             Positioned(
               left: modalLeft,
               right: modalLeft,
               bottom: modalBottom,
+              top: modalTop,
               child: _ActionNavModalContent(
                 actionItem: widget.actionItem,
                 animation: _animationController,
@@ -257,6 +260,42 @@ class _ActionNavModalContent extends StatelessWidget {
       curve: const Interval(0.0, 0.5, curve: Curves.easeOut),
     ));
 
+    Widget modalContainer = Container(
+      width: width,
+      // No height constraints - content controls its own sizing
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: context.expandableNavBorder,
+          width: VooNavigationTokens.expandableNavBorderWidth,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: theme.colorScheme.shadow.withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, -4),
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: Material(
+          color: Colors.transparent,
+          child: Theme(
+            data: theme.copyWith(
+              listTileTheme: ListTileThemeData(
+                textColor: Colors.white,
+                iconColor: Colors.white.withValues(alpha: 0.8),
+              ),
+            ),
+            child: actionItem.modalBuilder(context, onClose),
+          ),
+        ),
+      ),
+    );
+
     return SlideTransition(
       position: slideAnimation,
       child: ScaleTransition(
@@ -264,47 +303,15 @@ class _ActionNavModalContent extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         child: FadeTransition(
           opacity: fadeAnimation,
+          // Align to bottom so content appears above nav bar
+          // Content can expand to fill space via its own isExpanded property
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.max,
             children: [
-              // Modal content
-              Container(
-                width: width,
-                constraints: BoxConstraints(
-                  maxHeight: actionItem.modalMaxHeight,
-                ),
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: context.expandableNavBorder,
-                    width: VooNavigationTokens.expandableNavBorderWidth,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.shadow.withValues(alpha: 0.25),
-                      blurRadius: 20,
-                      offset: const Offset(0, -4),
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(16),
-                  child: Material(
-                    color: Colors.transparent,
-                    child: Theme(
-                      data: theme.copyWith(
-                        listTileTheme: ListTileThemeData(
-                          textColor: Colors.white,
-                          iconColor: Colors.white.withValues(alpha: 0.8),
-                        ),
-                      ),
-                      child: actionItem.modalBuilder(context, onClose),
-                    ),
-                  ),
-                ),
-              ),
+              // Modal content - uses Flexible to allow content to size itself
+              // or expand to fill available space
+              Flexible(child: modalContainer),
 
               // Arrow indicator positioned at button location
               SizedBox(

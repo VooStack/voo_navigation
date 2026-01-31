@@ -155,7 +155,9 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
 
   void _onNavigationItemSelected(String itemId) {
     // Check if this is a special nav item (user profile, etc.)
-    final isSpecialItem = itemId == VooUserProfileNavItem.navItemId;
+    // Use the effective ID from config to support custom profile IDs
+    final userProfileEffectiveId = widget.config.userProfileConfig?.effectiveId;
+    final isSpecialItem = itemId == userProfileEffectiveId;
 
     final item = _findItemById(widget.config.items, itemId);
 

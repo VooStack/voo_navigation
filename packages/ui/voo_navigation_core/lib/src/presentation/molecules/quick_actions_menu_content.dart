@@ -53,6 +53,22 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   /// Defaults to 100.
   final double gridItemHeight;
 
+  /// Whether items should expand to fill available space.
+  /// When true, items will grow to fill the container height.
+  /// Defaults to false.
+  final bool expandItems;
+
+  /// Whether the menu should expand to fill available space.
+  ///
+  /// When true, the menu will expand to fill its parent container.
+  /// When false or null, the menu will size dynamically based on its content.
+  /// Defaults to false (dynamic sizing).
+  final bool? isExpanded;
+
+  /// Fixed height for the menu content.
+  /// When provided, the menu will use this exact height instead of sizing to content.
+  final double? height;
+
   const VooQuickActionsMenuContent({
     super.key,
     this.style,
@@ -70,6 +86,9 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     this.contentPadding,
     this.gridSpacing = 8.0,
     this.gridItemHeight = 100.0,
+    this.expandItems = false,
+    this.isExpanded,
+    this.height,
   });
 
   @override
@@ -79,12 +98,48 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     final effectiveStyle = style ?? const VooQuickActionsStyle();
     final hasHeader = title != null || showCloseButton;
 
+    Widget contentWidget = useGridLayout
+        ? VooQuickActionsGridLayout(
+            style: effectiveStyle,
+            width: width,
+            gridColumns: gridColumns,
+            showLabelsInGrid: showLabelsInGrid,
+            actions: actions,
+            onActionTap: onActionTap,
+            onReorderActions: onReorderActions,
+            padding: contentPadding,
+            spacing: gridSpacing,
+            defaultItemHeight: gridItemHeight,
+            expandItems: expandItems,
+          )
+        : VooQuickActionsListLayout(
+            style: effectiveStyle,
+            actions: actions,
+            actionBuilder: actionBuilder,
+            onActionTap: onActionTap,
+            onReorderActions: onReorderActions,
+            padding: contentPadding,
+            expandItems: expandItems,
+          );
+
+    // Determine if we should expand to fill available space
+    final shouldExpand = isExpanded ?? false;
+
+    // Wrap content based on expansion settings
+    if (shouldExpand) {
+      contentWidget = Expanded(child: contentWidget);
+    } else {
+      contentWidget = Flexible(child: contentWidget);
+    }
+
     return Material(
       elevation: 8,
       borderRadius: effectiveStyle.borderRadius ?? BorderRadius.circular(16),
       color: effectiveStyle.backgroundColor ?? colorScheme.surface,
       child: Container(
         width: width,
+        // Only use fixed height when not expanding
+        height: shouldExpand ? null : height,
         decoration: BoxDecoration(
           borderRadius: effectiveStyle.borderRadius ?? BorderRadius.circular(16),
           border: Border.all(
@@ -92,7 +147,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
           ),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: shouldExpand ? MainAxisSize.max : MainAxisSize.min,
           children: [
             if (hasHeader)
               Padding(
@@ -120,29 +175,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
                   ],
                 ),
               ),
-            Flexible(
-              child: useGridLayout
-                  ? VooQuickActionsGridLayout(
-                      style: effectiveStyle,
-                      width: width,
-                      gridColumns: gridColumns,
-                      showLabelsInGrid: showLabelsInGrid,
-                      actions: actions,
-                      onActionTap: onActionTap,
-                      onReorderActions: onReorderActions,
-                      padding: contentPadding,
-                      spacing: gridSpacing,
-                      defaultItemHeight: gridItemHeight,
-                    )
-                  : VooQuickActionsListLayout(
-                      style: effectiveStyle,
-                      actions: actions,
-                      actionBuilder: actionBuilder,
-                      onActionTap: onActionTap,
-                      onReorderActions: onReorderActions,
-                      padding: contentPadding,
-                    ),
-            ),
+            contentWidget,
           ],
         ),
       ),

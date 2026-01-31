@@ -25,15 +25,7 @@ class VooThemedBottomNavContainer extends StatelessWidget {
   /// Bottom margin (for floating style)
   final double? bottomMargin;
 
-  const VooThemedBottomNavContainer({
-    super.key,
-    required this.theme,
-    required this.child,
-    this.height = 72,
-    this.isFloating = false,
-    this.horizontalMargin,
-    this.bottomMargin,
-  });
+  const VooThemedBottomNavContainer({super.key, required this.theme, required this.child, this.height = 72, this.isFloating = false, this.horizontalMargin, this.bottomMargin});
 
   @override
   Widget build(BuildContext context) {
@@ -43,18 +35,8 @@ class VooThemedBottomNavContainer extends StatelessWidget {
 
     if (isFloating) {
       return Padding(
-        padding: EdgeInsets.fromLTRB(
-          effectiveHMargin,
-          0,
-          effectiveHMargin,
-          effectiveBMargin,
-        ),
-        child: VooThemedNavContainer(
-          theme: theme,
-          height: height,
-          borderRadius: BorderRadius.circular(theme.borderRadius),
-          child: child,
-        ),
+        padding: EdgeInsets.fromLTRB(effectiveHMargin, 0, effectiveHMargin, effectiveBMargin),
+        child: VooThemedNavContainer(theme: theme, height: height, borderRadius: BorderRadius.circular(theme.borderRadius), child: child),
       );
     }
 
@@ -62,9 +44,7 @@ class VooThemedBottomNavContainer extends StatelessWidget {
     return VooThemedNavContainer(
       theme: theme,
       height: height,
-      borderRadius: BorderRadius.vertical(
-        top: Radius.circular(theme.borderRadius * 0.5),
-      ),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(theme.borderRadius * 0.5)),
       child: child,
     );
   }

@@ -22,6 +22,11 @@ class VooQuickActionsListLayout extends StatelessWidget {
   /// Padding for the list content. Defaults to `EdgeInsets.symmetric(vertical: 8)`.
   final EdgeInsetsGeometry? padding;
 
+  /// Whether items should expand to fill available space.
+  /// When true, the list will not shrink wrap and items can expand.
+  /// Defaults to false.
+  final bool expandItems;
+
   const VooQuickActionsListLayout({
     super.key,
     required this.style,
@@ -30,6 +35,7 @@ class VooQuickActionsListLayout extends StatelessWidget {
     required this.onActionTap,
     this.onReorderActions,
     this.padding,
+    this.expandItems = false,
   });
 
   Widget _buildItem(VooQuickAction action, int index) {
@@ -64,7 +70,7 @@ class VooQuickActionsListLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     if (onReorderActions != null) {
       return ReorderableListView.builder(
-        shrinkWrap: true,
+        shrinkWrap: !expandItems,
         padding: _effectivePadding,
         itemCount: actions.length,
         onReorder: (oldIndex, newIndex) {
@@ -81,7 +87,7 @@ class VooQuickActionsListLayout extends StatelessWidget {
     }
 
     return ListView.builder(
-      shrinkWrap: true,
+      shrinkWrap: !expandItems,
       padding: _effectivePadding,
       itemCount: actions.length,
       itemBuilder: (context, index) => _buildItem(actions[index], index),
