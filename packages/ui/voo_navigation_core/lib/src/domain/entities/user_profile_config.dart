@@ -2,6 +2,15 @@ import 'package:flutter/widgets.dart';
 import 'package:voo_navigation_core/src/domain/entities/voo_profile_menu_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/voo_user_status.dart';
 
+/// Position of the user profile in the mobile bottom navigation bar.
+enum VooUserProfilePosition {
+  /// Profile appears at the start (left) of the navigation bar
+  start,
+
+  /// Profile appears at the end (right) of the navigation bar (default)
+  end,
+}
+
 /// Configuration for the user profile displayed in navigation drawer/rail footer.
 ///
 /// This is a data-only configuration class that allows the navigation components
@@ -78,9 +87,14 @@ class VooUserProfileConfig {
 
   /// Explicit index position (0-based) in the mobile bottom navigation bar.
   /// When set, the user profile will be inserted at this position instead of
-  /// at the end. Valid values are 0 to 4 (max 5 items in bottom nav).
-  /// If null, the user profile appears at the end (default behavior).
+  /// using the [position] property. Valid values are 0 to 4 (max 5 items in bottom nav).
+  /// If null, the [position] property determines placement.
   final int? navItemIndex;
+
+  /// Position of the user profile in the navigation bar.
+  /// Only used when [navItemIndex] is null.
+  /// Defaults to [VooUserProfilePosition.end].
+  final VooUserProfilePosition position;
 
   /// Label for the nav item. Defaults to [userName] or 'Profile'.
   final String? navItemLabel;
@@ -125,6 +139,7 @@ class VooUserProfileConfig {
     this.mobilePriority = false,
     this.navItemSortOrder = 0,
     this.navItemIndex,
+    this.position = VooUserProfilePosition.end,
     this.navItemLabel,
     this.modalBuilder,
   });
@@ -161,6 +176,7 @@ class VooUserProfileConfig {
     bool? mobilePriority,
     int? navItemSortOrder,
     int? navItemIndex,
+    VooUserProfilePosition? position,
     String? navItemLabel,
     Widget Function(BuildContext context, VooUserProfileModalData data)?
         modalBuilder,
@@ -180,6 +196,7 @@ class VooUserProfileConfig {
     mobilePriority: mobilePriority ?? this.mobilePriority,
     navItemSortOrder: navItemSortOrder ?? this.navItemSortOrder,
     navItemIndex: navItemIndex ?? this.navItemIndex,
+    position: position ?? this.position,
     navItemLabel: navItemLabel ?? this.navItemLabel,
     modalBuilder: modalBuilder ?? this.modalBuilder,
   );

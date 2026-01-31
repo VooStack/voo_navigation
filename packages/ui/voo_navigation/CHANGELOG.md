@@ -1,10 +1,38 @@
+## 1.3.33
+
+### Added
+- **VooUserProfileConfig**: `position` property to control placement (start/end) in bottom navigation
+
+### Fixed
+- **VooNavigationBar**: User profile selection state and callbacks now work with custom `id`
+- **VooNavigationBar**: Action item stays centered when user profile is at start position
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.24
+- Updated `voo_navigation_bar` to ^0.1.15
+
+---
+
+## 1.3.32
+
+### Changed
+- **VooQuickActionsGridLayout**: Rewrote to use native `GridView.builder` for more reliable layout
+
+### Added
+- **VooQuickActionsMenuContent**: `gridSpacing` and `gridChildAspectRatio` parameters for grid customization
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.23
+
+---
+
 ## 1.3.31
 
 ### Added
 - **VooUserProfileConfig**: `id` property for custom navigation identification
 
-### Fixed
-- **VooQuickActionsGridLayout**: Fixed grid items wrapping incorrectly
+### Changed
+- **VooQuickActionsGridLayout**: Rewrote to use row-based ListView with proper column spanning and scrolling
 
 ### Dependencies
 - Updated `voo_navigation_core` to ^0.2.22

@@ -1,3 +1,34 @@
+## 0.2.24
+
+### Added
+- **VooUserProfileConfig**: Added `position` property with `VooUserProfilePosition` enum
+  - `VooUserProfilePosition.start` - Profile appears at the start of the nav bar
+  - `VooUserProfilePosition.end` - Profile appears at the end (default)
+  - `navItemIndex` takes priority over `position` if both are set
+
+### Fixed
+- **VooUserProfileConfig**: User profile now correctly uses `effectiveId` for selection state
+  - Custom `id` is now properly used for navigation selection and callbacks
+  - Avatar URL and other profile config properties are now correctly passed to the nav item
+
+---
+
+## 0.2.23
+
+### Changed
+- **VooQuickActionsGridLayout**: Rewrote to use `GridView.builder` with `SliverGridDelegateWithFixedCrossAxisCount`
+  - Simpler, more reliable layout using native GridView
+  - Added `spacing` parameter (default 8.0) for consistent gap between items
+  - Added `childAspectRatio` parameter (default 1.0) for controlling item proportions
+  - Supports scrolling via `shrinkWrap: true`
+
+### Added
+- **VooQuickActionsMenuContent**: Added grid customization parameters
+  - `gridSpacing` - Spacing between grid items (default 8.0)
+  - `gridChildAspectRatio` - Aspect ratio for grid items (default 1.0)
+
+---
+
 ## 0.2.22
 
 ### Added
@@ -5,9 +36,11 @@
   - Use with `selectedId` to show profile as selected without hardcoding `'_user_profile_nav'`
   - Added `effectiveId` getter that returns `id` or `'_user_profile_nav'` as fallback
 
-### Fixed
-- **VooQuickActionsGridLayout**: Fixed grid column width calculation causing items to wrap incorrectly
-  - Added 1px buffer to prevent floating point precision issues
+### Changed
+- **VooQuickActionsGridLayout**: Rewrote to use row-based ListView instead of Wrap
+  - Now properly handles `gridColumnSpan` by organizing items into rows
+  - Supports scrolling
+  - Fixed grid column width calculation issues
 
 ---
 

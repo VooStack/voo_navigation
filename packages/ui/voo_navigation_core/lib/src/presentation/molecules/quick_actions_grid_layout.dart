@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
 
-/// Grid layout for quick actions with optional reordering support
+/// Grid layout for quick actions with optional reordering support.
+/// Uses GridView for proper column handling and scrolling.
 class VooQuickActionsGridLayout extends StatefulWidget {
   /// Style configuration
   final VooQuickActionsStyle style;
 
-  /// Width of the grid container
+  /// Width of the grid container (used for calculations)
   final double width;
 
   /// Number of columns in grid layout
@@ -28,6 +29,12 @@ class VooQuickActionsGridLayout extends StatefulWidget {
   /// Padding for the grid content. Defaults to `EdgeInsets.all(16)`.
   final EdgeInsetsGeometry? padding;
 
+  /// Spacing between grid items. Defaults to 8.
+  final double spacing;
+
+  /// Aspect ratio (width / height) for grid items. Defaults to 1.0 (square).
+  final double childAspectRatio;
+
   const VooQuickActionsGridLayout({
     super.key,
     required this.style,
@@ -38,6 +45,8 @@ class VooQuickActionsGridLayout extends StatefulWidget {
     required this.onActionTap,
     this.onReorderActions,
     this.padding,
+    this.spacing = 8.0,
+    this.childAspectRatio = 1.0,
   });
 
   @override
@@ -49,107 +58,104 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
   String? _draggingId;
   String? _dragOverId;
 
-  EdgeInsetsGeometry get _effectivePadding => widget.padding ?? const EdgeInsets.all(16);
-
-  double _calculateItemWidth(VooQuickAction action) {
-    const spacing = 8.0;
-    final resolvedPadding = _effectivePadding.resolve(TextDirection.ltr);
-    final horizontalPadding = resolvedPadding.left + resolvedPadding.right;
-    // Subtract small buffer to prevent floating point issues causing wrap
-    final availableWidth = widget.width - horizontalPadding - 1;
-    final totalSpacing = spacing * (widget.gridColumns - 1);
-    final singleColumnWidth = (availableWidth - totalSpacing) / widget.gridColumns;
-    final span = action.gridColumnSpan.clamp(1, widget.gridColumns);
-    return singleColumnWidth * span + spacing * (span - 1);
-  }
+  EdgeInsets get _effectivePadding =>
+      (widget.padding ?? const EdgeInsets.all(16)).resolve(TextDirection.ltr);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final visibleActions = widget.actions.where((a) => !a.isDivider).toList();
+
+    return GridView.builder(
+      shrinkWrap: true,
+      padding: _effectivePadding,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: widget.gridColumns,
+        crossAxisSpacing: widget.spacing,
+        mainAxisSpacing: widget.spacing,
+        childAspectRatio: widget.childAspectRatio,
+      ),
+      itemCount: visibleActions.length,
+      itemBuilder: (context, index) {
+        final action = visibleActions[index];
+        return _buildActionItem(action, theme, colorScheme);
+      },
+    );
+  }
+
+  Widget _buildActionItem(
+    VooQuickAction action,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
     final canReorder = widget.onReorderActions != null;
 
-    return SizedBox(
-      width: widget.width,
-      child: Padding(
-        padding: _effectivePadding,
-        child: Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: visibleActions.map((action) {
-          final itemWidth = _calculateItemWidth(action);
+    final child = _buildGridItem(
+      action: action,
+      theme: theme,
+      colorScheme: colorScheme,
+      isDragging: _draggingId == action.id,
+      isDragOver: _dragOverId == action.id,
+    );
 
-          final child = _buildGridItem(
-            action: action,
-            itemWidth: itemWidth,
-            theme: theme,
-            colorScheme: colorScheme,
-            isDragging: _draggingId == action.id,
-            isDragOver: _dragOverId == action.id,
-          );
+    if (!canReorder) {
+      return child;
+    }
 
-          if (!canReorder) {
-            return child;
-          }
-
-          return DragTarget<VooQuickAction>(
-            onWillAcceptWithDetails: (details) {
-              if (details.data.id != action.id) {
-                setState(() => _dragOverId = action.id);
-                return true;
-              }
-              return false;
-            },
-            onLeave: (_) {
-              setState(() => _dragOverId = null);
-            },
-            onAcceptWithDetails: (details) {
-              setState(() => _dragOverId = null);
-              _handleReorder(details.data, action);
-            },
-            builder: (context, candidateData, rejectedData) {
-              return LongPressDraggable<VooQuickAction>(
-                data: action,
-                delay: const Duration(milliseconds: 150),
-                hapticFeedbackOnStart: true,
-                onDragStarted: () {
-                  HapticFeedback.mediumImpact();
-                  setState(() => _draggingId = action.id);
-                },
-                onDragEnd: (_) {
-                  setState(() {
-                    _draggingId = null;
-                    _dragOverId = null;
-                  });
-                },
-                feedback: Material(
-                  elevation: 8,
-                  borderRadius: BorderRadius.circular(12),
-                  child: Opacity(
-                    opacity: 0.9,
-                    child: _buildGridItem(
-                      action: action,
-                      itemWidth: itemWidth,
-                      theme: theme,
-                      colorScheme: colorScheme,
-                      isDragging: false,
-                      isDragOver: false,
-                      isFeedback: true,
-                    ),
-                  ),
-                ),
-                childWhenDragging: Opacity(
-                  opacity: 0.3,
-                  child: child,
-                ),
-                child: child,
-              );
-            },
-          );
-        }).toList(),
-        ),
-      ),
+    return DragTarget<VooQuickAction>(
+      onWillAcceptWithDetails: (details) {
+        if (details.data.id != action.id) {
+          setState(() => _dragOverId = action.id);
+          return true;
+        }
+        return false;
+      },
+      onLeave: (_) {
+        setState(() => _dragOverId = null);
+      },
+      onAcceptWithDetails: (details) {
+        setState(() => _dragOverId = null);
+        _handleReorder(details.data, action);
+      },
+      builder: (context, candidateData, rejectedData) {
+        return LongPressDraggable<VooQuickAction>(
+          data: action,
+          delay: const Duration(milliseconds: 150),
+          hapticFeedbackOnStart: true,
+          onDragStarted: () {
+            HapticFeedback.mediumImpact();
+            setState(() => _draggingId = action.id);
+          },
+          onDragEnd: (_) {
+            setState(() {
+              _draggingId = null;
+              _dragOverId = null;
+            });
+          },
+          feedback: Material(
+            elevation: 8,
+            borderRadius: BorderRadius.circular(12),
+            child: SizedBox(
+              width: 100,
+              height: 100,
+              child: _buildGridItem(
+                action: action,
+                theme: theme,
+                colorScheme: colorScheme,
+                isDragging: false,
+                isDragOver: false,
+                isFeedback: true,
+              ),
+            ),
+          ),
+          childWhenDragging: Opacity(
+            opacity: 0.3,
+            child: child,
+          ),
+          child: child,
+        );
+      },
     );
   }
 
@@ -167,7 +173,6 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
 
   Widget _buildGridItem({
     required VooQuickAction action,
-    required double itemWidth,
     required ThemeData theme,
     required ColorScheme colorScheme,
     required bool isDragging,
@@ -183,119 +188,64 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     // Determine item background color (default to subtle surface color)
     final itemBgColor = action.gridBackgroundColor ?? colorScheme.surfaceContainerLow;
 
-    final isWide = action.gridColumnSpan > 1;
     // Per-action showLabel overrides global showLabelsInGrid
     final shouldShowLabel = action.showLabel ?? widget.showLabelsInGrid;
 
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 150),
-      width: itemWidth,
-      height: action.gridHeight,
-      decoration: BoxDecoration(
-        color: itemBgColor,
-        borderRadius: BorderRadius.circular(12),
-        border: isDragOver
-            ? Border.all(color: colorScheme.primary, width: 2)
-            : null,
-      ),
-      child: InkWell(
-        onTap: action.isEnabled ? () => widget.onActionTap(action) : null,
-        borderRadius: BorderRadius.circular(12),
-        child: Opacity(
-          opacity: action.isEnabled ? 1.0 : 0.5,
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: isWide
-                ? Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: iconBgColor,
-                          borderRadius: BorderRadius.circular(12),
+    return Material(
+      color: itemBgColor,
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: isDragOver
+              ? Border.all(color: colorScheme.primary, width: 2)
+              : null,
+        ),
+        child: InkWell(
+          onTap: action.isEnabled ? () => widget.onActionTap(action) : null,
+          borderRadius: BorderRadius.circular(12),
+          child: Opacity(
+            opacity: action.isEnabled ? 1.0 : 0.5,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: iconBgColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: action.iconWidget ??
+                        Icon(
+                          action.icon ?? Icons.star,
+                          size: widget.style.iconSize ?? 24,
+                          color: action.isDangerous
+                              ? (widget.style.dangerColor ?? colorScheme.error)
+                              : (action.iconColor ?? colorScheme.onSurfaceVariant),
                         ),
-                        child: action.iconWidget ??
-                            Icon(
-                              action.icon ?? Icons.star,
-                              size: widget.style.iconSize ?? 24,
-                              color: action.isDangerous
-                                  ? (widget.style.dangerColor ?? colorScheme.error)
-                                  : (action.iconColor ?? colorScheme.onSurfaceVariant),
-                            ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (shouldShowLabel)
-                              Text(
-                                action.label,
-                                style: widget.style.labelStyle ??
-                                    theme.textTheme.titleSmall?.copyWith(
-                                      color: action.isDangerous
-                                          ? (widget.style.dangerColor ?? colorScheme.error)
-                                          : colorScheme.onSurface,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            if (action.description != null) ...[
-                              const SizedBox(height: 2),
-                              Text(
-                                action.description!,
-                                style: theme.textTheme.bodySmall?.copyWith(
-                                  color: colorScheme.onSurfaceVariant,
-                                ),
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: iconBgColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: action.iconWidget ??
-                            Icon(
-                              action.icon ?? Icons.star,
-                              size: widget.style.iconSize ?? 24,
-                              color: action.isDangerous
-                                  ? (widget.style.dangerColor ?? colorScheme.error)
-                                  : (action.iconColor ?? colorScheme.onSurfaceVariant),
-                            ),
-                      ),
-                      if (shouldShowLabel) ...[
-                        const SizedBox(height: 8),
-                        Text(
-                          action.label,
-                          style: widget.style.labelStyle ??
-                              theme.textTheme.labelSmall?.copyWith(
-                                color: action.isDangerous
-                                    ? (widget.style.dangerColor ?? colorScheme.error)
-                                    : colorScheme.onSurface,
-                              ),
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ],
                   ),
+                  if (shouldShowLabel) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      action.label,
+                      style: widget.style.labelStyle ??
+                          theme.textTheme.labelSmall?.copyWith(
+                            color: action.isDangerous
+                                ? (widget.style.dangerColor ?? colorScheme.error)
+                                : colorScheme.onSurface,
+                          ),
+                      textAlign: TextAlign.center,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

@@ -45,6 +45,13 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   /// Defaults to `EdgeInsets.all(16)` for grid layout and `EdgeInsets.symmetric(vertical: 8)` for list layout.
   final EdgeInsetsGeometry? contentPadding;
 
+  /// Spacing between grid items. Only used when useGridLayout is true. Defaults to 8.
+  final double gridSpacing;
+
+  /// Aspect ratio (width / height) for grid items. Only used when useGridLayout is true.
+  /// Defaults to 1.0 (square items).
+  final double gridChildAspectRatio;
+
   const VooQuickActionsMenuContent({
     super.key,
     this.style,
@@ -60,6 +67,8 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     this.showCloseButton = false,
     this.onClose,
     this.contentPadding,
+    this.gridSpacing = 8.0,
+    this.gridChildAspectRatio = 1.0,
   });
 
   @override
@@ -121,6 +130,8 @@ class VooQuickActionsMenuContent extends StatelessWidget {
                       onActionTap: onActionTap,
                       onReorderActions: onReorderActions,
                       padding: contentPadding,
+                      spacing: gridSpacing,
+                      childAspectRatio: gridChildAspectRatio,
                     )
                   : VooQuickActionsListLayout(
                       style: effectiveStyle,

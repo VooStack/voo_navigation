@@ -1,3 +1,19 @@
+## 0.1.15
+
+### Fixed
+- **VooNavigationBar**: User profile now correctly uses custom `id` from config
+  - Selection state properly reflects when `selectedId` matches user profile's `effectiveId`
+  - `onNavigationItemSelected` callback now passes the correct custom ID
+  - Action item stays centered when user profile is positioned at start
+
+### Added
+- **VooNavigationBar**: Support for `VooUserProfilePosition` (start/end) from config
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.24
+
+---
+
 ## 0.1.14
 
 ### Dependencies

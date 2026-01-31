@@ -162,15 +162,18 @@ class VooNavigationBar extends StatelessWidget {
         items.any((item) => item.id == VooContextSwitcherNavItem.navItemId);
     final hasMultiSwitcher = config.multiSwitcher != null &&
         items.any((item) => item.id == VooMultiSwitcherNavItem.navItemId);
+    // Use the effective ID from the config to detect user profile item
+    final userProfileId = config.userProfileConfig?.effectiveId;
     final hasUserProfile = config.userProfileConfig != null &&
-        items.any((item) => item.id == VooUserProfileNavItem.navItemId);
+        userProfileId != null &&
+        items.any((item) => item.id == userProfileId);
     final shouldCombineSwitchers = hasContextSwitcher && hasMultiSwitcher;
 
     // Filter out special items - they'll be added at the end
     final regularItems = items.where((item) =>
         item.id != VooContextSwitcherNavItem.navItemId &&
         item.id != VooMultiSwitcherNavItem.navItemId &&
-        item.id != VooUserProfileNavItem.navItemId).toList();
+        item.id != userProfileId).toList();
 
     // Calculate available space for label expansion
     final screenWidth = MediaQuery.of(context).size.width;
@@ -197,13 +200,31 @@ class VooNavigationBar extends StatelessWidget {
     // Remaining space for label (with buffer for animation smoothness)
     final maxLabelWidth = ((availableWidth - collapsedWidth) * 0.8).clamp(40.0, 80.0);
 
-    // Calculate center index based on regular items only
-    final centerIndex = regularItems.length ~/ 2;
+    // Determine if user profile will be at start (affects center calculation)
+    final profilePosition = config.userProfileConfig?.position ?? VooUserProfilePosition.end;
+    final profileNavItemIndex = config.userProfileConfig?.navItemIndex;
+    final userProfileAtStart = hasUserProfile &&
+        profileNavItemIndex == null &&
+        profilePosition == VooUserProfilePosition.start;
+
+    // Calculate center index for action item
+    // If user profile will be at start, we need to add 1 to account for it
+    // because the action item will be shifted when profile is inserted at 0
+    int calculateCenterIndex() {
+      final baseCenter = regularItems.length ~/ 2;
+      // If user profile is at start, add 1 to keep action centered after insertion
+      return userProfileAtStart ? baseCenter + 1 : baseCenter;
+    }
+
+    final centerIndex = calculateCenterIndex();
 
     // Track whether we've passed the action item (for label positioning)
     // Default: labels expand right (end)
     // After passing action item: labels expand left (start)
     bool passedActionItem = false;
+
+    // If user profile is at start, account for it in action item position tracking
+    int effectiveIndex = userProfileAtStart ? 1 : 0;
 
     for (var i = 0; i < regularItems.length; i++) {
       final item = regularItems[i];
@@ -211,12 +232,17 @@ class VooNavigationBar extends StatelessWidget {
 
       // Insert action item at appropriate position (if using position-based logic)
       if (actionItem != null && actionItem!.navItemIndex == null) {
+        // Start position: Add at beginning of regular items (i == 0)
+        // This will be shifted if user profile is inserted at 0 later
         if (actionPosition == VooActionItemPosition.start && i == 0) {
           widgets.add(_buildActionItem(context));
           passedActionItem = true;
-        } else if (actionPosition == VooActionItemPosition.center && i == centerIndex) {
+          effectiveIndex++;
+        } else if (actionPosition == VooActionItemPosition.center && effectiveIndex == centerIndex) {
+          // Center position: Use effectiveIndex to account for user profile shift
           widgets.add(_buildActionItem(context));
           passedActionItem = true;
+          effectiveIndex++;
         }
       }
 
@@ -242,6 +268,7 @@ class VooNavigationBar extends StatelessWidget {
           },
         ),
       );
+      effectiveIndex++;
     }
 
     // Add action item at end if configured (position-based, before switchers)
@@ -293,24 +320,34 @@ class VooNavigationBar extends StatelessWidget {
       }
     }
 
-    // Add user profile at specified index or at the end if no index specified
+    // Add user profile at specified index, position, or at the end
     if (hasUserProfile) {
+      // Determine label position based on where profile will be placed
+      final profilePosition = config.userProfileConfig!.position;
+      final navItemIndex = config.userProfileConfig!.navItemIndex;
+      final labelPos = (navItemIndex != null && navItemIndex == 0) ||
+              (navItemIndex == null && profilePosition == VooUserProfilePosition.start)
+          ? VooExpandableLabelPosition.end
+          : VooExpandableLabelPosition.start;
+
       final userProfileWidget = VooUserProfileNavItem(
         config: config.userProfileConfig!,
         enableHapticFeedback: enableFeedback,
         avatarColor: selectedColor,
-        isSelected: selectedId == VooUserProfileNavItem.navItemId,
-        labelPosition: VooExpandableLabelPosition.start,
+        isSelected: selectedId == userProfileId,
+        labelPosition: labelPos,
         maxLabelWidth: maxLabelWidth,
         onNavigationSelected: () {
-          onNavigationItemSelected(VooUserProfileNavItem.navItemId);
+          onNavigationItemSelected(userProfileId);
         },
       );
 
-      final navItemIndex = config.userProfileConfig!.navItemIndex;
       if (navItemIndex != null && navItemIndex >= 0 && navItemIndex <= widgets.length) {
-        // Insert at specified index
+        // Insert at specified index (takes priority over position)
         widgets.insert(navItemIndex, userProfileWidget);
+      } else if (profilePosition == VooUserProfilePosition.start) {
+        // Insert at the start
+        widgets.insert(0, userProfileWidget);
       } else {
         // Default: add at the end
         widgets.add(userProfileWidget);
