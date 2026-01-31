@@ -7,6 +7,9 @@ class VooQuickActionsGridLayout extends StatefulWidget {
   /// Style configuration
   final VooQuickActionsStyle style;
 
+  /// Width of the grid container
+  final double width;
+
   /// Number of columns in grid layout
   final int gridColumns;
 
@@ -25,6 +28,7 @@ class VooQuickActionsGridLayout extends StatefulWidget {
   const VooQuickActionsGridLayout({
     super.key,
     required this.style,
+    required this.width,
     required this.gridColumns,
     required this.showLabelsInGrid,
     required this.actions,
@@ -43,8 +47,10 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
 
   double _calculateItemWidth(VooQuickAction action) {
     const spacing = 8.0;
-    final totalWidth = widget.style.dropdownWidth ?? (widget.gridColumns * 80.0);
-    final singleColumnWidth = (totalWidth - 32 - (spacing * (widget.gridColumns - 1))) / widget.gridColumns;
+    const padding = 32.0; // 16px padding on each side
+    final availableWidth = widget.width - padding;
+    final totalSpacing = spacing * (widget.gridColumns - 1);
+    final singleColumnWidth = (availableWidth - totalSpacing) / widget.gridColumns;
     final span = action.gridColumnSpan.clamp(1, widget.gridColumns);
     return singleColumnWidth * span + spacing * (span - 1);
   }

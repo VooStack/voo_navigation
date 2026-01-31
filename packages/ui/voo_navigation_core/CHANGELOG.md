@@ -1,3 +1,12 @@
+## 0.2.19
+
+### Fixed
+- **VooQuickActionsGridLayout**: Fixed `gridColumns` not being respected
+  - Grid now uses actual container width for column calculations
+  - Previously used `style.dropdownWidth` which could be null/incorrect
+
+---
+
 ## 0.2.18
 
 ### Added

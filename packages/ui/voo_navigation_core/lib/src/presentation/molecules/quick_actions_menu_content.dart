@@ -65,6 +65,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
         child: useGridLayout
             ? VooQuickActionsGridLayout(
                 style: effectiveStyle,
+                width: width,
                 gridColumns: gridColumns,
                 showLabelsInGrid: showLabelsInGrid,
                 actions: actions,

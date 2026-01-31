@@ -1,3 +1,13 @@
+## 1.3.28
+
+### Fixed
+- **VooQuickActionsGridLayout**: Fixed `gridColumns` not being respected
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.19
+
+---
+
 ## 1.3.27
 
 ### Added
