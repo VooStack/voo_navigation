@@ -51,6 +51,11 @@ class VooQuickAction extends Equatable {
   /// Custom height for this action in grid layout
   final double? gridHeight;
 
+  /// Whether to show the label for this specific action.
+  /// If null, uses the global `showLabelsInGrid` setting.
+  /// If set, overrides the global setting for this action only.
+  final bool? showLabel;
+
   const VooQuickAction({
     required this.id,
     required this.label,
@@ -68,6 +73,7 @@ class VooQuickAction extends Equatable {
     this.gridBackgroundColor,
     this.gridIconBackgroundColor,
     this.gridHeight,
+    this.showLabel,
   });
 
   @override
@@ -84,6 +90,7 @@ class VooQuickAction extends Equatable {
     gridBackgroundColor,
     gridIconBackgroundColor,
     gridHeight,
+    showLabel,
   ];
 
   /// Creates a copy of this action with the given fields replaced
@@ -104,6 +111,7 @@ class VooQuickAction extends Equatable {
     Color? gridBackgroundColor,
     Color? gridIconBackgroundColor,
     double? gridHeight,
+    bool? showLabel,
   }) => VooQuickAction(
     id: id ?? this.id,
     label: label ?? this.label,
@@ -121,6 +129,7 @@ class VooQuickAction extends Equatable {
     gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
     gridIconBackgroundColor: gridIconBackgroundColor ?? this.gridIconBackgroundColor,
     gridHeight: gridHeight ?? this.gridHeight,
+    showLabel: showLabel ?? this.showLabel,
   );
 
   /// Whether this action has children (submenu)

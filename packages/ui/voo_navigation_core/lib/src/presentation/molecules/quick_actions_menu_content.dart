@@ -32,6 +32,15 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   /// Callback when actions are reordered. If provided, enables drag-to-reorder.
   final void Function(List<VooQuickAction> reorderedActions)? onReorderActions;
 
+  /// Optional title displayed at the top of the menu
+  final String? title;
+
+  /// Whether to show a close button in the header
+  final bool showCloseButton;
+
+  /// Callback when the close button is tapped
+  final VoidCallback? onClose;
+
   const VooQuickActionsMenuContent({
     super.key,
     this.style,
@@ -43,12 +52,17 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     this.actionBuilder,
     required this.onActionTap,
     this.onReorderActions,
+    this.title,
+    this.showCloseButton = false,
+    this.onClose,
   });
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final effectiveStyle = style ?? const VooQuickActionsStyle();
+    final hasHeader = title != null || showCloseButton;
 
     return Material(
       elevation: 8,
@@ -62,23 +76,56 @@ class VooQuickActionsMenuContent extends StatelessWidget {
             color: colorScheme.outline.withValues(alpha: 0.2),
           ),
         ),
-        child: useGridLayout
-            ? VooQuickActionsGridLayout(
-                style: effectiveStyle,
-                width: width,
-                gridColumns: gridColumns,
-                showLabelsInGrid: showLabelsInGrid,
-                actions: actions,
-                onActionTap: onActionTap,
-                onReorderActions: onReorderActions,
-              )
-            : VooQuickActionsListLayout(
-                style: effectiveStyle,
-                actions: actions,
-                actionBuilder: actionBuilder,
-                onActionTap: onActionTap,
-                onReorderActions: onReorderActions,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (hasHeader)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 8, 0),
+                child: Row(
+                  children: [
+                    if (title != null)
+                      Expanded(
+                        child: Text(
+                          title!,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    else
+                      const Spacer(),
+                    if (showCloseButton)
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: onClose,
+                        iconSize: 20,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                  ],
+                ),
               ),
+            Flexible(
+              child: useGridLayout
+                  ? VooQuickActionsGridLayout(
+                      style: effectiveStyle,
+                      width: width,
+                      gridColumns: gridColumns,
+                      showLabelsInGrid: showLabelsInGrid,
+                      actions: actions,
+                      onActionTap: onActionTap,
+                      onReorderActions: onReorderActions,
+                    )
+                  : VooQuickActionsListLayout(
+                      style: effectiveStyle,
+                      actions: actions,
+                      actionBuilder: actionBuilder,
+                      onActionTap: onActionTap,
+                      onReorderActions: onReorderActions,
+                    ),
+            ),
+          ],
+        ),
       ),
     );
   }

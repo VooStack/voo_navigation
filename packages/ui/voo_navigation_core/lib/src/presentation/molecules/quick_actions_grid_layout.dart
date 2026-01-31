@@ -169,8 +169,12 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
             ? (widget.style.dangerColor ?? colorScheme.error).withValues(alpha: 0.1)
             : colorScheme.surfaceContainerHighest);
 
-    // Determine item background color
-    final itemBgColor = action.gridBackgroundColor;
+    // Determine item background color (default to subtle surface color)
+    final itemBgColor = action.gridBackgroundColor ?? colorScheme.surfaceContainerLow;
+
+    final isWide = action.gridColumnSpan > 1;
+    // Per-action showLabel overrides global showLabelsInGrid
+    final shouldShowLabel = action.showLabel ?? widget.showLabelsInGrid;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
@@ -190,43 +194,97 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
           opacity: action.isEnabled ? 1.0 : 0.5,
           child: Padding(
             padding: const EdgeInsets.all(12),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 48,
-                  height: 48,
-                  decoration: BoxDecoration(
-                    color: iconBgColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: action.iconWidget ??
-                      Icon(
-                        action.icon ?? Icons.star,
-                        size: widget.style.iconSize ?? 24,
-                        color: action.isDangerous
-                            ? (widget.style.dangerColor ?? colorScheme.error)
-                            : (action.iconColor ?? colorScheme.onSurfaceVariant),
-                      ),
-                ),
-                if (widget.showLabelsInGrid) ...[
-                  const SizedBox(height: 8),
-                  Text(
-                    action.label,
-                    style: widget.style.labelStyle ??
-                        theme.textTheme.labelSmall?.copyWith(
-                          color: action.isDangerous
-                              ? (widget.style.dangerColor ?? colorScheme.error)
-                              : colorScheme.onSurface,
+            child: isWide
+                ? Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: iconBgColor,
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                    textAlign: TextAlign.center,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
+                        child: action.iconWidget ??
+                            Icon(
+                              action.icon ?? Icons.star,
+                              size: widget.style.iconSize ?? 24,
+                              color: action.isDangerous
+                                  ? (widget.style.dangerColor ?? colorScheme.error)
+                                  : (action.iconColor ?? colorScheme.onSurfaceVariant),
+                            ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (shouldShowLabel)
+                              Text(
+                                action.label,
+                                style: widget.style.labelStyle ??
+                                    theme.textTheme.titleSmall?.copyWith(
+                                      color: action.isDangerous
+                                          ? (widget.style.dangerColor ?? colorScheme.error)
+                                          : colorScheme.onSurface,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            if (action.description != null) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                action.description!,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: colorScheme.onSurfaceVariant,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: iconBgColor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: action.iconWidget ??
+                            Icon(
+                              action.icon ?? Icons.star,
+                              size: widget.style.iconSize ?? 24,
+                              color: action.isDangerous
+                                  ? (widget.style.dangerColor ?? colorScheme.error)
+                                  : (action.iconColor ?? colorScheme.onSurfaceVariant),
+                            ),
+                      ),
+                      if (shouldShowLabel) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          action.label,
+                          style: widget.style.labelStyle ??
+                              theme.textTheme.labelSmall?.copyWith(
+                                color: action.isDangerous
+                                    ? (widget.style.dangerColor ?? colorScheme.error)
+                                    : colorScheme.onSurface,
+                              ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ],
                   ),
-                ],
-              ],
-            ),
           ),
         ),
       ),
