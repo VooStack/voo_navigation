@@ -4,6 +4,10 @@
 - **VooUserProfileConfig**: Added `navItemIndex` property for explicit position control in mobile bottom navigation
   - Accepts values 0-4 to specify exact position in the bottom nav bar
   - When `null` (default), user profile appears at the end
+- **VooActionNavigationItem**: Added `navItemIndex` property for explicit position control
+  - Accepts values 0-4 to specify exact position in the bottom nav bar
+  - Takes precedence over `position` property when specified
+  - When `null` (default), falls back to `position` behavior (start/center/end)
 
 ### Fixed
 - **VooNavigationTokens**: Made expandable bottom nav colors theme-aware for proper light/dark mode support

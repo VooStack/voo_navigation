@@ -209,8 +209,8 @@ class VooNavigationBar extends StatelessWidget {
       final item = regularItems[i];
       final isSelected = item.id == selectedId;
 
-      // Insert action item at appropriate position
-      if (actionItem != null) {
+      // Insert action item at appropriate position (if using position-based logic)
+      if (actionItem != null && actionItem!.navItemIndex == null) {
         if (actionPosition == VooActionItemPosition.start && i == 0) {
           widgets.add(_buildActionItem(context));
           passedActionItem = true;
@@ -244,9 +244,20 @@ class VooNavigationBar extends StatelessWidget {
       );
     }
 
-    // Add action item at end if configured (before switchers)
-    if (actionItem != null && actionPosition == VooActionItemPosition.end) {
+    // Add action item at end if configured (position-based, before switchers)
+    if (actionItem != null && actionItem!.navItemIndex == null && actionPosition == VooActionItemPosition.end) {
       widgets.add(_buildActionItem(context));
+    }
+
+    // Insert action item at explicit navItemIndex if specified
+    if (actionItem != null && actionItem!.navItemIndex != null) {
+      final idx = actionItem!.navItemIndex!;
+      if (idx >= 0 && idx <= widgets.length) {
+        widgets.insert(idx, _buildActionItem(context));
+      } else {
+        // Fallback to end if index is out of bounds
+        widgets.add(_buildActionItem(context));
+      }
     }
 
     // Add switcher(s) at the very end

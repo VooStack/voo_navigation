@@ -89,7 +89,12 @@ class VooMobileScaffold extends StatelessWidget {
     final selectedItem = config.items.firstWhere((item) => item.id == selectedId, orElse: () => config.items.first);
 
     // Build the bottom navigation
-    final bottomNav = VooNavigationBar(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected);
+    final bottomNav = VooNavigationBar(
+      config: config,
+      selectedId: selectedId,
+      onNavigationItemSelected: onNavigationItemSelected,
+      actionItem: config.actionItem,
+    );
 
     // Determine FAB visibility and widget based on page config overrides
     final showFab = pageConfig?.showFloatingActionButton ?? config.showFloatingActionButton;

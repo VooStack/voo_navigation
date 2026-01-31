@@ -47,7 +47,14 @@ class VooActionNavigationItem {
   /// Position of the action item in the navigation bar.
   ///
   /// If null, the item will be positioned in the center.
+  /// Note: [navItemIndex] takes precedence over this if specified.
   final VooActionItemPosition position;
+
+  /// Explicit index position (0-based) in the mobile bottom navigation bar.
+  /// When set, the action item will be inserted at this position instead of
+  /// using [position]. Valid values are 0 to 4 (max 5 items in bottom nav).
+  /// If null, falls back to [position] behavior.
+  final int? navItemIndex;
 
   const VooActionNavigationItem({
     required this.id,
@@ -61,6 +68,7 @@ class VooActionNavigationItem {
     this.tooltip,
     this.sortOrder = 0,
     this.position = VooActionItemPosition.center,
+    this.navItemIndex,
   });
 
   /// Creates a copy of this item with the given fields replaced
@@ -76,6 +84,7 @@ class VooActionNavigationItem {
     String? tooltip,
     int? sortOrder,
     VooActionItemPosition? position,
+    int? navItemIndex,
   }) {
     return VooActionNavigationItem(
       id: id ?? this.id,
@@ -89,6 +98,7 @@ class VooActionNavigationItem {
       tooltip: tooltip ?? this.tooltip,
       sortOrder: sortOrder ?? this.sortOrder,
       position: position ?? this.position,
+      navItemIndex: navItemIndex ?? this.navItemIndex,
     );
   }
 

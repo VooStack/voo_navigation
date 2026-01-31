@@ -4,6 +4,9 @@
 - **VooNavigationBar**: User profile can now be positioned at a specific index in the bottom nav bar
   - Respects `navItemIndex` from `VooUserProfileConfig`
   - Inserts user profile at the specified position instead of always at the end
+- **VooNavigationBar**: Action item can now be positioned at a specific index in the bottom nav bar
+  - Respects `navItemIndex` from `VooActionNavigationItem`
+  - Takes precedence over `position` (start/center/end) when specified
 
 ### Dependencies
 - Updated `voo_navigation_core` to ^0.2.13
