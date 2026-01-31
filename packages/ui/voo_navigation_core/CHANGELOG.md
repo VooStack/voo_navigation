@@ -1,3 +1,21 @@
+## 0.2.13
+
+### Added
+- **VooUserProfileConfig**: Added `navItemIndex` property for explicit position control in mobile bottom navigation
+  - Accepts values 0-4 to specify exact position in the bottom nav bar
+  - When `null` (default), user profile appears at the end
+
+### Fixed
+- **VooNavigationTokens**: Made expandable bottom nav colors theme-aware for proper light/dark mode support
+  - `expandableNavBackground` now uses `surfaceContainer` in light mode
+  - `expandableNavUnselectedCircle` now uses `surfaceContainerHighest` in light mode
+  - `expandableNavSelectedBackground` now uses `surfaceContainerHigh` in light mode
+  - `expandableNavUnselectedIcon` now uses `onSurfaceVariant` in light mode
+  - `expandableNavSelectedIcon` now uses `onPrimary` in light mode
+  - `expandableNavSelectedLabel` now uses `onSurface` in light mode
+
+---
+
 ## 0.2.12
 
 ### Changed

@@ -282,21 +282,28 @@ class VooNavigationBar extends StatelessWidget {
       }
     }
 
-    // Add user profile at the end if configured
+    // Add user profile at specified index or at the end if no index specified
     if (hasUserProfile) {
-      widgets.add(
-        VooUserProfileNavItem(
-          config: config.userProfileConfig!,
-          enableHapticFeedback: enableFeedback,
-          avatarColor: selectedColor,
-          isSelected: selectedId == VooUserProfileNavItem.navItemId,
-          labelPosition: VooExpandableLabelPosition.start,
-          maxLabelWidth: maxLabelWidth,
-          onNavigationSelected: () {
-            onNavigationItemSelected(VooUserProfileNavItem.navItemId);
-          },
-        ),
+      final userProfileWidget = VooUserProfileNavItem(
+        config: config.userProfileConfig!,
+        enableHapticFeedback: enableFeedback,
+        avatarColor: selectedColor,
+        isSelected: selectedId == VooUserProfileNavItem.navItemId,
+        labelPosition: VooExpandableLabelPosition.start,
+        maxLabelWidth: maxLabelWidth,
+        onNavigationSelected: () {
+          onNavigationItemSelected(VooUserProfileNavItem.navItemId);
+        },
       );
+
+      final navItemIndex = config.userProfileConfig!.navItemIndex;
+      if (navItemIndex != null && navItemIndex >= 0 && navItemIndex <= widgets.length) {
+        // Insert at specified index
+        widgets.insert(navItemIndex, userProfileWidget);
+      } else {
+        // Default: add at the end
+        widgets.add(userProfileWidget);
+      }
     }
 
     return widgets;

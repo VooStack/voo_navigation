@@ -1,3 +1,18 @@
+## 1.3.22
+
+### Added
+- **VooUserProfileConfig**: Added `navItemIndex` for explicit bottom nav position control (0-4)
+
+### Fixed
+- **Bottom Navigation Bar**: Theme-aware colors now work correctly in light mode
+  - Previously hardcoded dark colors now adapt to the app's theme
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.13
+- Updated `voo_navigation_bar` to ^0.1.11
+
+---
+
 ## 1.3.21
 
 ### Fixed

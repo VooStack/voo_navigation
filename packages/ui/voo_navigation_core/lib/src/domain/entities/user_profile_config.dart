@@ -71,6 +71,12 @@ class VooUserProfileConfig {
   /// Lower values appear first. Only relevant when [mobilePriority] is true.
   final int navItemSortOrder;
 
+  /// Explicit index position (0-based) in the mobile bottom navigation bar.
+  /// When set, the user profile will be inserted at this position instead of
+  /// at the end. Valid values are 0 to 4 (max 5 items in bottom nav).
+  /// If null, the user profile appears at the end (default behavior).
+  final int? navItemIndex;
+
   /// Label for the nav item. Defaults to [userName] or 'Profile'.
   final String? navItemLabel;
 
@@ -108,6 +114,7 @@ class VooUserProfileConfig {
     this.showDropdownIndicator = true,
     this.mobilePriority = false,
     this.navItemSortOrder = 0,
+    this.navItemIndex,
     this.navItemLabel,
     this.modalBuilder,
   });
@@ -142,6 +149,7 @@ class VooUserProfileConfig {
     bool? showDropdownIndicator,
     bool? mobilePriority,
     int? navItemSortOrder,
+    int? navItemIndex,
     String? navItemLabel,
     Widget Function(BuildContext context, VooUserProfileModalData data)?
         modalBuilder,
@@ -159,6 +167,7 @@ class VooUserProfileConfig {
     showDropdownIndicator: showDropdownIndicator ?? this.showDropdownIndicator,
     mobilePriority: mobilePriority ?? this.mobilePriority,
     navItemSortOrder: navItemSortOrder ?? this.navItemSortOrder,
+    navItemIndex: navItemIndex ?? this.navItemIndex,
     navItemLabel: navItemLabel ?? this.navItemLabel,
     modalBuilder: modalBuilder ?? this.modalBuilder,
   );
