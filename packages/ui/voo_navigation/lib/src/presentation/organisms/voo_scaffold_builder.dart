@@ -25,15 +25,6 @@ class VooScaffoldBuilder extends StatelessWidget {
   /// Callback when a navigation item is selected
   final void Function(String itemId) onNavigationItemSelected;
 
-  /// Animation controller for transitions
-  final AnimationController animationController;
-
-  /// Fade animation
-  final Animation<double> fadeAnimation;
-
-  /// Slide animation
-  final Animation<Offset> slideAnimation;
-
   /// Optional custom app bar
   final PreferredSizeWidget? appBar;
 
@@ -102,9 +93,6 @@ class VooScaffoldBuilder extends StatelessWidget {
     required this.body,
     required this.selectedId,
     required this.onNavigationItemSelected,
-    required this.animationController,
-    required this.fadeAnimation,
-    required this.slideAnimation,
     this.appBar,
     required this.showAppBar,
     this.endDrawer,
@@ -134,12 +122,9 @@ class VooScaffoldBuilder extends StatelessWidget {
     // Use neutral white/dark background to match drawer (no tinted colors)
     final defaultBg = isDark ? const Color(0xFF1A1A1A) : Colors.white;
     final effectiveBackgroundColor =
-        backgroundColor ??
-        config.backgroundColor ??
-        defaultBg;
+        backgroundColor ?? config.backgroundColor ?? defaultBg;
 
     // Prepare the body - let each scaffold type handle its own padding
-    // This follows the KISS principle - each scaffold knows best how to position its content
     Widget processedBody = body;
 
     // Wrap in card if requested
@@ -158,25 +143,13 @@ class VooScaffoldBuilder extends StatelessWidget {
       );
     }
 
-    if (config.enableAnimations) {
-      processedBody = FadeTransition(
-        opacity: fadeAnimation,
-        child: SlideTransition(position: slideAnimation, child: processedBody),
-      );
-    }
-
-    // Build the scaffold based on navigation type with animation
-    // Note: Keys are applied directly to scaffold widgets instead of using KeyedSubtree
-    // to avoid confusing Flutter's diffing algorithm with AnimatedSwitcher
-    //
+    // Build the scaffold based on navigation type
     // SIMPLIFIED NAVIGATION:
     // - Mobile (< 600px): Bottom navigation bar
     // - Desktop (≥ 600px): Collapsible drawer (can collapse to compact rail)
-    // - No intermediate tablet-only rail mode
-    Widget scaffold;
     switch (navigationType) {
       case VooNavigationType.bottomNavigation:
-        scaffold = VooMobileScaffold(
+        return VooMobileScaffold(
           key: const ValueKey('mobile_scaffold'),
           config: config,
           body: processedBody,
@@ -198,15 +171,12 @@ class VooScaffoldBuilder extends StatelessWidget {
           restorationId: restorationId,
           pageConfig: pageConfig,
         );
-        break;
 
       // All non-mobile widths use the desktop scaffold with collapsible drawer
-      // This provides a unified experience: expanded drawer that can collapse to rail
-      // Medium screens (navigationRail) start collapsed, others start expanded
       case VooNavigationType.navigationRail:
       case VooNavigationType.extendedNavigationRail:
       case VooNavigationType.navigationDrawer:
-        scaffold = VooDesktopScaffold(
+        return VooDesktopScaffold(
           key: const ValueKey('desktop_scaffold'),
           config: config,
           body: processedBody,
@@ -229,15 +199,6 @@ class VooScaffoldBuilder extends StatelessWidget {
           pageConfig: pageConfig,
           navigationType: navigationType,
         );
-        break;
     }
-
-    // Wrap in AnimatedSwitcher to handle transitions smoothly
-    return AnimatedSwitcher(
-      duration: config.animationDuration,
-      child: scaffold,
-      transitionBuilder: (child, animation) =>
-          FadeTransition(opacity: animation, child: child),
-    );
   }
 }

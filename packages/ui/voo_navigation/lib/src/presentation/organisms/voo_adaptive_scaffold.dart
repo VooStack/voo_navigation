@@ -93,49 +93,33 @@ class VooAdaptiveScaffold extends StatefulWidget {
     double? bodyCardElevation,
     this.bodyCardBorderRadius,
     this.bodyCardColor,
-  }) : showAppBar = showAppBar ?? true,
-       resizeToAvoidBottomInset = resizeToAvoidBottomInset ?? true,
-       extendBody = extendBody ?? false,
-       extendBodyBehindAppBar = extendBodyBehindAppBar ?? false,
-       useBodyCard = useBodyCard ?? false,
-       bodyCardElevation = bodyCardElevation ?? 0;
+  })  : showAppBar = showAppBar ?? true,
+        resizeToAvoidBottomInset = resizeToAvoidBottomInset ?? true,
+        extendBody = extendBody ?? false,
+        extendBodyBehindAppBar = extendBodyBehindAppBar ?? false,
+        useBodyCard = useBodyCard ?? false,
+        bodyCardElevation = bodyCardElevation ?? 0;
 
   @override
   State<VooAdaptiveScaffold> createState() => _VooAdaptiveScaffoldState();
 }
 
-class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTickerProviderStateMixin {
+class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
   late String _selectedId;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
-  VooNavigationType? _previousNavigationType;
   late VooPageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    _selectedId = widget.config.selectedId ?? widget.config.items.firstWhere((item) => item.isEnabled).id;
+    _selectedId = widget.config.selectedId ??
+        widget.config.items.firstWhere((item) => item.isEnabled).id;
 
     _pageController = VooPageController();
     _pageController.setOnConfigChanged(_onPageConfigChanged);
-
-    // Start animation at completed state (value: 1.0) so body is visible immediately
-    // Animations will play on navigation changes, not on initial load
-    _animationController = AnimationController(
-      duration: widget.config.animationDuration,
-      vsync: this,
-      value: 1.0,
-    );
-
-    _fadeAnimation = CurvedAnimation(parent: _animationController, curve: widget.config.animationCurve);
-
-    _slideAnimation = Tween<Offset>(begin: const Offset(0.0, 0.05), end: Offset.zero).animate(CurvedAnimation(parent: _animationController, curve: widget.config.animationCurve));
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
     _pageController.dispose();
     super.dispose();
   }
@@ -157,7 +141,8 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
   }
 
   /// Recursively finds an item by ID, including items nested in sections
-  VooNavigationDestination? _findItemById(List<VooNavigationDestination> items, String itemId) {
+  VooNavigationDestination? _findItemById(
+      List<VooNavigationDestination> items, String itemId) {
     for (final item in items) {
       if (item.id == itemId) return item;
       if (item.children != null) {
@@ -195,11 +180,6 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
 
     // Always call the config callback (handles both regular and special items)
     widget.config.onNavigationItemSelected?.call(itemId);
-
-    // Animate content change if enabled
-    if (widget.config.enableAnimations) {
-      _animationController.forward(from: 0);
-    }
   }
 
   /// Updates the active route on the page controller
@@ -225,30 +205,34 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
             final screenWidth = screenInfo.width;
             final navigationType = widget.config.getNavigationType(screenWidth);
 
-            // Animate navigation type changes - defer to post-frame to avoid layout during build
-            if (_previousNavigationType != null && _previousNavigationType != navigationType && widget.config.enableAnimations) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                if (mounted) {
-                  _animationController.forward(from: 0);
-                }
-              });
-            }
-            _previousNavigationType = navigationType;
-
             // Get page-level overrides if any
-            // Note: Page config is applied on next rebuild cycle after VooPage sets it
             final pageConfig = _pageController.currentConfig;
 
             // Effective values with priority: pageConfig > widget > config
-            final effectiveShowAppBar = pageConfig?.showAppBar ?? widget.showAppBar;
-            final effectiveResizeToAvoidBottomInset = pageConfig?.resizeToAvoidBottomInset ?? widget.resizeToAvoidBottomInset;
-            final effectiveExtendBody = pageConfig?.extendBody ?? widget.extendBody;
-            final effectiveExtendBodyBehindAppBar = pageConfig?.extendBodyBehindAppBar ?? widget.extendBodyBehindAppBar;
-            final effectiveBodyPadding = pageConfig?.bodyPadding ?? widget.bodyPadding ?? widget.config.bodyPadding;
-            final effectiveUseBodyCard = pageConfig?.useBodyCard ?? widget.useBodyCard;
-            final effectiveBodyCardElevation = pageConfig?.bodyCardElevation ?? widget.bodyCardElevation;
-            final effectiveBodyCardBorderRadius = pageConfig?.bodyCardBorderRadius ?? widget.bodyCardBorderRadius ?? widget.config.bodyCardBorderRadius;
-            final effectiveBodyCardColor = pageConfig?.bodyCardColor ?? widget.bodyCardColor ?? widget.config.bodyCardColor;
+            final effectiveShowAppBar =
+                pageConfig?.showAppBar ?? widget.showAppBar;
+            final effectiveResizeToAvoidBottomInset =
+                pageConfig?.resizeToAvoidBottomInset ??
+                    widget.resizeToAvoidBottomInset;
+            final effectiveExtendBody =
+                pageConfig?.extendBody ?? widget.extendBody;
+            final effectiveExtendBodyBehindAppBar =
+                pageConfig?.extendBodyBehindAppBar ??
+                    widget.extendBodyBehindAppBar;
+            final effectiveBodyPadding = pageConfig?.bodyPadding ??
+                widget.bodyPadding ??
+                widget.config.bodyPadding;
+            final effectiveUseBodyCard =
+                pageConfig?.useBodyCard ?? widget.useBodyCard;
+            final effectiveBodyCardElevation =
+                pageConfig?.bodyCardElevation ?? widget.bodyCardElevation;
+            final effectiveBodyCardBorderRadius =
+                pageConfig?.bodyCardBorderRadius ??
+                    widget.bodyCardBorderRadius ??
+                    widget.config.bodyCardBorderRadius;
+            final effectiveBodyCardColor = pageConfig?.bodyCardColor ??
+                widget.bodyCardColor ??
+                widget.config.bodyCardColor;
 
             // Build appropriate scaffold based on navigation type
             return VooScaffoldBuilder(
@@ -258,22 +242,22 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> with SingleTi
               body: widget.body,
               selectedId: _selectedId,
               onNavigationItemSelected: _onNavigationItemSelected,
-              animationController: _animationController,
-              fadeAnimation: _fadeAnimation,
-              slideAnimation: _slideAnimation,
               appBar: pageConfig?.appBar ?? widget.appBar,
               showAppBar: effectiveShowAppBar,
               endDrawer: pageConfig?.endDrawer ?? widget.endDrawer,
               drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
               drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
-              endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
+              endDrawerEnableOpenDragGesture:
+                  widget.endDrawerEnableOpenDragGesture,
               scaffoldKey: widget.scaffoldKey,
-              backgroundColor: pageConfig?.backgroundColor ?? widget.backgroundColor,
+              backgroundColor:
+                  pageConfig?.backgroundColor ?? widget.backgroundColor,
               resizeToAvoidBottomInset: effectiveResizeToAvoidBottomInset,
               extendBody: effectiveExtendBody,
               extendBodyBehindAppBar: effectiveExtendBodyBehindAppBar,
               bottomSheet: pageConfig?.bottomSheet ?? widget.bottomSheet,
-              persistentFooterButtons: pageConfig?.persistentFooterButtons ?? widget.persistentFooterButtons,
+              persistentFooterButtons: pageConfig?.persistentFooterButtons ??
+                  widget.persistentFooterButtons,
               restorationId: widget.restorationId,
               bodyPadding: effectiveBodyPadding,
               useBodyCard: effectiveUseBodyCard,

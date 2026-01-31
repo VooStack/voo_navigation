@@ -1,10 +1,19 @@
-## 1.3.20
+## 1.3.21
 
 ### Fixed
 - **Body Not Rendering**: Fixed body content not displaying when `VooAdaptiveScaffold` is used inside a `StatelessWidget` parent
-  - Animation controller now starts at completed state (`value: 1.0`) so body is visible immediately
-  - Previously, animation started at opacity 0 and if State was recreated before completing, body stayed invisible
-  - Animations still play on navigation changes, just not on initial load
+  - Removed all scaffold-level animations that were causing rendering issues
+  - Removed `SingleTickerProviderStateMixin` and animation controller from `VooAdaptiveScaffold`
+  - Removed `AnimatedSwitcher` and `FadeTransition`/`SlideTransition` wrappers from `VooScaffoldBuilder`
+  - Body now renders directly without any animation interference
+  - Navigation item animations still work, only scaffold body transition animations were removed
+
+---
+
+## 1.3.20
+
+### Fixed
+- **Body Not Rendering**: Attempted fix with animation starting at completed state (superseded by 1.3.21)
 
 ---
 
