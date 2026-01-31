@@ -55,11 +55,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 | Package | Current Version |
 |---------|-----------------|
-| voo_navigation | 1.3.22 |
-| voo_navigation_core | 0.2.13 |
+| voo_navigation | 1.3.23 |
+| voo_navigation_core | 0.2.14 |
 | voo_navigation_rail | 0.2.4 |
 | voo_navigation_drawer | 0.2.4 |
-| voo_navigation_bar | 0.1.11 |
+| voo_navigation_bar | 0.1.12 |
 
 ---
 

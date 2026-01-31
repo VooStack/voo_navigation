@@ -1,6 +1,6 @@
 name: voo_navigation_bar
 description: Bottom navigation bar components for Flutter - part of the voo_navigation package ecosystem.
-version: 0.1.11
+version: 0.1.12
 homepage: https://voostack.com/packages/voo_navigation_bar
 repository: https://github.com/voostack/voo_navigation/tree/main/packages/ui/voo_navigation_bar
 issue_tracker: https://github.com/voostack/voo_navigation/issues
@@ -28,7 +28,7 @@ dependencies:
     sdk: flutter
 
   # Core navigation foundation
-  voo_navigation_core: ^0.2.13
+  voo_navigation_core: ^0.2.14
 
   # Design System
   voo_tokens: ^0.0.8
