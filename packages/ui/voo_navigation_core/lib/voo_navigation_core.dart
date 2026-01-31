@@ -83,6 +83,7 @@ export 'src/presentation/molecules/voo_navigation_item_widget.dart';
 export 'src/presentation/molecules/voo_notifications_bell.dart';
 export 'src/presentation/molecules/voo_organization_switcher.dart';
 export 'src/presentation/molecules/voo_quick_actions.dart';
+export 'src/presentation/molecules/quick_actions_menu_content.dart';
 export 'src/presentation/molecules/voo_search_bar.dart';
 export 'src/presentation/molecules/voo_themed_bottom_nav_container.dart';
 export 'src/presentation/molecules/voo_themed_drawer_container.dart';

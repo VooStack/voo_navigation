@@ -1,3 +1,16 @@
+## 1.3.26
+
+### Added
+- **VooQuickActionsMenuContent**: Now exported for use in custom modal builders
+  - Display quick actions content directly without the trigger button
+  - Added `onReorderActions` callback for drag-to-reorder functionality
+  - Supports reordering in both list and grid layouts
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.17
+
+---
+
 ## 1.3.25
 
 ### Changed

@@ -29,6 +29,9 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   /// Callback when an action is tapped
   final void Function(VooQuickAction) onActionTap;
 
+  /// Callback when actions are reordered. If provided, enables drag-to-reorder.
+  final void Function(List<VooQuickAction> reorderedActions)? onReorderActions;
+
   const VooQuickActionsMenuContent({
     super.key,
     required this.style,
@@ -39,6 +42,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     required this.actions,
     this.actionBuilder,
     required this.onActionTap,
+    this.onReorderActions,
   });
 
   @override
@@ -64,12 +68,14 @@ class VooQuickActionsMenuContent extends StatelessWidget {
                 showLabelsInGrid: showLabelsInGrid,
                 actions: actions,
                 onActionTap: onActionTap,
+                onReorderActions: onReorderActions,
               )
             : VooQuickActionsListLayout(
                 style: style,
                 actions: actions,
                 actionBuilder: actionBuilder,
                 onActionTap: onActionTap,
+                onReorderActions: onReorderActions,
               ),
       ),
     );

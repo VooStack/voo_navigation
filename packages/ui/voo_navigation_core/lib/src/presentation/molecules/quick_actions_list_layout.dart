@@ -16,40 +16,66 @@ class VooQuickActionsListLayout extends StatelessWidget {
   /// Callback when an action is tapped
   final void Function(VooQuickAction) onActionTap;
 
+  /// Callback when actions are reordered. If provided, enables drag-to-reorder.
+  final void Function(List<VooQuickAction> reorderedActions)? onReorderActions;
+
   const VooQuickActionsListLayout({
     super.key,
     required this.style,
     required this.actions,
     this.actionBuilder,
     required this.onActionTap,
+    this.onReorderActions,
   });
+
+  Widget _buildItem(VooQuickAction action, int index) {
+    if (action.isDivider) {
+      return Divider(key: ValueKey('divider_$index'), height: 8);
+    }
+
+    if (actionBuilder != null) {
+      return KeyedSubtree(
+        key: ValueKey(action.id),
+        child: actionBuilder!(
+          action,
+          () => onActionTap(action),
+        ),
+      );
+    }
+
+    return VooQuickActionTile(
+      key: ValueKey(action.id),
+      action: action,
+      style: style,
+      onTap: () => onActionTap(action),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (onReorderActions != null) {
+      return ReorderableListView.builder(
+        shrinkWrap: true,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        itemCount: actions.length,
+        onReorder: (oldIndex, newIndex) {
+          final reordered = List<VooQuickAction>.from(actions);
+          if (newIndex > oldIndex) {
+            newIndex -= 1;
+          }
+          final item = reordered.removeAt(oldIndex);
+          reordered.insert(newIndex, item);
+          onReorderActions!(reordered);
+        },
+        itemBuilder: (context, index) => _buildItem(actions[index], index),
+      );
+    }
+
     return ListView.builder(
       shrinkWrap: true,
       padding: const EdgeInsets.symmetric(vertical: 8),
       itemCount: actions.length,
-      itemBuilder: (context, index) {
-        final action = actions[index];
-
-        if (action.isDivider) {
-          return const Divider(height: 8);
-        }
-
-        if (actionBuilder != null) {
-          return actionBuilder!(
-            action,
-            () => onActionTap(action),
-          );
-        }
-
-        return VooQuickActionTile(
-          action: action,
-          style: style,
-          onTap: () => onActionTap(action),
-        );
-      },
+      itemBuilder: (context, index) => _buildItem(actions[index], index),
     );
   }
 }

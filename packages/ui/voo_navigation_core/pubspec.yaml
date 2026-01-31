@@ -1,6 +1,6 @@
 name: voo_navigation_core
 description: Core foundation package for voo_navigation - shared entities, atoms, molecules, and utilities for building adaptive navigation.
-version: 0.2.16
+version: 0.2.17
 homepage: https://voostack.com/packages/voo_navigation_core
 repository: https://github.com/voostack/voo_navigation/tree/main/packages/ui/voo_navigation_core
 issue_tracker: https://github.com/voostack/voo_navigation/issues
