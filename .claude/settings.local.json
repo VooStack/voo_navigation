@@ -29,7 +29,14 @@
       "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation status --porcelain)",
       "Bash(done)",
       "Bash(ls:*)",
-      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation log -1 --format=\"%H\" -- packages/ui/voo_navigation_bar/lib/src/presentation/molecules/floating_nav_item.dart)"
+      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation log -1 --format=\"%H\" -- packages/ui/voo_navigation_bar/lib/src/presentation/molecules/floating_nav_item.dart)",
+      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation show HEAD:packages/ui/voo_navigation_bar/lib/src/presentation/molecules/floating_nav_item.dart)",
+      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation show HEAD:packages/ui/voo_navigation_core/test/src/presentation/molecules/voo_themed_nav_container_test.dart)",
+      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation log --oneline -- packages/ui/voo_navigation_bar/lib/src/presentation/molecules/floating_nav_item.dart)",
+      "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation log --all --full-history --oneline -- packages/ui/voo_navigation_bar/lib/src/presentation/molecules/floating_nav_item.dart)",
+      "Bash(melos analyze:*)",
+      "Bash(melos run:*)",
+      "Bash(melos exec:*)"
     ]
   }
 }

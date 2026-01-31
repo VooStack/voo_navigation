@@ -7,6 +7,9 @@ library voo_navigation_bar;
 // Re-export core for convenience
 export 'package:voo_navigation_core/voo_navigation_core.dart';
 
+// Atoms
+export 'src/presentation/atoms/voo_expandable_nav_item_layout.dart';
+
 // Molecules
 export 'src/presentation/molecules/voo_action_nav_item.dart';
 export 'src/presentation/molecules/voo_action_nav_modal.dart';

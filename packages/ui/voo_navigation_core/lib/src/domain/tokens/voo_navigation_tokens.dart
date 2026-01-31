@@ -17,9 +17,6 @@ abstract final class VooNavigationTokens {
   /// Border radius for navigation item containers
   static const double itemBorderRadius = 8.0;
 
-  /// Border radius for floating bottom navigation pill
-  static const double floatingNavBorderRadius = 28.0;
-
   // === Spacing ===
   /// Horizontal padding inside navigation items
   static const double itemPaddingHorizontal = 10.0;
@@ -156,28 +153,6 @@ extension VooNavigationTokensTheme on BuildContext {
   Color get navMutedIconColor {
     final onSurface = Theme.of(this).colorScheme.onSurface;
     return onSurface.withValues(alpha: VooNavigationTokens.opacityMutedIcon);
-  }
-
-  /// Theme-aware floating navigation background color.
-  ///
-  /// Uses surface for a clean white background in light mode
-  /// that works in both light and dark modes.
-  Color get floatingNavBackground {
-    return Theme.of(this).colorScheme.surface;
-  }
-
-  /// Theme-aware floating navigation foreground color.
-  ///
-  /// Returns the appropriate text/icon color for floating nav.
-  Color get floatingNavForeground {
-    return Theme.of(this).colorScheme.onSurface;
-  }
-
-  /// Theme-aware floating navigation selected color.
-  ///
-  /// Returns the primary color for selected items in floating nav.
-  Color get floatingNavSelectedColor {
-    return Theme.of(this).colorScheme.primary;
   }
 
   /// Divider color with proper opacity.
