@@ -1,4 +1,4 @@
-## 0.2.20
+## 0.2.21
 
 ### Added
 - **VooQuickAction**: Added `showLabel` property for per-action label visibility control
@@ -8,6 +8,7 @@
   - `title` - Optional title displayed at the top
   - `showCloseButton` - Whether to show a close button
   - `onClose` - Callback when close button is tapped
+  - `contentPadding` - Custom padding for the actions content area
 
 ### Improved
 - **VooQuickActionsGridLayout**: Better layout for multi-column spanning items
@@ -15,6 +16,9 @@
   - Single-column items keep centered vertical layout
   - Added default background color (`surfaceContainerLow`) so items are visible
   - Description is now shown for wide items
+
+### Fixed
+- **VooQuickActionsGridLayout**: Fixed grid column width calculation causing incorrect wrapping
 
 ---
 

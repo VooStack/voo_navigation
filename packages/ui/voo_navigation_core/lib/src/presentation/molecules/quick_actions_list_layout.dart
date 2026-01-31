@@ -19,6 +19,9 @@ class VooQuickActionsListLayout extends StatelessWidget {
   /// Callback when actions are reordered. If provided, enables drag-to-reorder.
   final void Function(List<VooQuickAction> reorderedActions)? onReorderActions;
 
+  /// Padding for the list content. Defaults to `EdgeInsets.symmetric(vertical: 8)`.
+  final EdgeInsetsGeometry? padding;
+
   const VooQuickActionsListLayout({
     super.key,
     required this.style,
@@ -26,6 +29,7 @@ class VooQuickActionsListLayout extends StatelessWidget {
     this.actionBuilder,
     required this.onActionTap,
     this.onReorderActions,
+    this.padding,
   });
 
   Widget _buildItem(VooQuickAction action, int index) {
@@ -51,12 +55,17 @@ class VooQuickActionsListLayout extends StatelessWidget {
     );
   }
 
+  EdgeInsets get _effectivePadding {
+    final p = padding ?? const EdgeInsets.symmetric(vertical: 8);
+    return p.resolve(TextDirection.ltr);
+  }
+
   @override
   Widget build(BuildContext context) {
     if (onReorderActions != null) {
       return ReorderableListView.builder(
         shrinkWrap: true,
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: _effectivePadding,
         itemCount: actions.length,
         onReorder: (oldIndex, newIndex) {
           final reordered = List<VooQuickAction>.from(actions);
@@ -73,7 +82,7 @@ class VooQuickActionsListLayout extends StatelessWidget {
 
     return ListView.builder(
       shrinkWrap: true,
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: _effectivePadding,
       itemCount: actions.length,
       itemBuilder: (context, index) => _buildItem(actions[index], index),
     );

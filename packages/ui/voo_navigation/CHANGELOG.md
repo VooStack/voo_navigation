@@ -1,14 +1,18 @@
-## 1.3.29
+## 1.3.30
 
 ### Added
 - **VooQuickAction**: `showLabel` for per-action label visibility control
 - **VooQuickActionsMenuContent**: `title`, `showCloseButton`, `onClose` for header support
+- **VooQuickActionsMenuContent**: `contentPadding` for custom padding
 
 ### Improved
 - **VooQuickActionsGridLayout**: Multi-column items now use horizontal layout with description
 
+### Fixed
+- **VooQuickActionsGridLayout**: Fixed grid column width calculation causing incorrect wrapping
+
 ### Dependencies
-- Updated `voo_navigation_core` to ^0.2.20
+- Updated `voo_navigation_core` to ^0.2.21
 
 ---
 

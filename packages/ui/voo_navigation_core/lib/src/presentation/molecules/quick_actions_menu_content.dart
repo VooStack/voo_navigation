@@ -41,6 +41,10 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   /// Callback when the close button is tapped
   final VoidCallback? onClose;
 
+  /// Padding for the actions content area.
+  /// Defaults to `EdgeInsets.all(16)` for grid layout and `EdgeInsets.symmetric(vertical: 8)` for list layout.
+  final EdgeInsetsGeometry? contentPadding;
+
   const VooQuickActionsMenuContent({
     super.key,
     this.style,
@@ -55,6 +59,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     this.title,
     this.showCloseButton = false,
     this.onClose,
+    this.contentPadding,
   });
 
   @override
@@ -115,6 +120,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
                       actions: actions,
                       onActionTap: onActionTap,
                       onReorderActions: onReorderActions,
+                      padding: contentPadding,
                     )
                   : VooQuickActionsListLayout(
                       style: effectiveStyle,
@@ -122,6 +128,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
                       actionBuilder: actionBuilder,
                       onActionTap: onActionTap,
                       onReorderActions: onReorderActions,
+                      padding: contentPadding,
                     ),
             ),
           ],

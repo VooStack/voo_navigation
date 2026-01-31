@@ -25,6 +25,9 @@ class VooQuickActionsGridLayout extends StatefulWidget {
   /// Callback when actions are reordered. If provided, enables drag-to-reorder.
   final void Function(List<VooQuickAction> reorderedActions)? onReorderActions;
 
+  /// Padding for the grid content. Defaults to `EdgeInsets.all(16)`.
+  final EdgeInsetsGeometry? padding;
+
   const VooQuickActionsGridLayout({
     super.key,
     required this.style,
@@ -34,6 +37,7 @@ class VooQuickActionsGridLayout extends StatefulWidget {
     required this.actions,
     required this.onActionTap,
     this.onReorderActions,
+    this.padding,
   });
 
   @override
@@ -45,12 +49,15 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
   String? _draggingId;
   String? _dragOverId;
 
+  EdgeInsetsGeometry get _effectivePadding => widget.padding ?? const EdgeInsets.all(16);
+
   double _calculateItemWidth(VooQuickAction action) {
     const spacing = 8.0;
-    const padding = 32.0; // 16px padding on each side
-    final availableWidth = widget.width - padding;
+    final resolvedPadding = _effectivePadding.resolve(TextDirection.ltr);
+    final horizontalPadding = resolvedPadding.left + resolvedPadding.right;
+    final availableWidth = widget.width - horizontalPadding;
     final totalSpacing = spacing * (widget.gridColumns - 1);
-    final singleColumnWidth = (availableWidth - totalSpacing) / widget.gridColumns;
+    final singleColumnWidth = ((availableWidth - totalSpacing) / widget.gridColumns).floorToDouble();
     final span = action.gridColumnSpan.clamp(1, widget.gridColumns);
     return singleColumnWidth * span + spacing * (span - 1);
   }
@@ -62,12 +69,14 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     final visibleActions = widget.actions.where((a) => !a.isDivider).toList();
     final canReorder = widget.onReorderActions != null;
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Wrap(
-        spacing: 8,
-        runSpacing: 8,
-        children: visibleActions.map((action) {
+    return SizedBox(
+      width: widget.width,
+      child: Padding(
+        padding: _effectivePadding,
+        child: Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: visibleActions.map((action) {
           final itemWidth = _calculateItemWidth(action);
 
           final child = _buildGridItem(
@@ -138,6 +147,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
             },
           );
         }).toList(),
+        ),
       ),
     );
   }
