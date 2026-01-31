@@ -1,3 +1,16 @@
+## 0.2.22
+
+### Added
+- **VooUserProfileConfig**: Added `id` property for custom navigation identification
+  - Use with `selectedId` to show profile as selected without hardcoding `'_user_profile_nav'`
+  - Added `effectiveId` getter that returns `id` or `'_user_profile_nav'` as fallback
+
+### Fixed
+- **VooQuickActionsGridLayout**: Fixed grid column width calculation causing items to wrap incorrectly
+  - Added 1px buffer to prevent floating point precision issues
+
+---
+
 ## 0.2.21
 
 ### Added

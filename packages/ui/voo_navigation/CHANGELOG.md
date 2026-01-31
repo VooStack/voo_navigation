@@ -1,3 +1,16 @@
+## 1.3.31
+
+### Added
+- **VooUserProfileConfig**: `id` property for custom navigation identification
+
+### Fixed
+- **VooQuickActionsGridLayout**: Fixed grid items wrapping incorrectly
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.22
+
+---
+
 ## 1.3.30
 
 ### Added

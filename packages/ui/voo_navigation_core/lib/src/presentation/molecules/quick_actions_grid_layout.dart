@@ -55,9 +55,10 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     const spacing = 8.0;
     final resolvedPadding = _effectivePadding.resolve(TextDirection.ltr);
     final horizontalPadding = resolvedPadding.left + resolvedPadding.right;
-    final availableWidth = widget.width - horizontalPadding;
+    // Subtract small buffer to prevent floating point issues causing wrap
+    final availableWidth = widget.width - horizontalPadding - 1;
     final totalSpacing = spacing * (widget.gridColumns - 1);
-    final singleColumnWidth = ((availableWidth - totalSpacing) / widget.gridColumns).floorToDouble();
+    final singleColumnWidth = (availableWidth - totalSpacing) / widget.gridColumns;
     final span = action.gridColumnSpan.clamp(1, widget.gridColumns);
     return singleColumnWidth * span + spacing * (span - 1);
   }

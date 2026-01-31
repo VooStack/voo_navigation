@@ -710,7 +710,7 @@ class VooNavigationConfig {
   /// This item is used in bottom navigation to render the user profile avatar.
   VooNavigationDestination _createUserProfileNavItem() {
     return VooNavigationDestination(
-      id: '_user_profile_nav',
+      id: userProfileConfig?.effectiveId ?? '_user_profile_nav',
       label: userProfileConfig?.effectiveNavItemLabel ?? 'Profile',
       icon: const Icon(Icons.person_outlined),
       sortOrder: userProfileConfig?.navItemSortOrder ?? 0,

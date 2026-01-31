@@ -25,6 +25,11 @@ import 'package:voo_navigation_core/src/domain/entities/voo_user_status.dart';
 /// The navigation drawer/rail will automatically render the user profile
 /// in compact mode (avatar only) when collapsed, and full mode when expanded.
 class VooUserProfileConfig {
+  /// Unique identifier for the user profile nav item.
+  /// Use this with `selectedId` to show the profile as selected.
+  /// Defaults to `'_user_profile_nav'` if not provided.
+  final String? id;
+
   /// User's display name
   final String? userName;
 
@@ -100,7 +105,12 @@ class VooUserProfileConfig {
   final Widget Function(BuildContext context, VooUserProfileModalData data)?
       modalBuilder;
 
+  /// The effective ID for navigation purposes.
+  /// Returns [id] if provided, otherwise `'_user_profile_nav'`.
+  String get effectiveId => id ?? '_user_profile_nav';
+
   const VooUserProfileConfig({
+    this.id,
     this.userName,
     this.userEmail,
     this.avatarUrl,
@@ -136,6 +146,7 @@ class VooUserProfileConfig {
 
   /// Creates a copy with the given fields replaced
   VooUserProfileConfig copyWith({
+    String? id,
     String? userName,
     String? userEmail,
     String? avatarUrl,
@@ -154,6 +165,7 @@ class VooUserProfileConfig {
     Widget Function(BuildContext context, VooUserProfileModalData data)?
         modalBuilder,
   }) => VooUserProfileConfig(
+    id: id ?? this.id,
     userName: userName ?? this.userName,
     userEmail: userEmail ?? this.userEmail,
     avatarUrl: avatarUrl ?? this.avatarUrl,
