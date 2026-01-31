@@ -6,18 +6,18 @@ import 'package:voo_navigation_core/src/presentation/molecules/quick_actions_lis
 /// Menu content for quick actions dropdown
 class VooQuickActionsMenuContent extends StatelessWidget {
   /// Style configuration
-  final VooQuickActionsStyle style;
+  final VooQuickActionsStyle? style;
 
   /// Width of the dropdown
   final double width;
 
-  /// Whether to use grid layout
+  /// Whether to use grid layout (default: false)
   final bool useGridLayout;
 
-  /// Number of columns in grid layout
+  /// Number of columns in grid layout (default: 4, only used when useGridLayout is true)
   final int gridColumns;
 
-  /// Whether to show labels in grid layout
+  /// Whether to show labels in grid layout (default: true, only used when useGridLayout is true)
   final bool showLabelsInGrid;
 
   /// List of quick actions
@@ -34,11 +34,11 @@ class VooQuickActionsMenuContent extends StatelessWidget {
 
   const VooQuickActionsMenuContent({
     super.key,
-    required this.style,
+    this.style,
     required this.width,
-    required this.useGridLayout,
-    required this.gridColumns,
-    required this.showLabelsInGrid,
+    this.useGridLayout = false,
+    this.gridColumns = 4,
+    this.showLabelsInGrid = true,
     required this.actions,
     this.actionBuilder,
     required this.onActionTap,
@@ -48,22 +48,23 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final effectiveStyle = style ?? const VooQuickActionsStyle();
 
     return Material(
       elevation: 8,
-      borderRadius: style.borderRadius ?? BorderRadius.circular(16),
-      color: style.backgroundColor ?? colorScheme.surface,
+      borderRadius: effectiveStyle.borderRadius ?? BorderRadius.circular(16),
+      color: effectiveStyle.backgroundColor ?? colorScheme.surface,
       child: Container(
         width: width,
         decoration: BoxDecoration(
-          borderRadius: style.borderRadius ?? BorderRadius.circular(16),
+          borderRadius: effectiveStyle.borderRadius ?? BorderRadius.circular(16),
           border: Border.all(
             color: colorScheme.outline.withValues(alpha: 0.2),
           ),
         ),
         child: useGridLayout
             ? VooQuickActionsGridLayout(
-                style: style,
+                style: effectiveStyle,
                 gridColumns: gridColumns,
                 showLabelsInGrid: showLabelsInGrid,
                 actions: actions,
@@ -71,7 +72,7 @@ class VooQuickActionsMenuContent extends StatelessWidget {
                 onReorderActions: onReorderActions,
               )
             : VooQuickActionsListLayout(
-                style: style,
+                style: effectiveStyle,
                 actions: actions,
                 actionBuilder: actionBuilder,
                 onActionTap: onActionTap,

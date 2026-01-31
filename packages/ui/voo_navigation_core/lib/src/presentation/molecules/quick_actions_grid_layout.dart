@@ -41,6 +41,14 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
   String? _draggingId;
   String? _dragOverId;
 
+  double _calculateItemWidth(VooQuickAction action) {
+    const spacing = 8.0;
+    final totalWidth = widget.style.dropdownWidth ?? (widget.gridColumns * 80.0);
+    final singleColumnWidth = (totalWidth - 32 - (spacing * (widget.gridColumns - 1))) / widget.gridColumns;
+    final span = action.gridColumnSpan.clamp(1, widget.gridColumns);
+    return singleColumnWidth * span + spacing * (span - 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -54,10 +62,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
         spacing: 8,
         runSpacing: 8,
         children: visibleActions.map((action) {
-          final itemWidth =
-              (widget.style.dropdownWidth ?? (widget.gridColumns * 80.0)) /
-                      widget.gridColumns -
-                  16;
+          final itemWidth = _calculateItemWidth(action);
 
           final child = _buildGridItem(
             action: action,
@@ -152,10 +157,21 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     required bool isDragOver,
     bool isFeedback = false,
   }) {
+    // Determine icon background color
+    final iconBgColor = action.gridIconBackgroundColor ??
+        (action.isDangerous
+            ? (widget.style.dangerColor ?? colorScheme.error).withValues(alpha: 0.1)
+            : colorScheme.surfaceContainerHighest);
+
+    // Determine item background color
+    final itemBgColor = action.gridBackgroundColor;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 150),
       width: itemWidth,
+      height: action.gridHeight,
       decoration: BoxDecoration(
+        color: itemBgColor,
         borderRadius: BorderRadius.circular(12),
         border: isDragOver
             ? Border.all(color: colorScheme.primary, width: 2)
@@ -170,15 +186,13 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
             padding: const EdgeInsets.all(12),
             child: Column(
               mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
                   width: 48,
                   height: 48,
                   decoration: BoxDecoration(
-                    color: action.isDangerous
-                        ? (widget.style.dangerColor ?? colorScheme.error)
-                            .withValues(alpha: 0.1)
-                        : colorScheme.surfaceContainerHighest,
+                    color: iconBgColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: action.iconWidget ??

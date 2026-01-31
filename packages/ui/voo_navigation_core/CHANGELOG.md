@@ -1,3 +1,21 @@
+## 0.2.18
+
+### Added
+- **VooQuickAction**: Added grid layout customization properties
+  - `gridColumnSpan` - Number of columns to span (default: 1)
+  - `gridBackgroundColor` - Custom background color for the item
+  - `gridIconBackgroundColor` - Custom background color for the icon
+  - `gridHeight` - Custom height for the item
+
+### Changed
+- **VooQuickActionsMenuContent**: Made parameters optional with sensible defaults
+  - `style` is now optional (defaults to `VooQuickActionsStyle()`)
+  - `useGridLayout` defaults to `false`
+  - `gridColumns` defaults to `4`
+  - `showLabelsInGrid` defaults to `true`
+
+---
+
 ## 0.2.17
 
 ### Added

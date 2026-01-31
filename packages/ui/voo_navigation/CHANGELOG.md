@@ -1,3 +1,20 @@
+## 1.3.27
+
+### Added
+- **VooQuickAction**: Grid layout customization properties
+  - `gridColumnSpan` - Span multiple columns
+  - `gridBackgroundColor` - Custom item background
+  - `gridIconBackgroundColor` - Custom icon background
+  - `gridHeight` - Custom item height
+
+### Changed
+- **VooQuickActionsMenuContent**: Made `style`, `gridColumns`, `showLabelsInGrid` optional
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.18
+
+---
+
 ## 1.3.26
 
 ### Added

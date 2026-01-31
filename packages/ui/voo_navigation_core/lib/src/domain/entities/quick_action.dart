@@ -39,6 +39,18 @@ class VooQuickAction extends Equatable {
   /// Additional metadata for custom use
   final Map<String, dynamic>? metadata;
 
+  /// Number of columns this action spans in grid layout (default: 1)
+  final int gridColumnSpan;
+
+  /// Background color for this action in grid layout
+  final Color? gridBackgroundColor;
+
+  /// Icon background color for this action in grid layout
+  final Color? gridIconBackgroundColor;
+
+  /// Custom height for this action in grid layout
+  final double? gridHeight;
+
   const VooQuickAction({
     required this.id,
     required this.label,
@@ -52,6 +64,10 @@ class VooQuickAction extends Equatable {
     this.children,
     this.description,
     this.metadata,
+    this.gridColumnSpan = 1,
+    this.gridBackgroundColor,
+    this.gridIconBackgroundColor,
+    this.gridHeight,
   });
 
   @override
@@ -64,6 +80,10 @@ class VooQuickAction extends Equatable {
     isEnabled,
     isDangerous,
     children,
+    gridColumnSpan,
+    gridBackgroundColor,
+    gridIconBackgroundColor,
+    gridHeight,
   ];
 
   /// Creates a copy of this action with the given fields replaced
@@ -80,6 +100,10 @@ class VooQuickAction extends Equatable {
     List<VooQuickAction>? children,
     String? description,
     Map<String, dynamic>? metadata,
+    int? gridColumnSpan,
+    Color? gridBackgroundColor,
+    Color? gridIconBackgroundColor,
+    double? gridHeight,
   }) => VooQuickAction(
     id: id ?? this.id,
     label: label ?? this.label,
@@ -93,6 +117,10 @@ class VooQuickAction extends Equatable {
     children: children ?? this.children,
     description: description ?? this.description,
     metadata: metadata ?? this.metadata,
+    gridColumnSpan: gridColumnSpan ?? this.gridColumnSpan,
+    gridBackgroundColor: gridBackgroundColor ?? this.gridBackgroundColor,
+    gridIconBackgroundColor: gridIconBackgroundColor ?? this.gridIconBackgroundColor,
+    gridHeight: gridHeight ?? this.gridHeight,
   );
 
   /// Whether this action has children (submenu)
