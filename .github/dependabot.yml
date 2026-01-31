@@ -1,0 +1,33 @@
+version: 2
+updates:
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Pub dependencies for each package
+  - package-ecosystem: "pub"
+    directory: "/packages/ui/voo_navigation_core"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/ui/voo_navigation_bar"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/ui/voo_navigation_rail"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/ui/voo_navigation_drawer"
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "pub"
+    directory: "/packages/ui/voo_navigation"
+    schedule:
+      interval: "weekly"

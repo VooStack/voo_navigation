@@ -48,6 +48,14 @@ scripts:
     description: Run analyzer for all packages.
     run: melos exec -- flutter analyze
 
+  format:
+    description: Format all packages.
+    run: dart format .
+
+  format_check:
+    description: Check formatting for all packages.
+    run: dart format --set-exit-if-changed .
+
   nuke_stale_state:
     description: Nuke stale state from all packages.
     run: melos exec -- bash -c 'rm -rf pubspec.lock .dart_tool build'
