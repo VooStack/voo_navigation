@@ -1,3 +1,19 @@
+## 1.3.34
+
+### Changed
+- **VooQuickActionsGridLayout**: Now supports `gridColumnSpan` via `flutter_staggered_grid_view`
+  - Items can span multiple columns (e.g., `gridColumnSpan: 2` takes half width in 4-column grid)
+  - Wide items display with horizontal layout (icon + text side by side)
+
+### Fixed
+- **VooNavigationBar**: Action item now properly centered when profile has mobilePriority
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.25
+- Updated `voo_navigation_bar` to ^0.1.16
+
+---
+
 ## 1.3.33
 
 ### Added

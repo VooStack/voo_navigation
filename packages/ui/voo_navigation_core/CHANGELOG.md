@@ -1,3 +1,16 @@
+## 0.2.25
+
+### Changed
+- **VooQuickActionsGridLayout**: Now uses `flutter_staggered_grid_view` for proper column spanning
+  - Items with `gridColumnSpan > 1` now correctly span multiple columns
+  - Wide items (span > 1) use horizontal layout with icon left, text right
+  - Replaced `childAspectRatio` with `defaultItemHeight` for clearer sizing
+
+### Added
+- **Dependencies**: Added `flutter_staggered_grid_view: ^0.7.0` for advanced grid layouts
+
+---
+
 ## 0.2.24
 
 ### Added

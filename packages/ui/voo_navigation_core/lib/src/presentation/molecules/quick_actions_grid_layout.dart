@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
 
-/// Grid layout for quick actions with optional reordering support.
-/// Uses GridView for proper column handling and scrolling.
+/// Grid layout for quick actions with column spanning and optional reordering.
+/// Uses StaggeredGrid for proper column spanning support.
 class VooQuickActionsGridLayout extends StatefulWidget {
   /// Style configuration
   final VooQuickActionsStyle style;
@@ -32,8 +33,8 @@ class VooQuickActionsGridLayout extends StatefulWidget {
   /// Spacing between grid items. Defaults to 8.
   final double spacing;
 
-  /// Aspect ratio (width / height) for grid items. Defaults to 1.0 (square).
-  final double childAspectRatio;
+  /// Default height for grid items. Defaults to 100.
+  final double defaultItemHeight;
 
   const VooQuickActionsGridLayout({
     super.key,
@@ -46,7 +47,7 @@ class VooQuickActionsGridLayout extends StatefulWidget {
     this.onReorderActions,
     this.padding,
     this.spacing = 8.0,
-    this.childAspectRatio = 1.0,
+    this.defaultItemHeight = 100.0,
   });
 
   @override
@@ -67,20 +68,23 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     final colorScheme = theme.colorScheme;
     final visibleActions = widget.actions.where((a) => !a.isDivider).toList();
 
-    return GridView.builder(
-      shrinkWrap: true,
+    return SingleChildScrollView(
       padding: _effectivePadding,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      child: StaggeredGrid.count(
         crossAxisCount: widget.gridColumns,
-        crossAxisSpacing: widget.spacing,
         mainAxisSpacing: widget.spacing,
-        childAspectRatio: widget.childAspectRatio,
+        crossAxisSpacing: widget.spacing,
+        children: visibleActions.map((action) {
+          final columnSpan = (action.gridColumnSpan).clamp(1, widget.gridColumns);
+          final itemHeight = action.gridHeight ?? widget.defaultItemHeight;
+
+          return StaggeredGridTile.extent(
+            crossAxisCellCount: columnSpan,
+            mainAxisExtent: itemHeight,
+            child: _buildActionItem(action, theme, colorScheme, columnSpan > 1),
+          );
+        }).toList(),
       ),
-      itemCount: visibleActions.length,
-      itemBuilder: (context, index) {
-        final action = visibleActions[index];
-        return _buildActionItem(action, theme, colorScheme);
-      },
     );
   }
 
@@ -88,6 +92,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     VooQuickAction action,
     ThemeData theme,
     ColorScheme colorScheme,
+    bool isWide,
   ) {
     final canReorder = widget.onReorderActions != null;
 
@@ -97,6 +102,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
       colorScheme: colorScheme,
       isDragging: _draggingId == action.id,
       isDragOver: _dragOverId == action.id,
+      isWide: isWide,
     );
 
     if (!canReorder) {
@@ -146,6 +152,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
                 isDragging: false,
                 isDragOver: false,
                 isFeedback: true,
+                isWide: false,
               ),
             ),
           ),
@@ -177,6 +184,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     required ColorScheme colorScheme,
     required bool isDragging,
     required bool isDragOver,
+    required bool isWide,
     bool isFeedback = false,
   }) {
     // Determine icon background color
@@ -209,46 +217,122 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
             opacity: action.isEnabled ? 1.0 : 0.5,
             child: Padding(
               padding: const EdgeInsets.all(12),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: iconBgColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: action.iconWidget ??
-                        Icon(
-                          action.icon ?? Icons.star,
-                          size: widget.style.iconSize ?? 24,
-                          color: action.isDangerous
-                              ? (widget.style.dangerColor ?? colorScheme.error)
-                              : (action.iconColor ?? colorScheme.onSurfaceVariant),
-                        ),
-                  ),
-                  if (shouldShowLabel) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      action.label,
-                      style: widget.style.labelStyle ??
-                          theme.textTheme.labelSmall?.copyWith(
-                            color: action.isDangerous
-                                ? (widget.style.dangerColor ?? colorScheme.error)
-                                : colorScheme.onSurface,
-                          ),
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ],
-              ),
+              child: isWide
+                  ? _buildWideLayout(action, theme, colorScheme, iconBgColor, shouldShowLabel)
+                  : _buildCompactLayout(action, theme, colorScheme, iconBgColor, shouldShowLabel),
             ),
           ),
         ),
       ),
+    );
+  }
+
+  /// Wide layout: icon on left, label and description on right
+  Widget _buildWideLayout(
+    VooQuickAction action,
+    ThemeData theme,
+    ColorScheme colorScheme,
+    Color iconBgColor,
+    bool shouldShowLabel,
+  ) {
+    return Row(
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: iconBgColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: action.iconWidget ??
+              Icon(
+                action.icon ?? Icons.star,
+                size: widget.style.iconSize ?? 24,
+                color: action.isDangerous
+                    ? (widget.style.dangerColor ?? colorScheme.error)
+                    : (action.iconColor ?? colorScheme.onSurfaceVariant),
+              ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (shouldShowLabel)
+                Text(
+                  action.label,
+                  style: widget.style.labelStyle ??
+                      theme.textTheme.titleSmall?.copyWith(
+                        color: action.isDangerous
+                            ? (widget.style.dangerColor ?? colorScheme.error)
+                            : colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              if (action.description != null) ...[
+                const SizedBox(height: 2),
+                Text(
+                  action.description!,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Compact layout: icon on top, label below
+  Widget _buildCompactLayout(
+    VooQuickAction action,
+    ThemeData theme,
+    ColorScheme colorScheme,
+    Color iconBgColor,
+    bool shouldShowLabel,
+  ) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: iconBgColor,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: action.iconWidget ??
+              Icon(
+                action.icon ?? Icons.star,
+                size: widget.style.iconSize ?? 24,
+                color: action.isDangerous
+                    ? (widget.style.dangerColor ?? colorScheme.error)
+                    : (action.iconColor ?? colorScheme.onSurfaceVariant),
+              ),
+        ),
+        if (shouldShowLabel) ...[
+          const SizedBox(height: 8),
+          Text(
+            action.label,
+            style: widget.style.labelStyle ??
+                theme.textTheme.labelSmall?.copyWith(
+                  color: action.isDangerous
+                      ? (widget.style.dangerColor ?? colorScheme.error)
+                      : colorScheme.onSurface,
+                ),
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ],
     );
   }
 }

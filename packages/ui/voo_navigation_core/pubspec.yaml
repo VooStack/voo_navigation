@@ -1,6 +1,6 @@
 name: voo_navigation_core
 description: Core foundation package for voo_navigation - shared entities, atoms, molecules, and utilities for building adaptive navigation.
-version: 0.2.24
+version: 0.2.25
 homepage: https://voostack.com/packages/voo_navigation_core
 repository: https://github.com/voostack/voo_navigation/tree/main/packages/ui/voo_navigation_core
 issue_tracker: https://github.com/voostack/voo_navigation/issues
@@ -29,6 +29,9 @@ dependencies:
 
   # Material Design
   material_design_icons_flutter: ^7.0.7296
+
+  # Grid layouts with variable sizing
+  flutter_staggered_grid_view: ^0.7.0
 
   # UI Core & Design System
   voo_tokens: ^0.0.8

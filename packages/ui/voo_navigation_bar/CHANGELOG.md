@@ -1,3 +1,15 @@
+## 0.1.16
+
+### Fixed
+- **VooNavigationBar**: Action item now correctly centered based on total item count
+  - Center calculation accounts for profile at end, not just regular items
+  - Fixes action appearing at wrong position when profile has mobilePriority
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.25
+
+---
+
 ## 0.1.15
 
 ### Fixed

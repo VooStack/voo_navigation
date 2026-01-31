@@ -207,13 +207,20 @@ class VooNavigationBar extends StatelessWidget {
         profileNavItemIndex == null &&
         profilePosition == VooUserProfilePosition.start;
 
-    // Calculate center index for action item
-    // If user profile will be at start, we need to add 1 to account for it
-    // because the action item will be shifted when profile is inserted at 0
+    // Calculate center index for action item based on TOTAL items
+    // This ensures the action is visually centered in the final bar
     int calculateCenterIndex() {
-      final baseCenter = regularItems.length ~/ 2;
-      // If user profile is at start, add 1 to keep action centered after insertion
-      return userProfileAtStart ? baseCenter + 1 : baseCenter;
+      // Count all items that will be in the bar
+      int total = regularItems.length;
+      if (actionItem != null) total++; // The action item being placed
+      if (hasUserProfile) total++; // Profile at start or end
+      if (shouldCombineSwitchers) {
+        total++;
+      } else {
+        if (hasContextSwitcher) total++;
+        if (hasMultiSwitcher) total++;
+      }
+      return total ~/ 2;
     }
 
     final centerIndex = calculateCenterIndex();
