@@ -1,3 +1,11 @@
+## 0.2.16
+
+### Changed
+- **VooActionNavigationItem**: Changed `icon` and `activeIcon` from `Icon` to `Widget`
+  - Supports any widget like `FaIcon`, `Icon`, `Image`, etc.
+
+---
+
 ## 0.2.15
 
 ### Changed

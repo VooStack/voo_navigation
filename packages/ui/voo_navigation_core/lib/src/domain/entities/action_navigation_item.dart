@@ -9,11 +9,11 @@ class VooActionNavigationItem {
   /// Unique identifier for the action item
   final String id;
 
-  /// Icon to display when the modal is closed
-  final Icon icon;
+  /// Icon widget to display when the modal is closed
+  final Widget icon;
 
-  /// Icon to display when the modal is open (optional, defaults to close icon)
-  final Icon? activeIcon;
+  /// Icon widget to display when the modal is open (optional, defaults to close icon)
+  final Widget? activeIcon;
 
   /// Custom background color for the action button circle
   final Color? backgroundColor;
@@ -70,8 +70,8 @@ class VooActionNavigationItem {
   /// Creates a copy of this item with the given fields replaced
   VooActionNavigationItem copyWith({
     String? id,
-    Icon? icon,
-    Icon? activeIcon,
+    Widget? icon,
+    Widget? activeIcon,
     Color? backgroundColor,
     Widget Function(BuildContext context, VoidCallback close)? modalBuilder,
     double? modalMaxHeight,
@@ -97,7 +97,7 @@ class VooActionNavigationItem {
   }
 
   /// Gets the effective active icon (defaults to close icon)
-  Icon get effectiveActiveIcon => activeIcon ?? const Icon(Icons.close);
+  Widget get effectiveActiveIcon => activeIcon ?? const Icon(Icons.close);
 }
 
 /// Position of the action item in the expandable bottom navigation bar.
