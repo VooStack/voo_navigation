@@ -10,13 +10,10 @@ class VooActionNavigationItem {
   final String id;
 
   /// Icon to display when the modal is closed
-  final IconData icon;
+  final Icon icon;
 
-  /// Icon to display when the modal is open (optional, defaults to Icons.close)
-  final IconData? activeIcon;
-
-  /// Custom color for the icon (defaults to theme's onPrimary color)
-  final Color? iconColor;
+  /// Icon to display when the modal is open (optional, defaults to close icon)
+  final Icon? activeIcon;
 
   /// Custom background color for the action button circle
   final Color? backgroundColor;
@@ -59,9 +56,8 @@ class VooActionNavigationItem {
   const VooActionNavigationItem({
     required this.id,
     required this.icon,
-    required this.modalBuilder,
     this.activeIcon,
-    this.iconColor,
+    required this.modalBuilder,
     this.backgroundColor,
     this.modalMaxHeight = 300.0,
     this.closeOnTapOutside = true,
@@ -74,9 +70,8 @@ class VooActionNavigationItem {
   /// Creates a copy of this item with the given fields replaced
   VooActionNavigationItem copyWith({
     String? id,
-    IconData? icon,
-    IconData? activeIcon,
-    Color? iconColor,
+    Icon? icon,
+    Icon? activeIcon,
     Color? backgroundColor,
     Widget Function(BuildContext context, VoidCallback close)? modalBuilder,
     double? modalMaxHeight,
@@ -90,7 +85,6 @@ class VooActionNavigationItem {
       id: id ?? this.id,
       icon: icon ?? this.icon,
       activeIcon: activeIcon ?? this.activeIcon,
-      iconColor: iconColor ?? this.iconColor,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       modalBuilder: modalBuilder ?? this.modalBuilder,
       modalMaxHeight: modalMaxHeight ?? this.modalMaxHeight,
@@ -103,7 +97,7 @@ class VooActionNavigationItem {
   }
 
   /// Gets the effective active icon (defaults to close icon)
-  IconData get effectiveActiveIcon => activeIcon ?? Icons.close;
+  Icon get effectiveActiveIcon => activeIcon ?? const Icon(Icons.close);
 }
 
 /// Position of the action item in the expandable bottom navigation bar.

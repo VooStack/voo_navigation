@@ -52,7 +52,9 @@ class _VooActionNavItemState extends State<VooActionNavItem>
 
   @override
   void dispose() {
-    _closeModal();
+    // Remove overlay synchronously without animation (controller may be disposed)
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     _animationController.dispose();
     super.dispose();
   }
@@ -160,14 +162,18 @@ class _VooActionNavItemState extends State<VooActionNavItem>
     );
   }
 
+  Widget _buildIcon() {
+    final icon = _isModalOpen
+        ? widget.actionItem.effectiveActiveIcon
+        : widget.actionItem.icon;
+    return icon;
+  }
+
   @override
   Widget build(BuildContext context) {
     final circleColor = widget.circleColor ??
         widget.actionItem.backgroundColor ??
         context.expandableNavSelectedCircle();
-
-    final iconColor = widget.actionItem.iconColor ??
-        context.expandableNavSelectedIcon;
 
     return GestureDetector(
       key: _buttonKey,
@@ -192,13 +198,7 @@ class _VooActionNavItemState extends State<VooActionNavItem>
                   child: Center(
                     child: Transform.rotate(
                       angle: _animationController.value * math.pi / 4, // 45 degrees
-                      child: Icon(
-                        _isModalOpen
-                            ? widget.actionItem.effectiveActiveIcon
-                            : widget.actionItem.icon,
-                        color: iconColor,
-                        size: VooNavigationTokens.expandableNavActionIconSize,
-                      ),
+                      child: _buildIcon(),
                     ),
                   ),
                 );

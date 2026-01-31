@@ -85,8 +85,10 @@ class _VooQuickActionsState extends State<VooQuickActions>
 
   @override
   void dispose() {
+    // Remove overlay synchronously without animation (controller may be disposed)
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     _animationController.dispose();
-    _removeOverlay();
     super.dispose();
   }
 

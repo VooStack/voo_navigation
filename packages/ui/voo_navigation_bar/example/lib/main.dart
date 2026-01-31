@@ -82,8 +82,8 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
   // Action item for the expandable nav
   VooActionNavigationItem get _actionItem => VooActionNavigationItem(
         id: 'quick-add',
-        icon: Icons.add,
-        activeIcon: Icons.close,
+        icon: const Icon(Icons.add, color: Colors.white),
+        activeIcon: const Icon(Icons.close, color: Colors.white),
         backgroundColor: const Color(0xFF10B981),
         tooltip: 'Quick Actions',
         modalBuilder: (context, close) => _QuickActionsModal(

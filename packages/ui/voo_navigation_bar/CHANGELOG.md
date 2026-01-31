@@ -1,3 +1,14 @@
+## 0.1.13
+
+### Fixed
+- **VooActionNavItem**: Fixed `AnimationController.reverse() called after dispose()` error
+  - Overlay is now removed synchronously during dispose without animation
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.15
+
+---
+
 ## 0.1.12
 
 ### Added

@@ -25,7 +25,7 @@ import 'package:voo_navigation_bar/src/presentation/molecules/voo_user_profile_n
 ///   onNavigationItemSelected: (id) => setState(() => _selectedId = id),
 ///   actionItem: VooActionNavigationItem(
 ///     id: 'add',
-///     icon: Icons.add,
+///     icon: Icon(Icons.add, color: Colors.white),
 ///     modalBuilder: (context, close) => Column(
 ///       children: [
 ///         ListTile(title: Text('New Note'), onTap: close),

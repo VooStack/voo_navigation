@@ -1,3 +1,16 @@
+## 0.2.15
+
+### Changed
+- **VooActionNavigationItem**: Changed `icon` and `activeIcon` from `IconData` to `Icon` for full customization
+  - Provides direct control over icon color, size, and other properties
+  - Removed `iconColor` parameter (set color directly on the `Icon` widget)
+
+### Fixed
+- **VooQuickActions**: Fixed `AnimationController.reverse() called after dispose()` error
+  - Overlay is now removed synchronously during dispose without animation
+
+---
+
 ## 0.2.14
 
 ### Added

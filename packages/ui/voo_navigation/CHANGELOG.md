@@ -1,3 +1,18 @@
+## 1.3.24
+
+### Changed
+- **VooActionNavigationItem**: Changed `icon` and `activeIcon` from `IconData` to `Icon` for full customization
+
+### Fixed
+- **VooQuickActions**: Fixed `AnimationController.reverse() called after dispose()` error
+- **VooActionNavItem**: Fixed `AnimationController.reverse() called after dispose()` error
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.15
+- Updated `voo_navigation_bar` to ^0.1.13
+
+---
+
 ## 1.3.23
 
 ### Added
