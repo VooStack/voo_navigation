@@ -56,6 +56,33 @@ class VooQuickAction extends Equatable {
   /// If set, overrides the global setting for this action only.
   final bool? showLabel;
 
+  /// Custom text style for the label of this specific action.
+  /// If null, uses the global style from VooQuickActionsStyle.labelStyle.
+  final TextStyle? labelStyle;
+
+  /// Whether this action represents a section with nested actions.
+  /// When true, this action renders as a section header with [sectionActions].
+  final bool isSection;
+
+  /// Actions within this section (only used when [isSection] is true).
+  final List<VooQuickAction>? sectionActions;
+
+  /// Whether to enable horizontal scrolling for section actions.
+  /// Only used when [isSection] is true. Defaults to true.
+  final bool sectionHorizontalScroll;
+
+  /// Height of items in the section. Only used when [isSection] is true.
+  final double sectionItemHeight;
+
+  /// Width of items in the section. Only used when [isSection] is true.
+  final double sectionItemWidth;
+
+  /// Spacing between items in the section. Only used when [isSection] is true.
+  final double sectionItemSpacing;
+
+  /// Padding for section content. Only used when [isSection] is true.
+  final EdgeInsets? sectionPadding;
+
   const VooQuickAction({
     required this.id,
     required this.label,
@@ -74,6 +101,14 @@ class VooQuickAction extends Equatable {
     this.gridIconBackgroundColor,
     this.gridHeight,
     this.showLabel,
+    this.labelStyle,
+    this.isSection = false,
+    this.sectionActions,
+    this.sectionHorizontalScroll = true,
+    this.sectionItemHeight = 100,
+    this.sectionItemWidth = 100,
+    this.sectionItemSpacing = 8,
+    this.sectionPadding,
   });
 
   @override
@@ -91,6 +126,14 @@ class VooQuickAction extends Equatable {
     gridIconBackgroundColor,
     gridHeight,
     showLabel,
+    labelStyle,
+    isSection,
+    sectionActions,
+    sectionHorizontalScroll,
+    sectionItemHeight,
+    sectionItemWidth,
+    sectionItemSpacing,
+    sectionPadding,
   ];
 
   /// Creates a copy of this action with the given fields replaced
@@ -112,6 +155,14 @@ class VooQuickAction extends Equatable {
     Color? gridIconBackgroundColor,
     double? gridHeight,
     bool? showLabel,
+    TextStyle? labelStyle,
+    bool? isSection,
+    List<VooQuickAction>? sectionActions,
+    bool? sectionHorizontalScroll,
+    double? sectionItemHeight,
+    double? sectionItemWidth,
+    double? sectionItemSpacing,
+    EdgeInsets? sectionPadding,
   }) => VooQuickAction(
     id: id ?? this.id,
     label: label ?? this.label,
@@ -130,6 +181,14 @@ class VooQuickAction extends Equatable {
     gridIconBackgroundColor: gridIconBackgroundColor ?? this.gridIconBackgroundColor,
     gridHeight: gridHeight ?? this.gridHeight,
     showLabel: showLabel ?? this.showLabel,
+    labelStyle: labelStyle ?? this.labelStyle,
+    isSection: isSection ?? this.isSection,
+    sectionActions: sectionActions ?? this.sectionActions,
+    sectionHorizontalScroll: sectionHorizontalScroll ?? this.sectionHorizontalScroll,
+    sectionItemHeight: sectionItemHeight ?? this.sectionItemHeight,
+    sectionItemWidth: sectionItemWidth ?? this.sectionItemWidth,
+    sectionItemSpacing: sectionItemSpacing ?? this.sectionItemSpacing,
+    sectionPadding: sectionPadding ?? this.sectionPadding,
   );
 
   /// Whether this action has children (submenu)
@@ -141,8 +200,34 @@ class VooQuickAction extends Equatable {
     label: '',
   );
 
+  /// Factory for creating a section with nested actions
+  factory VooQuickAction.section({
+    required String id,
+    required String label,
+    required List<VooQuickAction> actions,
+    TextStyle? labelStyle,
+    bool horizontalScroll = true,
+    double itemHeight = 100,
+    double itemWidth = 100,
+    double itemSpacing = 8,
+    EdgeInsets? padding,
+    bool? showLabels,
+  }) => VooQuickAction(
+    id: id,
+    label: label,
+    labelStyle: labelStyle,
+    isSection: true,
+    sectionActions: actions,
+    sectionHorizontalScroll: horizontalScroll,
+    sectionItemHeight: itemHeight,
+    sectionItemWidth: itemWidth,
+    sectionItemSpacing: itemSpacing,
+    sectionPadding: padding,
+    showLabel: showLabels,
+  );
+
   /// Whether this action is a divider
-  bool get isDivider => label.isEmpty;
+  bool get isDivider => label.isEmpty && !isSection;
 }
 
 /// Style configuration for the quick actions menu
@@ -242,4 +327,92 @@ enum VooQuickActionsPosition {
   header,
   /// In the footer area
   footer,
+}
+
+/// Represents a section of quick actions with a label and optional horizontal scrolling
+class VooQuickActionSection extends Equatable {
+  /// Unique identifier for the section
+  final String id;
+
+  /// Display label for the section header
+  final String label;
+
+  /// Custom text style for the section label
+  final TextStyle? labelStyle;
+
+  /// List of actions in this section
+  final List<VooQuickAction> actions;
+
+  /// Whether to enable horizontal scrolling for this section.
+  /// When true, actions are displayed in a horizontally scrolling row.
+  /// When false, actions follow the parent layout (grid/list).
+  final bool horizontalScroll;
+
+  /// Height of items when horizontal scrolling is enabled. Defaults to 100.
+  final double itemHeight;
+
+  /// Width of items when horizontal scrolling is enabled. Defaults to 100.
+  final double itemWidth;
+
+  /// Spacing between items when horizontal scrolling is enabled. Defaults to 8.
+  final double itemSpacing;
+
+  /// Padding for the section content
+  final EdgeInsets? padding;
+
+  /// Whether to show labels on items in this section.
+  /// If null, uses the global setting.
+  final bool? showLabels;
+
+  const VooQuickActionSection({
+    required this.id,
+    required this.label,
+    required this.actions,
+    this.labelStyle,
+    this.horizontalScroll = true,
+    this.itemHeight = 100,
+    this.itemWidth = 100,
+    this.itemSpacing = 8,
+    this.padding,
+    this.showLabels,
+  });
+
+  @override
+  List<Object?> get props => [
+    id,
+    label,
+    labelStyle,
+    actions,
+    horizontalScroll,
+    itemHeight,
+    itemWidth,
+    itemSpacing,
+    padding,
+    showLabels,
+  ];
+
+  /// Creates a copy of this section with the given fields replaced
+  VooQuickActionSection copyWith({
+    String? id,
+    String? label,
+    TextStyle? labelStyle,
+    List<VooQuickAction>? actions,
+    bool? horizontalScroll,
+    double? itemHeight,
+    double? itemWidth,
+    double? itemSpacing,
+    EdgeInsets? padding,
+    bool? showLabels,
+  }) => VooQuickActionSection(
+    id: id ?? this.id,
+    label: label ?? this.label,
+    labelStyle: labelStyle ?? this.labelStyle,
+    actions: actions ?? this.actions,
+    horizontalScroll: horizontalScroll ?? this.horizontalScroll,
+    itemHeight: itemHeight ?? this.itemHeight,
+    itemWidth: itemWidth ?? this.itemWidth,
+    itemSpacing: itemSpacing ?? this.itemSpacing,
+    padding: padding ?? this.padding,
+    showLabels: showLabels ?? this.showLabels,
+  );
 }

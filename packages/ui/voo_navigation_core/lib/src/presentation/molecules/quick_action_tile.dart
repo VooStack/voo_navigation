@@ -73,7 +73,7 @@ class _VooQuickActionTileState extends State<VooQuickActionTile> {
                     children: [
                       Text(
                         action.label,
-                        style: style.labelStyle ?? theme.textTheme.bodyMedium?.copyWith(
+                        style: action.labelStyle ?? style.labelStyle ?? theme.textTheme.bodyMedium?.copyWith(
                           color: action.isDangerous
                               ? (style.dangerColor ?? colorScheme.error)
                               : colorScheme.onSurface,

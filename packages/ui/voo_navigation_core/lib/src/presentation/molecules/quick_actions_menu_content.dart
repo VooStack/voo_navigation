@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/quick_actions_grid_layout.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/quick_actions_list_layout.dart';
+import 'package:voo_navigation_core/src/presentation/molecules/quick_actions_section_layout.dart';
 
 /// Menu content for quick actions dropdown
 class VooQuickActionsMenuContent extends StatelessWidget {
@@ -20,8 +21,15 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   /// Whether to show labels in grid layout (default: true, only used when useGridLayout is true)
   final bool showLabelsInGrid;
 
-  /// List of quick actions
+  /// List of quick actions (used when sections is not provided)
   final List<VooQuickAction> actions;
+
+  /// List of action sections with labels and horizontal scrolling.
+  /// When provided, this takes precedence over [actions].
+  final List<VooQuickActionSection>? sections;
+
+  /// Spacing between sections when using sections. Defaults to 16.
+  final double sectionSpacing;
 
   /// Custom action builder
   final Widget Function(VooQuickAction, VoidCallback onTap)? actionBuilder;
@@ -76,7 +84,9 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     this.useGridLayout = false,
     this.gridColumns = 4,
     this.showLabelsInGrid = true,
-    required this.actions,
+    this.actions = const [],
+    this.sections,
+    this.sectionSpacing = 16.0,
     this.actionBuilder,
     required this.onActionTap,
     this.onReorderActions,
@@ -98,29 +108,43 @@ class VooQuickActionsMenuContent extends StatelessWidget {
     final effectiveStyle = style ?? const VooQuickActionsStyle();
     final hasHeader = title != null || showCloseButton;
 
-    Widget contentWidget = useGridLayout
-        ? VooQuickActionsGridLayout(
-            style: effectiveStyle,
-            width: width,
-            gridColumns: gridColumns,
-            showLabelsInGrid: showLabelsInGrid,
-            actions: actions,
-            onActionTap: onActionTap,
-            onReorderActions: onReorderActions,
-            padding: contentPadding,
-            spacing: gridSpacing,
-            defaultItemHeight: gridItemHeight,
-            expandItems: expandItems,
-          )
-        : VooQuickActionsListLayout(
-            style: effectiveStyle,
-            actions: actions,
-            actionBuilder: actionBuilder,
-            onActionTap: onActionTap,
-            onReorderActions: onReorderActions,
-            padding: contentPadding,
-            expandItems: expandItems,
-          );
+    Widget contentWidget;
+
+    // Use sections layout if sections are provided
+    if (sections != null && sections!.isNotEmpty) {
+      contentWidget = VooQuickActionsSectionsLayout(
+        sections: sections!,
+        style: effectiveStyle,
+        showLabelsInGrid: showLabelsInGrid,
+        onActionTap: onActionTap,
+        sectionSpacing: sectionSpacing,
+        padding: contentPadding?.resolve(TextDirection.ltr),
+      );
+    } else if (useGridLayout) {
+      contentWidget = VooQuickActionsGridLayout(
+        style: effectiveStyle,
+        width: width,
+        gridColumns: gridColumns,
+        showLabelsInGrid: showLabelsInGrid,
+        actions: actions,
+        onActionTap: onActionTap,
+        onReorderActions: onReorderActions,
+        padding: contentPadding,
+        spacing: gridSpacing,
+        defaultItemHeight: gridItemHeight,
+        expandItems: expandItems,
+      );
+    } else {
+      contentWidget = VooQuickActionsListLayout(
+        style: effectiveStyle,
+        actions: actions,
+        actionBuilder: actionBuilder,
+        onActionTap: onActionTap,
+        onReorderActions: onReorderActions,
+        padding: contentPadding,
+        expandItems: expandItems,
+      );
+    }
 
     // Determine if we should expand to fill available space
     final shouldExpand = isExpanded ?? false;

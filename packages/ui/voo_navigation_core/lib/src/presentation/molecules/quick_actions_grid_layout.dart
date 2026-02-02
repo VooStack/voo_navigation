@@ -83,6 +83,13 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     final visibleActions = widget.actions.where((a) => !a.isDivider).toList();
     final columnWidth = _calculateColumnWidth();
 
+    // Check if we have any sections - if so, use mixed layout
+    final hasSections = visibleActions.any((a) => a.isSection);
+
+    if (hasSections) {
+      return _buildMixedLayout(context, theme, colorScheme, visibleActions, columnWidth);
+    }
+
     if (widget.expandItems) {
       // When expandItems is true, use LayoutBuilder to fill available space
       return LayoutBuilder(
@@ -160,6 +167,238 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
             ),
           );
         }).toList(),
+      ),
+    );
+  }
+
+  /// Builds a mixed layout containing both regular grid items and sections
+  Widget _buildMixedLayout(
+    BuildContext context,
+    ThemeData theme,
+    ColorScheme colorScheme,
+    List<VooQuickAction> actions,
+    double columnWidth,
+  ) {
+    final List<Widget> children = [];
+    List<VooQuickAction> currentGridActions = [];
+
+    void flushGridActions() {
+      if (currentGridActions.isEmpty) return;
+
+      children.add(
+        Padding(
+          padding: _effectivePadding,
+          child: StaggeredGrid.count(
+            crossAxisCount: widget.gridColumns,
+            mainAxisSpacing: widget.spacing,
+            crossAxisSpacing: widget.spacing,
+            children: currentGridActions.map((action) {
+              final columnSpan =
+                  (action.gridColumnSpan).clamp(1, widget.gridColumns);
+              final itemHeight = action.gridHeight ?? widget.defaultItemHeight;
+              final itemWidth =
+                  (columnWidth * columnSpan) + (widget.spacing * (columnSpan - 1));
+
+              return StaggeredGridTile.extent(
+                crossAxisCellCount: columnSpan,
+                mainAxisExtent: itemHeight,
+                child: _buildActionItem(
+                  action,
+                  theme,
+                  colorScheme,
+                  columnSpan > 1,
+                  itemWidth: itemWidth,
+                  itemHeight: itemHeight,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      );
+      currentGridActions = [];
+    }
+
+    for (final action in actions) {
+      if (action.isSection) {
+        // Flush any pending grid actions before adding section
+        flushGridActions();
+        // Add the section
+        children.add(
+          _buildSectionWidget(action, theme, colorScheme),
+        );
+      } else {
+        currentGridActions.add(action);
+      }
+    }
+
+    // Flush remaining grid actions
+    flushGridActions();
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
+    );
+  }
+
+  /// Builds a section widget with header and optional horizontal scrolling or grid layout
+  Widget _buildSectionWidget(
+    VooQuickAction section,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    final sectionPadding = section.sectionPadding ??
+        EdgeInsets.symmetric(horizontal: _effectivePadding.left);
+    final sectionActions = section.sectionActions ?? [];
+    final shouldShowLabels = section.showLabel ?? widget.showLabelsInGrid;
+    final columnWidth = _calculateColumnWidth();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Section header
+        Padding(
+          padding: sectionPadding,
+          child: Text(
+            section.label,
+            style: section.labelStyle ??
+                theme.textTheme.titleSmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w600,
+                ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        // Section actions
+        if (section.sectionHorizontalScroll)
+          SizedBox(
+            height: section.sectionItemHeight,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: sectionPadding,
+              itemCount: sectionActions.length,
+              separatorBuilder: (_, __) => SizedBox(width: section.sectionItemSpacing),
+              itemBuilder: (context, index) {
+                final action = sectionActions[index];
+                return SizedBox(
+                  width: section.sectionItemWidth,
+                  height: section.sectionItemHeight,
+                  child: _buildSectionActionItem(
+                    action: action,
+                    theme: theme,
+                    colorScheme: colorScheme,
+                    showLabel: shouldShowLabels,
+                  ),
+                );
+              },
+            ),
+          )
+        else
+          // Use grid layout when not horizontal scrolling
+          Padding(
+            padding: sectionPadding,
+            child: StaggeredGrid.count(
+              crossAxisCount: widget.gridColumns,
+              mainAxisSpacing: widget.spacing,
+              crossAxisSpacing: widget.spacing,
+              children: sectionActions.map((action) {
+                final columnSpan =
+                    (action.gridColumnSpan).clamp(1, widget.gridColumns);
+                final itemHeight = action.gridHeight ?? widget.defaultItemHeight;
+                final itemWidth =
+                    (columnWidth * columnSpan) + (widget.spacing * (columnSpan - 1));
+
+                return StaggeredGridTile.extent(
+                  crossAxisCellCount: columnSpan,
+                  mainAxisExtent: itemHeight,
+                  child: _buildActionItem(
+                    action,
+                    theme,
+                    colorScheme,
+                    columnSpan > 1,
+                    itemWidth: itemWidth,
+                    itemHeight: itemHeight,
+                  ),
+                );
+              }).toList(),
+            ),
+          ),
+        SizedBox(height: widget.spacing),
+      ],
+    );
+  }
+
+  /// Builds an action item within a section
+  Widget _buildSectionActionItem({
+    required VooQuickAction action,
+    required ThemeData theme,
+    required ColorScheme colorScheme,
+    required bool showLabel,
+  }) {
+    final iconBgColor = action.gridIconBackgroundColor ??
+        (action.isDangerous
+            ? (widget.style.dangerColor ?? colorScheme.error).withValues(alpha: 0.1)
+            : colorScheme.surfaceContainerHighest);
+
+    final itemBgColor = action.gridBackgroundColor ?? colorScheme.surfaceContainerLow;
+    final shouldShowLabel = action.showLabel ?? showLabel;
+
+    return Material(
+      color: itemBgColor,
+      borderRadius: BorderRadius.circular(12),
+      child: InkWell(
+        onTap: action.isEnabled
+            ? () {
+                HapticFeedback.lightImpact();
+                widget.onActionTap(action);
+              }
+            : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Opacity(
+          opacity: action.isEnabled ? 1.0 : 0.5,
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: iconBgColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: action.iconWidget ??
+                      Icon(
+                        action.icon ?? Icons.star,
+                        size: widget.style.iconSize ?? 24,
+                        color: action.isDangerous
+                            ? (widget.style.dangerColor ?? colorScheme.error)
+                            : (action.iconColor ?? colorScheme.onSurfaceVariant),
+                      ),
+                ),
+                if (shouldShowLabel) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    action.label,
+                    style: action.labelStyle ??
+                        widget.style.labelStyle ??
+                        theme.textTheme.labelSmall?.copyWith(
+                          color: action.isDangerous
+                              ? (widget.style.dangerColor ?? colorScheme.error)
+                              : colorScheme.onSurface,
+                        ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -345,7 +584,8 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
               if (shouldShowLabel)
                 Text(
                   action.label,
-                  style: widget.style.labelStyle ??
+                  style: action.labelStyle ??
+                      widget.style.labelStyle ??
                       theme.textTheme.titleSmall?.copyWith(
                         color: action.isDangerous
                             ? (widget.style.dangerColor ?? colorScheme.error)
@@ -404,7 +644,8 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
           const SizedBox(height: 8),
           Text(
             action.label,
-            style: widget.style.labelStyle ??
+            style: action.labelStyle ??
+                widget.style.labelStyle ??
                 theme.textTheme.labelSmall?.copyWith(
                   color: action.isDangerous
                       ? (widget.style.dangerColor ?? colorScheme.error)
