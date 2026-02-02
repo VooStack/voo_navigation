@@ -8,6 +8,7 @@ library voo_navigation_core;
 export 'src/domain/tokens/voo_navigation_tokens.dart';
 
 // Domain Entities
+export 'src/domain/entities/app_bar_config.dart';
 export 'src/domain/entities/action_navigation_item.dart';
 export 'src/domain/entities/breadcrumb_item.dart';
 export 'src/domain/entities/breakpoint.dart';

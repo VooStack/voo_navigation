@@ -36,7 +36,9 @@
       "Bash(git -C /Users/coltonbristow/Documents/GitHub/voo_navigation log --all --full-history --oneline -- packages/ui/voo_navigation_bar/lib/src/presentation/molecules/floating_nav_item.dart)",
       "Bash(melos analyze:*)",
       "Bash(melos run:*)",
-      "Bash(melos exec:*)"
+      "Bash(melos exec:*)",
+      "Bash(xargs:*)",
+      "Bash(git restore:*)"
     ]
   }
 }

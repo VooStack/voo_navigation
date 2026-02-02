@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
-import 'package:voo_navigation/src/presentation/utils/voo_page_scope.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
 /// Adaptive app bar that adjusts based on screen size and navigation type
@@ -50,8 +49,11 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Custom toolbar height
   final double? toolbarHeight;
 
-  /// Whether to show bottom border
-  final bool showBottomBorder;
+  /// Whether to show bottom border/divider
+  final bool? showBottomBorder;
+
+  /// Custom bottom widget (e.g., TabBar)
+  final PreferredSizeWidget? bottom;
 
   /// Custom scroll behavior
   final ScrollNotificationPredicate notificationPredicate;
@@ -74,7 +76,8 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.foregroundColor,
     this.elevation,
     this.toolbarHeight,
-    this.showBottomBorder = false,
+    this.showBottomBorder,
+    this.bottom,
     this.margin,
     this.notificationPredicate = defaultScrollNotificationPredicate,
   });
@@ -83,10 +86,11 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize {
     const spacingTokens = VooSpacingTokens();
     final marginVertical = (margin?.top ?? 0) + (margin?.bottom ?? 0);
-    // Height = toolbarHeight + spacing.sm (internal padding) + 1 (bottom border) + margin
-    return Size.fromHeight(
-      (toolbarHeight ?? kToolbarHeight) + spacingTokens.sm + 1 + marginVertical,
-    );
+    double height = (toolbarHeight ?? kToolbarHeight) + spacingTokens.sm + 1 + marginVertical;
+    if (bottom != null) {
+      height += bottom!.preferredSize.height;
+    }
+    return Size.fromHeight(height);
   }
 
   @override
@@ -107,9 +111,6 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     Widget effectiveTitle;
     if (title != null) {
       effectiveTitle = title!;
-    } else if (effectiveConfig?.appBarTitleBuilder != null) {
-      final customTitle = effectiveConfig!.appBarTitleBuilder!.call(effectiveSelectedId);
-      effectiveTitle = customTitle ?? const Text('');
     } else if (selectedItem != null) {
       // Check if breadcrumbs should be shown in app bar
       if (effectiveConfig?.showBreadcrumbsInAppBar == true &&
@@ -138,26 +139,19 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       effectiveTitle = const Text('');
     }
 
-    // Get page config from scope for back button control
-    final pageConfig = VooPageScope.configOf(context);
-
     // Check if the leading widget would actually show content
     final wouldShowLeading = leading != null ||
-        effectiveConfig?.appBarLeadingBuilder?.call(effectiveSelectedId) != null ||
         VooAppBarLeading.wouldShowContent(
           context: context,
           showMenuButton: showMenuButton,
           config: effectiveConfig,
-          pageConfig: pageConfig,
         );
 
     final Widget? effectiveLeading = wouldShowLeading
         ? (leading ??
-            effectiveConfig?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
             VooAppBarLeading(
               showMenuButton: showMenuButton,
               config: effectiveConfig,
-              pageConfig: pageConfig,
             ))
         : null;
 
@@ -165,8 +159,6 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     List<Widget>? effectiveActions;
     if (actions != null) {
       effectiveActions = actions;
-    } else if (effectiveConfig?.appBarActionsBuilder != null) {
-      effectiveActions = effectiveConfig!.appBarActionsBuilder!.call(effectiveSelectedId);
     } else {
       // Build default actions with integrated components
       effectiveActions = _buildIntegratedActions(context, effectiveConfig);
@@ -177,7 +169,7 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       effectiveActions = [...?effectiveActions, ...additionalActions!];
     }
 
-    final effectiveCenterTitle = centerTitle ?? effectiveConfig?.centerAppBarTitle ?? false;
+    final effectiveCenterTitle = centerTitle ?? false;
     // When appBarAlongsideRail is true, the app bar is inside the content container
     // so it should be transparent to show the container's background
     final isInsideContentContainer = effectiveConfig?.appBarAlongsideRail ?? true;
@@ -204,10 +196,7 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
           toolbarHeight: (toolbarHeight ?? kToolbarHeight) + context.vooSpacing.sm,
           titleSpacing: context.vooSpacing.md,
           titleTextStyle: theme.textTheme.titleLarge?.copyWith(color: effectiveForegroundColor, fontWeight: FontWeight.w600),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1),
-            child: Container(height: context.vooSize.borderThin, color: theme.dividerColor.withValues(alpha: 0.08)),
-          ),
+          bottom: _buildBottom(context, theme),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: theme.brightness == Brightness.light ? Brightness.dark : Brightness.light,
@@ -220,6 +209,46 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
   VooNavigationConfig? _getConfigFromScaffold(BuildContext context) => VooNavigationInherited.maybeOf(context)?.config;
 
   String? _getSelectedIdFromScaffold(BuildContext context) => VooNavigationInherited.maybeOf(context)?.selectedId;
+
+  /// Builds the bottom widget for the app bar.
+  /// If a custom bottom widget is provided, uses that.
+  /// Otherwise, shows a divider based on showBottomBorder (defaults to true).
+  PreferredSizeWidget? _buildBottom(BuildContext context, ThemeData theme) {
+    // If custom bottom widget provided, wrap with divider if needed
+    if (bottom != null) {
+      final effectiveShowDivider = showBottomBorder ?? true;
+      if (effectiveShowDivider) {
+        return PreferredSize(
+          preferredSize: Size.fromHeight(bottom!.preferredSize.height + 1),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              bottom!,
+              Container(
+                height: context.vooSize.borderThin,
+                color: theme.dividerColor.withValues(alpha: 0.08),
+              ),
+            ],
+          ),
+        );
+      }
+      return bottom;
+    }
+
+    // Default: show divider based on showBottomBorder (defaults to true)
+    final effectiveShowDivider = showBottomBorder ?? true;
+    if (!effectiveShowDivider) {
+      return null;
+    }
+
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(1),
+      child: Container(
+        height: context.vooSize.borderThin,
+        color: theme.dividerColor.withValues(alpha: 0.08),
+      ),
+    );
+  }
 
   /// Builds the integrated actions list with search bar, notifications bell, etc.
   List<Widget>? _buildIntegratedActions(

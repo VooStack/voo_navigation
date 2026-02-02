@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
-import 'package:voo_navigation_core/src/domain/entities/page_config.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_app_bar_leading.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_app_bar_title.dart';
 
@@ -45,8 +44,11 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
   /// Custom toolbar height
   final double? toolbarHeight;
 
-  /// Page configuration for per-page overrides
-  final VooPageConfig? pageConfig;
+  /// Custom bottom widget (e.g., TabBar)
+  final PreferredSizeWidget? bottom;
+
+  /// Whether to show the bottom divider
+  final bool? showBottomDivider;
 
   const VooMobileAppBar({
     super.key,
@@ -62,50 +64,49 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.foregroundColor,
     this.showMenuButton = false,
     this.toolbarHeight,
-    this.pageConfig,
+    this.bottom,
+    this.showBottomDivider,
   });
 
   @override
-  Size get preferredSize =>
-      Size.fromHeight((toolbarHeight ?? kToolbarHeight) + 8 + 1);
+  Size get preferredSize {
+    double height = (toolbarHeight ?? kToolbarHeight) + 8 + 1;
+    if (bottom != null) {
+      height += bottom!.preferredSize.height;
+    }
+    return Size.fromHeight(height);
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    final effectiveSelectedId = selectedId ?? selectedItem?.id;
-
     final effectiveTitle =
         title ??
-        config?.appBarTitleBuilder?.call(effectiveSelectedId) ??
         (selectedItem != null
             ? VooAppBarTitle(item: selectedItem!, config: config)
             : const Text(''));
 
     // Check if the leading widget would actually show content
     final wouldShowLeading = leading != null ||
-        config?.appBarLeadingBuilder?.call(effectiveSelectedId) != null ||
         VooAppBarLeading.wouldShowContent(
           context: context,
           showMenuButton: showMenuButton,
           config: config,
-          pageConfig: pageConfig,
         );
 
     final Widget? effectiveLeading = wouldShowLeading
         ? (leading ??
-            config?.appBarLeadingBuilder?.call(effectiveSelectedId) ??
             VooAppBarLeading(
               showMenuButton: showMenuButton,
               config: config,
-              pageConfig: pageConfig,
             ))
         : null;
 
-    final effectiveCenterTitle = centerTitle ?? config?.centerAppBarTitle ?? false;
+    final effectiveCenterTitle = centerTitle ?? false;
 
-    var effectiveActions = actions ?? config?.appBarActionsBuilder?.call(effectiveSelectedId);
+    var effectiveActions = actions;
 
     // Append additional actions if provided
     if (additionalActions != null && additionalActions!.isNotEmpty) {
@@ -163,13 +164,7 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
             color: effectiveForegroundColor,
             fontWeight: FontWeight.w600,
           ),
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(1),
-            child: Container(
-              height: context.vooSize.borderThin,
-              color: theme.dividerColor.withValues(alpha: 0.08),
-            ),
-          ),
+          bottom: _buildBottom(context, theme),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarColor: Colors.transparent,
             statusBarIconBrightness: theme.brightness == Brightness.light
@@ -178,6 +173,46 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
             statusBarBrightness: theme.brightness,
           ),
         ),
+      ),
+    );
+  }
+
+  /// Builds the bottom widget for the app bar.
+  /// If a custom bottom widget is provided, uses that.
+  /// Otherwise, shows a divider based on showBottomDivider (defaults to true).
+  PreferredSizeWidget? _buildBottom(BuildContext context, ThemeData theme) {
+    // If custom bottom widget provided, wrap with divider if needed
+    if (bottom != null) {
+      final effectiveShowDivider = showBottomDivider ?? true;
+      if (effectiveShowDivider) {
+        return PreferredSize(
+          preferredSize: Size.fromHeight(bottom!.preferredSize.height + 1),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              bottom!,
+              Container(
+                height: context.vooSize.borderThin,
+                color: theme.dividerColor.withValues(alpha: 0.08),
+              ),
+            ],
+          ),
+        );
+      }
+      return bottom;
+    }
+
+    // Default: show divider based on showBottomDivider (defaults to true)
+    final effectiveShowDivider = showBottomDivider ?? true;
+    if (!effectiveShowDivider) {
+      return null;
+    }
+
+    return PreferredSize(
+      preferredSize: const Size.fromHeight(1),
+      child: Container(
+        height: context.vooSize.borderThin,
+        color: theme.dividerColor.withValues(alpha: 0.08),
       ),
     );
   }

@@ -8,11 +8,10 @@ class VooExpandableNavItemLayout {
   VooExpandableNavItemLayout._();
 
   /// Circle size for nav items
-  static double get circleSize =>
-      VooNavigationTokens.expandableNavSelectedCircleSize;
+  static double get circleSize => VooNavigationTokens.expandableNavSelectedCircleSize;
 
   /// Padding around the circle
-  static const double circlePadding = 3.0;
+  static const double circlePadding = 2.0;
 
   /// Spacing between circle and label
   static const double spacing = 6.0;
@@ -28,10 +27,7 @@ class VooExpandableNavItemLayout {
     final textPainter = TextPainter(
       text: TextSpan(
         text: label,
-        style: TextStyle(
-          fontSize: VooNavigationTokens.expandableNavLabelFontSize,
-          fontWeight: VooNavigationTokens.expandableNavLabelFontWeight,
-        ),
+        style: TextStyle(fontSize: VooNavigationTokens.expandableNavLabelFontSize, fontWeight: VooNavigationTokens.expandableNavLabelFontWeight),
       ),
       maxLines: 1,
       textDirection: TextDirection.ltr,
@@ -41,37 +37,23 @@ class VooExpandableNavItemLayout {
   }
 
   /// Builds the circle container that holds the icon or avatar
-  static Widget buildCircle({
-    required Widget child,
-    required Color color,
-  }) {
+  static Widget buildCircle({required Widget child, required Color color}) {
     return Container(
       width: circleSize,
       height: circleSize,
       margin: const EdgeInsets.all(circlePadding),
-      decoration: BoxDecoration(
-        color: color,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
       child: Center(child: child),
     );
   }
 
   /// Builds the label widget with proper styling
-  static Widget buildLabel({
-    required String text,
-    required double opacity,
-    required Color color,
-  }) {
+  static Widget buildLabel({required String text, required double opacity, required Color color}) {
     return Opacity(
       opacity: opacity,
       child: Text(
         text,
-        style: TextStyle(
-          color: color,
-          fontSize: VooNavigationTokens.expandableNavLabelFontSize,
-          fontWeight: VooNavigationTokens.expandableNavLabelFontWeight,
-        ),
+        style: TextStyle(color: color, fontSize: VooNavigationTokens.expandableNavLabelFontSize, fontWeight: VooNavigationTokens.expandableNavLabelFontWeight),
         maxLines: 1,
         overflow: TextOverflow.clip,
       ),
@@ -96,10 +78,7 @@ class VooExpandableNavItemLayout {
         SizedBox(width: animatedTextPadding),
         SizedBox(
           width: animatedLabelWidth,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: label,
-          ),
+          child: Align(alignment: Alignment.centerRight, child: label),
         ),
         SizedBox(width: animatedSpacing),
         circle,
@@ -111,10 +90,7 @@ class VooExpandableNavItemLayout {
         SizedBox(width: animatedSpacing),
         SizedBox(
           width: animatedLabelWidth,
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: label,
-          ),
+          child: Align(alignment: Alignment.centerLeft, child: label),
         ),
         SizedBox(width: animatedTextPadding),
       ];
@@ -122,24 +98,14 @@ class VooExpandableNavItemLayout {
   }
 
   /// Builds the outer container with background decoration
-  static Widget buildContainer({
-    required List<Widget> rowChildren,
-    required double progress,
-    required Color selectedBackgroundColor,
-  }) {
+  static Widget buildContainer({required List<Widget> rowChildren, required double progress, required Color selectedBackgroundColor}) {
     return Container(
       height: containerHeight,
       decoration: BoxDecoration(
-        color: progress > 0
-            ? selectedBackgroundColor.withValues(alpha: progress)
-            : Colors.transparent,
+        color: progress > 0 ? selectedBackgroundColor.withValues(alpha: progress) : Colors.transparent,
         borderRadius: BorderRadius.circular(containerHeight / 2),
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: rowChildren,
-      ),
+      child: Row(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.center, children: rowChildren),
     );
   }
 }

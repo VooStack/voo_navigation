@@ -229,6 +229,13 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
             title: widget.pageConfig?.appBarTitle,
             leading: widget.pageConfig?.appBarLeading,
             additionalActions: widget.pageConfig?.additionalAppBarActions,
+            bottom: widget.pageConfig?.appBarBottom,
+            showBottomBorder: widget.pageConfig?.showAppBarBottomDivider,
+            backgroundColor: widget.pageConfig?.appBarBackgroundColor,
+            foregroundColor: widget.pageConfig?.appBarForegroundColor,
+            centerTitle: widget.pageConfig?.centerAppBarTitle,
+            elevation: widget.pageConfig?.appBarElevation,
+            toolbarHeight: widget.pageConfig?.appBarToolbarHeight,
           );
         }
       }
@@ -300,6 +307,13 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
                   title: widget.pageConfig?.appBarTitle,
                   leading: widget.pageConfig?.appBarLeading,
                   additionalActions: widget.pageConfig?.additionalAppBarActions,
+                  bottom: widget.pageConfig?.appBarBottom,
+                  showBottomBorder: widget.pageConfig?.showAppBarBottomDivider,
+                  backgroundColor: widget.pageConfig?.appBarBackgroundColor,
+                  foregroundColor: widget.pageConfig?.appBarForegroundColor,
+                  centerTitle: widget.pageConfig?.centerAppBarTitle,
+                  elevation: widget.pageConfig?.appBarElevation,
+                  toolbarHeight: widget.pageConfig?.appBarToolbarHeight,
                 ))
           : null,
       body: Row(

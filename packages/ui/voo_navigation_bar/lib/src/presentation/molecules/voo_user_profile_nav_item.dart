@@ -50,9 +50,7 @@ class VooUserProfileNavItem extends StatefulWidget {
     this.avatarColor,
     this.isSelected = false,
     this.labelPosition = VooExpandableLabelPosition.start,
-    this.animationDuration = const Duration(
-      milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs,
-    ),
+    this.animationDuration = const Duration(milliseconds: VooNavigationTokens.expandableNavAnimationDurationMs),
     this.animationCurve = Curves.easeOutCubic,
     this.maxLabelWidth = 60.0,
     this.onNavigationSelected,
@@ -62,8 +60,7 @@ class VooUserProfileNavItem extends StatefulWidget {
   State<VooUserProfileNavItem> createState() => _VooUserProfileNavItemState();
 }
 
-class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
-    with TickerProviderStateMixin, ExpandableNavModalMixin {
+class _VooUserProfileNavItemState extends State<VooUserProfileNavItem> with TickerProviderStateMixin, ExpandableNavModalMixin {
   late AnimationController _controller;
   late Animation<double> _expandAnimation;
   late Animation<double> _labelOpacity;
@@ -73,16 +70,9 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
     super.initState();
     initModalAnimation();
 
-    _controller = AnimationController(
-      duration: widget.animationDuration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.animationDuration, vsync: this);
 
-    _expandAnimation = CurvedAnimation(
-      parent: _controller,
-      curve: widget.animationCurve,
-      reverseCurve: Curves.easeInCubic,
-    );
+    _expandAnimation = CurvedAnimation(parent: _controller, curve: widget.animationCurve, reverseCurve: Curves.easeInCubic);
 
     _labelOpacity = CurvedAnimation(
       parent: _controller,
@@ -162,21 +152,13 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
     final theme = Theme.of(context);
 
     // Use the same circle colors as VooExpandableNavItem
-    final circleColor = widget.isSelected
-        ? context.expandableNavSelectedCircle(widget.avatarColor)
-        : context.expandableNavUnselectedCircle;
+    final circleColor = widget.isSelected ? context.expandableNavSelectedCircle(widget.avatarColor) : context.expandableNavUnselectedCircle;
 
     // Measure label width using shared layout
-    final labelWidth = VooExpandableNavItemLayout.measureLabelWidth(
-      widget.config.effectiveNavItemLabel,
-      widget.maxLabelWidth,
-    );
+    final labelWidth = VooExpandableNavItemLayout.measureLabelWidth(widget.config.effectiveNavItemLabel, widget.maxLabelWidth);
 
     // Build avatar circle using shared layout
-    final circle = VooExpandableNavItemLayout.buildCircle(
-      color: circleColor,
-      child: _buildAvatarContent(context, theme),
-    );
+    final circle = VooExpandableNavItemLayout.buildCircle(color: circleColor, child: _buildAvatarContent(context, theme));
 
     return GestureDetector(
       key: buttonKey,
@@ -190,17 +172,11 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
 
           // Calculate animated values
           final animatedLabelWidth = labelWidth * progress;
-          final animatedSpacing =
-              VooExpandableNavItemLayout.spacing * progress;
-          final animatedTextPadding =
-              VooExpandableNavItemLayout.textPadding * progress;
+          final animatedSpacing = VooExpandableNavItemLayout.spacing * progress;
+          final animatedTextPadding = VooExpandableNavItemLayout.textPadding * progress;
 
           // Build label using shared layout
-          final label = VooExpandableNavItemLayout.buildLabel(
-            text: widget.config.effectiveNavItemLabel,
-            opacity: labelProgress,
-            color: context.expandableNavSelectedLabel,
-          );
+          final label = VooExpandableNavItemLayout.buildLabel(text: widget.config.effectiveNavItemLabel, opacity: labelProgress, color: context.expandableNavSelectedLabel);
 
           // Build row children using shared layout (single source of truth)
           final rowChildren = VooExpandableNavItemLayout.buildRowChildren(
@@ -215,11 +191,7 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
           // Build container using shared layout, wrapped in Tooltip
           return Tooltip(
             message: widget.config.effectiveNavItemLabel,
-            child: VooExpandableNavItemLayout.buildContainer(
-              rowChildren: rowChildren,
-              progress: progress,
-              selectedBackgroundColor: context.expandableNavSelectedBackground,
-            ),
+            child: VooExpandableNavItemLayout.buildContainer(rowChildren: rowChildren, progress: progress, selectedBackgroundColor: context.expandableNavSelectedBackground),
           );
         },
       ),
@@ -231,7 +203,7 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
   Widget _buildAvatarContent(BuildContext context, ThemeData theme) {
     final circleSize = VooExpandableNavItemLayout.circleSize;
     // Inner content size (smaller than circle to show background ring)
-    final contentSize = circleSize * 0.75;
+    final contentSize = circleSize * 0.9;
 
     // If custom avatar widget provided, use it
     if (widget.config.avatarWidget != null) {
@@ -243,8 +215,7 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
     }
 
     // If avatar URL provided, show image with loading animation
-    if (widget.config.avatarUrl != null &&
-        widget.config.avatarUrl!.isNotEmpty) {
+    if (widget.config.avatarUrl != null && widget.config.avatarUrl!.isNotEmpty) {
       return ClipOval(
         child: SizedBox(
           width: contentSize,
@@ -276,17 +247,11 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem>
   Widget _buildInitials(BuildContext context, double circleSize) {
     final initials = widget.config.effectiveInitials ?? '?';
     // Use icon color to match how regular nav items style their icons
-    final textColor = widget.isSelected
-        ? context.expandableNavSelectedIcon
-        : context.expandableNavUnselectedIcon;
+    final textColor = widget.isSelected ? context.expandableNavSelectedIcon : context.expandableNavUnselectedIcon;
 
     return Text(
       initials,
-      style: TextStyle(
-        color: textColor,
-        fontSize: circleSize * 0.36,
-        fontWeight: FontWeight.w600,
-      ),
+      style: TextStyle(color: textColor, fontSize: circleSize * 0.36, fontWeight: FontWeight.w600),
     );
   }
 
@@ -308,22 +273,16 @@ class _AvatarLoadingIndicator extends StatefulWidget {
   State<_AvatarLoadingIndicator> createState() => _AvatarLoadingIndicatorState();
 }
 
-class _AvatarLoadingIndicatorState extends State<_AvatarLoadingIndicator>
-    with SingleTickerProviderStateMixin {
+class _AvatarLoadingIndicatorState extends State<_AvatarLoadingIndicator> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    )..repeat(reverse: true);
+    _controller = AnimationController(duration: const Duration(milliseconds: 1000), vsync: this)..repeat(reverse: true);
 
-    _animation = Tween<double>(begin: 0.3, end: 0.7).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(begin: 0.3, end: 0.7).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -342,15 +301,10 @@ class _AvatarLoadingIndicatorState extends State<_AvatarLoadingIndicator>
           height: widget.size,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: context.expandableNavUnselectedIcon
-                .withValues(alpha: _animation.value),
+            color: context.expandableNavUnselectedIcon.withValues(alpha: _animation.value),
           ),
           child: Center(
-            child: Icon(
-              Icons.person_outline,
-              size: widget.size * 0.5,
-              color: context.expandableNavUnselectedCircle,
-            ),
+            child: Icon(Icons.person_outline, size: widget.size * 0.5, color: context.expandableNavUnselectedCircle),
           ),
         );
       },

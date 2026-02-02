@@ -5,19 +5,9 @@ import 'package:voo_navigation_core/voo_navigation_core.dart';
 void main() {
   group('VooNavigationConfig', () {
     test('should create config with required parameters', () {
-      final items = [
-        const VooNavigationDestination(
-          id: 'home',
-          label: 'Home',
-          icon: Icon(Icons.home),
-          route: '/test',
-        ),
-      ];
+      final items = [const VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home), route: '/test')];
 
-      final config = VooNavigationConfig(
-        items: items,
-        onNavigationItemSelected: (id) {},
-      );
+      final config = VooNavigationConfig(items: items, onNavigationItemSelected: (id) {});
 
       expect(config.items, equals(items));
       expect(config.selectedId, isNull);
@@ -28,18 +18,8 @@ void main() {
 
     test('should create config with all parameters', () {
       final items = [
-        const VooNavigationDestination(
-          id: 'home',
-          label: 'Home',
-          icon: Icon(Icons.home),
-          route: '/test',
-        ),
-        const VooNavigationDestination(
-          id: 'settings',
-          label: 'Settings',
-          icon: Icon(Icons.settings),
-          route: '/test',
-        ),
+        const VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home), route: '/test'),
+        const VooNavigationDestination(id: 'settings', label: 'Settings', icon: Icon(Icons.settings), route: '/test'),
       ];
 
       final config = VooNavigationConfig(
@@ -55,7 +35,6 @@ void main() {
         useExtendedRail: false,
         showNavigationRailDivider: false,
         showNotificationBadges: false,
-        centerAppBarTitle: true,
         backgroundColor: Colors.white,
         navigationBackgroundColor: Colors.grey,
         selectedItemColor: Colors.blue,
@@ -65,12 +44,7 @@ void main() {
         elevation: 4.0,
         drawerHeader: const Text('Header'),
         drawerFooter: const Text('Footer'),
-        appBarLeadingBuilder: (_) => const Icon(Icons.menu),
-        appBarActionsBuilder: (_) => [const Icon(Icons.search)],
-        floatingActionButton: const FloatingActionButton(
-          onPressed: null,
-          child: Icon(Icons.add),
-        ),
+        floatingActionButton: const FloatingActionButton(onPressed: null, child: Icon(Icons.add)),
         floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
         breakpoints: [],
         onNavigationItemSelected: (id) {},
@@ -90,7 +64,6 @@ void main() {
       expect(config.showNavigationRailDivider, isFalse);
       expect(config.showNotificationBadges, isFalse);
       expect(config.groupItemsBySections, isFalse);
-      expect(config.centerAppBarTitle, isTrue);
       expect(config.backgroundColor, Colors.white);
       expect(config.navigationBackgroundColor, Colors.grey);
       expect(config.selectedItemColor, Colors.blue);
@@ -100,43 +73,19 @@ void main() {
       expect(config.elevation, 4.0);
       expect(config.drawerHeader, isNotNull);
       expect(config.drawerFooter, isNotNull);
-      expect(config.appBarLeadingBuilder, isNotNull);
-      expect(config.appBarActionsBuilder, isNotNull);
       expect(config.floatingActionButton, isNotNull);
-      expect(
-        config.floatingActionButtonAnimator,
-        FloatingActionButtonAnimator.scaling,
-      );
+      expect(config.floatingActionButtonAnimator, FloatingActionButtonAnimator.scaling);
       expect(config.breakpoints, isEmpty);
     });
 
     test('visibleItems should filter out invisible items', () {
       final items = [
-        const VooNavigationDestination(
-          id: 'home',
-          label: 'Home',
-          icon: Icon(Icons.home),
-          route: '/test',
-        ),
-        const VooNavigationDestination(
-          id: 'hidden',
-          label: 'Hidden',
-          icon: Icon(Icons.visibility_off),
-          route: '/test',
-          isVisible: false,
-        ),
-        const VooNavigationDestination(
-          id: 'settings',
-          label: 'Settings',
-          icon: Icon(Icons.settings),
-          route: '/test',
-        ),
+        const VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home), route: '/test'),
+        const VooNavigationDestination(id: 'hidden', label: 'Hidden', icon: Icon(Icons.visibility_off), route: '/test', isVisible: false),
+        const VooNavigationDestination(id: 'settings', label: 'Settings', icon: Icon(Icons.settings), route: '/test'),
       ];
 
-      final config = VooNavigationConfig(
-        items: items,
-        onNavigationItemSelected: (id) {},
-      );
+      final config = VooNavigationConfig(items: items, onNavigationItemSelected: (id) {});
 
       expect(config.visibleItems.length, 2);
       expect(config.visibleItems[0].id, 'home');
@@ -145,36 +94,15 @@ void main() {
 
     test('selectedId should work correctly', () {
       final items = [
-        const VooNavigationDestination(
-          id: 'home',
-          label: 'Home',
-          icon: Icon(Icons.home),
-          route: '/test',
-        ),
-        const VooNavigationDestination(
-          id: 'settings',
-          label: 'Settings',
-          icon: Icon(Icons.settings),
-          route: '/test',
-        ),
+        const VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home), route: '/test'),
+        const VooNavigationDestination(id: 'settings', label: 'Settings', icon: Icon(Icons.settings), route: '/test'),
       ];
 
-      final configWithSelected = VooNavigationConfig(
-        items: items,
-        selectedId: 'home',
-        onNavigationItemSelected: (id) {},
-      );
+      final configWithSelected = VooNavigationConfig(items: items, selectedId: 'home', onNavigationItemSelected: (id) {});
 
-      final configWithoutSelected = VooNavigationConfig(
-        items: items,
-        onNavigationItemSelected: (id) {},
-      );
+      final configWithoutSelected = VooNavigationConfig(items: items, onNavigationItemSelected: (id) {});
 
-      final configWithInvalidSelected = VooNavigationConfig(
-        items: items,
-        selectedId: 'invalid',
-        onNavigationItemSelected: (id) {},
-      );
+      final configWithInvalidSelected = VooNavigationConfig(items: items, selectedId: 'invalid', onNavigationItemSelected: (id) {});
 
       expect(configWithSelected.selectedId, 'home');
       expect(configWithoutSelected.selectedId, isNull);
@@ -182,67 +110,28 @@ void main() {
     });
 
     test('selectedItem should return correct item or null', () {
-      const homeItem = VooNavigationDestination(
-        id: 'home',
-        label: 'Home',
-        icon: Icon(Icons.home),
-        route: '/test',
-      );
-      const settingsItem = VooNavigationDestination(
-        id: 'settings',
-        label: 'Settings',
-        icon: Icon(Icons.settings),
-        route: '/test',
-      );
+      const homeItem = VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home), route: '/test');
+      const settingsItem = VooNavigationDestination(id: 'settings', label: 'Settings', icon: Icon(Icons.settings), route: '/test');
 
       final items = [homeItem, settingsItem];
 
-      final config = VooNavigationConfig(
-        items: items,
-        selectedId: 'home',
-        onNavigationItemSelected: (id) {},
-      );
+      final config = VooNavigationConfig(items: items, selectedId: 'home', onNavigationItemSelected: (id) {});
 
       expect(config.selectedItem, equals(homeItem));
 
-      final configNoSelection = VooNavigationConfig(
-        items: items,
-        onNavigationItemSelected: (id) {},
-      );
+      final configNoSelection = VooNavigationConfig(items: items, onNavigationItemSelected: (id) {});
 
       expect(configNoSelection.selectedItem, isNull);
     });
 
     test('copyWith should create new instance with updated values', () {
-      final items = [
-        const VooNavigationDestination(
-          id: 'home',
-          label: 'Home',
-          icon: Icon(Icons.home),
-          route: '/test',
-        ),
-      ];
+      final items = [const VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home), route: '/test')];
 
-      final config = VooNavigationConfig(
-        items: items,
-        selectedId: 'home',
-        onNavigationItemSelected: (id) {},
-      );
+      final config = VooNavigationConfig(items: items, selectedId: 'home', onNavigationItemSelected: (id) {});
 
-      final newItems = [
-        const VooNavigationDestination(
-          id: 'settings',
-          label: 'Settings',
-          icon: Icon(Icons.settings),
-          route: '/test',
-        ),
-      ];
+      final newItems = [const VooNavigationDestination(id: 'settings', label: 'Settings', icon: Icon(Icons.settings), route: '/test')];
 
-      final updatedConfig = config.copyWith(
-        items: newItems,
-        selectedId: 'settings',
-        enableAnimations: false,
-      );
+      final updatedConfig = config.copyWith(items: newItems, selectedId: 'settings', enableAnimations: false);
 
       expect(updatedConfig.items, equals(newItems));
       expect(updatedConfig.selectedId, 'settings');
@@ -252,18 +141,8 @@ void main() {
 
     test('configuration callback should be called', () {
       final items = [
-        const VooNavigationDestination(
-          id: 'home',
-          label: 'Home',
-          icon: Icon(Icons.home),
-          route: '/test',
-        ),
-        const VooNavigationDestination(
-          id: 'settings',
-          label: 'Settings',
-          icon: Icon(Icons.settings),
-          route: '/test',
-        ),
+        const VooNavigationDestination(id: 'home', label: 'Home', icon: Icon(Icons.home), route: '/test'),
+        const VooNavigationDestination(id: 'settings', label: 'Settings', icon: Icon(Icons.settings), route: '/test'),
       ];
 
       String? selectedItemId;

@@ -54,18 +54,6 @@ class VooNavigationConfig {
   /// Custom footer widget for navigation drawer
   final Widget? drawerFooter;
 
-  /// Custom leading widget builder for app bar
-  final Widget? Function(String? selectedId)? appBarLeadingBuilder;
-
-  /// Custom actions builder for app bar
-  final List<Widget>? Function(String? selectedId)? appBarActionsBuilder;
-
-  /// App bar title builder
-  final Widget? Function(String? selectedId)? appBarTitleBuilder;
-
-  /// Whether to center the app bar title
-  final bool centerAppBarTitle;
-
   /// Whether the app bar should be positioned alongside the navigation rail
   final bool appBarAlongsideRail;
 
@@ -299,10 +287,6 @@ class VooNavigationConfig {
     this.headerConfig,
     this.drawerHeaderTrailing,
     this.drawerFooter,
-    this.appBarLeadingBuilder,
-    this.appBarActionsBuilder,
-    this.appBarTitleBuilder,
-    this.centerAppBarTitle = false,
     this.appBarAlongsideRail = true,
     this.showAppBar = true,
     this.resizeToAvoidBottomInset = true,
@@ -414,10 +398,6 @@ class VooNavigationConfig {
     VooHeaderConfig? headerConfig,
     Widget? drawerHeaderTrailing,
     Widget? drawerFooter,
-    Widget? Function(String? selectedId)? appBarLeadingBuilder,
-    List<Widget>? Function(String? selectedId)? appBarActionsBuilder,
-    Widget? Function(String? selectedId)? appBarTitleBuilder,
-    bool? centerAppBarTitle,
     bool? appBarAlongsideRail,
     bool? showAppBar,
     bool? resizeToAvoidBottomInset,
@@ -503,12 +483,6 @@ class VooNavigationConfig {
         headerConfig: headerConfig ?? this.headerConfig,
         drawerHeaderTrailing: drawerHeaderTrailing ?? this.drawerHeaderTrailing,
         drawerFooter: drawerFooter ?? this.drawerFooter,
-        appBarLeadingBuilder:
-            appBarLeadingBuilder ?? this.appBarLeadingBuilder,
-        appBarActionsBuilder:
-            appBarActionsBuilder ?? this.appBarActionsBuilder,
-        appBarTitleBuilder: appBarTitleBuilder ?? this.appBarTitleBuilder,
-        centerAppBarTitle: centerAppBarTitle ?? this.centerAppBarTitle,
         appBarAlongsideRail: appBarAlongsideRail ?? this.appBarAlongsideRail,
         showAppBar: showAppBar ?? this.showAppBar,
         resizeToAvoidBottomInset:

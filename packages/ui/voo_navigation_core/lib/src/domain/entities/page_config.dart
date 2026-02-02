@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/domain/entities/app_bar_config.dart';
 
 /// Configuration for page-level scaffold overrides.
 ///
@@ -10,27 +11,25 @@ import 'package:flutter/material.dart';
 /// ```dart
 /// VooPage(
 ///   config: VooPageConfig(
-///     appBar: MyCustomAppBar(),
+///     appBarConfig: VooAppBarConfig(
+///       title: Text('My Page'),
+///       centerTitle: true,
+///       bottom: TabBar(tabs: [...]),
+///     ),
 ///     floatingActionButton: FloatingActionButton(
 ///       onPressed: () {},
 ///       child: Icon(Icons.add),
 ///     ),
-///     floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
 ///   ),
 ///   child: MyPageContent(),
 /// )
 /// ```
 class VooPageConfig {
-  /// Custom app bar to override the scaffold's app bar.
+  /// App bar configuration for this page.
   ///
-  /// When provided, this replaces the app bar from [VooNavigationConfig].
-  final PreferredSizeWidget? appBar;
-
-  /// Whether to show the app bar.
-  ///
-  /// When null, uses the scaffold's default setting.
-  /// Set to false to hide the app bar for this page only.
-  final bool? showAppBar;
+  /// Use this to customize the app bar's title, actions, bottom widget,
+  /// background color, and other properties.
+  final VooAppBarConfig? appBarConfig;
 
   /// Custom floating action button for this page.
   ///
@@ -56,7 +55,7 @@ class VooPageConfig {
   /// Persistent footer buttons for this page.
   final List<Widget>? persistentFooterButtons;
 
-  /// Background color override for this page.
+  /// Background color override for this page's scaffold.
   final Color? backgroundColor;
 
   /// Whether to resize to avoid bottom inset for this page.
@@ -70,24 +69,6 @@ class VooPageConfig {
 
   /// Custom end drawer for this page.
   final Widget? endDrawer;
-
-  /// Additional actions to add to the app bar for this page.
-  ///
-  /// These are appended to the actions from [VooNavigationConfig].
-  final List<Widget>? additionalAppBarActions;
-
-  /// Custom leading widget for the app bar.
-  final Widget? appBarLeading;
-
-  /// Custom title widget for the app bar.
-  final Widget? appBarTitle;
-
-  /// Whether to show the back button in the app bar.
-  ///
-  /// When null (default), uses automatic behavior based on Navigator.canPop().
-  /// When true, always shows the back button.
-  /// When false, never shows the back button.
-  final bool? shouldShowBackButton;
 
   /// Whether to wrap the page content in a basic Scaffold.
   ///
@@ -125,8 +106,7 @@ class VooPageConfig {
   final Color? bodyCardColor;
 
   const VooPageConfig({
-    this.appBar,
-    this.showAppBar,
+    this.appBarConfig,
     this.floatingActionButton,
     this.floatingActionButtonLocation,
     this.floatingActionButtonAnimator,
@@ -138,10 +118,6 @@ class VooPageConfig {
     this.extendBody,
     this.extendBodyBehindAppBar,
     this.endDrawer,
-    this.additionalAppBarActions,
-    this.appBarLeading,
-    this.appBarTitle,
-    this.shouldShowBackButton,
     this.wrapInScaffold = false,
     this.useCustomScaffold = false,
     this.scaffoldBuilder,
@@ -154,64 +130,53 @@ class VooPageConfig {
 
   /// Creates a config that hides all scaffold elements for a clean page.
   const VooPageConfig.clean()
-      : appBar = null,
-        showAppBar = false,
-        floatingActionButton = null,
-        floatingActionButtonLocation = null,
-        floatingActionButtonAnimator = null,
-        showFloatingActionButton = false,
-        bottomSheet = null,
-        persistentFooterButtons = null,
-        backgroundColor = null,
-        resizeToAvoidBottomInset = null,
-        extendBody = true,
-        extendBodyBehindAppBar = true,
-        endDrawer = null,
-        additionalAppBarActions = null,
-        appBarLeading = null,
-        appBarTitle = null,
-        shouldShowBackButton = false,
-        wrapInScaffold = false,
-        useCustomScaffold = false,
-        scaffoldBuilder = null,
-        bodyPadding = null,
-        useBodyCard = false,
-        bodyCardElevation = null,
-        bodyCardBorderRadius = null,
-        bodyCardColor = null;
+    : appBarConfig = const VooAppBarConfig.hidden(),
+      floatingActionButton = null,
+      floatingActionButtonLocation = null,
+      floatingActionButtonAnimator = null,
+      showFloatingActionButton = false,
+      bottomSheet = null,
+      persistentFooterButtons = null,
+      backgroundColor = null,
+      resizeToAvoidBottomInset = null,
+      extendBody = true,
+      extendBodyBehindAppBar = true,
+      endDrawer = null,
+      wrapInScaffold = false,
+      useCustomScaffold = false,
+      scaffoldBuilder = null,
+      bodyPadding = null,
+      useBodyCard = false,
+      bodyCardElevation = null,
+      bodyCardBorderRadius = null,
+      bodyCardColor = null;
 
   /// Creates a config for a full-screen page (no app bar, extended body).
   const VooPageConfig.fullscreen()
-      : appBar = null,
-        showAppBar = false,
-        floatingActionButton = null,
-        floatingActionButtonLocation = null,
-        floatingActionButtonAnimator = null,
-        showFloatingActionButton = null,
-        bottomSheet = null,
-        persistentFooterButtons = null,
-        backgroundColor = null,
-        resizeToAvoidBottomInset = null,
-        extendBody = true,
-        extendBodyBehindAppBar = true,
-        endDrawer = null,
-        additionalAppBarActions = null,
-        appBarLeading = null,
-        appBarTitle = null,
-        shouldShowBackButton = false,
-        wrapInScaffold = false,
-        useCustomScaffold = false,
-        scaffoldBuilder = null,
-        bodyPadding = null,
-        useBodyCard = null,
-        bodyCardElevation = null,
-        bodyCardBorderRadius = null,
-        bodyCardColor = null;
+    : appBarConfig = const VooAppBarConfig.hidden(),
+      floatingActionButton = null,
+      floatingActionButtonLocation = null,
+      floatingActionButtonAnimator = null,
+      showFloatingActionButton = null,
+      bottomSheet = null,
+      persistentFooterButtons = null,
+      backgroundColor = null,
+      resizeToAvoidBottomInset = null,
+      extendBody = true,
+      extendBodyBehindAppBar = true,
+      endDrawer = null,
+      wrapInScaffold = false,
+      useCustomScaffold = false,
+      scaffoldBuilder = null,
+      bodyPadding = null,
+      useBodyCard = null,
+      bodyCardElevation = null,
+      bodyCardBorderRadius = null,
+      bodyCardColor = null;
 
   /// Creates a copy of this configuration with the given fields replaced.
   VooPageConfig copyWith({
-    PreferredSizeWidget? appBar,
-    bool? showAppBar,
+    VooAppBarConfig? appBarConfig,
     Widget? floatingActionButton,
     FloatingActionButtonLocation? floatingActionButtonLocation,
     FloatingActionButtonAnimator? floatingActionButtonAnimator,
@@ -223,10 +188,6 @@ class VooPageConfig {
     bool? extendBody,
     bool? extendBodyBehindAppBar,
     Widget? endDrawer,
-    List<Widget>? additionalAppBarActions,
-    Widget? appBarLeading,
-    Widget? appBarTitle,
-    bool? shouldShowBackButton,
     bool? wrapInScaffold,
     bool? useCustomScaffold,
     Widget Function(BuildContext context, Widget child)? scaffoldBuilder,
@@ -237,30 +198,18 @@ class VooPageConfig {
     Color? bodyCardColor,
   }) {
     return VooPageConfig(
-      appBar: appBar ?? this.appBar,
-      showAppBar: showAppBar ?? this.showAppBar,
+      appBarConfig: appBarConfig ?? this.appBarConfig,
       floatingActionButton: floatingActionButton ?? this.floatingActionButton,
-      floatingActionButtonLocation:
-          floatingActionButtonLocation ?? this.floatingActionButtonLocation,
-      floatingActionButtonAnimator:
-          floatingActionButtonAnimator ?? this.floatingActionButtonAnimator,
-      showFloatingActionButton:
-          showFloatingActionButton ?? this.showFloatingActionButton,
+      floatingActionButtonLocation: floatingActionButtonLocation ?? this.floatingActionButtonLocation,
+      floatingActionButtonAnimator: floatingActionButtonAnimator ?? this.floatingActionButtonAnimator,
+      showFloatingActionButton: showFloatingActionButton ?? this.showFloatingActionButton,
       bottomSheet: bottomSheet ?? this.bottomSheet,
-      persistentFooterButtons:
-          persistentFooterButtons ?? this.persistentFooterButtons,
+      persistentFooterButtons: persistentFooterButtons ?? this.persistentFooterButtons,
       backgroundColor: backgroundColor ?? this.backgroundColor,
-      resizeToAvoidBottomInset:
-          resizeToAvoidBottomInset ?? this.resizeToAvoidBottomInset,
+      resizeToAvoidBottomInset: resizeToAvoidBottomInset ?? this.resizeToAvoidBottomInset,
       extendBody: extendBody ?? this.extendBody,
-      extendBodyBehindAppBar:
-          extendBodyBehindAppBar ?? this.extendBodyBehindAppBar,
+      extendBodyBehindAppBar: extendBodyBehindAppBar ?? this.extendBodyBehindAppBar,
       endDrawer: endDrawer ?? this.endDrawer,
-      additionalAppBarActions:
-          additionalAppBarActions ?? this.additionalAppBarActions,
-      appBarLeading: appBarLeading ?? this.appBarLeading,
-      appBarTitle: appBarTitle ?? this.appBarTitle,
-      shouldShowBackButton: shouldShowBackButton ?? this.shouldShowBackButton,
       wrapInScaffold: wrapInScaffold ?? this.wrapInScaffold,
       useCustomScaffold: useCustomScaffold ?? this.useCustomScaffold,
       scaffoldBuilder: scaffoldBuilder ?? this.scaffoldBuilder,
@@ -272,10 +221,51 @@ class VooPageConfig {
     );
   }
 
+  // ===== Convenience getters for app bar properties =====
+  // These provide easy access to app bar config values
+
+  /// Whether to show the app bar.
+  bool? get showAppBar => appBarConfig?.show;
+
+  /// Custom app bar widget.
+  PreferredSizeWidget? get appBar => appBarConfig?.appBar;
+
+  /// Custom title widget for the app bar.
+  Widget? get appBarTitle => appBarConfig?.title;
+
+  /// Custom leading widget for the app bar.
+  Widget? get appBarLeading => appBarConfig?.leading;
+
+  /// Additional actions to add to the app bar.
+  List<Widget>? get additionalAppBarActions => appBarConfig?.additionalActions;
+
+  /// Widget to display at the bottom of the app bar (e.g., TabBar).
+  PreferredSizeWidget? get appBarBottom => appBarConfig?.bottom;
+
+  /// Whether to show a divider/border at the bottom of the app bar.
+  bool? get showAppBarBottomDivider => appBarConfig?.showBottomDivider;
+
+  /// Whether to show the back button in the app bar.
+  bool? get shouldShowBackButton => appBarConfig?.showBackButton;
+
+  /// Background color for the app bar.
+  Color? get appBarBackgroundColor => appBarConfig?.backgroundColor;
+
+  /// Foreground color for the app bar.
+  Color? get appBarForegroundColor => appBarConfig?.foregroundColor;
+
+  /// Whether to center the app bar title.
+  bool? get centerAppBarTitle => appBarConfig?.centerTitle;
+
+  /// App bar elevation.
+  double? get appBarElevation => appBarConfig?.elevation;
+
+  /// App bar toolbar height.
+  double? get appBarToolbarHeight => appBarConfig?.toolbarHeight;
+
   /// Returns true if any override is set.
   bool get hasOverrides =>
-      appBar != null ||
-      showAppBar != null ||
+      (appBarConfig?.hasOverrides ?? false) ||
       floatingActionButton != null ||
       floatingActionButtonLocation != null ||
       floatingActionButtonAnimator != null ||
@@ -287,10 +277,6 @@ class VooPageConfig {
       extendBody != null ||
       extendBodyBehindAppBar != null ||
       endDrawer != null ||
-      additionalAppBarActions != null ||
-      appBarLeading != null ||
-      appBarTitle != null ||
-      shouldShowBackButton != null ||
       wrapInScaffold ||
       useCustomScaffold ||
       scaffoldBuilder != null ||

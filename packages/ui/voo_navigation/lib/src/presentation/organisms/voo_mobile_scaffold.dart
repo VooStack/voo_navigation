@@ -115,6 +115,12 @@ class VooMobileScaffold extends StatelessWidget {
                   title: pageConfig?.appBarTitle,
                   leading: pageConfig?.appBarLeading,
                   additionalActions: pageConfig?.additionalAppBarActions,
+                  bottom: pageConfig?.appBarBottom,
+                  showBottomDivider: pageConfig?.showAppBarBottomDivider,
+                  backgroundColor: pageConfig?.appBarBackgroundColor,
+                  foregroundColor: pageConfig?.appBarForegroundColor,
+                  centerTitle: pageConfig?.centerAppBarTitle,
+                  toolbarHeight: pageConfig?.appBarToolbarHeight,
                 ))
           : null,
       body: body,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_bar/voo_navigation_bar.dart';
 import 'package:voo_navigation/src/presentation/organisms/voo_scaffold_builder.dart';
-import 'package:voo_navigation/src/presentation/utils/voo_page_scope.dart';
 import 'package:voo_responsive/voo_responsive.dart';
 
 /// Adaptive scaffold that automatically adjusts navigation based on screen size
@@ -12,12 +11,6 @@ class VooAdaptiveScaffold extends StatefulWidget {
 
   /// Main content body (can be a StatefulNavigationShell from go_router)
   final Widget body;
-
-  /// Optional custom app bar (overrides config.appBarTitle)
-  final PreferredSizeWidget? appBar;
-
-  /// Whether to show the app bar
-  final bool showAppBar;
 
   /// Custom end drawer
   final Widget? endDrawer;
@@ -74,8 +67,6 @@ class VooAdaptiveScaffold extends StatefulWidget {
     super.key,
     required this.config,
     required this.body,
-    this.appBar,
-    bool? showAppBar,
     this.endDrawer,
     this.drawerEdgeDragWidth = 20.0,
     this.drawerEnableOpenDragGesture = true,
@@ -93,8 +84,7 @@ class VooAdaptiveScaffold extends StatefulWidget {
     double? bodyCardElevation,
     this.bodyCardBorderRadius,
     this.bodyCardColor,
-  })  : showAppBar = showAppBar ?? true,
-        resizeToAvoidBottomInset = resizeToAvoidBottomInset ?? true,
+  })  : resizeToAvoidBottomInset = resizeToAvoidBottomInset ?? true,
         extendBody = extendBody ?? false,
         extendBodyBehindAppBar = extendBodyBehindAppBar ?? false,
         useBodyCard = useBodyCard ?? false,
@@ -106,41 +96,23 @@ class VooAdaptiveScaffold extends StatefulWidget {
 
 class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
   late String _selectedId;
-  late VooPageController _pageController;
 
   @override
   void initState() {
     super.initState();
     _selectedId = widget.config.selectedId ??
         widget.config.items.firstWhere((item) => item.isEnabled).id;
-
-    _pageController = VooPageController();
-    _pageController.setOnConfigChanged(_onPageConfigChanged);
-  }
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
   }
 
   @override
   void didUpdateWidget(VooAdaptiveScaffold oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Sync selectedId when config changes from parent
     if (widget.config.selectedId != null &&
         widget.config.selectedId != oldWidget.config.selectedId) {
       _selectedId = widget.config.selectedId!;
     }
   }
 
-  void _onPageConfigChanged() {
-    if (mounted) {
-      setState(() {});
-    }
-  }
-
-  /// Recursively finds an item by ID, including items nested in sections
   VooNavigationDestination? _findItemById(
       List<VooNavigationDestination> items, String itemId) {
     for (final item in items) {
@@ -154,14 +126,10 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
   }
 
   void _onNavigationItemSelected(String itemId) {
-    // Check if this is a special nav item (user profile, etc.)
-    // Use the effective ID from config to support custom profile IDs
     final userProfileEffectiveId = widget.config.userProfileConfig?.effectiveId;
     final isSpecialItem = itemId == userProfileEffectiveId;
-
     final item = _findItemById(widget.config.items, itemId);
 
-    // For regular items, validate the item exists and is enabled
     if (!isSpecialItem && (item == null || !item.isEnabled)) return;
 
     if (widget.config.enableHapticFeedback) {
@@ -172,104 +140,53 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
       _selectedId = itemId;
     });
 
-    // Handle navigation for regular items
     if (item?.route != null && context.mounted) {
       Navigator.of(context).pushNamed(item!.route!);
     }
 
-    // Call custom callback for regular items
     item?.onTap?.call();
-
-    // Always call the config callback (handles both regular and special items)
     widget.config.onNavigationItemSelected?.call(itemId);
-  }
-
-  /// Updates the active route on the page controller
-  void _updateActiveRoute(BuildContext context) {
-    final route = ModalRoute.of(context);
-    _pageController.setActiveRoute(route?.settings.name);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Update the active route for proper page config resolution
-    // This is critical for StatefulShellRoute/IndexedStack where multiple pages are mounted
-    _updateActiveRoute(context);
+    return VooNavigationInherited(
+      config: widget.config,
+      selectedId: _selectedId,
+      onNavigationItemSelected: _onNavigationItemSelected,
+      child: VooResponsiveBuilder(
+        builder: (context, screenInfo) {
+          final navigationType = widget.config.getNavigationType(screenInfo.width);
 
-    return VooPageScope(
-      controller: _pageController,
-      child: VooNavigationInherited(
-        config: widget.config,
-        selectedId: _selectedId,
-        onNavigationItemSelected: _onNavigationItemSelected,
-        child: VooResponsiveBuilder(
-          builder: (context, screenInfo) {
-            final screenWidth = screenInfo.width;
-            final navigationType = widget.config.getNavigationType(screenWidth);
-
-            // Get page-level overrides if any
-            final pageConfig = _pageController.currentConfig;
-
-            // Effective values with priority: pageConfig > widget > config
-            final effectiveShowAppBar =
-                pageConfig?.showAppBar ?? widget.showAppBar;
-            final effectiveResizeToAvoidBottomInset =
-                pageConfig?.resizeToAvoidBottomInset ??
-                    widget.resizeToAvoidBottomInset;
-            final effectiveExtendBody =
-                pageConfig?.extendBody ?? widget.extendBody;
-            final effectiveExtendBodyBehindAppBar =
-                pageConfig?.extendBodyBehindAppBar ??
-                    widget.extendBodyBehindAppBar;
-            final effectiveBodyPadding = pageConfig?.bodyPadding ??
-                widget.bodyPadding ??
-                widget.config.bodyPadding;
-            final effectiveUseBodyCard =
-                pageConfig?.useBodyCard ?? widget.useBodyCard;
-            final effectiveBodyCardElevation =
-                pageConfig?.bodyCardElevation ?? widget.bodyCardElevation;
-            final effectiveBodyCardBorderRadius =
-                pageConfig?.bodyCardBorderRadius ??
-                    widget.bodyCardBorderRadius ??
-                    widget.config.bodyCardBorderRadius;
-            final effectiveBodyCardColor = pageConfig?.bodyCardColor ??
-                widget.bodyCardColor ??
-                widget.config.bodyCardColor;
-
-            // Build appropriate scaffold based on navigation type
-            return VooScaffoldBuilder(
-              config: widget.config,
-              navigationType: navigationType,
-              screenInfo: screenInfo,
-              body: widget.body,
-              selectedId: _selectedId,
-              onNavigationItemSelected: _onNavigationItemSelected,
-              appBar: pageConfig?.appBar ?? widget.appBar,
-              showAppBar: effectiveShowAppBar,
-              endDrawer: pageConfig?.endDrawer ?? widget.endDrawer,
-              drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
-              drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
-              endDrawerEnableOpenDragGesture:
-                  widget.endDrawerEnableOpenDragGesture,
-              scaffoldKey: widget.scaffoldKey,
-              backgroundColor:
-                  pageConfig?.backgroundColor ?? widget.backgroundColor,
-              resizeToAvoidBottomInset: effectiveResizeToAvoidBottomInset,
-              extendBody: effectiveExtendBody,
-              extendBodyBehindAppBar: effectiveExtendBodyBehindAppBar,
-              bottomSheet: pageConfig?.bottomSheet ?? widget.bottomSheet,
-              persistentFooterButtons: pageConfig?.persistentFooterButtons ??
-                  widget.persistentFooterButtons,
-              restorationId: widget.restorationId,
-              bodyPadding: effectiveBodyPadding,
-              useBodyCard: effectiveUseBodyCard,
-              bodyCardElevation: effectiveBodyCardElevation,
-              bodyCardBorderRadius: effectiveBodyCardBorderRadius,
-              bodyCardColor: effectiveBodyCardColor,
-              pageConfig: pageConfig,
-            );
-          },
-        ),
+          return VooScaffoldBuilder(
+            config: widget.config,
+            navigationType: navigationType,
+            screenInfo: screenInfo,
+            body: widget.body,
+            selectedId: _selectedId,
+            onNavigationItemSelected: _onNavigationItemSelected,
+            appBar: null,
+            showAppBar: false,
+            endDrawer: widget.endDrawer,
+            drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
+            drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
+            endDrawerEnableOpenDragGesture: widget.endDrawerEnableOpenDragGesture,
+            scaffoldKey: widget.scaffoldKey,
+            backgroundColor: widget.backgroundColor,
+            resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
+            extendBody: widget.extendBody,
+            extendBodyBehindAppBar: widget.extendBodyBehindAppBar,
+            bottomSheet: widget.bottomSheet,
+            persistentFooterButtons: widget.persistentFooterButtons,
+            restorationId: widget.restorationId,
+            bodyPadding: widget.bodyPadding ?? widget.config.bodyPadding,
+            useBodyCard: widget.useBodyCard,
+            bodyCardElevation: widget.bodyCardElevation,
+            bodyCardBorderRadius: widget.bodyCardBorderRadius ?? widget.config.bodyCardBorderRadius,
+            bodyCardColor: widget.bodyCardColor ?? widget.config.bodyCardColor,
+            pageConfig: null,
+          );
+        },
       ),
     );
   }

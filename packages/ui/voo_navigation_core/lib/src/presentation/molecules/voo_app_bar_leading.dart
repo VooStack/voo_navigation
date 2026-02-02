@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/page_config.dart';
 
 /// App bar leading widget that handles menu, back button, or custom widget
 class VooAppBarLeading extends StatelessWidget {
@@ -11,18 +10,10 @@ class VooAppBarLeading extends StatelessWidget {
   /// Navigation configuration
   final VooNavigationConfig? config;
 
-  /// Currently selected navigation item ID
-  final String? selectedId;
-
-  /// Page configuration for per-page overrides
-  final VooPageConfig? pageConfig;
-
   const VooAppBarLeading({
     super.key,
     required this.showMenuButton,
     this.config,
-    this.selectedId,
-    this.pageConfig,
   });
 
   /// Checks if this widget would render actual content (not an empty SizedBox)
@@ -33,15 +24,7 @@ class VooAppBarLeading extends StatelessWidget {
     required BuildContext context,
     required bool showMenuButton,
     VooNavigationConfig? config,
-    String? selectedId,
-    VooPageConfig? pageConfig,
   }) {
-    // Check for custom leading from builder
-    final customLeading = config?.appBarLeadingBuilder?.call(selectedId);
-    if (customLeading != null) {
-      return true;
-    }
-
     // Check for menu button (drawer)
     if (showMenuButton) {
       final scaffoldState = Scaffold.maybeOf(context);
@@ -50,16 +33,8 @@ class VooAppBarLeading extends StatelessWidget {
       }
     }
 
-    // Check shouldShowBackButton from page config
-    final shouldShowBackButton = pageConfig?.shouldShowBackButton;
-
-    // If explicitly set to false, don't show
-    if (shouldShowBackButton == false) {
-      return false;
-    }
-
-    // Show if explicitly true OR if can pop
-    if (shouldShowBackButton == true || Navigator.of(context).canPop()) {
+    // Show back button if can pop
+    if (Navigator.of(context).canPop()) {
       return true;
     }
 
@@ -68,12 +43,6 @@ class VooAppBarLeading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Try to get custom leading from builder first
-    final customLeading = config?.appBarLeadingBuilder?.call(selectedId);
-    if (customLeading != null) {
-      return customLeading;
-    }
-
     // Show menu button for drawer on mobile (only if showMenuButton is true)
     if (showMenuButton) {
       final scaffoldState = Scaffold.maybeOf(context);
@@ -91,16 +60,8 @@ class VooAppBarLeading extends StatelessWidget {
       }
     }
 
-    // Check shouldShowBackButton from page config
-    final shouldShowBackButton = pageConfig?.shouldShowBackButton;
-
-    // If explicitly set to false, don't show back button
-    if (shouldShowBackButton == false) {
-      return const SizedBox.shrink();
-    }
-
-    // Show back button if explicitly true OR if can pop (auto behavior)
-    if (shouldShowBackButton == true || Navigator.of(context).canPop()) {
+    // Show back button if can pop
+    if (Navigator.of(context).canPop()) {
       return IconButton(
         icon: const Icon(Icons.arrow_back),
         onPressed: () {

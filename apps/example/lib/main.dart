@@ -262,7 +262,6 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
   }
 
   Widget _buildMainScaffold(BuildContext context) {
-    final theme = Theme.of(context);
     const scaffoldBgColor = Color(0xFFF9FAFB);
 
     final config = VooNavigationConfig(
@@ -292,18 +291,6 @@ class _HRISELinkAppState extends State<HRISELinkApp> {
       // App bar
       appBarAlongsideRail: true,
       showAppBar: true,
-      appBarTitleBuilder: (_) => Text(
-        _getPageTitle(),
-        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-      ),
-      appBarActionsBuilder: (_) => [
-        IconButton(icon: const Icon(Icons.chat_bubble_outline), onPressed: () {}, tooltip: 'Messages'),
-        IconButton(icon: const Icon(Icons.notifications_outlined), onPressed: () {}, tooltip: 'Notifications'),
-        const SizedBox(width: 12),
-        OutlinedButton(onPressed: () {}, child: const Text('Export CSV')),
-        const SizedBox(width: 8),
-        FilledButton(onPressed: () {}, child: const Text('Add new')),
-      ],
 
       // Sizing
       navigationDrawerWidth: 220,
