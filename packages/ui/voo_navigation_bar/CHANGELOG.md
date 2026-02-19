@@ -1,3 +1,11 @@
+## 0.1.17
+
+### Changed
+- **Exports**: Updated navigation bar exports
+- **Cleanup**: Removed unused floating navigation tokens
+
+---
+
 ## 0.1.16
 
 ### Fixed

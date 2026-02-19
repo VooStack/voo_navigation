@@ -1,3 +1,19 @@
+## 1.3.35
+
+### Added
+- **VooQuickAction**: Custom action callbacks now invoked on quick action taps
+- **VooQuickActionsSection**: New support for quick action sections with customizable layouts and styles
+
+### Changed
+- **App bar configuration**: Refactored app bar configuration and navigation components
+- **Cleanup**: Removed unused navigation components and related atoms
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.26
+- Updated `voo_navigation_bar` to ^0.1.17
+
+---
+
 ## 1.3.34
 
 ### Changed

@@ -1,3 +1,15 @@
+## 0.2.26
+
+### Added
+- **VooQuickActionsSection**: New entity for grouping quick actions with customizable styles
+- **VooQuickAction**: Added `onTap` callback support for custom action handling
+
+### Changed
+- **App bar**: Refactored app bar configuration components
+- **Cleanup**: Removed unused navigation atoms and components
+
+---
+
 ## 0.2.25
 
 ### Changed
