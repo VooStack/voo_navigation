@@ -352,6 +352,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
         onTap: action.isEnabled
             ? () {
                 HapticFeedback.lightImpact();
+                action.onTap?.call();
                 widget.onActionTap(action);
               }
             : null,
@@ -531,6 +532,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
           onTap: action.isEnabled
               ? () {
                   HapticFeedback.lightImpact();
+                  action.onTap?.call();
                   widget.onActionTap(action);
                 }
               : null,

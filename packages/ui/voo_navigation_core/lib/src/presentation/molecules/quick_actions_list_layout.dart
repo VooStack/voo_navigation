@@ -48,7 +48,10 @@ class VooQuickActionsListLayout extends StatelessWidget {
         key: ValueKey(action.id),
         child: actionBuilder!(
           action,
-          () => onActionTap(action),
+          () {
+            action.onTap?.call();
+            onActionTap(action);
+          },
         ),
       );
     }
@@ -57,7 +60,10 @@ class VooQuickActionsListLayout extends StatelessWidget {
       key: ValueKey(action.id),
       action: action,
       style: style,
-      onTap: () => onActionTap(action),
+      onTap: () {
+        action.onTap?.call();
+        onActionTap(action);
+      },
     );
   }
 

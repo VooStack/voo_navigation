@@ -118,6 +118,7 @@ class VooQuickActionsSectionLayout extends StatelessWidget {
         onTap: action.isEnabled
             ? () {
                 HapticFeedback.lightImpact();
+                action.onTap?.call();
                 onActionTap(action);
               }
             : null,
