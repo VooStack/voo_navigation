@@ -146,38 +146,44 @@ class _VooQuickActionsState extends State<VooQuickActions>
     final spaceBelow = screenSize.height - offset.dy - size.height;
     final showAbove = spaceBelow < 300;
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     return OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          // Backdrop
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: _removeOverlay,
-              behavior: HitTestBehavior.opaque,
-              child: Container(color: Colors.transparent),
-            ),
-          ),
-          // Menu
-          Positioned(
-            left: left,
-            top: showAbove ? null : offset.dy + size.height + 8,
-            bottom: showAbove ? screenSize.height - offset.dy + 8 : null,
-            child: ScaleTransition(
-              scale: _scaleAnimation,
-              alignment: showAbove ? Alignment.bottomCenter : Alignment.topCenter,
-              child: VooQuickActionsMenuContent(
-                style: style,
-                width: dropdownWidth,
-                useGridLayout: widget.useGridLayout,
-                gridColumns: widget.gridColumns,
-                showLabelsInGrid: widget.showLabelsInGrid,
-                actions: widget.actions,
-                actionBuilder: widget.actionBuilder,
-                onActionTap: _handleActionTap,
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: Stack(
+          children: [
+            // Backdrop
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: _removeOverlay,
+                behavior: HitTestBehavior.opaque,
+                child: Container(color: Colors.transparent),
               ),
             ),
-          ),
-        ],
+            // Menu
+            Positioned(
+              left: left,
+              top: showAbove ? null : offset.dy + size.height + 8,
+              bottom: showAbove ? screenSize.height - offset.dy + 8 : null,
+              child: ScaleTransition(
+                scale: _scaleAnimation,
+                alignment: showAbove ? Alignment.bottomCenter : Alignment.topCenter,
+                child: VooQuickActionsMenuContent(
+                  style: style,
+                  width: dropdownWidth,
+                  useGridLayout: widget.useGridLayout,
+                  gridColumns: widget.gridColumns,
+                  showLabelsInGrid: widget.showLabelsInGrid,
+                  actions: widget.actions,
+                  actionBuilder: widget.actionBuilder,
+                  onActionTap: _handleActionTap,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

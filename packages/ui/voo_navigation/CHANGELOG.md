@@ -1,3 +1,16 @@
+## 1.3.37
+
+### Fixed
+- **Overlay Theming**: Fixed all overlay components not inheriting app theme
+  - Overlays now properly capture and pass theme context from the widget tree
+  - Affects: `VooQuickActions`, `VooActionNavItem`, `VooExpandableNavModal`, `VooMultiSwitcher`, `VooContextSwitcher`, `VooNotificationsBell`, `VooOrganizationSwitcher`, `VooSearchBar`, `VooCollapsedItemsDropdown`
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.27
+- Updated `voo_navigation_bar` to ^0.1.18
+
+---
+
 ## 1.3.36
 
 ### Fixed

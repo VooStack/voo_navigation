@@ -264,76 +264,82 @@ class _VooSearchBarState extends State<VooSearchBar> {
     final dropdownWidth = style.dropdownWidth ?? size.width;
     final maxHeight = style.maxDropdownHeight ?? 400;
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     return OverlayEntry(
-      builder: (context) {
+      builder: (overlayContext) {
         final hasResults = _totalResults > 0 || _showRecentSection;
 
         if (!hasResults && _query.isEmpty) {
           return const SizedBox.shrink();
         }
 
-        return Stack(
-          children: [
-            // Backdrop
-            Positioned.fill(
-              child: GestureDetector(
-                onTap: () => _focusNode.unfocus(),
-                behavior: HitTestBehavior.translucent,
-                child: Container(color: Colors.transparent),
+        return Theme(
+          data: theme,
+          child: Stack(
+            children: [
+              // Backdrop
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () => _focusNode.unfocus(),
+                  behavior: HitTestBehavior.translucent,
+                  child: Container(color: Colors.transparent),
+                ),
               ),
-            ),
-            // Results dropdown
-            CompositedTransformFollower(
-              link: _layerLink,
-              offset: Offset(0, size.height + 4),
-              child: Material(
-                elevation: 8,
-                borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-                color: style.dropdownBackgroundColor ??
-                    Theme.of(context).colorScheme.surface,
-                child: Container(
-                  width: dropdownWidth,
-                  constraints: BoxConstraints(maxHeight: maxHeight),
-                  decoration: BoxDecoration(
-                    borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-                    border: Border.all(
-                      color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+              // Results dropdown
+              CompositedTransformFollower(
+                link: _layerLink,
+                offset: Offset(0, size.height + 4),
+                child: Material(
+                  elevation: 8,
+                  borderRadius: style.borderRadius ?? BorderRadius.circular(12),
+                  color: style.dropdownBackgroundColor ??
+                      theme.colorScheme.surface,
+                  child: Container(
+                    width: dropdownWidth,
+                    constraints: BoxConstraints(maxHeight: maxHeight),
+                    decoration: BoxDecoration(
+                      borderRadius: style.borderRadius ?? BorderRadius.circular(12),
+                      border: Border.all(
+                        color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                      ),
                     ),
-                  ),
-                  child: KeyboardListener(
-                    focusNode: FocusNode(),
-                    onKeyEvent: _handleKeyEvent,
-                    child: VooSearchBarResults(
-                      style: style,
-                      query: _query,
-                      showRecentSection: _showRecentSection,
-                      recentSearches: widget.recentSearches,
-                      filteredNavItems: _filteredNavItems,
-                      filteredActions: _filteredActions,
-                      selectedIndex: _selectedIndex,
-                      onClearRecentSearches: widget.onClearRecentSearches,
-                      onRecentSearchSelected: (search) {
-                        widget.onRecentSearchSelected?.call(search);
-                        _controller.text = search;
-                        _handleSearch(search);
-                      },
-                      onNavigationItemSelected: (item) {
-                        widget.onNavigationItemSelected?.call(item);
-                        _removeOverlay();
-                      },
-                      onSearchActionSelected: (action) {
-                        widget.onSearchActionSelected?.call(action);
-                        action.onTap?.call();
-                        _removeOverlay();
-                      },
-                      filteredItemBuilder: widget.filteredItemBuilder,
-                      actionBuilder: widget.actionBuilder,
+                    child: KeyboardListener(
+                      focusNode: FocusNode(),
+                      onKeyEvent: _handleKeyEvent,
+                      child: VooSearchBarResults(
+                        style: style,
+                        query: _query,
+                        showRecentSection: _showRecentSection,
+                        recentSearches: widget.recentSearches,
+                        filteredNavItems: _filteredNavItems,
+                        filteredActions: _filteredActions,
+                        selectedIndex: _selectedIndex,
+                        onClearRecentSearches: widget.onClearRecentSearches,
+                        onRecentSearchSelected: (search) {
+                          widget.onRecentSearchSelected?.call(search);
+                          _controller.text = search;
+                          _handleSearch(search);
+                        },
+                        onNavigationItemSelected: (item) {
+                          widget.onNavigationItemSelected?.call(item);
+                          _removeOverlay();
+                        },
+                        onSearchActionSelected: (action) {
+                          widget.onSearchActionSelected?.call(action);
+                          action.onTap?.call();
+                          _removeOverlay();
+                        },
+                        filteredItemBuilder: widget.filteredItemBuilder,
+                        actionBuilder: widget.actionBuilder,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         );
       },
     );

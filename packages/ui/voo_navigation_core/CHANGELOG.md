@@ -1,3 +1,11 @@
+## 0.2.27
+
+### Fixed
+- **Overlay Theming**: Fixed overlay components not inheriting app theme
+  - `VooQuickActions`, `VooMultiSwitcher`, `VooContextSwitcher`, `VooNotificationsBell`, `VooOrganizationSwitcher`, `VooSearchBar`, `VooCollapsedItemsDropdown` now capture and pass theme context to overlays
+
+---
+
 ## 0.2.26
 
 ### Added

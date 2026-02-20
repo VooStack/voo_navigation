@@ -225,8 +225,14 @@ mixin ExpandableNavModalMixin<T extends StatefulWidget> on State<T>, TickerProvi
 
     modalAnimationController.forward();
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     overlayEntry = OverlayEntry(
-      builder: (context) => _buildModalOverlay(context, modalBuilder),
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: _buildModalOverlay(overlayContext, modalBuilder),
+      ),
     );
 
     Overlay.of(context).insert(overlayEntry!);

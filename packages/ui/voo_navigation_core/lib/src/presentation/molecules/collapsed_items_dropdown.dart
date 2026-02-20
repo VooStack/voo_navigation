@@ -65,75 +65,81 @@ class _VooCollapsedItemsDropdownState extends State<VooCollapsedItemsDropdown> {
     final size = renderBox.size;
     final offset = renderBox.localToGlobal(Offset.zero);
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     return OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: _removeOverlay,
-              behavior: HitTestBehavior.opaque,
-              child: Container(color: Colors.transparent),
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: _removeOverlay,
+                behavior: HitTestBehavior.opaque,
+                child: Container(color: Colors.transparent),
+              ),
             ),
-          ),
-          Positioned(
-            left: offset.dx,
-            top: offset.dy + size.height + 4,
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 200),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
+            Positioned(
+              left: offset.dx,
+              top: offset.dy + size.height + 4,
+              child: Material(
+                elevation: 4,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 200),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: theme.colorScheme.outline.withValues(alpha: 0.2),
+                    ),
                   ),
-                ),
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  itemCount: widget.items.length,
-                  itemBuilder: (context, index) {
-                    final item = widget.items[index];
-                    return InkWell(
-                      onTap: () {
-                        _removeOverlay();
-                        item.onTap?.call();
-                        widget.onItemTap?.call(item);
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 8,
-                        ),
-                        child: Row(
-                          children: [
-                            if (item.icon != null) ...[
-                              item.iconWidget ??
-                                  Icon(
-                                    item.icon,
-                                    size: 16,
-                                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                                  ),
-                              const SizedBox(width: 8),
-                            ],
-                            Expanded(
-                              child: Text(
-                                item.label,
-                                style: Theme.of(context).textTheme.bodyMedium,
-                                overflow: TextOverflow.ellipsis,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    itemCount: widget.items.length,
+                    itemBuilder: (itemContext, index) {
+                      final item = widget.items[index];
+                      return InkWell(
+                        onTap: () {
+                          _removeOverlay();
+                          item.onTap?.call();
+                          widget.onItemTap?.call(item);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              if (item.icon != null) ...[
+                                item.iconWidget ??
+                                    Icon(
+                                      item.icon,
+                                      size: 16,
+                                      color: theme.colorScheme.onSurfaceVariant,
+                                    ),
+                                const SizedBox(width: 8),
+                              ],
+                              Expanded(
+                                child: Text(
+                                  item.label,
+                                  style: theme.textTheme.bodyMedium,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -147,8 +147,13 @@ class _VooNotificationsBellState extends State<VooNotificationsBell> with Single
     }
     if (left < 16) left = 16;
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     return OverlayEntry(
-      builder: (context) => Stack(
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: Stack(
         children: [
           // Backdrop
           Positioned.fill(
@@ -189,6 +194,7 @@ class _VooNotificationsBellState extends State<VooNotificationsBell> with Single
             ),
           ),
         ],
+        ),
       ),
     );
   }

@@ -111,15 +111,21 @@ class _VooMultiSwitcherState extends State<VooMultiSwitcher>
         style.modalMaxHeight ?? VooMultiSwitcherStyle.defaultModalMaxHeight;
     final cardWidth = _getCardWidth();
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     _overlayEntry = OverlayEntry(
-      builder: (context) => _MultiSwitcherOverlay(
-        link: _layerLink,
-        animation: _slideAnimation,
-        modalMaxHeight: modalMaxHeight,
-        modalWidth: cardWidth,
-        config: widget.config,
-        onClose: _toggleExpanded,
-        onOrganizationSelected: _handleOrganizationSelected,
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: _MultiSwitcherOverlay(
+          link: _layerLink,
+          animation: _slideAnimation,
+          modalMaxHeight: modalMaxHeight,
+          modalWidth: cardWidth,
+          config: widget.config,
+          onClose: _toggleExpanded,
+          onOrganizationSelected: _handleOrganizationSelected,
+        ),
       ),
     );
 

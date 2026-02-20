@@ -179,8 +179,13 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
     final spaceBelow = screenSize.height - offset.dy - size.height;
     final showAbove = spaceBelow < maxHeight && offset.dy > maxHeight;
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     return OverlayEntry(
-      builder: (context) => Stack(
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: Stack(
         children: [
           // Backdrop
           Positioned.fill(
@@ -227,6 +232,7 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
             ),
           ),
         ],
+        ),
       ),
     );
   }

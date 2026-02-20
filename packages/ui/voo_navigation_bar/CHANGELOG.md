@@ -1,3 +1,11 @@
+## 0.1.18
+
+### Fixed
+- **Overlay Theming**: Fixed overlay components not inheriting app theme
+  - `VooActionNavItem` and `VooExpandableNavModal` now capture and pass theme context to overlays
+
+---
+
 ## 0.1.17
 
 ### Changed

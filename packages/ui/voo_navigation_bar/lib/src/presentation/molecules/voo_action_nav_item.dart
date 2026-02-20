@@ -78,8 +78,14 @@ class _VooActionNavItemState extends State<VooActionNavItem>
 
     _animationController.forward();
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     _overlayEntry = OverlayEntry(
-      builder: (context) => _buildModalOverlay(context),
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: _buildModalOverlay(overlayContext),
+      ),
     );
 
     Overlay.of(context).insert(_overlayEntry!);

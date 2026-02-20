@@ -110,15 +110,21 @@ class _VooContextSwitcherState extends State<VooContextSwitcher>
         style.modalMaxHeight ?? VooContextSwitcherStyle.defaultModalMaxHeight;
     final cardWidth = _getCardWidth();
 
+    // Capture the theme from the widget's context to pass to the overlay
+    final theme = Theme.of(context);
+
     _overlayEntry = OverlayEntry(
-      builder: (context) => _ContextSwitcherOverlay(
-        link: _layerLink,
-        animation: _slideAnimation,
-        modalMaxHeight: modalMaxHeight,
-        modalWidth: cardWidth,
-        config: widget.config,
-        onClose: _toggleExpanded,
-        onContextSelected: _handleContextSelected,
+      builder: (overlayContext) => Theme(
+        data: theme,
+        child: _ContextSwitcherOverlay(
+          link: _layerLink,
+          animation: _slideAnimation,
+          modalMaxHeight: modalMaxHeight,
+          modalWidth: cardWidth,
+          config: widget.config,
+          onClose: _toggleExpanded,
+          onContextSelected: _handleContextSelected,
+        ),
       ),
     );
 
