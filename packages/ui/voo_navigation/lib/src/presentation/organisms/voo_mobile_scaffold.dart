@@ -123,7 +123,7 @@ class VooMobileScaffold extends StatelessWidget {
                   toolbarHeight: pageConfig?.appBarToolbarHeight,
                 ))
           : null,
-      body: body,
+      body: SizedBox.expand(child: body),
       bottomNavigationBar: bottomNav,
       floatingActionButton: showFab ? fabWidget : null,
       floatingActionButtonLocation: fabLocation,

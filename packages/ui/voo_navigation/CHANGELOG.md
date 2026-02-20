@@ -1,3 +1,12 @@
+## 1.3.36
+
+### Fixed
+- **VooMobileScaffold**: Fixed white screen on mobile caused by zero-height constraints
+  - Wrapped body in `SizedBox.expand()` to ensure full available width/height constraints
+  - Fixes nested Scaffold layout issue where body content would not render
+
+---
+
 ## 1.3.35
 
 ### Added
