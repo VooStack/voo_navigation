@@ -211,8 +211,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ?? const BorderRadius.only(topLeft: Radius.circular(12));
 
     // Content area background - use surfaceContainerLow for visible distinction from navigation
-    final isDark = theme.brightness == Brightness.dark;
-    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ?? (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
+    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ?? colorScheme.surfaceContainerLow;
 
     // When app bar is alongside drawer/rail, wrap the content area with its own scaffold
     if (widget.config.appBarAlongsideRail) {

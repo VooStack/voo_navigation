@@ -113,8 +113,7 @@ class VooTabletScaffold extends StatelessWidget {
 
       final navTheme = config.effectiveTheme;
       final colorScheme = Theme.of(context).colorScheme;
-      final isDark = Theme.of(context).brightness == Brightness.dark;
-      final effectiveContentBackgroundColor = config.contentAreaBackgroundColor ?? (isDark ? colorScheme.surfaceContainerLow : const Color(0xFFF5F5F5));
+      final effectiveContentBackgroundColor = config.contentAreaBackgroundColor ?? colorScheme.surfaceContainerLow;
 
       return Scaffold(
         key: scaffoldKey,
@@ -169,8 +168,7 @@ class VooTabletScaffold extends StatelessWidget {
     // Body always gets margins on top, bottom, right to match navigation styling (default behavior)
     final navTheme = config.effectiveTheme;
     final colorScheme2 = Theme.of(context).colorScheme;
-    final isDark2 = Theme.of(context).brightness == Brightness.dark;
-    final effectiveContentBackgroundColor2 = config.contentAreaBackgroundColor ?? (isDark2 ? colorScheme2.surfaceContainerLow : const Color(0xFFF5F5F5));
+    final effectiveContentBackgroundColor2 = config.contentAreaBackgroundColor ?? colorScheme2.surfaceContainerLow;
 
     return Scaffold(
       key: scaffoldKey,

@@ -1,3 +1,12 @@
+## 0.2.30
+
+### Fixed
+- **Theming Fix**: Fixed hard-coded colors in mobile app bar
+  - Background now uses `theme.colorScheme.surface` instead of hard-coded dark/light colors
+  - Mobile app bar properly respects custom dark themes
+
+---
+
 ## 0.2.29
 
 ### Fixed

@@ -1,3 +1,16 @@
+## 1.3.42
+
+### Fixed
+- **Scaffold Theming**: Fixed hard-coded colors in scaffold backgrounds
+  - Scaffold background now uses `theme.colorScheme.surface`
+  - Content area background now uses `theme.colorScheme.surfaceContainerLow` for both light and dark modes
+  - All scaffold components properly respect custom dark themes
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.30
+
+---
+
 ## 1.3.41
 
 ### Fixed
