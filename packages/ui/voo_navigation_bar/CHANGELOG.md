@@ -1,3 +1,16 @@
+## 0.1.20
+
+### Fixed
+- **Action Modal Theming**: Fixed hard-coded white colors in action item modal's `ListTileThemeData`
+  - `textColor` now uses `theme.colorScheme.onSurface`
+  - `iconColor` now uses `theme.colorScheme.onSurfaceVariant`
+  - Modal content now properly respects custom dark themes
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.29
+
+---
+
 ## 0.1.19
 
 ### Fixed

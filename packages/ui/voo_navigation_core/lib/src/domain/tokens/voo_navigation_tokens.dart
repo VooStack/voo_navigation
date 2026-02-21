@@ -168,13 +168,8 @@ extension VooNavigationTokensTheme on BuildContext {
   // === Expandable Bottom Navigation Theme Extensions ===
 
   /// Background color for expandable nav container.
-  /// Uses surface container in light mode, dark surface in dark mode.
   Color get expandableNavBackground {
-    final theme = Theme.of(this);
-    final isDark = theme.brightness == Brightness.dark;
-    return isDark
-        ? const Color(0xFF1C1C1E) // Dark mode: very dark gray
-        : theme.colorScheme.surfaceContainer; // Light mode: theme-aware surface
+    return Theme.of(this).colorScheme.surfaceContainer;
   }
 
   /// Border color for expandable nav container.
@@ -190,46 +185,26 @@ extension VooNavigationTokensTheme on BuildContext {
 
   /// Background color for unselected item circles in expandable nav.
   Color get expandableNavUnselectedCircle {
-    final theme = Theme.of(this);
-    final isDark = theme.brightness == Brightness.dark;
-    return isDark
-        ? const Color(0xFF3A3A3C) // Dark mode: medium dark gray
-        : theme.colorScheme.surfaceContainerHighest; // Light mode: theme-aware
+    return Theme.of(this).colorScheme.surfaceContainerHighest;
   }
 
   /// Background color for the selected item container (rounded rectangle).
   Color get expandableNavSelectedBackground {
-    final theme = Theme.of(this);
-    final isDark = theme.brightness == Brightness.dark;
-    return isDark
-        ? const Color(0xFF38383A) // Dark mode: visible dark gray
-        : theme.colorScheme.surfaceContainerHigh; // Light mode: theme-aware
+    return Theme.of(this).colorScheme.surfaceContainerHigh;
   }
 
   /// Icon color for unselected items in expandable nav.
   Color get expandableNavUnselectedIcon {
-    final theme = Theme.of(this);
-    final isDark = theme.brightness == Brightness.dark;
-    return isDark
-        ? Colors.white.withValues(alpha: 0.7)
-        : theme.colorScheme.onSurfaceVariant;
+    return Theme.of(this).colorScheme.onSurfaceVariant;
   }
 
   /// Icon color for selected items in expandable nav (on colored circle).
   Color get expandableNavSelectedIcon {
-    final theme = Theme.of(this);
-    final isDark = theme.brightness == Brightness.dark;
-    return isDark
-        ? const Color(0xFF1A1A1A)
-        : theme.colorScheme.onPrimary;
+    return Theme.of(this).colorScheme.onPrimary;
   }
 
   /// Label color for selected items in expandable nav.
   Color get expandableNavSelectedLabel {
-    final theme = Theme.of(this);
-    final isDark = theme.brightness == Brightness.dark;
-    return isDark
-        ? Colors.white
-        : theme.colorScheme.onSurface;
+    return Theme.of(this).colorScheme.onSurface;
   }
 }

@@ -1,3 +1,17 @@
+## 1.3.40
+
+### Fixed
+- **Bottom Nav Bar Theming**: Fixed bottom nav bar using hard-coded dark mode colors instead of theme-aware colors
+  - Navigation bar now properly respects custom dark themes
+  - All expandable nav colors now use Material 3 `colorScheme` properties
+  - Action modal also uses proper theme colors for text and icons
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.29
+- Updated `voo_navigation_bar` to ^0.1.20
+
+---
+
 ## 1.3.39
 
 ### Fixed

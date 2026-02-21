@@ -292,8 +292,8 @@ class _ActionNavModalContent extends StatelessWidget {
           child: Theme(
             data: theme.copyWith(
               listTileTheme: ListTileThemeData(
-                textColor: Colors.white,
-                iconColor: Colors.white.withValues(alpha: 0.8),
+                textColor: theme.colorScheme.onSurface,
+                iconColor: theme.colorScheme.onSurfaceVariant,
               ),
             ),
             child: actionItem.modalBuilder(context, onClose),

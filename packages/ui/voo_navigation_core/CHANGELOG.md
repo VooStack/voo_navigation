@@ -1,3 +1,18 @@
+## 0.2.29
+
+### Fixed
+- **VooNavigationTokens**: Fixed bottom nav bar theming using hard-coded dark mode colors instead of theme-aware colors
+  - All 6 expandable nav getters now use Material 3 `colorScheme` properties consistently
+  - `expandableNavBackground` now uses `surfaceContainer` for both light and dark modes
+  - `expandableNavUnselectedCircle` now uses `surfaceContainerHighest`
+  - `expandableNavSelectedBackground` now uses `surfaceContainerHigh`
+  - `expandableNavUnselectedIcon` now uses `onSurfaceVariant`
+  - `expandableNavSelectedIcon` now uses `onPrimary`
+  - `expandableNavSelectedLabel` now uses `onSurface`
+  - Bottom nav bar now properly respects custom dark themes
+
+---
+
 ## 0.2.28
 
 ### Fixed
