@@ -1,3 +1,11 @@
+## 1.3.39
+
+### Fixed
+- **Floating Nav Bar**: Fixed white background appearing behind floating nav bar
+  - `VooMobileScaffold` now forces `extendBody: true` so body extends behind nav bar
+
+---
+
 ## 1.3.38
 
 ### Fixed

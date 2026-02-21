@@ -133,7 +133,8 @@ class VooMobileScaffold extends StatelessWidget {
       drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
       endDrawerEnableOpenDragGesture: endDrawerEnableOpenDragGesture,
       resizeToAvoidBottomInset: resizeToAvoidBottomInset,
-      extendBody: extendBody,
+      // Force extendBody true for floating nav bar design
+      extendBody: true,
       extendBodyBehindAppBar: extendBodyBehindAppBar,
       bottomSheet: bottomSheet,
       persistentFooterButtons: persistentFooterButtons,
