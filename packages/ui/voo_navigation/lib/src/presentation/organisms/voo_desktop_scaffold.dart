@@ -210,8 +210,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     // Calculate content area border radius - only top-left corner rounded
     final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ?? const BorderRadius.only(topLeft: Radius.circular(12));
 
-    // Content area background - use surfaceContainerLow for visible distinction from navigation
-    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ?? colorScheme.surfaceContainerLow;
+    // Content area background - use base surface for clean content area
+    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ?? colorScheme.surface;
 
     // When app bar is alongside drawer/rail, wrap the content area with its own scaffold
     if (widget.config.appBarAlongsideRail) {

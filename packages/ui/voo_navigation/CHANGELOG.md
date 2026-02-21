@@ -1,3 +1,17 @@
+## 1.3.43
+
+### Changed
+- **Visual Hierarchy**: Updated color scheme for better visual distinction between navigation and content
+  - Content area now uses `colorScheme.surface` (base surface)
+  - Navigation rail/drawer use `surfaceContainerLow` for subtle differentiation
+  - Creates cleaner visual hierarchy while maintaining theme-aware colors
+
+### Dependencies
+- Updated `voo_navigation_rail` to ^0.2.6
+- Updated `voo_navigation_drawer` to ^0.2.6
+
+---
+
 ## 1.3.42
 
 ### Fixed

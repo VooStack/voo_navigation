@@ -129,7 +129,8 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
     final effectiveWidth = widget.width ?? widget.config.navigationDrawerWidth ?? 220;
 
     // Use theme-aware surface color for proper dark theme support
-    final effectiveBackgroundColor = widget.backgroundColor ?? widget.config.navigationBackgroundColor ?? theme.colorScheme.surface;
+    // Use surfaceContainerLow for visual distinction from app bar and content area
+    final effectiveBackgroundColor = widget.backgroundColor ?? widget.config.navigationBackgroundColor ?? theme.colorScheme.surfaceContainerLow;
 
     // Determine drawer margin - use drawerMargin if set, otherwise use navigationRailMargin
     final effectiveDrawerMargin = widget.config.drawerMargin ?? EdgeInsets.all(widget.config.navigationRailMargin);

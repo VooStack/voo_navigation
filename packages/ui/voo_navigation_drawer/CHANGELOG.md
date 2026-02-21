@@ -1,3 +1,12 @@
+## 0.2.6
+
+### Changed
+- **Visual Distinction**: Navigation drawer now uses `surfaceContainerLow` for background
+  - Creates subtle visual separation from app bar and content area
+  - Maintains theme-aware colors throughout
+
+---
+
 ## 0.2.5
 
 ### Fixed

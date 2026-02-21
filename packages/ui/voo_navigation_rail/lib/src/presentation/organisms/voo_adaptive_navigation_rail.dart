@@ -104,10 +104,11 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
             : (widget.config.navigationRailWidth ?? 80));
 
     // Use theme-aware surface color for proper dark theme support
+    // Use surfaceContainerLow for visual distinction from app bar and content area
     final effectiveBackgroundColor =
         widget.backgroundColor ??
         widget.config.navigationBackgroundColor ??
-        theme.colorScheme.surface;
+        theme.colorScheme.surfaceContainerLow;
 
     return AnimatedContainer(
       duration: navTheme.animationDuration,
