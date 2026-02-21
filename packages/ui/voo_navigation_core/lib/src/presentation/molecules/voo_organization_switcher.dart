@@ -81,6 +81,7 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
+  final FocusNode _keyboardFocusNode = FocusNode();
   int _selectedIndex = -1;
 
   bool get _shouldShowSearch =>
@@ -100,6 +101,7 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
     _removeOverlay();
     _searchController.dispose();
     _searchFocusNode.dispose();
+    _keyboardFocusNode.dispose();
     super.dispose();
   }
 
@@ -130,9 +132,11 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
   void _removeOverlay() {
     _overlayEntry?.remove();
     _overlayEntry = null;
-    setState(() {
-      _isOpen = false;
-    });
+    if (mounted) {
+      setState(() {
+        _isOpen = false;
+      });
+    }
   }
 
   void _selectOrganization(VooOrganization org) {
@@ -202,7 +206,7 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
             bottom: showAbove ? screenSize.height - offset.dy + 4 : null,
             width: dropdownWidth,
             child: KeyboardListener(
-              focusNode: FocusNode(),
+              focusNode: _keyboardFocusNode,
               onKeyEvent: _handleKeyEvent,
               child: VooOrganizationDropdownContent(
                 style: style,

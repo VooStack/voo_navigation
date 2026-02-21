@@ -102,44 +102,52 @@ class VooNavigationBar extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final maxBarWidth = screenWidth - (horizontalMargin * 2);
 
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Padding(
-        padding: EdgeInsets.only(
-          bottom: margin + bottomPadding,
-          left: horizontalMargin,
-          right: horizontalMargin,
-        ),
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: maxBarWidth),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Container(
-              height: VooNavigationTokens.expandableNavBarHeight,
-              padding: EdgeInsets.symmetric(
-                horizontal:
-                    VooNavigationTokens.expandableNavBarPaddingHorizontal,
-                vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
-              ),
-              decoration: BoxDecoration(
-                color: bgColor,
-                borderRadius: borderRadius,
-                border: Border.all(
-                  color: border,
-                  width: VooNavigationTokens.expandableNavBorderWidth,
+    // Calculate total height for proper Scaffold layout
+    final totalHeight = VooNavigationTokens.expandableNavBarHeight +
+        margin +
+        bottomPadding;
+
+    return SizedBox(
+      height: totalHeight,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: margin + bottomPadding,
+            left: horizontalMargin,
+            right: horizontalMargin,
+          ),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: maxBarWidth),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Container(
+                height: VooNavigationTokens.expandableNavBarHeight,
+                padding: EdgeInsets.symmetric(
+                  horizontal:
+                      VooNavigationTokens.expandableNavBarPaddingHorizontal,
+                  vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
+                decoration: BoxDecoration(
+                  color: bgColor,
+                  borderRadius: borderRadius,
+                  border: Border.all(
+                    color: border,
+                    width: VooNavigationTokens.expandableNavBorderWidth,
                   ),
-                ],
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: _addSpacingBetweenItems(navWidgets),
+                  boxShadow: [
+                    BoxShadow(
+                      color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+                      blurRadius: 16,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: _addSpacingBetweenItems(navWidgets),
+                ),
               ),
             ),
           ),

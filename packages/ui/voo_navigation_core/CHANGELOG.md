@@ -1,3 +1,12 @@
+## 0.2.28
+
+### Fixed
+- **VooOrganizationSwitcher**: Fixed crash on mobile when widget is disposed while overlay is open
+  - Added `mounted` check in `_removeOverlay()` to prevent `setState()` on defunct widget
+  - Fixed `FocusNode` leak by properly disposing keyboard listener focus node
+
+---
+
 ## 0.2.27
 
 ### Fixed

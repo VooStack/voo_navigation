@@ -38,7 +38,8 @@
       "Bash(melos run:*)",
       "Bash(melos exec:*)",
       "Bash(xargs:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(flutter pub deps:*)"
     ]
   }
 }

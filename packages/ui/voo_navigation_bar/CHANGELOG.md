@@ -1,3 +1,12 @@
+## 0.1.19
+
+### Fixed
+- **White Screen on Mobile**: Fixed body not rendering when using `VooNavigationBar` as `bottomNavigationBar`
+  - Root `Align` widget was not reporting proper intrinsic height to Scaffold
+  - Wrapped in `SizedBox` with explicit height so Scaffold can properly calculate body constraints
+
+---
+
 ## 0.1.18
 
 ### Fixed

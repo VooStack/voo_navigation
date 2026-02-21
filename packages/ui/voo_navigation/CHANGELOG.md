@@ -1,3 +1,19 @@
+## 1.3.38
+
+### Fixed
+- **White Screen on Mobile Portrait**: Fixed body not rendering on mobile screens
+  - `VooNavigationBar`'s `Align` widget was not reporting proper intrinsic height to Scaffold
+  - Scaffold couldn't calculate body constraints, resulting in zero-height body
+- **VooOrganizationSwitcher**: Fixed crash when widget disposed while overlay open
+  - Added `mounted` check before `setState` in `_removeOverlay()`
+  - Fixed `FocusNode` leak in keyboard listener
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.28
+- Updated `voo_navigation_bar` to ^0.1.19
+
+---
+
 ## 1.3.37
 
 ### Fixed
