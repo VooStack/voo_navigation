@@ -1,3 +1,14 @@
+## 0.2.5
+
+### Fixed
+- **Theming Fix**: Fixed hard-coded colors in navigation drawer
+  - Background now uses `theme.colorScheme.surface` instead of hard-coded dark/light colors
+  - Footer decorations now use `theme.colorScheme.onSurface` for consistent theming
+  - Logo background now uses `theme.colorScheme.surfaceContainerHighest` for both modes
+  - Navigation drawer properly respects custom dark themes
+
+---
+
 ## 0.2.4
 
 ### Changed

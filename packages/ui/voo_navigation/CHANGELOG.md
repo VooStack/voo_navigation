@@ -1,3 +1,16 @@
+## 1.3.41
+
+### Fixed
+- **Navigation Theming**: Fixed rail and drawer using hard-coded colors instead of theme-aware colors
+  - Navigation components now properly respect custom dark themes
+  - Uses Material 3 `colorScheme` properties throughout
+
+### Dependencies
+- Updated `voo_navigation_rail` to ^0.2.5
+- Updated `voo_navigation_drawer` to ^0.2.5
+
+---
+
 ## 1.3.40
 
 ### Fixed

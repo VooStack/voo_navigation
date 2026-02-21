@@ -1,6 +1,6 @@
 name: voo_navigation_rail
 description: Navigation rail components for Flutter - part of the voo_navigation package ecosystem.
-version: 0.2.4
+version: 0.2.5
 homepage: https://voostack.com/packages/voo_navigation_rail
 repository: https://github.com/voostack/voo_navigation/tree/main/packages/ui/voo_navigation_rail
 issue_tracker: https://github.com/voostack/voo_navigation/issues

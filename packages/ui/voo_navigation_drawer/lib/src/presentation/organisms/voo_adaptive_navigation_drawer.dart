@@ -125,12 +125,11 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final navTheme = widget.config.effectiveTheme;
-    final isDark = theme.brightness == Brightness.dark;
 
     final effectiveWidth = widget.width ?? widget.config.navigationDrawerWidth ?? 220;
 
-    // Use pure white/dark surface for drawer (no tinted colors)
-    final effectiveBackgroundColor = widget.backgroundColor ?? widget.config.navigationBackgroundColor ?? (isDark ? const Color(0xFF1A1A1A) : Colors.white);
+    // Use theme-aware surface color for proper dark theme support
+    final effectiveBackgroundColor = widget.backgroundColor ?? widget.config.navigationBackgroundColor ?? theme.colorScheme.surface;
 
     // Determine drawer margin - use drawerMargin if set, otherwise use navigationRailMargin
     final effectiveDrawerMargin = widget.config.drawerMargin ?? EdgeInsets.all(widget.config.navigationRailMargin);
@@ -214,13 +213,8 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
             // Unified footer section for org switcher, profile, or multi-switcher
             if (orgSwitcherInFooter != null ||
                 widget.config.showUserProfile ||
-                (widget.config.multiSwitcher != null &&
-                 widget.config.multiSwitcherPosition == VooMultiSwitcherPosition.footer))
-              _DrawerFooterSection(
-                config: widget.config,
-                orgSwitcher: orgSwitcherInFooter,
-                showProfile: widget.config.showUserProfile,
-              ),
+                (widget.config.multiSwitcher != null && widget.config.multiSwitcherPosition == VooMultiSwitcherPosition.footer))
+              _DrawerFooterSection(config: widget.config, orgSwitcher: orgSwitcherInFooter, showProfile: widget.config.showUserProfile),
 
             // Custom footer
             if (widget.config.drawerFooter != null) Padding(padding: EdgeInsets.all(context.vooSpacing.sm + context.vooSpacing.xs), child: widget.config.drawerFooter!),
@@ -246,38 +240,22 @@ class _DrawerFooterSection extends StatelessWidget {
   final Widget? orgSwitcher;
   final bool showProfile;
 
-  const _DrawerFooterSection({
-    required this.config,
-    this.orgSwitcher,
-    required this.showProfile,
-  });
+  const _DrawerFooterSection({required this.config, this.orgSwitcher, required this.showProfile});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final spacing = context.vooSpacing;
 
     // If multi-switcher is configured for footer position, use it instead
-    if (config.multiSwitcher != null &&
-        config.multiSwitcherPosition == VooMultiSwitcherPosition.footer) {
+    if (config.multiSwitcher != null && config.multiSwitcherPosition == VooMultiSwitcherPosition.footer) {
       return Container(
-        margin: EdgeInsets.only(
-          left: spacing.sm,
-          right: spacing.sm,
-          top: spacing.sm,
-          bottom: spacing.sm,
-        ),
+        margin: EdgeInsets.only(left: spacing.sm, right: spacing.sm, top: spacing.sm, bottom: spacing.sm),
         padding: EdgeInsets.all(spacing.xs),
         decoration: BoxDecoration(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.03)
-              : Colors.black.withValues(alpha: 0.02),
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.03),
           borderRadius: BorderRadius.circular(context.vooRadius.md),
-          border: Border.all(
-            color: theme.dividerColor.withValues(alpha: 0.08),
-            width: 1,
-          ),
+          border: Border.all(color: theme.dividerColor.withValues(alpha: 0.08), width: 1),
         ),
         child: VooMultiSwitcher(config: config.multiSwitcher!),
       );
@@ -285,35 +263,19 @@ class _DrawerFooterSection extends StatelessWidget {
 
     // Traditional org switcher + profile layout
     return Container(
-      margin: EdgeInsets.only(
-        left: spacing.sm,
-        right: spacing.sm,
-        top: spacing.sm,
-        bottom: spacing.sm,
-      ),
+      margin: EdgeInsets.only(left: spacing.sm, right: spacing.sm, top: spacing.sm, bottom: spacing.sm),
       padding: EdgeInsets.all(spacing.xs),
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.03)
-            : Colors.black.withValues(alpha: 0.02),
+        color: theme.colorScheme.onSurface.withValues(alpha: 0.03),
         borderRadius: BorderRadius.circular(context.vooRadius.md),
-        border: Border.all(
-          color: theme.dividerColor.withValues(alpha: 0.08),
-          width: 1,
-        ),
+        border: Border.all(color: theme.dividerColor.withValues(alpha: 0.08), width: 1),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (orgSwitcher != null) _FooterOrgSwitcher(config: config),
           if (orgSwitcher != null && showProfile)
-            Divider(
-              height: spacing.md,
-              thickness: 1,
-              indent: spacing.md,
-              endIndent: spacing.md,
-              color: theme.dividerColor.withValues(alpha: 0.08),
-            ),
+            Divider(height: spacing.md, thickness: 1, indent: spacing.md, endIndent: spacing.md, color: theme.dividerColor.withValues(alpha: 0.08)),
           if (showProfile) _FooterProfile(config: config),
         ],
       ),

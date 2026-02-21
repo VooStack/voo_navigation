@@ -1,3 +1,13 @@
+## 0.2.5
+
+### Fixed
+- **Theming Fix**: Fixed hard-coded colors in navigation rail
+  - Background now uses `theme.colorScheme.surface` instead of hard-coded dark/light colors
+  - Logo background now uses `theme.colorScheme.surfaceContainerHighest` for both modes
+  - Navigation rail properly respects custom dark themes
+
+---
+
 ## 0.2.4
 
 ### Changed

@@ -47,11 +47,9 @@ class VooDrawerDefaultHeader extends StatelessWidget {
     final spacing = context.vooSpacing;
     final radius = context.vooRadius;
 
-    // Use neutral gray for icon background instead of tinted surface
+    // Use theme-aware surface container for icon background
     final iconBgColor = logoBackgroundColor ??
-        (theme.brightness == Brightness.light
-            ? const Color(0xFFF0F0F0)
-            : theme.colorScheme.onSurface.withValues(alpha: 0.12));
+        theme.colorScheme.surfaceContainerHighest;
 
     // Use 40dp logo for visual balance in kToolbarHeight
     const double logoSize = 40;

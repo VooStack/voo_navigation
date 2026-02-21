@@ -69,9 +69,7 @@ class VooRailDefaultHeader extends StatelessWidget {
     final effectiveShowTitle = config?.showTitle ?? showTitle;
     final effectiveLogoBackground = config?.logoBackgroundColor ??
         logoBackgroundColor ??
-        (theme.brightness == Brightness.light
-            ? const Color(0xFFF0F0F0)
-            : theme.colorScheme.onSurface.withValues(alpha: 0.12));
+        theme.colorScheme.surfaceContainerHighest;
 
     // Use 40dp logo for visual balance in kToolbarHeight
     const double logoSize = 40;
