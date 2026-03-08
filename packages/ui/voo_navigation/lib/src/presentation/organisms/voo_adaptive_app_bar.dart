@@ -181,6 +181,7 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       margin: margin,
       color: effectiveBackgroundColor,
       child: AppBar(
+          forceMaterialTransparency: true,
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,
           title: Padding(

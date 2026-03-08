@@ -142,6 +142,7 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
           topRight: Radius.circular(context.vooRadius.lg),
         ),
         child: AppBar(
+          forceMaterialTransparency: true,
           scrolledUnderElevation: 0,
           surfaceTintColor: Colors.transparent,
           title: Padding(

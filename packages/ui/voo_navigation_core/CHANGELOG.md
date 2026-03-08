@@ -1,3 +1,10 @@
+## 0.2.33
+
+### Fixed
+- **Scroll-Under Tint**: Added `forceMaterialTransparency: true` on mobile app bar to completely bypass M3 elevation/tint/shadow logic
+
+---
+
 ## 0.2.32
 
 ### Fixed

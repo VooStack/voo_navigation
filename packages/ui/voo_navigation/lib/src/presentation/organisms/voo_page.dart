@@ -59,7 +59,7 @@ class VooPage extends StatelessWidget {
       return Scaffold(
         appBar: _buildAppBar(context, appBarConfig),
         body: child,
-        backgroundColor: config.backgroundColor,
+        backgroundColor: appBarConfig.backgroundColor ?? config.backgroundColor,
         floatingActionButton: config.floatingActionButton,
         floatingActionButtonLocation: config.floatingActionButtonLocation,
         floatingActionButtonAnimator: config.floatingActionButtonAnimator,
@@ -101,13 +101,14 @@ class VooPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return AppBar(
+      forceMaterialTransparency: true,
       scrolledUnderElevation: 0,
       surfaceTintColor: Colors.transparent,
       title: appBarConfig.title,
       leading: appBarConfig.leading,
       actions: appBarConfig.additionalActions,
       centerTitle: appBarConfig.centerTitle,
-      backgroundColor: appBarConfig.backgroundColor,
+      backgroundColor: Colors.transparent,
       foregroundColor: appBarConfig.foregroundColor,
       elevation: appBarConfig.elevation,
       toolbarHeight: appBarConfig.toolbarHeight,

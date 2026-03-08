@@ -1,3 +1,14 @@
+## 1.3.46
+
+### Fixed
+- **Scroll-Under Tint**: Added `forceMaterialTransparency: true` on all app bars to completely bypass M3 elevation/tint/shadow logic
+- **VooPage AppBar**: Custom `appBarConfig.backgroundColor` now applied on the Scaffold background so it shows through the transparent AppBar
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.33
+
+---
+
 ## 1.3.45
 
 ### Fixed
