@@ -101,6 +101,7 @@ class VooPage extends StatelessWidget {
     final theme = Theme.of(context);
 
     return AppBar(
+      scrolledUnderElevation: 0,
       title: appBarConfig.title,
       leading: appBarConfig.leading,
       actions: appBarConfig.additionalActions,

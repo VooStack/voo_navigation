@@ -1,3 +1,10 @@
+## 0.2.31
+
+### Fixed
+- **Scroll-Under Tint**: Set `scrolledUnderElevation: 0` on mobile app bar to prevent surface tint color shift when content scrolls underneath
+
+---
+
 ## 0.2.30
 
 ### Fixed

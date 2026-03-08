@@ -1,3 +1,13 @@
+## 1.3.44
+
+### Fixed
+- **Scroll-Under Tint**: Set `scrolledUnderElevation: 0` on all app bars to prevent surface tint color shift when content scrolls underneath
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.31
+
+---
+
 ## 1.3.43
 
 ### Changed
