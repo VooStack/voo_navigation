@@ -1,3 +1,13 @@
+## 1.3.45
+
+### Fixed
+- **Scroll-Under Tint**: Added `surfaceTintColor: Colors.transparent` on all app bars to fully disable M3 surface tint overlay
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.32
+
+---
+
 ## 1.3.44
 
 ### Fixed

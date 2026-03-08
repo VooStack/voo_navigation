@@ -102,6 +102,7 @@ class VooPage extends StatelessWidget {
 
     return AppBar(
       scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
       title: appBarConfig.title,
       leading: appBarConfig.leading,
       actions: appBarConfig.additionalActions,

@@ -1,3 +1,10 @@
+## 0.2.32
+
+### Fixed
+- **Scroll-Under Tint**: Added `surfaceTintColor: Colors.transparent` on mobile app bar to fully disable M3 surface tint overlay
+
+---
+
 ## 0.2.31
 
 ### Fixed
