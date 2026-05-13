@@ -129,21 +129,47 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem> with Tick
     }
   }
 
+  void _handleLongPress() {
+    final hasLongPressModal = widget.config.longPressModalBuilder != null;
+    final hasLongPressCallback = widget.config.onLongPress != null;
+    if (!hasLongPressModal && !hasLongPressCallback) return;
+
+    if (widget.enableHapticFeedback) {
+      HapticFeedback.heavyImpact();
+    }
+
+    if (hasLongPressModal) {
+      if (isModalOpen) {
+        closeModal();
+      } else {
+        openModal(_buildLongPressModalContent);
+      }
+      return;
+    }
+
+    widget.config.onLongPress!.call();
+  }
+
   Widget _buildModalContent(BuildContext context) {
-    return widget.config.modalBuilder!(
-      context,
-      VooUserProfileModalData(
-        userName: widget.config.userName,
-        userEmail: widget.config.userEmail,
-        avatarUrl: widget.config.avatarUrl,
-        avatarWidget: widget.config.avatarWidget,
-        initials: widget.config.effectiveInitials,
-        status: widget.config.status,
-        onClose: closeModal,
-        onSettingsTap: widget.config.onSettingsTap,
-        onLogout: widget.config.onLogout,
-        menuItems: widget.config.menuItems,
-      ),
+    return widget.config.modalBuilder!(context, _modalData());
+  }
+
+  Widget _buildLongPressModalContent(BuildContext context) {
+    return widget.config.longPressModalBuilder!(context, _modalData());
+  }
+
+  VooUserProfileModalData _modalData() {
+    return VooUserProfileModalData(
+      userName: widget.config.userName,
+      userEmail: widget.config.userEmail,
+      avatarUrl: widget.config.avatarUrl,
+      avatarWidget: widget.config.avatarWidget,
+      initials: widget.config.effectiveInitials,
+      status: widget.config.status,
+      onClose: closeModal,
+      onSettingsTap: widget.config.onSettingsTap,
+      onLogout: widget.config.onLogout,
+      menuItems: widget.config.menuItems,
     );
   }
 
@@ -160,9 +186,12 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem> with Tick
     // Build avatar circle using shared layout
     final circle = VooExpandableNavItemLayout.buildCircle(color: circleColor, child: _buildAvatarContent(context, theme));
 
+    final hasLongPress = widget.config.longPressModalBuilder != null || widget.config.onLongPress != null;
+
     return GestureDetector(
       key: buttonKey,
       onTap: _handleTap,
+      onLongPress: hasLongPress ? _handleLongPress : null,
       behavior: HitTestBehavior.opaque,
       child: AnimatedBuilder(
         animation: _controller,

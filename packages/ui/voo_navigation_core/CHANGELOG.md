@@ -1,3 +1,10 @@
+## 0.2.34
+
+### Added
+- **Profile Long-Press**: `VooUserProfileConfig` now exposes `onLongPress` and `longPressModalBuilder` for handling long-press on the profile nav item. When `longPressModalBuilder` is set, long-press opens an overlay modal anchored to the avatar using the same downward-arrow + slide/scale/fade animation as the action button — useful for account/app/context switchers. Tap behavior is unchanged.
+
+---
+
 ## 0.2.33
 
 ### Fixed

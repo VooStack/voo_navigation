@@ -1,3 +1,14 @@
+## 1.3.47
+
+### Added
+- **Profile Long-Press**: Long-press on the profile nav item now opens a custom modal via `VooUserProfileConfig.longPressModalBuilder`, or fires `VooUserProfileConfig.onLongPress` — perfect for account/app/context switchers anchored to the avatar.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.34
+- Updated `voo_navigation_bar` to ^0.1.21
+
+---
+
 ## 1.3.46
 
 ### Fixed

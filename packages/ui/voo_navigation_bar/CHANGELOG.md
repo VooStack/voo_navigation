@@ -1,3 +1,13 @@
+## 0.1.21
+
+### Added
+- **Profile Long-Press**: `VooUserProfileNavItem` now responds to long-press when `VooUserProfileConfig.onLongPress` or `longPressModalBuilder` is set. With `longPressModalBuilder`, the long-press opens an overlay modal anchored to the avatar using the existing `ExpandableNavModalMixin` (downward arrow + slide/scale/fade), giving consumers a turnkey account/app switcher without re-implementing the overlay.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.34
+
+---
+
 ## 0.1.20
 
 ### Fixed

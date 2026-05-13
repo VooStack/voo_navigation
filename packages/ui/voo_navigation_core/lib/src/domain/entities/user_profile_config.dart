@@ -119,6 +119,32 @@ class VooUserProfileConfig {
   final Widget Function(BuildContext context, VooUserProfileModalData data)?
       modalBuilder;
 
+  /// Callback invoked when the user long-presses the profile nav item.
+  ///
+  /// Only called when [longPressModalBuilder] is null. When both are set,
+  /// [longPressModalBuilder] takes precedence and this callback is ignored.
+  final VoidCallback? onLongPress;
+
+  /// Custom builder for the modal opened on long-press of the profile nav item.
+  ///
+  /// When provided, long-pressing the profile nav item opens this modal using
+  /// the same overlay + downward-arrow animation as [modalBuilder]. The regular
+  /// tap behavior (navigation or [modalBuilder]) is unaffected.
+  ///
+  /// Useful for account/app/context switchers anchored to the profile avatar.
+  ///
+  /// Example:
+  /// ```dart
+  /// longPressModalBuilder: (context, data) => Column(
+  ///   children: [
+  ///     ListTile(title: const Text('FitStack'), onTap: () { data.onClose(); }),
+  ///     ListTile(title: const Text('Admin'), onTap: () { data.onClose(); }),
+  ///   ],
+  /// ),
+  /// ```
+  final Widget Function(BuildContext context, VooUserProfileModalData data)?
+      longPressModalBuilder;
+
   /// The effective ID for navigation purposes.
   /// Returns [id] if provided, otherwise `'_user_profile_nav'`.
   String get effectiveId => id ?? '_user_profile_nav';
@@ -142,6 +168,8 @@ class VooUserProfileConfig {
     this.position = VooUserProfilePosition.end,
     this.navItemLabel,
     this.modalBuilder,
+    this.onLongPress,
+    this.longPressModalBuilder,
   });
 
   /// Gets the effective initials (derived from userName if not provided)
@@ -180,6 +208,9 @@ class VooUserProfileConfig {
     String? navItemLabel,
     Widget Function(BuildContext context, VooUserProfileModalData data)?
         modalBuilder,
+    VoidCallback? onLongPress,
+    Widget Function(BuildContext context, VooUserProfileModalData data)?
+        longPressModalBuilder,
   }) => VooUserProfileConfig(
     id: id ?? this.id,
     userName: userName ?? this.userName,
@@ -199,6 +230,8 @@ class VooUserProfileConfig {
     position: position ?? this.position,
     navItemLabel: navItemLabel ?? this.navItemLabel,
     modalBuilder: modalBuilder ?? this.modalBuilder,
+    onLongPress: onLongPress ?? this.onLongPress,
+    longPressModalBuilder: longPressModalBuilder ?? this.longPressModalBuilder,
   );
 }
 
