@@ -63,6 +63,13 @@ class VooAdaptiveScaffold extends StatefulWidget {
   /// Color for body card (if useBodyCard is true)
   final Color? bodyCardColor;
 
+  /// Page-level overrides for the scaffold app bar, FAB, etc. When the
+  /// hamburger menu is enabled the mobile app bar reads `additionalActions`,
+  /// `title`, `appBarLeading` and `appBarBottom` from this config so the
+  /// currently visible route can surface page-specific chrome without
+  /// rendering its own AppBar (which would stack on top of voo's).
+  final VooPageConfig? pageConfig;
+
   const VooAdaptiveScaffold({
     super.key,
     required this.config,
@@ -84,6 +91,7 @@ class VooAdaptiveScaffold extends StatefulWidget {
     double? bodyCardElevation,
     this.bodyCardBorderRadius,
     this.bodyCardColor,
+    this.pageConfig,
   })  : resizeToAvoidBottomInset = resizeToAvoidBottomInset ?? true,
         extendBody = extendBody ?? false,
         extendBodyBehindAppBar = extendBodyBehindAppBar ?? false,
@@ -166,7 +174,9 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
             selectedId: _selectedId,
             onNavigationItemSelected: _onNavigationItemSelected,
             appBar: null,
-            showAppBar: false,
+            // Auto-enable the app bar when the hamburger menu is on so the
+            // hamburger leading icon has a place to live.
+            showAppBar: widget.config.showHamburgerMenu,
             endDrawer: widget.endDrawer,
             drawerEdgeDragWidth: widget.drawerEdgeDragWidth,
             drawerEnableOpenDragGesture: widget.drawerEnableOpenDragGesture,
@@ -184,7 +194,7 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
             bodyCardElevation: widget.bodyCardElevation,
             bodyCardBorderRadius: widget.bodyCardBorderRadius ?? widget.config.bodyCardBorderRadius,
             bodyCardColor: widget.bodyCardColor ?? widget.config.bodyCardColor,
-            pageConfig: null,
+            pageConfig: widget.pageConfig,
           );
         },
       ),

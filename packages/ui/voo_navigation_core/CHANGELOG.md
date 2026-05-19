@@ -1,3 +1,10 @@
+## 0.2.35
+
+### Added
+- **Hamburger Menu Config**: `VooNavigationConfig` now exposes `showHamburgerMenu` (default `false`) and `mobileDrawerBuilder` to opt-in to a top-bar hamburger + drawer pattern on mobile. When the flag is on, consuming scaffolds automatically install a `Scaffold.drawer` and surface a hamburger leading icon in the mobile app bar.
+
+---
+
 ## 0.2.34
 
 ### Added

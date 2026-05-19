@@ -19,3 +19,4 @@ export 'src/presentation/molecules/drawer_navigation_items.dart';
 
 // Organisms
 export 'src/presentation/organisms/voo_adaptive_navigation_drawer.dart';
+export 'src/presentation/organisms/voo_mobile_navigation_drawer.dart';

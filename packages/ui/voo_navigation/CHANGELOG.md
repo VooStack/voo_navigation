@@ -1,3 +1,15 @@
+## 1.3.48
+
+### Added
+- **Hamburger Menu**: Set `VooNavigationConfig.showHamburgerMenu: true` and the mobile scaffold automatically installs a `Scaffold.drawer` (defaults to the new `VooMobileNavigationDrawer`, overridable via `mobileDrawerBuilder`) and renders the mobile `VooMobileAppBar` with a hamburger leading icon — no more hand-rolled modal sheets per app.
+- **Per-Page Overrides**: `VooAdaptiveScaffold` now accepts an optional `pageConfig: VooPageConfig?` that flows through to the mobile app bar, letting the currently visible route surface page-specific `title`, `leading`, `additionalActions`, and `bottom` (e.g. a `TabBar`) without nesting its own `Scaffold`/`AppBar`.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.35
+- Updated `voo_navigation_drawer` to ^0.2.7
+
+---
+
 ## 1.3.47
 
 ### Added

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_bar/voo_navigation_bar.dart';
+import 'package:voo_navigation_drawer/voo_navigation_drawer.dart';
 
 /// Mobile scaffold with bottom navigation
 class VooMobileScaffold extends StatelessWidget {
@@ -102,16 +103,26 @@ class VooMobileScaffold extends StatelessWidget {
     final fabLocation = pageConfig?.floatingActionButtonLocation ?? config.floatingActionButtonLocation ?? FloatingActionButtonLocation.endFloat;
     final fabAnimator = pageConfig?.floatingActionButtonAnimator ?? config.floatingActionButtonAnimator;
 
+    final Widget? mobileDrawer = config.showHamburgerMenu
+        ? (config.mobileDrawerBuilder?.call(context) ??
+            VooMobileNavigationDrawer(
+              config: config,
+              selectedId: selectedId,
+              onNavigationItemSelected: onNavigationItemSelected,
+            ))
+        : null;
+
     return Scaffold(
       key: scaffoldKey,
       backgroundColor: backgroundColor,
+      drawer: mobileDrawer,
       appBar: showAppBar
           ? (appBar ??
                 VooMobileAppBar(
                   config: config,
                   selectedItem: selectedItem,
                   selectedId: selectedId,
-                  showMenuButton: false,
+                  showMenuButton: config.showHamburgerMenu,
                   title: pageConfig?.appBarTitle,
                   leading: pageConfig?.appBarLeading,
                   additionalActions: pageConfig?.additionalAppBarActions,

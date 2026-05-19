@@ -227,6 +227,20 @@ class VooNavigationConfig {
   /// Visual theme for navigation styling
   final VooNavigationTheme? navigationTheme;
 
+  /// Whether the mobile bottom nav should expose a hamburger button that opens
+  /// a navigation Drawer listing all items.
+  ///
+  /// When true, [VooMobileScaffold] attaches a [Scaffold.drawer] and
+  /// [VooNavigationBar] prepends a hamburger pill that opens it.
+  final bool showHamburgerMenu;
+
+  /// Optional builder for the Drawer body shown when the hamburger is tapped.
+  ///
+  /// If null and [showHamburgerMenu] is true, the default
+  /// `VooMobileNavigationDrawer` is rendered listing every visible item and
+  /// honoring [VooNavigationDestination] divider items as section breaks.
+  final Widget Function(BuildContext context)? mobileDrawerBuilder;
+
   /// Gets the effective theme
   VooNavigationTheme get effectiveTheme =>
       navigationTheme ?? const VooNavigationTheme();
@@ -356,6 +370,8 @@ class VooNavigationConfig {
     this.multiSwitcherPosition = VooMultiSwitcherPosition.footer,
     this.contextSwitcher,
     this.contextSwitcherPosition = VooContextSwitcherPosition.beforeItems,
+    this.showHamburgerMenu = false,
+    this.mobileDrawerBuilder,
   }) : breakpoints = breakpoints ?? VooBreakpoint.material3Breakpoints,
        assert(
          onNavigationItemSelected != null || _allItemsHaveNavigation(items),
@@ -469,6 +485,8 @@ class VooNavigationConfig {
     VooMultiSwitcherPosition? multiSwitcherPosition,
     VooContextSwitcherConfig? contextSwitcher,
     VooContextSwitcherPosition? contextSwitcherPosition,
+    bool? showHamburgerMenu,
+    Widget Function(BuildContext context)? mobileDrawerBuilder,
   }) =>
       VooNavigationConfig(
         items: items ?? this.items,
@@ -575,6 +593,8 @@ class VooNavigationConfig {
         contextSwitcher: contextSwitcher ?? this.contextSwitcher,
         contextSwitcherPosition:
             contextSwitcherPosition ?? this.contextSwitcherPosition,
+        showHamburgerMenu: showHamburgerMenu ?? this.showHamburgerMenu,
+        mobileDrawerBuilder: mobileDrawerBuilder ?? this.mobileDrawerBuilder,
       );
 
   /// Gets the current navigation type based on screen width

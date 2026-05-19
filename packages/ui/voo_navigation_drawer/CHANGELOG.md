@@ -1,3 +1,15 @@
+## 0.2.7
+
+### Added
+- **`VooMobileNavigationDrawer`**: New Material `Drawer` organism for mobile layouts. Renders every visible destination from `VooNavigationConfig`, groups items by `VooNavigationDestination.divider(id: …)` into uppercase section headers (e.g. `divider_operations` → `OPERATIONS`), and supports an optional `firstSectionLabel` for the first batch of items, plus `subtitle` and `footer` slots in the header.
+- **Polished UI**: Rounded right edge (24dp), primary-tinted section headers with tighter letter-spacing, rounded "pill" selected state at 14dp radius using primaryContainer + trailing primary dot indicator, consistent 24×24 leading slot for icons.
+- **`VooMobileNavigationDrawer.open(context)`**: Static helper that walks past nested scaffolds without drawers to open the navigation drawer of the outer `Scaffold` — useful for opening the drawer from within nested per-page scaffolds.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.2.35
+
+---
+
 ## 0.2.6
 
 ### Changed
