@@ -99,6 +99,12 @@ class VooUserProfileConfig {
   /// Label for the nav item. Defaults to [userName] or 'Profile'.
   final String? navItemLabel;
 
+  /// Whether to show the label next to the avatar in the bottom navigation
+  /// when the profile item is selected. Defaults to `true` for backwards
+  /// compatibility. Set to `false` for an icon-only profile entry that
+  /// collapses to a colored avatar circle without horizontal label expansion.
+  final bool showNavItemLabel;
+
   // ============================================================================
   // CUSTOM BUILDERS
   // ============================================================================
@@ -167,6 +173,7 @@ class VooUserProfileConfig {
     this.navItemIndex,
     this.position = VooUserProfilePosition.end,
     this.navItemLabel,
+    this.showNavItemLabel = true,
     this.modalBuilder,
     this.onLongPress,
     this.longPressModalBuilder,
@@ -183,9 +190,12 @@ class VooUserProfileConfig {
     return userName![0].toUpperCase();
   }
 
-  /// Gets the effective nav item label
-  String get effectiveNavItemLabel =>
-      navItemLabel ?? userEmail ?? userName ?? 'Profile';
+  /// Gets the effective nav item label. Returns `null` when [showNavItemLabel]
+  /// is `false` so the bottom nav can render an icon-only profile entry.
+  String? get effectiveNavItemLabel {
+    if (!showNavItemLabel) return null;
+    return navItemLabel ?? userEmail ?? userName ?? 'Profile';
+  }
 
   /// Creates a copy with the given fields replaced
   VooUserProfileConfig copyWith({
@@ -206,6 +216,7 @@ class VooUserProfileConfig {
     int? navItemIndex,
     VooUserProfilePosition? position,
     String? navItemLabel,
+    bool? showNavItemLabel,
     Widget Function(BuildContext context, VooUserProfileModalData data)?
         modalBuilder,
     VoidCallback? onLongPress,
@@ -229,6 +240,7 @@ class VooUserProfileConfig {
     navItemIndex: navItemIndex ?? this.navItemIndex,
     position: position ?? this.position,
     navItemLabel: navItemLabel ?? this.navItemLabel,
+    showNavItemLabel: showNavItemLabel ?? this.showNavItemLabel,
     modalBuilder: modalBuilder ?? this.modalBuilder,
     onLongPress: onLongPress ?? this.onLongPress,
     longPressModalBuilder: longPressModalBuilder ?? this.longPressModalBuilder,

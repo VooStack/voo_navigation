@@ -1,3 +1,13 @@
+## 0.3.1
+
+### Added
+- **`VooUserProfileConfig.showNavItemLabel`**: New `bool` (default `true`) that controls whether the profile entry shows a label next to its avatar in the bottom navigation. Set to `false` for an icon-only profile entry that collapses to a pure avatar circle when selected.
+
+### Changed
+- `VooUserProfileConfig.effectiveNavItemLabel` is now `String?` and returns `null` when `showNavItemLabel: false`. All internal callers fall back to `'Profile'` when null, so existing call sites continue to work.
+
+---
+
 ## 0.3.0
 
 ### Changed (breaking)

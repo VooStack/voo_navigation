@@ -1,3 +1,14 @@
+## 0.2.1
+
+### Fixed
+- **Empty label space in selected pill**: When a destination has no label, the selected state no longer leaves ~16px of empty horizontal space inside the pill. The `spacing` and `textPadding` animations are now suppressed when there is no label, so the selected item is a pure icon circle.
+- Same fix applies to `VooUserProfileNavItem` for the new `VooUserProfileConfig.showNavItemLabel: false` mode.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.3.1
+
+---
+
 ## 0.2.0
 
 ### Added

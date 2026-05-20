@@ -100,11 +100,15 @@ class _VooExpandableNavItemState extends State<VooExpandableNavItem> with Single
         builder: (context, child) {
           final progress = _expandAnimation.value.clamp(0.0, 1.0);
           final labelProgress = _labelOpacity.value.clamp(0.0, 1.0);
+          final hasLabel = labelWidth > 0;
 
-          // Calculate animated values
+          // Calculate animated values. When the destination has no label, the
+          // spacing and text padding stay collapsed so the selected state is a
+          // pure icon circle — otherwise these constants would add ~16px of
+          // empty space inside the pill.
           final animatedLabelWidth = labelWidth * progress;
-          final animatedSpacing = VooExpandableNavItemLayout.spacing * progress;
-          final animatedTextPadding = VooExpandableNavItemLayout.textPadding * progress;
+          final animatedSpacing = hasLabel ? VooExpandableNavItemLayout.spacing * progress : 0.0;
+          final animatedTextPadding = hasLabel ? VooExpandableNavItemLayout.textPadding * progress : 0.0;
 
           // Build label using shared layout
           final label = VooExpandableNavItemLayout.buildLabel(text: widget.item.label, opacity: labelProgress, color: context.expandableNavSelectedLabel);

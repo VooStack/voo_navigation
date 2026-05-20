@@ -198,11 +198,14 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem> with Tick
         builder: (context, child) {
           final progress = _expandAnimation.value.clamp(0.0, 1.0);
           final labelProgress = _labelOpacity.value.clamp(0.0, 1.0);
+          final hasLabel = labelWidth > 0;
 
-          // Calculate animated values
+          // Calculate animated values. When the profile config opts out of a
+          // label (showNavItemLabel: false), the spacing and text padding stay
+          // collapsed so the selected state is a pure avatar circle.
           final animatedLabelWidth = labelWidth * progress;
-          final animatedSpacing = VooExpandableNavItemLayout.spacing * progress;
-          final animatedTextPadding = VooExpandableNavItemLayout.textPadding * progress;
+          final animatedSpacing = hasLabel ? VooExpandableNavItemLayout.spacing * progress : 0.0;
+          final animatedTextPadding = hasLabel ? VooExpandableNavItemLayout.textPadding * progress : 0.0;
 
           // Build label using shared layout
           final label = VooExpandableNavItemLayout.buildLabel(text: widget.config.effectiveNavItemLabel, opacity: labelProgress, color: context.expandableNavSelectedLabel);
@@ -219,7 +222,7 @@ class _VooUserProfileNavItemState extends State<VooUserProfileNavItem> with Tick
 
           // Build container using shared layout, wrapped in Tooltip
           return Tooltip(
-            message: widget.config.effectiveNavItemLabel,
+            message: widget.config.effectiveNavItemLabel ?? widget.config.userName ?? 'Profile',
             child: VooExpandableNavItemLayout.buildContainer(rowChildren: rowChildren, progress: progress, selectedBackgroundColor: context.expandableNavSelectedBackground),
           );
         },

@@ -1,3 +1,17 @@
+## 1.4.1
+
+### Added
+- **`VooUserProfileConfig.showNavItemLabel`** (default `true`): Set to `false` for an icon-only profile entry in the bottom navigation that collapses to a pure avatar circle.
+
+### Fixed
+- **Empty label space**: When a destination (including the user profile) has no label, the selected state no longer leaves empty horizontal space inside the pill.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.3.1
+- Updated `voo_navigation_bar` to ^0.2.1
+
+---
+
 ## 1.4.0
 
 ### Added
