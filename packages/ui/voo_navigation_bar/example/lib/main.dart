@@ -127,7 +127,7 @@ class _BottomNavigationExampleState extends State<BottomNavigationExample> {
 
   String _getLabelForId(String id) {
     final item = _findItemById(id) ?? _items.first;
-    return item.label;
+    return item.label ?? '';
   }
 }
 

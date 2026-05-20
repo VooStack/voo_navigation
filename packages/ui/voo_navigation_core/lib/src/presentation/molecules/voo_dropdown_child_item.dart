@@ -79,7 +79,7 @@ class VooDropdownChildItem extends StatelessWidget {
             // Label
             Expanded(
               child: Text(
-                item.label,
+                item.label ?? '',
                 style: isSelected
                     ? (item.selectedLabelStyle ??
                           theme.textTheme.bodyMedium!.copyWith(

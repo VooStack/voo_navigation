@@ -6,8 +6,9 @@ class VooNavigationDestination extends Equatable {
   /// Unique identifier for the navigation item
   final String id;
 
-  /// Display label for the navigation item
-  final String label;
+  /// Display label for the navigation item. Optional — when null or empty,
+  /// the selected state collapses to an icon-only circle (no label expansion).
+  final String? label;
 
   /// Icon widget for the navigation item
   final Widget icon;
@@ -92,8 +93,8 @@ class VooNavigationDestination extends Equatable {
 
   const VooNavigationDestination({
     required this.id,
-    required this.label,
     required this.icon,
+    this.label,
     this.selectedIcon,
     this.route,
     this.destination,
@@ -211,27 +212,27 @@ class VooNavigationDestination extends Equatable {
   bool get hasChildren => children != null && children!.isNotEmpty;
 
   /// Gets the effective tooltip text
-  String get effectiveTooltip => tooltip ?? label;
+  String get effectiveTooltip => tooltip ?? label ?? '';
 
   /// Gets the effective semantic label
   String get effectiveSemanticLabel {
     if (semanticLabel != null) return semanticLabel!;
+    final effectiveLabel = label ?? '';
     if (hasBadge && badgeCount != null) {
-      return '$label, $badgeCount notifications';
+      return '$effectiveLabel, $badgeCount notifications';
     }
-    return label;
+    return effectiveLabel;
   }
 
   /// Gets the effective selected icon widget
   Widget get effectiveSelectedIcon => selectedIcon ?? icon;
 
   /// Whether this item is a divider
-  bool get isDivider => label.isEmpty && id.startsWith('divider_');
+  bool get isDivider => (label == null || label!.isEmpty) && id.startsWith('divider_');
 
   /// Convenience factory for creating a divider item
   factory VooNavigationDestination.divider({String? id}) => VooNavigationDestination(
     id: id ?? 'divider_${DateTime.now().millisecondsSinceEpoch}',
-    label: '',
     icon: const Icon(Icons.remove),
   );
 

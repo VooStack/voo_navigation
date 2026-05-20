@@ -22,8 +22,10 @@ class VooExpandableNavItemLayout {
   /// Container height based on circle size and padding
   static double get containerHeight => circleSize + (circlePadding * 2);
 
-  /// Measures the width needed for a label
-  static double measureLabelWidth(String label, double maxWidth) {
+  /// Measures the width needed for a label. Returns 0 if the label is null or empty
+  /// so the selected state collapses to an icon-only circle.
+  static double measureLabelWidth(String? label, double maxWidth) {
+    if (label == null || label.isEmpty) return 0.0;
     final textPainter = TextPainter(
       text: TextSpan(
         text: label,
@@ -47,12 +49,13 @@ class VooExpandableNavItemLayout {
     );
   }
 
-  /// Builds the label widget with proper styling
-  static Widget buildLabel({required String text, required double opacity, required Color color}) {
+  /// Builds the label widget with proper styling. Accepts a nullable text;
+  /// when null, renders an empty string (caller is expected to zero out width).
+  static Widget buildLabel({required String? text, required double opacity, required Color color}) {
     return Opacity(
       opacity: opacity,
       child: Text(
-        text,
+        text ?? '',
         style: TextStyle(color: color, fontSize: VooNavigationTokens.expandableNavLabelFontSize, fontWeight: VooNavigationTokens.expandableNavLabelFontWeight),
         maxLines: 1,
         overflow: TextOverflow.clip,

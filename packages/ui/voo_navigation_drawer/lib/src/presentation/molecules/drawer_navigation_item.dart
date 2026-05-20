@@ -92,7 +92,7 @@ class VooDrawerNavigationItem extends StatelessWidget {
           // Label
           Expanded(
             child: Text(
-              item.label,
+              item.label ?? '',
               style: labelStyle,
               overflow: TextOverflow.ellipsis,
             ),

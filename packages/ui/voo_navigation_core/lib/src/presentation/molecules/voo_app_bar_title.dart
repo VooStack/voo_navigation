@@ -30,7 +30,7 @@ class VooAppBarTitle extends StatelessWidget {
         ),
       ),
       child: Text(
-        item.label,
+        item.label ?? '',
         key: ValueKey(item.id),
         style: theme.appBarTheme.titleTextStyle ?? theme.textTheme.titleLarge,
       ),

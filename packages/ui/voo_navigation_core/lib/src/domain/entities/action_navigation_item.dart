@@ -105,4 +105,8 @@ enum VooActionItemPosition {
 
   /// Position the action item at the end (right) of the navigation bar
   end,
+
+  /// Render the action item as a separate circular button outside the pill,
+  /// to the right of the navigation bar (Apple Music style).
+  trailingPill,
 }

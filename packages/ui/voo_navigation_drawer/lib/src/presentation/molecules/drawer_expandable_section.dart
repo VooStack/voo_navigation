@@ -85,7 +85,7 @@ class VooDrawerExpandableSection extends StatelessWidget {
                   const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
                   Expanded(
                     child: Text(
-                      item.label,
+                      item.label ?? '',
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: sectionColor,
                         fontWeight: FontWeight.w600,

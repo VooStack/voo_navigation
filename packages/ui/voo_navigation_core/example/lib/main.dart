@@ -207,7 +207,7 @@ class _CoreComponentsExampleState extends State<CoreComponentsExample> {
                       data: IconThemeData(color: colorScheme.primary),
                       child: item.icon,
                     ),
-                    title: Text(item.label),
+                    title: Text(item.label ?? ''),
                     subtitle: Text(item.route ?? ''),
                     trailing: item.badgeCount != null
                         ? VooBadge(count: item.badgeCount!)

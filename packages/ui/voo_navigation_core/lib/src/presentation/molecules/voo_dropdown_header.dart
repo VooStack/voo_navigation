@@ -97,7 +97,7 @@ class VooDropdownHeader extends StatelessWidget {
                                 config.unselectedItemColor ??
                                 colorScheme.onSurfaceVariant,
                           )),
-                child: Text(item.label, overflow: TextOverflow.ellipsis),
+                child: Text(item.label ?? '', overflow: TextOverflow.ellipsis),
               ),
             ),
 

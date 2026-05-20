@@ -90,7 +90,7 @@ class VooDrawerFooterItem extends StatelessWidget {
                 const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
                 Expanded(
                   child: Text(
-                    item.label,
+                    item.label ?? '',
                     style: labelStyle,
                     overflow: TextOverflow.ellipsis,
                   ),

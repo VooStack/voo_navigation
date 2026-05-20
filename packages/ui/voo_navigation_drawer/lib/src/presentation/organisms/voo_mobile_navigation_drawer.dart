@@ -246,7 +246,7 @@ class _DrawerNavRow extends StatelessWidget {
                 const SizedBox(width: 14),
                 Expanded(
                   child: Text(
-                    item.label,
+                    item.label ?? '',
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: color,
                       fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,

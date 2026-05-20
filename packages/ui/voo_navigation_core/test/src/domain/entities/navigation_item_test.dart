@@ -71,7 +71,7 @@ void main() {
       final divider = VooNavigationDestination.divider();
 
       expect(divider.id, startsWith('divider_'));
-      expect(divider.label, '');
+      expect(divider.label, isNull);
       expect(divider.icon, isA<Icon>());
       expect(
         divider.isEnabled,

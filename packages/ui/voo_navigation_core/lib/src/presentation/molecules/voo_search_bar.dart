@@ -112,7 +112,7 @@ class _VooSearchBarState extends State<VooSearchBar> {
     if (_query.isEmpty || widget.navigationItems == null) return [];
     final query = _query.toLowerCase();
     return widget.navigationItems!.where((item) {
-      return item.label.toLowerCase().contains(query) ||
+      return (item.label?.toLowerCase().contains(query) ?? false) ||
           (item.tooltip?.toLowerCase().contains(query) ?? false);
     }).toList();
   }

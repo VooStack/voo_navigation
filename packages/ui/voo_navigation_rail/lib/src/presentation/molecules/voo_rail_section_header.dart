@@ -59,7 +59,7 @@ class VooRailSectionHeader extends StatelessWidget {
                 top: spacing.xs,
               ),
               child: Text(
-                item.label,
+                item.label ?? '',
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                   fontWeight: FontWeight.w600,
@@ -85,7 +85,7 @@ class VooRailSectionHeader extends StatelessWidget {
           horizontal: spacing.sm,
         ),
         child: Tooltip(
-          message: item.label,
+          message: item.label ?? '',
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(context.vooRadius.md),

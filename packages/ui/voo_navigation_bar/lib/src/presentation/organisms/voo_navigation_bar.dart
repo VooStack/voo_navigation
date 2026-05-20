@@ -92,12 +92,74 @@ class VooNavigationBar extends StatelessWidget {
     final bottomPadding = MediaQuery.of(context).padding.bottom;
     final margin = bottomMargin ?? 8.0;
 
-    // Build the list of nav item widgets
+    final isTrailingPill = actionItem?.position == VooActionItemPosition.trailingPill;
+
+    // Build the list of nav item widgets (action item is omitted when trailingPill)
     final navWidgets = _buildNavigationItems(context, items);
 
     final borderRadius = BorderRadius.circular(
       VooNavigationTokens.expandableNavBorderRadius,
     );
+
+    final boxShadow = [
+      BoxShadow(
+        color: theme.colorScheme.shadow.withValues(alpha: 0.2),
+        blurRadius: 16,
+        offset: const Offset(0, 4),
+      ),
+    ];
+
+    final pillContainer = Container(
+      height: VooNavigationTokens.expandableNavBarHeight,
+      padding: EdgeInsets.symmetric(
+        horizontal: VooNavigationTokens.expandableNavBarPaddingHorizontal,
+        vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
+      ),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: borderRadius,
+        border: Border.all(
+          color: border,
+          width: VooNavigationTokens.expandableNavBorderWidth,
+        ),
+        boxShadow: boxShadow,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: _addSpacingBetweenItems(navWidgets),
+      ),
+    );
+
+    Widget barContent = pillContainer;
+
+    if (isTrailingPill && actionItem != null) {
+      final buttonSize = VooNavigationTokens.expandableNavBarHeight;
+      final trailingButton = Container(
+        width: buttonSize,
+        height: buttonSize,
+        decoration: BoxDecoration(
+          color: bgColor,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: border,
+            width: VooNavigationTokens.expandableNavBorderWidth,
+          ),
+          boxShadow: boxShadow,
+        ),
+        child: Center(child: _buildActionItem(context)),
+      );
+
+      barContent = Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          pillContainer,
+          const SizedBox(width: 8),
+          trailingButton,
+        ],
+      );
+    }
 
     final screenWidth = MediaQuery.of(context).size.width;
     final maxBarWidth = screenWidth - (horizontalMargin * 2);
@@ -121,34 +183,7 @@ class VooNavigationBar extends StatelessWidget {
             constraints: BoxConstraints(maxWidth: maxBarWidth),
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: Container(
-                height: VooNavigationTokens.expandableNavBarHeight,
-                padding: EdgeInsets.symmetric(
-                  horizontal:
-                      VooNavigationTokens.expandableNavBarPaddingHorizontal,
-                  vertical: VooNavigationTokens.expandableNavBarPaddingVertical,
-                ),
-                decoration: BoxDecoration(
-                  color: bgColor,
-                  borderRadius: borderRadius,
-                  border: Border.all(
-                    color: border,
-                    width: VooNavigationTokens.expandableNavBorderWidth,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: _addSpacingBetweenItems(navWidgets),
-                ),
-              ),
+              child: barContent,
             ),
           ),
         ),
@@ -162,8 +197,11 @@ class VooNavigationBar extends StatelessWidget {
   ) {
     final widgets = <Widget>[];
 
-    // Determine action item position
+    // Determine action item position. When trailingPill, the action item is
+    // rendered separately outside the pill container (handled in build()),
+    // so we treat it as "not in the bar" for the purposes of in-pill layout.
     final actionPosition = actionItem?.position ?? VooActionItemPosition.center;
+    final actionInPill = actionItem != null && actionPosition != VooActionItemPosition.trailingPill;
 
     // Check if special items are present (they'll be added at the end)
     final hasContextSwitcher = config.contextSwitcher != null &&
@@ -191,7 +229,7 @@ class VooNavigationBar extends StatelessWidget {
 
     // Count total items (regular + special + action)
     var totalItems = regularItems.length;
-    if (actionItem != null) totalItems++;
+    if (actionInPill) totalItems++;
     if (shouldCombineSwitchers) {
       totalItems++;
     } else {
@@ -220,7 +258,7 @@ class VooNavigationBar extends StatelessWidget {
     int calculateCenterIndex() {
       // Count all items that will be in the bar
       int total = regularItems.length;
-      if (actionItem != null) total++; // The action item being placed
+      if (actionInPill) total++; // The action item being placed
       if (hasUserProfile) total++; // Profile at start or end
       if (shouldCombineSwitchers) {
         total++;
@@ -246,7 +284,7 @@ class VooNavigationBar extends StatelessWidget {
       final isSelected = item.id == selectedId;
 
       // Insert action item at appropriate position (if using position-based logic)
-      if (actionItem != null && actionItem!.navItemIndex == null) {
+      if (actionInPill && actionItem!.navItemIndex == null) {
         // Start position: Add at beginning of regular items (i == 0)
         // This will be shifted if user profile is inserted at 0 later
         if (actionPosition == VooActionItemPosition.start && i == 0) {
@@ -287,12 +325,12 @@ class VooNavigationBar extends StatelessWidget {
     }
 
     // Add action item at end if configured (position-based, before switchers)
-    if (actionItem != null && actionItem!.navItemIndex == null && actionPosition == VooActionItemPosition.end) {
+    if (actionInPill && actionItem!.navItemIndex == null && actionPosition == VooActionItemPosition.end) {
       widgets.add(_buildActionItem(context));
     }
 
     // Insert action item at explicit navItemIndex if specified
-    if (actionItem != null && actionItem!.navItemIndex != null) {
+    if (actionInPill && actionItem!.navItemIndex != null) {
       final idx = actionItem!.navItemIndex!;
       if (idx >= 0 && idx <= widgets.length) {
         widgets.insert(idx, _buildActionItem(context));

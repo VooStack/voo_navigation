@@ -103,7 +103,7 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
                         // Label - no icon for child items
                         Expanded(
                           child: Text(
-                            item.label,
+                            item.label ?? '',
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: isSelected
                                   ? unselectedColor
