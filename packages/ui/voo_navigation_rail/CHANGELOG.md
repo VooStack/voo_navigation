@@ -1,3 +1,13 @@
+## 0.2.7
+
+### Fixed
+- `VooRailNavigationItem` and `VooRailSectionHeader` now safely handle the new optional `VooNavigationDestination.label` by falling back to an empty string when null.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.3.0
+
+---
+
 ## 0.2.6
 
 ### Changed

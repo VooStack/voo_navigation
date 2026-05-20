@@ -1,3 +1,16 @@
+## 0.2.0
+
+### Added
+- **Trailing-pill action button**: `VooNavigationBar` now supports `VooActionItemPosition.trailingPill`. When set, the `actionItem` renders as a standalone circular button outside the pill container (to the right, with a small gap) — matching the Apple Music navigation pattern. The button reuses the existing pill surface, border, and shadow tokens so it visually matches the bar.
+
+### Fixed
+- `VooExpandableNavItem` and `VooExpandableNavItemLayout` now accept nullable labels. When a destination has no label, the selected state collapses to an icon-only colored circle with no horizontal label expansion.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.3.0
+
+---
+
 ## 0.1.21
 
 ### Added

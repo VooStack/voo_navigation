@@ -1,3 +1,17 @@
+## 1.4.0
+
+### Added
+- **Trailing-pill action button** (`VooActionItemPosition.trailingPill`): the bottom navigation action item can now render as a standalone circular button outside the pill container, matching the Apple Music navigation pattern. The trailing button picks up the same surface/border/shadow tokens as the pill.
+- **Optional `VooNavigationDestination.label`**: destinations can now be icon-only. The selected state collapses to a colored icon circle (no horizontal label expansion) when the label is null or empty. Existing call sites that pass a label keep working unchanged.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.3.0
+- Updated `voo_navigation_bar` to ^0.2.0
+- Updated `voo_navigation_drawer` to ^0.2.8
+- Updated `voo_navigation_rail` to ^0.2.7
+
+---
+
 ## 1.3.48
 
 ### Added

@@ -1,3 +1,17 @@
+## 0.3.0
+
+### Changed (breaking)
+- **`VooNavigationDestination.label` is now optional** (`String?`). Destinations can omit a label for icon-only navigation; the selected expandable state collapses to a colored icon circle with no label expansion. Existing call sites passing a label continue to work unchanged.
+- **`VooNavigationDestination.divider()`** factory no longer passes an empty `label:` — divider items now report `label == null`.
+
+### Added
+- **`VooActionItemPosition.trailingPill`**: New enum value placing the action item as a separate circular button outside the navigation pill (Apple Music style). Existing positions (`start` / `center` / `end`) keep rendering inside the pill.
+
+### Fixed
+- All label consumers (drawer items, rail items, search bar, app bar title, dropdown header/child) now safely handle a null label by falling back to an empty string.
+
+---
+
 ## 0.2.35
 
 ### Added

@@ -1,3 +1,13 @@
+## 0.2.8
+
+### Fixed
+- All drawer destination renderers (`drawer_navigation_item`, `drawer_footer_item`, `drawer_expandable_section`, `drawer_child_navigation_item`, `voo_mobile_navigation_drawer`) now safely handle the new optional `VooNavigationDestination.label` by falling back to an empty string when null.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.3.0
+
+---
+
 ## 0.2.7
 
 ### Added
