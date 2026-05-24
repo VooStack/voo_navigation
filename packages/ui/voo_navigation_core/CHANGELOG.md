@@ -1,3 +1,16 @@
+## 0.3.2
+
+### Fixed
+- **Section item overflow**: default `sectionItemHeight` / `itemHeight` raised from 100 → 112 on `VooQuickAction.section` factory, the underlying `VooQuickAction` constructor, and the standalone `VooQuickActionSection` class. The previous 100 was 12px short of fitting a 2-line label under the 48×48 icon, producing "BOTTOM OVERFLOWED BY 12 PIXELS" for any longer action label (e.g. "Create community", "Create workout plan"). Existing call sites that pass an explicit height are unaffected.
+
+### Changed
+- **Quick Actions section headers**: default label style upgraded from `titleSmall` / `onSurfaceVariant` / `w600` to `titleMedium` / `onSurface` / `w700` with a subtle `-0.2` letter spacing. Header-to-content spacing increased from 8 → 12. Custom `labelStyle` overrides continue to take precedence.
+
+### Added
+- **Hide-when-empty for Quick Actions sections**: sections (both `VooQuickActionsSectionsLayout` entries and inline `VooQuickAction.section` items inside grid layouts) that contain zero actions no longer render their header or container. Lets callers hide a section just by passing an empty `actions` list.
+
+---
+
 ## 0.3.1
 
 ### Added

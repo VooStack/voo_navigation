@@ -220,6 +220,9 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
 
     for (final action in actions) {
       if (action.isSection) {
+        if ((action.sectionActions ?? const <VooQuickAction>[]).isEmpty) {
+          continue;
+        }
         // Flush any pending grid actions before adding section
         flushGridActions();
         // Add the section
@@ -248,9 +251,13 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
+    final sectionActions = section.sectionActions ?? const <VooQuickAction>[];
+    if (sectionActions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     final sectionPadding = section.sectionPadding ??
         EdgeInsets.symmetric(horizontal: _effectivePadding.left);
-    final sectionActions = section.sectionActions ?? [];
     final shouldShowLabels = section.showLabel ?? widget.showLabelsInGrid;
     final columnWidth = _calculateColumnWidth();
 
@@ -264,13 +271,14 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
           child: Text(
             section.label,
             style: section.labelStyle ??
-                theme.textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
+                theme.textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
                 ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         // Section actions
         if (section.sectionHorizontalScroll)
           SizedBox(

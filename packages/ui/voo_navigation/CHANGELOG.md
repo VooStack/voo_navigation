@@ -1,3 +1,19 @@
+## 1.5.0
+
+### Fixed
+- Quick Actions modal: section items default height raised 100 → 112 so 2-line labels (e.g. "Create community") no longer overflow by 12 pixels.
+
+### Changed
+- Quick Actions modal: section headers now use `titleMedium` / `onSurface` / `w700` by default for a clearer hierarchy. Custom `labelStyle` overrides are still respected.
+
+### Added
+- Quick Actions modal: sections with zero actions are now hidden automatically (no header, no empty container) in both `VooQuickActionsSectionsLayout` and grid-mode inline sections.
+
+### Dependencies
+- Updated `voo_navigation_core` to ^0.3.2
+
+---
+
 ## 1.4.1
 
 ### Added

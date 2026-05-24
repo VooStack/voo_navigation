@@ -27,6 +27,10 @@ class VooQuickActionsSectionLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (section.actions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final effectivePadding = section.padding ?? const EdgeInsets.symmetric(horizontal: 16);
@@ -41,13 +45,14 @@ class VooQuickActionsSectionLayout extends StatelessWidget {
           child: Text(
             section.label,
             style: section.labelStyle ??
-                theme.textTheme.titleSmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w600,
+                theme.textTheme.titleMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.2,
                 ),
           ),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         // Actions
         if (section.horizontalScroll)
           SizedBox(
@@ -203,19 +208,21 @@ class VooQuickActionsSectionsLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final visibleSections = sections.where((s) => s.actions.isNotEmpty).toList();
+
     return SingleChildScrollView(
       padding: padding,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          for (int i = 0; i < sections.length; i++) ...[
+          for (int i = 0; i < visibleSections.length; i++) ...[
             VooQuickActionsSectionLayout(
-              section: sections[i],
+              section: visibleSections[i],
               style: style,
               showLabelsInGrid: showLabelsInGrid,
               onActionTap: onActionTap,
             ),
-            if (i < sections.length - 1) SizedBox(height: sectionSpacing),
+            if (i < visibleSections.length - 1) SizedBox(height: sectionSpacing),
           ],
         ],
       ),

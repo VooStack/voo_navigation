@@ -5,6 +5,23 @@ All notable changes to the voo_navigation workspace will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0]
+
+### Fixed
+- **voo_navigation_core 0.3.2**: Default section item height raised from 100 → 112 so 2-line action labels (e.g. "Create community", "Create workout plan") no longer overflow the tile by 12 pixels.
+
+### Changed
+- **voo_navigation_core 0.3.2**: Quick Actions modal section headers default to a stronger style (`titleMedium` / `onSurface` / `w700`, `letterSpacing: -0.2`) and 12px header-to-content spacing. Custom `labelStyle` overrides remain authoritative.
+
+### Added
+- **voo_navigation_core 0.3.2**: Empty quick-action sections are now hidden automatically — passing an empty `actions` list collapses the entire section, both in `VooQuickActionsSectionsLayout` and inside grid-mode inline `VooQuickAction.section` items.
+
+### Dependencies
+- `voo_navigation` → 1.5.0
+- `voo_navigation_core` → 0.3.2 (additive patch — `^0.3.x` constraints in `voo_navigation_bar` / `_drawer` / `_rail` remain valid)
+
+---
+
 ## [1.3.5]
 
 ### Added
