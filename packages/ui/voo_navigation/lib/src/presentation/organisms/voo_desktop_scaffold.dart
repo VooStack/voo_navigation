@@ -257,9 +257,12 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
                 margin: effectiveContentMargin,
                 decoration: BoxDecoration(
                   borderRadius: effectiveContentBorderRadius,
+                  // Hairline separator between drawer and content. Uniform
+                  // color across both sides — Flutter requires matching
+                  // BorderSide colors when paired with borderRadius.
                   border: Border(
-                    left: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
-                    top: BorderSide(color: theme.dividerColor.withValues(alpha: 0.15), width: 1),
+                    left: BorderSide(color: context.vooMinimal.borderStrong, width: 1),
+                    top: BorderSide(color: context.vooMinimal.borderStrong, width: 1),
                   ),
                 ),
                 child: VooThemedNavContainer(

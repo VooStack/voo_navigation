@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
-import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
+import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_modern_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -38,82 +36,84 @@ class VooDrawerNavigationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final m = context.vooMinimal;
     final isSelected = item.id == selectedId;
 
-    // Resolve colors from item, config, or theme (in that priority order)
-    final unselectedColor = config.effectiveTheme.unselectedItemColor ?? theme.colorScheme.onSurface;
-    final selectedColor = config.effectiveTheme.selectedItemColor ?? theme.colorScheme.primary;
-
+    // Selected: accent icon + full-contrast text + subtle bg tint.
+    // Unselected: muted text + muted icon, no chrome.
     final iconColor = isSelected
-        ? (item.selectedIconColor ?? selectedColor)
-        : (item.iconColor ?? unselectedColor.withValues(alpha: VooNavigationTokens.opacityMutedIcon));
+        ? (item.selectedIconColor ?? config.effectiveTheme.selectedItemColor ?? m.accent)
+        : (item.iconColor ?? m.textTertiary);
 
-    // Resolve label style
     final labelStyle = theme.textTheme.bodyMedium?.copyWith(
-      color: unselectedColor,
-      fontWeight: isSelected ? VooNavigationTokens.labelFontWeightSelected : VooNavigationTokens.labelFontWeight,
+      color: isSelected ? m.textPrimary : m.textSecondary,
+      fontWeight: isSelected
+          ? VooNavigationTokens.labelFontWeightSelected
+          : VooNavigationTokens.labelFontWeight,
       fontSize: VooNavigationTokens.labelFontSize,
+      letterSpacing: -0.1,
     );
+
+    // Backgrounds are neutral — the accent leading bar carries the
+    // "selected" signal, not a primary-tinted background.
+    final bgColor = isSelected
+        ? m.selectedOverlay
+        : isHovered
+            ? m.hoverOverlay
+            : Colors.transparent;
 
     Widget itemContent = AnimatedContainer(
-      duration: context.vooAnimation.durationFast,
-      padding: const EdgeInsets.symmetric(
-        horizontal: VooNavigationTokens.itemPaddingHorizontal,
-        vertical: VooNavigationTokens.itemPaddingVertical,
-      ),
+      duration: VooMinimal.motionFast,
+      curve: VooMinimal.motionCurve,
       decoration: BoxDecoration(
-        color: isSelected
-            ? context.navSelectedBackground(selectedColor)
-            : isHovered
-                ? context.navHoverBackground
-                : Colors.transparent,
-        borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
+        color: bgColor,
+        borderRadius: VooMinimal.brSm,
       ),
-      child: Row(
-        children: [
-          // Leading widget or Icon
-          if (item.leadingWidget != null)
-            item.leadingWidget!
-          else
-            AnimatedSwitcher(
-              duration: context.vooAnimation.durationFast,
-              child: IconTheme(
-                key: ValueKey(isSelected),
-                data: IconThemeData(
-                  color: iconColor,
-                  size: VooNavigationTokens.iconSizeDefault,
+      // Selected signal comes from the icon color (accent) + bolder
+      // higher-contrast text + subtle bg tint. No leading bar — it
+      // didn't read clearly at typical row heights.
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: VooNavigationTokens.itemPaddingHorizontal,
+          vertical: 7,
+        ),
+        child: Row(
+              children: [
+                if (item.leadingWidget != null)
+                  item.leadingWidget!
+                else
+                  AnimatedSwitcher(
+                    duration: VooMinimal.motionFast,
+                    child: IconTheme(
+                      key: ValueKey(isSelected),
+                      data: IconThemeData(
+                        color: iconColor,
+                        size: VooNavigationTokens.iconSizeDefault,
+                      ),
+                      child: isSelected ? item.effectiveSelectedIcon : item.icon,
+                    ),
+                  ),
+                const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
+                Expanded(
+                  child: Text(
+                    item.label ?? '',
+                    style: labelStyle,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                child: isSelected ? item.effectiveSelectedIcon : item.icon,
-              ),
-            ),
-
-          const SizedBox(width: VooNavigationTokens.iconLabelSpacing),
-
-          // Label
-          Expanded(
-            child: Text(
-              item.label ?? '',
-              style: labelStyle,
-              overflow: TextOverflow.ellipsis,
+                if (item.hasBadge) ...[
+                  SizedBox(width: context.vooSpacing.xs),
+                  VooDrawerModernBadge(item: item, isSelected: isSelected),
+                ],
+                if (item.trailingWidget != null) ...[
+                  SizedBox(width: context.vooSpacing.xs),
+                  item.trailingWidget!,
+                ],
+              ],
             ),
           ),
-
-          // Modern badge
-          if (item.hasBadge) ...[
-            SizedBox(width: context.vooSpacing.xs),
-            VooDrawerModernBadge(item: item, isSelected: isSelected),
-          ],
-
-          // Trailing widget
-          if (item.trailingWidget != null) ...[
-            SizedBox(width: context.vooSpacing.xs),
-            item.trailingWidget!,
-          ],
-        ],
-      ),
     );
 
-    // Wrap with tooltip if provided
     if (item.tooltip != null) {
       itemContent = Tooltip(
         message: item.effectiveTooltip,
@@ -121,7 +121,6 @@ class VooDrawerNavigationItem extends StatelessWidget {
       );
     }
 
-    // Wrap with semantics for accessibility
     return Semantics(
       label: item.effectiveSemanticLabel,
       button: true,
@@ -133,7 +132,7 @@ class VooDrawerNavigationItem extends StatelessWidget {
         child: InkWell(
           key: item.key,
           onTap: item.isEnabled ? () => onItemTap(item) : null,
-          borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
+          borderRadius: VooMinimal.brSm,
           child: itemContent,
         ),
       ),

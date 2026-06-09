@@ -65,10 +65,13 @@ class VooMinimalTheme extends ThemeExtension<VooMinimalTheme> {
       textTertiary: VooMinimal.darkTextTertiary,
       accent: accent,
       textOnAccent: VooMinimal.darkTextOnAccent,
-      hoverOverlay: const Color(0x14FFFFFF), // ~8% white
-      pressedOverlay: const Color(0x29FFFFFF), // ~16%
-      selectedOverlay: const Color(0x1FFFFFFF), // ~12%
-      focusOverlay: const Color(0x3DFFFFFF), // ~24%
+      // Restrained overlays so the "selected" signal comes from text+icon
+      // contrast (and any leading accent bar a widget adds), not a heavy
+      // background block. Tuned for Linear/Vercel-style subtlety.
+      hoverOverlay: const Color(0x0AFFFFFF), // ~4% white
+      pressedOverlay: const Color(0x14FFFFFF), // ~8%
+      selectedOverlay: const Color(0x0FFFFFFF), // ~6%
+      focusOverlay: const Color(0x29FFFFFF), // ~16%
     );
   }
 

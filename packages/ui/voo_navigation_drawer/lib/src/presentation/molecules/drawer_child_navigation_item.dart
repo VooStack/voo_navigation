@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
-import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
+import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_modern_badge.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -42,11 +40,10 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final m = context.vooMinimal;
     final isSelected = item.id == selectedId;
 
-    // Resolve colors from config or theme
-    final unselectedColor = config.effectiveTheme.unselectedItemColor ?? theme.colorScheme.onSurface;
-    final selectedColor = config.effectiveTheme.selectedItemColor ?? theme.colorScheme.primary;
+    final selectedColor = config.effectiveTheme.selectedItemColor ?? m.accent;
 
     // Calculate line position to align with parent icon center
     // Parent icon center = itemPaddingHorizontal + iconSizeDefault/2
@@ -73,9 +70,7 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
                     right: context.vooSpacing.xs,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? selectedColor
-                        : unselectedColor.withValues(alpha: VooNavigationTokens.opacityBorderSubtle),
+                    color: isSelected ? selectedColor : m.borderStrong,
                     borderRadius: BorderRadius.circular(1),
                   ),
                 ),
@@ -85,37 +80,36 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
                   onTap: item.isEnabled ? () => onItemTap(item) : null,
                   borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
                   child: AnimatedContainer(
-                    duration: context.vooAnimation.durationFast,
+                    duration: VooMinimal.motionFast,
+                    curve: VooMinimal.motionCurve,
                     padding: const EdgeInsets.symmetric(
                       horizontal: VooNavigationTokens.itemPaddingHorizontal,
                       vertical: VooNavigationTokens.itemChildPaddingVertical,
                     ),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? context.navSelectedBackground(selectedColor)
+                          ? m.selectedOverlay
                           : isHovered
-                              ? context.navHoverBackground
+                              ? m.hoverOverlay
                               : Colors.transparent,
-                      borderRadius: BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
+                      borderRadius: VooMinimal.brSm,
                     ),
                     child: Row(
                       children: [
-                        // Label - no icon for child items
                         Expanded(
                           child: Text(
                             item.label ?? '',
                             style: theme.textTheme.bodySmall?.copyWith(
-                              color: isSelected
-                                  ? unselectedColor
-                                  : unselectedColor.withValues(alpha: VooNavigationTokens.opacityMutedIcon),
-                              fontWeight: isSelected ? VooNavigationTokens.labelFontWeightSelected : FontWeight.w400,
+                              color: isSelected ? m.textPrimary : m.textTertiary,
+                              fontWeight: isSelected
+                                  ? VooNavigationTokens.labelFontWeightSelected
+                                  : FontWeight.w400,
                               fontSize: VooNavigationTokens.labelFontSize,
+                              letterSpacing: -0.1,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-
-                        // Badge
                         if (item.hasBadge) ...[
                           SizedBox(width: context.vooSpacing.xs),
                           VooDrawerModernBadge(item: item, isSelected: isSelected),

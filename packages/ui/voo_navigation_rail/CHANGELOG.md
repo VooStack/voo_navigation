@@ -1,3 +1,12 @@
+## 0.2.8
+
+### Changed
+- **Rail background** now defaults to `colorScheme.surface` (matching the scaffold body) instead of `surfaceContainerLow`, eliminating the tonal seam where the rail meets the content area.
+- **`RailSearchBar` overlay dialog** rebuilt around the minimal palette — uses `m.surfaceElevated` + hairline `m.border` + subtle `m.dropdownShadow` instead of a heavy 20px blur + transparent backdrop.
+- Constraint bump: requires `voo_navigation_core: ^0.4.0`.
+
+---
+
 ## 0.2.7
 
 ### Fixed

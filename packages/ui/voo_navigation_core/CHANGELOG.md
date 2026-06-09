@@ -1,3 +1,60 @@
+## 0.4.0
+
+### Breaking
+- **`VooNavigationConfig` API consolidation**. Eighteen individual fields were collapsed into six cohesive struct types. The old fields are removed (no deprecated stubs); existing call sites must migrate.
+  - `useBodyCard` / `bodyCardElevation` / `bodyCardBorderRadius` / `bodyCardColor` → `bodyCard: VooBodyCardConfig(...)`
+  - `floatingActionButton` / `floatingActionButtonLocation` / `floatingActionButtonAnimator` / `showFloatingActionButton` → `fab: VooFabConfig(widget: ..., location: ..., animator: ..., visible: ...)` (use `VooFabConfig.hidden` to suppress)
+  - `animationDuration` / `animationCurve` / `enableAnimations` / `badgeAnimationDuration` → `animation: VooAnimationConfig(duration: ..., curve: ..., enabled: ..., badgeDuration: ...)` (defaults now match `VooMinimal.motionNormal` + `motionCurve`; use `VooAnimationConfig.disabled` for instant transitions)
+  - `navigationBackgroundColor` / `selectedItemColor` / `unselectedItemColor` / `indicatorColor` / `indicatorShape` / `elevation` → moved onto the existing `navigationTheme: VooNavigationTheme(...)`. `VooNavigationTheme` gained `selectedItemColor`, `unselectedItemColor`, `indicatorShape` fields plus matching resolver methods.
+  - `drawerHeader` / `drawerHeaderTrailing` / `drawerFooter` → `drawerSlots: VooDrawerSlots(header: ..., headerTrailing: ..., footer: ...)`
+  - `contentAreaMargin` / `contentAreaBorderRadius` / `contentAreaBackgroundColor` → `contentArea: VooContentAreaConfig(margin: ..., borderRadius: ..., backgroundColor: ...)`
+
+### Added
+- **Design system primitives** (`VooMinimal`, `VooMinimalTheme`) — Linear/Vercel-inspired neutral palette + state-layer opacities + motion/radius/typography tokens, exposed via a `ThemeExtension` and `context.vooMinimal`. `VooMinimalTheme.lightThemeData()` / `darkThemeData()` build ready-to-use `ThemeData`. When consumers don't opt in, `VooMinimalTheme.fallback(scheme)` derives every value from the active `ColorScheme` so widgets remain theme-conformant.
+- **`VooNavigationConfig.simple(items, onItemSelected)`** factory for the minimal-case shell (items + selection).
+- **`VooNavigationConfig.appShell(items, header, multiSwitcher, searchBar, ...)`** factory pre-baking the typical SaaS app-shell config (collapsible rail on, multi-switcher in footer, search bar in header).
+- **`VooMultiSwitcherConfig.fromUser(user, organizations, ...)`** factory — collapses 7 user fields into a single `VooMultiSwitcherUser` struct (existing constructor still works for explicit field control).
+
+### Changed
+- **Atom-level glow shadows removed** across `VooBadge`, `VooBadgeText`, `VooBadgeDot`, `VooDotBadge`, `VooTextBadge`, `VooStatusBadge`, `VooStatusIndicator`, `VooEdgeIndicator`, `VooInitialsAvatar`, `VooStackedAvatars`. Selection signal now comes from contrast + ring borders, not colored halos.
+- **Modal/overlay surfaces** (notifications bell dropdown, quick actions menu, organization dropdown, multi/context switcher modals + bottom sheets, mobile app bar, expanded profile dropdown, search bar results) now use `m.dropdownShadow` (subtle two-stop) + hairline `m.border` instead of 16–20px primary-tinted glows. Tighter radii (10/8/6 in place of 16/14/12).
+- **`VooSearchField`** redesigned around the minimal palette — kbd-style shortcut chip with hairline border, restrained focus ring, smaller icon, 1.5px focused border (was 2px).
+- **`VooMobileAppBar`** no longer renders a 8px blur shadow under itself; relies on the hairline divider from `AppBarTheme.shape`.
+
+### Migration
+```dart
+// Before
+VooNavigationConfig(
+  items: items,
+  onNavigationItemSelected: onSelect,
+  useBodyCard: true,
+  bodyCardElevation: 1,
+  bodyCardColor: Colors.white,
+  floatingActionButton: FloatingActionButton(...),
+  floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+  showFloatingActionButton: true,
+  animationDuration: Duration(milliseconds: 200),
+  enableAnimations: true,
+  navigationBackgroundColor: Colors.grey,
+  selectedItemColor: Colors.blue,
+  drawerHeader: const Text('Header'),
+  drawerFooter: const Text('Footer'),
+)
+
+// After
+VooNavigationConfig(
+  items: items,
+  onNavigationItemSelected: onSelect,
+  bodyCard: const VooBodyCardConfig(enabled: true, elevation: 1, color: Colors.white),
+  fab: VooFabConfig(widget: FloatingActionButton(...), location: FloatingActionButtonLocation.endFloat),
+  animation: const VooAnimationConfig(duration: Duration(milliseconds: 200)),
+  navigationTheme: const VooNavigationTheme(surfaceColor: Colors.grey, selectedItemColor: Colors.blue),
+  drawerSlots: const VooDrawerSlots(header: Text('Header'), footer: Text('Footer')),
+)
+```
+
+---
+
 ## 0.3.2
 
 ### Fixed

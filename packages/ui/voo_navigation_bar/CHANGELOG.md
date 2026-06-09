@@ -1,3 +1,13 @@
+## 0.2.2
+
+### Changed
+- **`VooNavigationBar` shadow** softened — replaced the 16px primary-tinted blur with the design-system `m.cardShadow` (two stops, ~4% black) so the floating pill bar lifts off the body without halo.
+- **`VooExpandableNavModal` and `VooActionNavItem` modals** now use `m.dropdownShadow` (subtle two-stop) instead of a 20px black blur, matching the rest of the overlay surfaces.
+- Bouncy curves (`Curves.easeOutBack`) swept to `Curves.easeOutCubic` across action-item / modal animations for the minimal aesthetic.
+- Constraint bump: requires `voo_navigation_core: ^0.4.0`.
+
+---
+
 ## 0.2.1
 
 ### Fixed

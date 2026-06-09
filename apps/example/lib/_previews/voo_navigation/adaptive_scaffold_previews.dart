@@ -20,7 +20,11 @@ Widget adaptiveScaffoldDefault() => VooAdaptiveScaffold(
       body: _body(),
     );
 
-@Preview(name: 'Mobile (360×800)', size: Size(360, 800), theme: previewTheme)
+@Preview(
+  name: 'Mobile — no hamburger (360×800)',
+  size: Size(360, 800),
+  theme: previewTheme,
+)
 Widget adaptiveScaffoldMobile() => VooAdaptiveScaffold(
       config: Fixtures.fullNavConfig(),
       body: _body(),
@@ -39,14 +43,16 @@ Widget adaptiveScaffoldDesktop() => VooAdaptiveScaffold(
     );
 
 @Preview(
-  name: 'Mobile + hamburger drawer',
+  name: 'Mobile — with hamburger drawer (360×800)',
   size: Size(360, 800),
   theme: previewTheme,
 )
 Widget adaptiveScaffoldMobileWithDrawer() {
-  final base = Fixtures.fullNavConfig();
+  // Opt-in to the mobile hamburger menu — adds Icons.menu to the app bar
+  // leading slot; tapping it opens the default VooMobileNavigationDrawer
+  // which lists every visible item (and groups by `divider` items).
   return VooAdaptiveScaffold(
-    config: base.copyWith(showHamburgerMenu: true),
+    config: Fixtures.fullNavConfig().copyWith(showHamburgerMenu: true),
     body: _body(),
   );
 }

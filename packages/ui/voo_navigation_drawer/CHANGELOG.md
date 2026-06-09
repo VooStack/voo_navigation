@@ -1,3 +1,20 @@
+## 0.3.0
+
+### Breaking
+- **`VooMobileNavigationDrawer` is now `StatefulWidget`** (was `StatelessWidget`). Subclasses or code that introspected the type may need updating; the public constructor and props are unchanged.
+- Constraint bump: requires `voo_navigation_core: ^0.4.0` (see core 0.4.0 changelog for the consolidated config API).
+
+### Added
+- **Expandable sections in `VooMobileNavigationDrawer`** — items with `children` now render as expandable section rows with a rotating chevron + animated child list, matching the desktop drawer's behaviour. Children render under a left guide line (`borderStrong`) aligned with the parent's icon. Sections seed initial open/closed state from `VooNavigationDestination.isExpanded` and auto-expand when one of their children is currently selected.
+
+### Changed
+- **`VooDrawerNavigationItem`** (desktop) restyled with neutral selected/hover overlays (`m.selectedOverlay` ≈ 6% white, `m.hoverOverlay` ≈ 4% white) instead of primary-tinted backgrounds. Selected state signals via accent icon + full-contrast text + `w600` weight. Tighter vertical padding (10 → 7).
+- **`VooDrawerChildNavigationItem`** vertical guide line bumped from `border` (8% white) to `borderStrong` (16% white) so the parent-child relationship reads clearly.
+- **`VooDrawerExpandableSection`** chevron switched from `arrow_drop_down` (filled) to `keyboard_arrow_down` (outlined) with `textTertiary` color. Removed accent-tint hover background.
+- **`VooMobileNavigationDrawer`** sized for mobile: 48dp tap-target minimum on item rows, font sizes bumped (header 16 → 20, item 13 → 15, child 13 → 14), larger close button (44dp hit area), expanded breathing room throughout. Background now uses `m.background` for consistency with the rest of the scaffold.
+
+---
+
 ## 0.2.8
 
 ### Fixed

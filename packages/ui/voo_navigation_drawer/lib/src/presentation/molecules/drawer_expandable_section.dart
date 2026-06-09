@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
-import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
-import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
+import 'package:voo_navigation_core/voo_navigation_core.dart';
 import 'package:voo_navigation_drawer/src/presentation/molecules/drawer_child_navigation_item.dart';
 import 'package:voo_tokens/voo_tokens.dart';
 
@@ -46,10 +44,8 @@ class VooDrawerExpandableSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final m = context.vooMinimal;
     final isHovered = hoveredItems[item.id] == true;
-
-    // Use config colors if provided, otherwise fall back to theme
-    final sectionColor = config.effectiveTheme.unselectedItemColor ?? theme.colorScheme.onSurface;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,25 +55,23 @@ class VooDrawerExpandableSection extends StatelessWidget {
           onExit: (_) => onHoverChanged(item.id, false),
           child: InkWell(
             onTap: () => onItemTap(item),
-            borderRadius: BorderRadius.circular(6),
+            borderRadius: VooMinimal.brSm,
             child: AnimatedContainer(
-              duration: context.vooAnimation.durationFast,
-              padding: EdgeInsets.symmetric(
+              duration: VooMinimal.motionFast,
+              curve: VooMinimal.motionCurve,
+              padding: const EdgeInsets.symmetric(
                 horizontal: VooNavigationTokens.itemPaddingHorizontal,
-                vertical: VooNavigationTokens.itemPaddingVertical,
+                vertical: 7,
               ),
               decoration: BoxDecoration(
-                color: isHovered
-                    ? sectionColor.withValues(alpha: 0.04)
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(6),
+                color: isHovered ? m.hoverOverlay : Colors.transparent,
+                borderRadius: VooMinimal.brSm,
               ),
               child: Row(
                 children: [
-                  // Section icon
                   IconTheme(
                     data: IconThemeData(
-                      color: sectionColor.withValues(alpha: 0.7),
+                      color: m.textTertiary,
                       size: VooNavigationTokens.iconSizeDefault,
                     ),
                     child: item.icon,
@@ -87,17 +81,19 @@ class VooDrawerExpandableSection extends StatelessWidget {
                     child: Text(
                       item.label ?? '',
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: sectionColor,
-                        fontWeight: FontWeight.w600,
+                        color: m.textSecondary,
+                        fontWeight: FontWeight.w500,
                         fontSize: 13,
+                        letterSpacing: -0.1,
                       ),
                     ),
                   ),
-                  // Dropdown arrow
+                  // Subtle chevron — rotates on expand via the parent's
+                  // expansion controller (left to the existing impl).
                   Icon(
-                    Icons.arrow_drop_down,
-                    color: sectionColor.withValues(alpha: 0.4),
-                    size: 18,
+                    Icons.keyboard_arrow_down,
+                    color: m.textTertiary,
+                    size: 16,
                   ),
                 ],
               ),
@@ -129,10 +125,7 @@ class VooDrawerExpandableSection extends StatelessWidget {
                               right: context.vooSpacing.xs,
                             ),
                             decoration: BoxDecoration(
-                              color: item.sectionHeaderLineColor ??
-                                  sectionColor.withValues(
-                                      alpha: VooNavigationTokens
-                                          .opacityBorderSubtle),
+                              color: item.sectionHeaderLineColor ?? m.borderStrong,
                               borderRadius: BorderRadius.circular(1),
                             ),
                           ),

@@ -140,6 +140,30 @@ MaterialApp.router(
 ### Bottom Navigation (Mobile)
 Automatically used on screens < 600px wide. Perfect for mobile devices.
 
+#### Optional hamburger menu
+
+When the bottom nav's 5-item cap can't show every destination, opt in to a
+hamburger button in the mobile app bar that opens a drawer listing every
+visible item:
+
+```dart
+VooAdaptiveScaffold(
+  config: VooNavigationConfig.appShell(
+    items: items,
+    header: header,
+    multiSwitcher: multiSwitcher,
+    onItemSelected: (id) => setState(() => _selectedId = id),
+  ).copyWith(showHamburgerMenu: true), // ← opt in
+  body: body,
+)
+```
+
+Defaults to off. When on, the app bar's leading slot shows `Icons.menu`,
+tapping it opens the default `VooMobileNavigationDrawer` which groups items
+by any `VooNavigationDestination.divider()` entries. Pass
+`mobileDrawerBuilder: (context) => MyCustomDrawer(...)` on the config to
+fully replace the drawer body.
+
 ### Navigation Rail (Tablet)
 Used on screens 600-840px. Ideal for tablets in portrait mode.
 

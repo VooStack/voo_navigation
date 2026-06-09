@@ -1,3 +1,22 @@
+## 2.0.0
+
+### Breaking
+- **`VooAdaptiveScaffold` and `VooScaffoldBuilder`**: removed `useBodyCard`, `bodyCardElevation`, `bodyCardBorderRadius`, `bodyCardColor` parameters. Replaced with a single `bodyCard: VooBodyCardConfig?` parameter (null = no card wrapper). See `voo_navigation_core` 0.4.0 changelog for the full struct.
+- **`VooNavigationConfig` API consolidation** — see `voo_navigation_core` 0.4.0 CHANGELOG for all 18 fields that were collapsed into 6 cohesive struct types (`bodyCard`, `fab`, `animation`, `navigationTheme`, `drawerSlots`, `contentArea`). Every scaffold widget in this package now reads from the new struct fields.
+
+### Fixed
+- **Desktop scaffold top-band seam**: removed the 8px top `Padding` that wrapped the navigation column in `VooDesktopScaffold`. The drawer/rail now flushes to the top edge of the scaffold body, eliminating the lighter strip of scaffold background that showed above the drawer header.
+- **Drawer/content background mismatch**: `VooAdaptiveNavigationDrawer` and `VooAdaptiveNavigationRail` now default their background to `colorScheme.surface` (matching the body) instead of `surfaceContainerLow`. The architectural seam between drawer and content is now a hairline border (`borderStrong`), not a tonal split.
+
+### Added
+- **`VooNavigationConfig.appShell(...)`** and **`VooNavigationConfig.simple(...)`** factories re-exported via `voo_navigation_core`.
+- **Mobile hamburger menu README section** — surfaces the existing `showHamburgerMenu: true` opt-in and `mobileDrawerBuilder` field, which were undocumented.
+
+### Migration
+See `voo_navigation_core` 0.4.0 changelog for the field-by-field migration table.
+
+---
+
 ## 1.5.0
 
 ### Fixed
