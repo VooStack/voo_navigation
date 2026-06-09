@@ -123,7 +123,7 @@ class VooDrawerDefaultHeader extends StatelessWidget {
                     maxLines: 1,
                   ),
           ),
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

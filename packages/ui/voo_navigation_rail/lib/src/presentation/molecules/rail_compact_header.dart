@@ -68,7 +68,7 @@ class VooRailCompactHeader extends StatelessWidget {
           ),
           SizedBox(height: spacing.md),
           // Expand toggle
-          if (trailing != null) trailing!,
+          ?trailing,
         ],
       ),
     );

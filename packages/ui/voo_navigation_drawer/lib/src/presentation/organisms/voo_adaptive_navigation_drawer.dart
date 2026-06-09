@@ -164,19 +164,19 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
             VooDrawerHeader(config: widget.config),
 
             // Search bar in header position
-            if (searchBarInHeader != null) searchBarInHeader,
+            ?searchBarInHeader,
 
             // Context switcher after header position
-            if (contextSwitcherAfterHeader != null) contextSwitcherAfterHeader,
+            ?contextSwitcherAfterHeader,
 
             // Organization switcher before items
-            if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
+            ?orgSwitcherBeforeItems,
 
             // Search bar before items
-            if (searchBarBeforeItems != null) searchBarBeforeItems,
+            ?searchBarBeforeItems,
 
             // Context switcher before items position
-            if (contextSwitcherBeforeItems != null) contextSwitcherBeforeItems,
+            ?contextSwitcherBeforeItems,
 
             // Navigation items
             Expanded(

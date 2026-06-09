@@ -118,31 +118,31 @@ class VooRailThemedContainer extends StatelessWidget {
               VooRailCompactHeader(trailing: config.drawerHeaderTrailing, headerConfig: config.headerConfig),
 
             // Organization switcher in header position
-            if (orgSwitcherInHeader != null) orgSwitcherInHeader,
+            ?orgSwitcherInHeader,
 
             // Multi-switcher in header position
-            if (multiSwitcherHeader != null) multiSwitcherHeader,
+            ?multiSwitcherHeader,
 
             // Context switcher after header position
-            if (contextSwitcherAfterHeader != null) contextSwitcherAfterHeader,
+            ?contextSwitcherAfterHeader,
 
             // Search bar in header position
-            if (searchBarInHeader != null) searchBarInHeader,
+            ?searchBarInHeader,
 
             // Organization switcher before items
-            if (orgSwitcherBeforeItems != null) orgSwitcherBeforeItems,
+            ?orgSwitcherBeforeItems,
 
             // Context switcher before items position
-            if (contextSwitcherBeforeItems != null) contextSwitcherBeforeItems,
+            ?contextSwitcherBeforeItems,
 
             // Context switcher as nav item (before main items)
-            if (contextSwitcherAsNavItem != null) contextSwitcherAsNavItem,
+            ?contextSwitcherAsNavItem,
 
             // Multi-switcher as nav item (before main items)
-            if (multiSwitcherAsNavItem != null) multiSwitcherAsNavItem,
+            ?multiSwitcherAsNavItem,
 
             // Search bar before items
-            if (searchBarBeforeItems != null) searchBarBeforeItems,
+            ?searchBarBeforeItems,
 
             // Main navigation items - only main items scroll
             Expanded(
@@ -180,10 +180,10 @@ class VooRailThemedContainer extends StatelessWidget {
               ),
 
             // Organization switcher in footer position
-            if (orgSwitcherInFooter != null) orgSwitcherInFooter,
+            ?orgSwitcherInFooter,
 
             // Multi-switcher in footer position
-            if (multiSwitcherFooter != null) multiSwitcherFooter,
+            ?multiSwitcherFooter,
 
             // User profile footer when enabled
             if (config.showUserProfile) VooRailUserProfile(config: config, extended: extended),
