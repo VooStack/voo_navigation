@@ -235,6 +235,10 @@ ThemeData _buildThemeData(VooMinimalTheme ext, Brightness brightness) {
     onSurfaceVariant: ext.textSecondary,
     outline: ext.borderStrong,
     outlineVariant: ext.border,
+    // Disable M3 surface tinting globally — any Material widget with
+    // elevation > 0 won't auto-tint its surface, which is what produced
+    // the lighter band visible at the top of the scaffold.
+    surfaceTint: Colors.transparent,
   );
 
   final base = ThemeData(
