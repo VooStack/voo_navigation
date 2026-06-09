@@ -47,11 +47,11 @@ class VooDropdownChildItem extends StatelessWidget {
               top: context.vooSpacing.sm,
               bottom: context.vooSpacing.sm,
             ),
-        decoration: isSelected && config.indicatorShape == null
+        decoration: isSelected && config.effectiveTheme.indicatorShape == null
             ? BoxDecoration(
                 border: Border(
                   left: BorderSide(
-                    color: config.selectedItemColor ?? colorScheme.primary,
+                    color: config.effectiveTheme.selectedItemColor ?? colorScheme.primary,
                     width: context.vooSize.borderThick,
                   ),
                 ),
@@ -65,10 +65,10 @@ class VooDropdownChildItem extends StatelessWidget {
                 size: context.vooSize.checkboxSize,
                 color: isSelected
                     ? (item.selectedIconColor ??
-                          config.selectedItemColor ??
+                          config.effectiveTheme.selectedItemColor ??
                           colorScheme.primary)
                     : (item.iconColor ??
-                          config.unselectedItemColor ??
+                          config.effectiveTheme.unselectedItemColor ??
                           colorScheme.onSurfaceVariant),
               ),
               child: isSelected ? item.effectiveSelectedIcon : item.icon,
@@ -84,13 +84,13 @@ class VooDropdownChildItem extends StatelessWidget {
                     ? (item.selectedLabelStyle ??
                           theme.textTheme.bodyMedium!.copyWith(
                             color:
-                                config.selectedItemColor ?? colorScheme.primary,
+                                config.effectiveTheme.selectedItemColor ?? colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ))
                     : (item.labelStyle ??
                           theme.textTheme.bodyMedium!.copyWith(
                             color:
-                                config.unselectedItemColor ??
+                                config.effectiveTheme.unselectedItemColor ??
                                 colorScheme.onSurfaceVariant,
                           )),
                 overflow: TextOverflow.ellipsis,
@@ -104,7 +104,7 @@ class VooDropdownChildItem extends StatelessWidget {
                 item: item,
                 config: config,
                 size: context.vooSize.iconXSmall,
-                animate: config.enableAnimations,
+                animate: config.animation.enabled,
               ),
             ],
 

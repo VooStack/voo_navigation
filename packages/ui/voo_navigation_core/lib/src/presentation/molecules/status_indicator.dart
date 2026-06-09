@@ -31,15 +31,8 @@ class VooStatusIndicator extends StatelessWidget {
           color: theme.colorScheme.surface,
           width: 2,
         ),
-        boxShadow: status == VooUserStatus.online
-            ? [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.5),
-                  blurRadius: 4,
-                  spreadRadius: 1,
-                ),
-              ]
-            : null,
+        // Minimal: no glow on online status. The hairline ring against the
+        // parent surface already provides the contrast.
       ),
     );
   }

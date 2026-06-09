@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/voo_user_status.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/profile_avatar.dart';
 import 'package:voo_tokens/voo_tokens.dart';
@@ -42,7 +44,6 @@ class _VooCompactProfileState extends State<VooCompactProfile> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final spacing = context.vooSpacing;
     final radius = context.vooRadius;
 
@@ -56,11 +57,12 @@ class _VooCompactProfileState extends State<VooCompactProfile> {
           child: Tooltip(
             message: widget.userName ?? 'Profile',
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: VooMinimal.motionFast,
+              curve: VooMinimal.motionCurve,
               padding: EdgeInsets.all(spacing.xs),
               decoration: BoxDecoration(
                 color: _isHovered
-                    ? theme.colorScheme.primary.withValues(alpha: 0.1)
+                    ? context.vooMinimal.hoverOverlay
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(radius.md),
               ),

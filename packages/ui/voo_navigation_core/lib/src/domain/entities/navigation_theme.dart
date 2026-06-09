@@ -31,6 +31,17 @@ class VooNavigationTheme {
   /// Indicator color for selected items
   final Color? indicatorColor;
 
+  /// Shape of the selection indicator
+  final ShapeBorder? indicatorShape;
+
+  /// Color for the selected navigation item (icon + label).
+  /// When null, falls back to `ColorScheme.primary`.
+  final Color? selectedItemColor;
+
+  /// Color for unselected navigation items.
+  /// When null, falls back to `ColorScheme.onSurfaceVariant`.
+  final Color? unselectedItemColor;
+
   /// Animation duration for transitions
   final Duration animationDuration;
 
@@ -45,6 +56,9 @@ class VooNavigationTheme {
     this.borderColor,
     this.borderWidth = 0,
     this.indicatorColor,
+    this.indicatorShape,
+    this.selectedItemColor,
+    this.unselectedItemColor,
     this.animationDuration = const Duration(milliseconds: 200),
     this.animationCurve = Curves.easeOutCubic,
   });
@@ -57,6 +71,9 @@ class VooNavigationTheme {
     Color? borderColor,
     double? borderWidth,
     Color? indicatorColor,
+    ShapeBorder? indicatorShape,
+    Color? selectedItemColor,
+    Color? unselectedItemColor,
     Duration? animationDuration,
     Curve? animationCurve,
   }) {
@@ -67,9 +84,23 @@ class VooNavigationTheme {
       borderColor: borderColor ?? this.borderColor,
       borderWidth: borderWidth ?? this.borderWidth,
       indicatorColor: indicatorColor ?? this.indicatorColor,
+      indicatorShape: indicatorShape ?? this.indicatorShape,
+      selectedItemColor: selectedItemColor ?? this.selectedItemColor,
+      unselectedItemColor: unselectedItemColor ?? this.unselectedItemColor,
       animationDuration: animationDuration ?? this.animationDuration,
       animationCurve: animationCurve ?? this.animationCurve,
     );
+  }
+
+  /// Resolves the selected item color for the current theme
+  Color resolveSelectedItemColor(BuildContext context) {
+    return selectedItemColor ?? Theme.of(context).colorScheme.primary;
+  }
+
+  /// Resolves the unselected item color for the current theme
+  Color resolveUnselectedItemColor(BuildContext context) {
+    return unselectedItemColor ??
+        Theme.of(context).colorScheme.onSurfaceVariant;
   }
 
   /// Resolves the surface color for the current theme
@@ -117,6 +148,9 @@ class VooNavigationTheme {
         other.borderColor == borderColor &&
         other.borderWidth == borderWidth &&
         other.indicatorColor == indicatorColor &&
+        other.indicatorShape == indicatorShape &&
+        other.selectedItemColor == selectedItemColor &&
+        other.unselectedItemColor == unselectedItemColor &&
         other.animationDuration == animationDuration;
   }
 
@@ -128,6 +162,9 @@ class VooNavigationTheme {
         borderColor,
         borderWidth,
         indicatorColor,
+        indicatorShape,
+        selectedItemColor,
+        unselectedItemColor,
         animationDuration,
       );
 }

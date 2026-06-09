@@ -73,7 +73,7 @@ class _VooQuickActionsState extends State<VooQuickActions>
     );
     _scaleAnimation = CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeOutBack,
+      curve: Curves.easeOutCubic,
     );
     _rotationAnimation = Tween<double>(begin: 0, end: 0.125).animate(
       CurvedAnimation(

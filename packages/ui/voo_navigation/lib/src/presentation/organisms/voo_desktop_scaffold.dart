@@ -133,7 +133,7 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       return widget.config.collapseToggleBuilder!(!_isCollapsed, _toggleCollapse);
     }
 
-    return VooCollapseToggle(isExpanded: !_isCollapsed, onToggle: _toggleCollapse, iconColor: widget.config.unselectedItemColor, hoverColor: widget.config.selectedItemColor);
+    return VooCollapseToggle(isExpanded: !_isCollapsed, onToggle: _toggleCollapse, iconColor: widget.config.effectiveTheme.unselectedItemColor, hoverColor: widget.config.effectiveTheme.selectedItemColor);
   }
 
   Widget _getNavigation() {
@@ -149,7 +149,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       return VooAdaptiveNavigationRail(
         config: widget.config.copyWith(
           // Collapse toggle in header for rail too
-          drawerHeaderTrailing: collapseToggle,
+          drawerSlots: (widget.config.drawerSlots ?? const VooDrawerSlots())
+              .copyWith(headerTrailing: collapseToggle),
         ),
         selectedId: widget.selectedId,
         onNavigationItemSelected: widget.onNavigationItemSelected,
@@ -161,7 +162,8 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     return VooAdaptiveNavigationDrawer(
       config: widget.config.copyWith(
         // Collapse toggle in header (top right)
-        drawerHeaderTrailing: collapseToggle,
+        drawerSlots: (widget.config.drawerSlots ?? const VooDrawerSlots())
+            .copyWith(headerTrailing: collapseToggle),
       ),
       selectedId: widget.selectedId,
       onNavigationItemSelected: widget.onNavigationItemSelected,
@@ -193,25 +195,27 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
     final navigation = _getNavigation();
 
     // Determine FAB visibility and widget based on page config overrides
-    final showFab = widget.pageConfig?.showFloatingActionButton ?? widget.config.showFloatingActionButton;
+    final fab = widget.config.fab;
+    final showFab = widget.pageConfig?.showFloatingActionButton ?? (fab?.visible ?? true);
     // Use quick actions FAB if configured, otherwise fall back to custom FAB
     final quickActionsFab = _buildQuickActionsFab();
-    final fabWidget = quickActionsFab ?? widget.pageConfig?.floatingActionButton ?? widget.config.floatingActionButton;
-    final fabLocation = widget.pageConfig?.floatingActionButtonLocation ?? widget.config.floatingActionButtonLocation;
-    final fabAnimator = widget.pageConfig?.floatingActionButtonAnimator ?? widget.config.floatingActionButtonAnimator;
+    final fabWidget = quickActionsFab ?? widget.pageConfig?.floatingActionButton ?? fab?.widget;
+    final fabLocation = widget.pageConfig?.floatingActionButtonLocation ?? fab?.location;
+    final fabAnimator = widget.pageConfig?.floatingActionButtonAnimator ?? fab?.animator;
 
     final navTheme = widget.config.effectiveTheme;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
+    final contentArea = widget.config.contentArea;
     // Calculate content area margin - only top margin for visual separation
-    final effectiveContentMargin = widget.config.contentAreaMargin ?? const EdgeInsets.only(top: 8);
+    final effectiveContentMargin = contentArea?.margin ?? const EdgeInsets.only(top: 8);
 
     // Calculate content area border radius - only top-left corner rounded
-    final effectiveContentBorderRadius = widget.config.contentAreaBorderRadius ?? const BorderRadius.only(topLeft: Radius.circular(12));
+    final effectiveContentBorderRadius = contentArea?.borderRadius ?? const BorderRadius.only(topLeft: Radius.circular(12));
 
     // Content area background - use base surface for clean content area
-    final effectiveContentBackgroundColor = widget.config.contentAreaBackgroundColor ?? colorScheme.surface;
+    final effectiveContentBackgroundColor = contentArea?.backgroundColor ?? colorScheme.surface;
 
     // When app bar is alongside drawer/rail, wrap the content area with its own scaffold
     if (widget.config.appBarAlongsideRail) {
@@ -245,11 +249,9 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
         body: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Apply same top margin to navigation for header alignment
-            Padding(
-              padding: EdgeInsets.only(top: effectiveContentMargin.top),
-              child: navigation,
-            ),
+            // Navigation flushes to the top edge of the scaffold body so we
+            // don't expose a band of scaffold background above the drawer.
+            navigation,
             Expanded(
               child: Container(
                 margin: effectiveContentMargin,
@@ -318,11 +320,9 @@ class _VooDesktopScaffoldState extends State<VooDesktopScaffold> {
       body: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Apply same top margin to navigation for header alignment
-          Padding(
-            padding: EdgeInsets.only(top: effectiveContentMargin.top),
-            child: navigation,
-          ),
+          // Navigation flushes to the top edge of the scaffold body so we
+          // don't expose a band of scaffold background above the drawer.
+          navigation,
           Expanded(
             child: Container(
               margin: effectiveContentMargin,

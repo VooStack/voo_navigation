@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
@@ -93,23 +94,10 @@ class _VooContextSwitcherModalState extends State<VooContextSwitcherModal> {
       margin: const EdgeInsets.only(top: 4),
       decoration: style.modalDecoration ??
           BoxDecoration(
-            color: style.modalBackgroundColor ?? theme.colorScheme.surface,
+            color: style.modalBackgroundColor ?? context.vooMinimal.surfaceElevated,
             borderRadius: style.modalBorderRadius ?? BorderRadius.circular(12),
-            border: Border.all(
-              color: theme.colorScheme.outline.withValues(alpha: 0.15),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: theme.shadowColor.withValues(alpha: 0.08),
-                blurRadius: 16,
-                offset: const Offset(0, 4),
-              ),
-              BoxShadow(
-                color: theme.shadowColor.withValues(alpha: 0.04),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            border: Border.all(color: context.vooMinimal.border),
+            boxShadow: context.vooMinimal.dropdownShadow,
           ),
       child: ClipRRect(
         borderRadius: style.modalBorderRadius ?? BorderRadius.circular(12),

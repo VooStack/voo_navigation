@@ -4,17 +4,26 @@
 /// that are used by voo_navigation_rail, voo_navigation_drawer, and voo_navigation_bar.
 library voo_navigation_core;
 
+// Design system — minimal aesthetic (Linear/Vercel inspired)
+export 'src/design/voo_minimal.dart';
+export 'src/design/voo_minimal_theme.dart';
+
 // Domain - Tokens
 export 'src/domain/tokens/voo_navigation_tokens.dart';
 
 // Domain Entities
 export 'src/domain/entities/app_bar_config.dart';
 export 'src/domain/entities/action_navigation_item.dart';
+export 'src/domain/entities/animation_config.dart';
+export 'src/domain/entities/body_card_config.dart';
 export 'src/domain/entities/breadcrumb_item.dart';
+export 'src/domain/entities/fab_config.dart';
 export 'src/domain/entities/breakpoint.dart';
 export 'src/domain/entities/context_switcher_config.dart';
 export 'src/domain/entities/context_switcher_item.dart';
+export 'src/domain/entities/content_area_config.dart';
 export 'src/domain/entities/context_switcher_style.dart';
+export 'src/domain/entities/drawer_slots.dart';
 export 'src/domain/entities/multi_switcher_config.dart';
 export 'src/domain/entities/multi_switcher_style.dart';
 export 'src/domain/entities/multi_switcher_user.dart';

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_badge_dot.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_badge_text.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_pulsing_status_badge.dart';
@@ -57,15 +59,15 @@ class VooBadge extends StatelessWidget {
     this.showDot = false,
     this.backgroundColor,
     this.foregroundColor,
-    this.dotSize = 8,
-    this.minWidth = 18,
+    this.dotSize = 6,
+    this.minWidth = 16,
     this.borderRadius,
     this.border,
     this.boxShadow,
     this.padding,
     this.textStyle,
     this.isVisible = true,
-    this.animationDuration = const Duration(milliseconds: 200),
+    this.animationDuration = VooMinimal.motionNormal,
     this.offset,
   });
 
@@ -129,8 +131,7 @@ class VooBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final colorScheme = Theme.of(context).colorScheme;
 
     final effectiveBgColor = backgroundColor ?? colorScheme.error;
     final effectiveFgColor = foregroundColor ?? colorScheme.onError;
@@ -138,10 +139,11 @@ class VooBadge extends StatelessWidget {
     return AnimatedOpacity(
       opacity: isVisible ? 1.0 : 0.0,
       duration: animationDuration,
+      curve: VooMinimal.motionCurve,
       child: AnimatedScale(
         scale: isVisible ? 1.0 : 0.0,
         duration: animationDuration,
-        curve: Curves.easeOutBack,
+        curve: VooMinimal.motionCurve,
         child: showDot
             ? VooBadgeDot(
                 bgColor: effectiveBgColor,
@@ -217,19 +219,20 @@ class VooStatusBadge extends StatelessWidget {
     this.showPulse = true,
   });
 
-  Color _getStatusColor(ColorScheme colorScheme) {
+  Color _getStatusColor() {
+    // Linear/Vercel-style status palette — slightly desaturated, not neon.
     return switch (status) {
-      VooStatus.online => Colors.green,
-      VooStatus.away => Colors.orange,
-      VooStatus.busy => colorScheme.error,
-      VooStatus.offline => colorScheme.outline,
+      VooStatus.online => const Color(0xFF22C55E),
+      VooStatus.away => const Color(0xFFF59E0B),
+      VooStatus.busy => const Color(0xFFEF4444),
+      VooStatus.offline => const Color(0xFF9CA3AF),
     };
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final color = _getStatusColor(theme.colorScheme);
+    final color = _getStatusColor();
+    final ring = context.vooMinimal.background;
 
     Widget indicator = Container(
       width: size,
@@ -237,16 +240,7 @@ class VooStatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,
-        border: Border.all(
-          color: theme.colorScheme.surface,
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.4),
-            blurRadius: 4,
-          ),
-        ],
+        border: Border.all(color: ring, width: 1.5),
       ),
     );
 
@@ -254,7 +248,7 @@ class VooStatusBadge extends StatelessWidget {
       indicator = VooPulsingStatusBadge(
         color: color,
         size: size,
-        borderColor: theme.colorScheme.surface,
+        borderColor: ring,
       );
     }
 

@@ -1,0 +1,7 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    unnecessary_library_name: false
+    unnecessary_underscores: false
+    sort_child_properties_last: false

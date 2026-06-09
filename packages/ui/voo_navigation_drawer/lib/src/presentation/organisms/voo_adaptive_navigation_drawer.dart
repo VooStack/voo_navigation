@@ -128,9 +128,10 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
 
     final effectiveWidth = widget.width ?? widget.config.navigationDrawerWidth ?? 220;
 
-    // Use theme-aware surface color for proper dark theme support
-    // Use surfaceContainerLow for visual distinction from app bar and content area
-    final effectiveBackgroundColor = widget.backgroundColor ?? widget.config.navigationBackgroundColor ?? theme.colorScheme.surfaceContainerLow;
+    // Drawer shares the scaffold background so there's no tonal seam where
+    // the drawer meets the content area. The visual separation comes from
+    // a hairline border in the desktop scaffold, not a different surface tint.
+    final effectiveBackgroundColor = widget.backgroundColor ?? widget.config.effectiveTheme.surfaceColor ?? theme.colorScheme.surface;
 
     // Determine drawer margin - use drawerMargin if set, otherwise use navigationRailMargin
     final effectiveDrawerMargin = widget.config.drawerMargin ?? EdgeInsets.all(widget.config.navigationRailMargin);
@@ -218,7 +219,11 @@ class _VooAdaptiveNavigationDrawerState extends State<VooAdaptiveNavigationDrawe
               _DrawerFooterSection(config: widget.config, orgSwitcher: orgSwitcherInFooter, showProfile: widget.config.showUserProfile),
 
             // Custom footer
-            if (widget.config.drawerFooter != null) Padding(padding: EdgeInsets.all(context.vooSpacing.sm + context.vooSpacing.xs), child: widget.config.drawerFooter!),
+            if (widget.config.drawerSlots?.footer != null)
+              Padding(
+                padding: EdgeInsets.all(context.vooSpacing.sm + context.vooSpacing.xs),
+                child: widget.config.drawerSlots!.footer!,
+              ),
           ],
         ),
       ),

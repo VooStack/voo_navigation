@@ -355,7 +355,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
 
     return Material(
       color: itemBgColor,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: action.isEnabled
             ? () {
@@ -364,7 +364,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
                 widget.onActionTap(action);
               }
             : null,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         child: Opacity(
           opacity: action.isEnabled ? 1.0 : 0.5,
           child: Padding(
@@ -377,7 +377,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
                   height: 48,
                   decoration: BoxDecoration(
                     color: iconBgColor,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: action.iconWidget ??
                       Icon(
@@ -467,7 +467,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
           },
           feedback: Material(
             elevation: 8,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
             child: SizedBox(
               width: itemWidth,
               height: itemHeight,
@@ -527,11 +527,11 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
 
     return Material(
       color: itemBgColor,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           border: isDragOver
               ? Border.all(color: colorScheme.primary, width: 2)
               : null,
@@ -544,7 +544,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
                   widget.onActionTap(action);
                 }
               : null,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
           child: Opacity(
             opacity: action.isEnabled ? 1.0 : 0.5,
             child: Padding(
@@ -574,7 +574,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
           height: 48,
           decoration: BoxDecoration(
             color: iconBgColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: action.iconWidget ??
               Icon(
@@ -639,7 +639,7 @@ class _VooQuickActionsGridLayoutState extends State<VooQuickActionsGridLayout> {
           height: 48,
           decoration: BoxDecoration(
             color: iconBgColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(8),
           ),
           child: action.iconWidget ??
               Icon(

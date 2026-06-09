@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
@@ -88,15 +89,10 @@ class _VooContextSwitcherBottomSheetState
         maxHeight: MediaQuery.of(context).size.height * 0.7,
       ),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: context.vooMinimal.surfaceElevated,
         borderRadius: BorderRadius.circular(radius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withValues(alpha: 0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        border: Border.all(color: context.vooMinimal.border),
+        boxShadow: context.vooMinimal.dropdownShadow,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

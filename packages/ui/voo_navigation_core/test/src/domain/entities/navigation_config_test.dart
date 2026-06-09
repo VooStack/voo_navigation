@@ -12,7 +12,7 @@ void main() {
       expect(config.items, equals(items));
       expect(config.selectedId, isNull);
       expect(config.isAdaptive, isTrue);
-      expect(config.enableAnimations, isTrue);
+      expect(config.animation.enabled, isTrue);
       expect(config.enableHapticFeedback, isTrue);
     });
 
@@ -27,25 +27,33 @@ void main() {
         selectedId: 'home',
         isAdaptive: false,
         forcedNavigationType: VooNavigationType.navigationRail,
-        enableAnimations: false,
+        animation: const VooAnimationConfig(
+          enabled: false,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.linear,
+        ),
         enableHapticFeedback: false,
-        animationDuration: const Duration(milliseconds: 500),
-        animationCurve: Curves.linear,
         railLabelType: NavigationRailLabelType.all,
         useExtendedRail: false,
         showNavigationRailDivider: false,
         showNotificationBadges: false,
         backgroundColor: Colors.white,
-        navigationBackgroundColor: Colors.grey,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.black,
-        indicatorColor: Colors.blue.withAlpha(30),
-        indicatorShape: const RoundedRectangleBorder(),
-        elevation: 4.0,
-        drawerHeader: const Text('Header'),
-        drawerFooter: const Text('Footer'),
-        floatingActionButton: const FloatingActionButton(onPressed: null, child: Icon(Icons.add)),
-        floatingActionButtonAnimator: FloatingActionButtonAnimator.scaling,
+        navigationTheme: VooNavigationTheme(
+          surfaceColor: Colors.grey,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.black,
+          indicatorColor: Colors.blue.withAlpha(30),
+          indicatorShape: const RoundedRectangleBorder(),
+          elevation: 4.0,
+        ),
+        drawerSlots: const VooDrawerSlots(
+          header: Text('Header'),
+          footer: Text('Footer'),
+        ),
+        fab: VooFabConfig(
+          widget: const FloatingActionButton(onPressed: null, child: Icon(Icons.add)),
+          animator: FloatingActionButtonAnimator.scaling,
+        ),
         breakpoints: [],
         onNavigationItemSelected: (id) {},
       );
@@ -54,27 +62,27 @@ void main() {
       expect(config.selectedId, 'home');
       expect(config.isAdaptive, isFalse);
       expect(config.forcedNavigationType, VooNavigationType.navigationRail);
-      expect(config.enableAnimations, isFalse);
+      expect(config.animation.enabled, isFalse);
       expect(config.enableHapticFeedback, isFalse);
-      expect(config.animationDuration, const Duration(milliseconds: 500));
-      expect(config.animationCurve, Curves.linear);
-      expect(config.badgeAnimationDuration, const Duration(milliseconds: 150));
+      expect(config.animation.duration, const Duration(milliseconds: 500));
+      expect(config.animation.curve, Curves.linear);
+      expect(config.animation.badgeDuration, const Duration(milliseconds: 150));
       expect(config.railLabelType, NavigationRailLabelType.all);
       expect(config.useExtendedRail, isFalse);
       expect(config.showNavigationRailDivider, isFalse);
       expect(config.showNotificationBadges, isFalse);
       expect(config.groupItemsBySections, isFalse);
       expect(config.backgroundColor, Colors.white);
-      expect(config.navigationBackgroundColor, Colors.grey);
-      expect(config.selectedItemColor, Colors.blue);
-      expect(config.unselectedItemColor, Colors.black);
-      expect(config.indicatorColor, Colors.blue.withAlpha(30));
-      expect(config.indicatorShape, isA<RoundedRectangleBorder>());
-      expect(config.elevation, 4.0);
-      expect(config.drawerHeader, isNotNull);
-      expect(config.drawerFooter, isNotNull);
-      expect(config.floatingActionButton, isNotNull);
-      expect(config.floatingActionButtonAnimator, FloatingActionButtonAnimator.scaling);
+      expect(config.effectiveTheme.surfaceColor, Colors.grey);
+      expect(config.effectiveTheme.selectedItemColor, Colors.blue);
+      expect(config.effectiveTheme.unselectedItemColor, Colors.black);
+      expect(config.effectiveTheme.indicatorColor, Colors.blue.withAlpha(30));
+      expect(config.effectiveTheme.indicatorShape, isA<RoundedRectangleBorder>());
+      expect(config.effectiveTheme.elevation, 4.0);
+      expect(config.drawerSlots?.header, isNotNull);
+      expect(config.drawerSlots?.footer, isNotNull);
+      expect(config.fab?.widget, isNotNull);
+      expect(config.fab?.animator, FloatingActionButtonAnimator.scaling);
       expect(config.breakpoints, isEmpty);
     });
 
@@ -131,11 +139,15 @@ void main() {
 
       final newItems = [const VooNavigationDestination(id: 'settings', label: 'Settings', icon: Icon(Icons.settings), route: '/test')];
 
-      final updatedConfig = config.copyWith(items: newItems, selectedId: 'settings', enableAnimations: false);
+      final updatedConfig = config.copyWith(
+        items: newItems,
+        selectedId: 'settings',
+        animation: const VooAnimationConfig(enabled: false),
+      );
 
       expect(updatedConfig.items, equals(newItems));
       expect(updatedConfig.selectedId, 'settings');
-      expect(updatedConfig.enableAnimations, isFalse);
+      expect(updatedConfig.animation.enabled, isFalse);
       expect(updatedConfig.enableHapticFeedback, isTrue); // unchanged
     });
 

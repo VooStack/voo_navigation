@@ -40,8 +40,8 @@ class VooNavigationBadge extends StatelessWidget {
       return VooDotBadge(
         badgeColor: badgeColor,
         size: size ?? 8,
-        animate: animate && config.enableAnimations,
-        animationDuration: config.badgeAnimationDuration,
+        animate: animate && config.animation.enabled,
+        animationDuration: config.animation.badgeDuration,
       );
     }
 
@@ -59,8 +59,8 @@ class VooNavigationBadge extends StatelessWidget {
       badgeColor: badgeColor,
       textColor: theme.colorScheme.onError,
       size: size ?? 20,
-      animate: animate && config.enableAnimations,
-      animationDuration: config.badgeAnimationDuration,
+      animate: animate && config.animation.enabled,
+      animationDuration: config.animation.badgeDuration,
     );
   }
 

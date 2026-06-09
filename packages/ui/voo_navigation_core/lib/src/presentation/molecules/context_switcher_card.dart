@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
@@ -92,18 +94,19 @@ class _VooContextSwitcherCardState extends State<VooContextSwitcherCard> {
           onTap: widget.onTap,
           borderRadius: BorderRadius.circular(6),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
+            duration: VooMinimal.motionFast,
+            curve: VooMinimal.motionCurve,
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(
               color: _isHovered || widget.isExpanded
-                  ? theme.colorScheme.onSurface.withValues(alpha: 0.06)
-                  : theme.colorScheme.onSurface.withValues(alpha: 0.03),
-              borderRadius: BorderRadius.circular(6),
+                  ? context.vooMinimal.hoverOverlay
+                  : context.vooMinimal.surfaceMuted,
+              borderRadius: VooMinimal.brSm,
               border: Border.all(
                 color: widget.isExpanded
-                    ? theme.colorScheme.outline.withValues(alpha: 0.2)
-                    : theme.colorScheme.outline.withValues(alpha: 0.08),
-                width: 1,
+                    ? context.vooMinimal.borderStrong
+                    : context.vooMinimal.border,
+                width: VooMinimal.strokeWidth,
               ),
             ),
             child: Row(

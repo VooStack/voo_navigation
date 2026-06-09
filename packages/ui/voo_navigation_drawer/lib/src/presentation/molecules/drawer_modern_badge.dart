@@ -34,7 +34,7 @@ class _VooDrawerModernBadgeState extends State<VooDrawerModernBadge>
     );
     _scaleAnimation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.elasticOut,
+      curve: Curves.easeOutCubic,
     );
     // Animate in on first build
     _controller.forward();

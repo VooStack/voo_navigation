@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_avatar.dart';
 
@@ -42,10 +43,11 @@ class _VooOrganizationTileState extends State<VooOrganizationTile> {
     final org = widget.organization;
     final style = widget.style;
 
+    final m = context.vooMinimal;
     final backgroundColor = widget.isSelected
-        ? (style.selectedColor ?? colorScheme.primaryContainer)
+        ? (style.selectedColor ?? m.selectedOverlay)
         : widget.isHighlighted || _isHovered
-            ? (style.hoverColor ?? colorScheme.surfaceContainerHighest)
+            ? (style.hoverColor ?? m.hoverOverlay)
             : Colors.transparent;
 
     return MouseRegion(

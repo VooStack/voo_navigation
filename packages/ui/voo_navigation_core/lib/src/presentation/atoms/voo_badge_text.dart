@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
-/// Text badge widget for displaying counts or labels
+/// Text badge widget for displaying counts or labels.
+///
+/// Flat, no glow — the minimal aesthetic relies on contrast and shape, not
+/// halos. Callers can still pass a custom [boxShadow] if needed.
 class VooBadgeText extends StatelessWidget {
   /// Background color
   final Color bgColor;
@@ -23,7 +26,7 @@ class VooBadgeText extends StatelessWidget {
   /// Optional border
   final BoxBorder? border;
 
-  /// Optional shadow
+  /// Optional shadow (defaults to none in the minimal aesthetic).
   final List<BoxShadow>? boxShadow;
 
   /// Text style
@@ -51,20 +54,13 @@ class VooBadgeText extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
       constraints: BoxConstraints(minWidth: minWidth, minHeight: minWidth),
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: borderRadius ?? BorderRadius.circular(minWidth / 2),
         border: border,
-        boxShadow: boxShadow ??
-            [
-              BoxShadow(
-                color: bgColor.withValues(alpha: 0.4),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
+        boxShadow: boxShadow,
       ),
       alignment: Alignment.center,
       child: Text(
@@ -75,6 +71,7 @@ class VooBadgeText extends StatelessWidget {
               fontWeight: FontWeight.w600,
               fontSize: 10,
               height: 1.2,
+              letterSpacing: 0,
             ),
         textAlign: TextAlign.center,
       ),

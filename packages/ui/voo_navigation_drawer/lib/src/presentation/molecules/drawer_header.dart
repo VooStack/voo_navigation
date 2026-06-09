@@ -14,8 +14,9 @@ class VooDrawerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final customHeader = config.drawerHeader;
-    final trailing = config.drawerHeaderTrailing;
+    final slots = config.drawerSlots;
+    final customHeader = slots?.header;
+    final trailing = slots?.headerTrailing;
     final orgSwitcher = config.organizationSwitcher;
     final showOrgSwitcherInHeader = orgSwitcher != null &&
         config.organizationSwitcherPosition == VooOrganizationSwitcherPosition.header;

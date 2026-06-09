@@ -30,13 +30,6 @@ class VooDotBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: badgeColor,
         shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: badgeColor.withAlpha((0.3 * 255).round()),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
     );
 
@@ -47,7 +40,7 @@ class VooDotBadge extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: animationDuration,
-      curve: Curves.elasticOut,
+      curve: Curves.easeOutCubic,
       builder: (context, value, child) =>
           Transform.scale(scale: value, child: child),
       child: dot,

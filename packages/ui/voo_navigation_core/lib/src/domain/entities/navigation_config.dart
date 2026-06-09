@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_core/src/domain/entities/action_navigation_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/animation_config.dart';
+import 'package:voo_navigation_core/src/domain/entities/body_card_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/breadcrumb_item.dart';
+import 'package:voo_navigation_core/src/domain/entities/fab_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/breakpoint.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_config.dart';
+import 'package:voo_navigation_core/src/domain/entities/content_area_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/context_switcher_style.dart';
+import 'package:voo_navigation_core/src/domain/entities/drawer_slots.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
@@ -42,17 +47,16 @@ class VooNavigationConfig {
   /// Whether to use extended navigation rail when possible
   final bool useExtendedRail;
 
-  /// Custom header widget for navigation drawer (full override)
-  final Widget? drawerHeader;
+  /// Customization slots for the navigation drawer/rail (header, trailing,
+  /// footer). All three are optional. When null, the default header built
+  /// from [headerConfig] is used.
+  ///
+  /// **2.0 note**: this replaces the three individual fields
+  /// `drawerHeader`, `drawerHeaderTrailing`, `drawerFooter`.
+  final VooDrawerSlots? drawerSlots;
 
   /// Simplified header configuration
   final VooHeaderConfig? headerConfig;
-
-  /// Trailing widget for drawer header
-  final Widget? drawerHeaderTrailing;
-
-  /// Custom footer widget for navigation drawer
-  final Widget? drawerFooter;
 
   /// Whether the app bar should be positioned alongside the navigation rail
   final bool appBarAlongsideRail;
@@ -72,50 +76,38 @@ class VooNavigationConfig {
   /// Padding to apply to the body content
   final EdgeInsetsGeometry? bodyPadding;
 
-  /// Whether to wrap body in a card with elevation
-  final bool useBodyCard;
+  /// Configures whether the body is wrapped in a card and how it's styled.
+  /// Pass `null` (the default) to render the body without a card wrapper.
+  ///
+  /// **2.0 note**: this replaces the four individual fields `useBodyCard`,
+  /// `bodyCardElevation`, `bodyCardBorderRadius`, `bodyCardColor`, which
+  /// were removed in this major.
+  final VooBodyCardConfig? bodyCard;
 
-  /// Elevation for body card
-  final double bodyCardElevation;
+  /// Floating action button configuration.
+  ///
+  /// Pass `null` (the default) for no FAB. Pass [VooFabConfig.hidden] to
+  /// suppress a FAB that would otherwise be injected by a page config or
+  /// page-level override.
+  ///
+  /// **2.0 note**: this replaces the four individual fields
+  /// `floatingActionButton`, `floatingActionButtonLocation`,
+  /// `floatingActionButtonAnimator`, `showFloatingActionButton`.
+  final VooFabConfig? fab;
 
-  /// Border radius for body card
-  final BorderRadius? bodyCardBorderRadius;
-
-  /// Color for body card
-  final Color? bodyCardColor;
-
-  /// Custom floating action button
-  final Widget? floatingActionButton;
-
-  /// Floating action button location
-  final FloatingActionButtonLocation? floatingActionButtonLocation;
-
-  /// Floating action button animator
-  final FloatingActionButtonAnimator? floatingActionButtonAnimator;
-
-  /// Whether to show floating action button
-  final bool showFloatingActionButton;
-
-  /// Background color for the scaffold
+  /// Background color for the scaffold (the outer-most surface).
   final Color? backgroundColor;
 
-  /// Background color for navigation components
-  final Color? navigationBackgroundColor;
-
-  /// Selected item color
-  final Color? selectedItemColor;
-
-  /// Unselected item color
-  final Color? unselectedItemColor;
-
-  /// Indicator color for selected items
-  final Color? indicatorColor;
-
-  /// Indicator shape
-  final ShapeBorder? indicatorShape;
-
-  /// Elevation for navigation components
-  final double? elevation;
+  // ---------------------------------------------------------------------------
+  // **2.0 note**: the six fields `navigationBackgroundColor`,
+  // `selectedItemColor`, `unselectedItemColor`, `indicatorColor`,
+  // `indicatorShape`, and `elevation` were removed in this major.
+  //
+  // Use [navigationTheme] to override these — `VooNavigationTheme` now
+  // exposes all six (as `surfaceColor`, `selectedItemColor`,
+  // `unselectedItemColor`, `indicatorColor`, `indicatorShape`, and
+  // `elevation`).
+  // ---------------------------------------------------------------------------
 
   /// Whether to show divider in navigation rail
   final bool showNavigationRailDivider;
@@ -129,14 +121,12 @@ class VooNavigationConfig {
   /// Margin around the navigation drawer
   final EdgeInsets? drawerMargin;
 
-  /// Margin around the content area
-  final EdgeInsets? contentAreaMargin;
-
-  /// Border radius for the content area container
-  final BorderRadius? contentAreaBorderRadius;
-
-  /// Background color for the content area
-  final Color? contentAreaBackgroundColor;
+  /// Content area styling (margin, border radius, background color).
+  ///
+  /// **2.0 note**: this replaces the three individual fields
+  /// `contentAreaMargin`, `contentAreaBorderRadius`,
+  /// `contentAreaBackgroundColor`.
+  final VooContentAreaConfig? contentArea;
 
   /// Custom extended navigation rail width
   final double? extendedNavigationRailWidth;
@@ -144,17 +134,19 @@ class VooNavigationConfig {
   /// Custom navigation drawer width
   final double? navigationDrawerWidth;
 
-  /// Animation duration for transitions
-  final Duration animationDuration;
-
-  /// Animation curve for transitions
-  final Curve animationCurve;
+  /// Motion configuration for transitions, hover effects, and badges.
+  ///
+  /// Defaults to a sensible Linear/Vercel-style motion config
+  /// ([VooMinimal.motionNormal] + [VooMinimal.motionCurve]). Pass
+  /// [VooAnimationConfig.disabled] to suppress animations entirely.
+  ///
+  /// **2.0 note**: this replaces the four individual fields
+  /// `animationDuration`, `animationCurve`, `enableAnimations`,
+  /// `badgeAnimationDuration`.
+  final VooAnimationConfig animation;
 
   /// Whether to enable haptic feedback
   final bool enableHapticFeedback;
-
-  /// Whether to enable animations
-  final bool enableAnimations;
 
   /// Custom transition builder for navigation animations
   final Widget Function(Widget child, Animation<double> animation)?
@@ -171,9 +163,6 @@ class VooNavigationConfig {
 
   /// Whether to show notification badge
   final bool showNotificationBadges;
-
-  /// Badge animation duration
-  final Duration badgeAnimationDuration;
 
   /// Whether to group items by sections
   final bool groupItemsBySections;
@@ -288,6 +277,71 @@ class VooNavigationConfig {
   /// Position of the context switcher
   final VooContextSwitcherPosition contextSwitcherPosition;
 
+  /// Convenience factory for the most common case: a flat list of items
+  /// plus a selection callback.
+  ///
+  /// All other options use their defaults. Use the main constructor when
+  /// you need header, switchers, search bar, or any other customization.
+  ///
+  /// Example:
+  /// ```dart
+  /// VooAdaptiveScaffold(
+  ///   config: VooNavigationConfig.simple(
+  ///     items: items,
+  ///     selectedId: _selectedId,
+  ///     onItemSelected: (id) => setState(() => _selectedId = id),
+  ///   ),
+  ///   body: ...,
+  /// )
+  /// ```
+  factory VooNavigationConfig.simple({
+    required List<VooNavigationDestination> items,
+    required ValueChanged<String> onItemSelected,
+    String? selectedId,
+    VooHeaderConfig? header,
+    List<VooNavigationDestination>? footerItems,
+  }) {
+    return VooNavigationConfig(
+      items: items,
+      selectedId: selectedId,
+      onNavigationItemSelected: onItemSelected,
+      headerConfig: header,
+      footerItems: footerItems,
+    );
+  }
+
+  /// Convenience factory for the "app shell" case: items + header +
+  /// org/user multi-switcher + search bar — the shape used by most
+  /// product apps.
+  ///
+  /// All extra customization is still available via the main constructor.
+  factory VooNavigationConfig.appShell({
+    required List<VooNavigationDestination> items,
+    required ValueChanged<String> onItemSelected,
+    required VooHeaderConfig header,
+    required VooMultiSwitcherConfig multiSwitcher,
+    String? selectedId,
+    VooSearchBarConfig? searchBar,
+    List<VooNavigationDestination>? footerItems,
+    VooNavigationTheme? navigationTheme,
+  }) {
+    return VooNavigationConfig(
+      items: items,
+      selectedId: selectedId,
+      onNavigationItemSelected: onItemSelected,
+      headerConfig: header,
+      footerItems: footerItems,
+      multiSwitcher: multiSwitcher,
+      multiSwitcherPosition: VooMultiSwitcherPosition.footer,
+      searchBar: searchBar,
+      searchBarPosition: VooSearchBarPosition.header,
+      navigationTheme: navigationTheme,
+      // Sensible defaults for an app shell
+      enableCollapsibleRail: true,
+      showUserProfile: false, // the multi-switcher replaces this
+    );
+  }
+
   VooNavigationConfig({
     required this.items,
     this.selectedId,
@@ -297,45 +351,28 @@ class VooNavigationConfig {
     this.theme,
     this.railLabelType = NavigationRailLabelType.selected,
     this.useExtendedRail = true,
-    this.drawerHeader,
+    this.drawerSlots,
     this.headerConfig,
-    this.drawerHeaderTrailing,
-    this.drawerFooter,
     this.appBarAlongsideRail = true,
     this.showAppBar = true,
     this.resizeToAvoidBottomInset = true,
     this.extendBody = false,
     this.extendBodyBehindAppBar = false,
     this.bodyPadding,
-    this.useBodyCard = false,
-    this.bodyCardElevation = 0,
-    this.bodyCardBorderRadius,
-    this.bodyCardColor,
-    this.floatingActionButton,
-    this.floatingActionButtonLocation,
-    this.floatingActionButtonAnimator,
-    this.showFloatingActionButton = true,
+    this.bodyCard,
+    this.fab,
     this.backgroundColor,
-    this.navigationBackgroundColor,
-    this.selectedItemColor,
-    this.unselectedItemColor,
-    this.indicatorColor,
-    this.indicatorShape,
-    this.elevation,
     this.showNavigationRailDivider = true,
     this.navigationRailWidth,
     this.extendedNavigationRailWidth,
     this.navigationDrawerWidth,
-    this.animationDuration = const Duration(milliseconds: 200),
-    this.animationCurve = Curves.easeOutCubic,
+    this.animation = const VooAnimationConfig(),
     this.enableHapticFeedback = true,
-    this.enableAnimations = true,
     this.transitionBuilder,
     this.onNavigationItemSelected,
     this.persistNavigationState = true,
     this.drawerScrollController,
     this.showNotificationBadges = true,
-    this.badgeAnimationDuration = const Duration(milliseconds: 150),
     this.groupItemsBySections = false,
     this.sections,
     this.footerItems,
@@ -354,9 +391,7 @@ class VooNavigationConfig {
     this.navigationTheme,
     this.navigationRailMargin = 0,
     this.drawerMargin,
-    this.contentAreaMargin,
-    this.contentAreaBorderRadius,
-    this.contentAreaBackgroundColor,
+    this.contentArea,
     this.organizationSwitcher,
     this.organizationSwitcherPosition = VooOrganizationSwitcherPosition.header,
     this.searchBar,
@@ -410,46 +445,29 @@ class VooNavigationConfig {
     ThemeData? theme,
     NavigationRailLabelType? railLabelType,
     bool? useExtendedRail,
-    Widget? drawerHeader,
+    VooDrawerSlots? drawerSlots,
     VooHeaderConfig? headerConfig,
-    Widget? drawerHeaderTrailing,
-    Widget? drawerFooter,
     bool? appBarAlongsideRail,
     bool? showAppBar,
     bool? resizeToAvoidBottomInset,
     bool? extendBody,
     bool? extendBodyBehindAppBar,
     EdgeInsetsGeometry? bodyPadding,
-    bool? useBodyCard,
-    double? bodyCardElevation,
-    BorderRadius? bodyCardBorderRadius,
-    Color? bodyCardColor,
-    Widget? floatingActionButton,
-    FloatingActionButtonLocation? floatingActionButtonLocation,
-    FloatingActionButtonAnimator? floatingActionButtonAnimator,
-    bool? showFloatingActionButton,
+    VooBodyCardConfig? bodyCard,
+    VooFabConfig? fab,
     Color? backgroundColor,
-    Color? navigationBackgroundColor,
-    Color? selectedItemColor,
-    Color? unselectedItemColor,
-    Color? indicatorColor,
-    ShapeBorder? indicatorShape,
-    double? elevation,
     bool? showNavigationRailDivider,
     double? navigationRailWidth,
     double? extendedNavigationRailWidth,
     double? navigationDrawerWidth,
-    Duration? animationDuration,
-    Curve? animationCurve,
+    VooAnimationConfig? animation,
     bool? enableHapticFeedback,
-    bool? enableAnimations,
     Widget Function(Widget child, Animation<double> animation)?
         transitionBuilder,
     void Function(String itemId)? onNavigationItemSelected,
     bool? persistNavigationState,
     ScrollController? drawerScrollController,
     bool? showNotificationBadges,
-    Duration? badgeAnimationDuration,
     bool? groupItemsBySections,
     List<VooNavigationSection>? sections,
     List<VooNavigationDestination>? footerItems,
@@ -469,9 +487,7 @@ class VooNavigationConfig {
     VooNavigationTheme? navigationTheme,
     double? navigationRailMargin,
     EdgeInsets? drawerMargin,
-    EdgeInsets? contentAreaMargin,
-    BorderRadius? contentAreaBorderRadius,
-    Color? contentAreaBackgroundColor,
+    VooContentAreaConfig? contentArea,
     VooOrganizationSwitcherConfig? organizationSwitcher,
     VooOrganizationSwitcherPosition? organizationSwitcherPosition,
     VooSearchBarConfig? searchBar,
@@ -497,10 +513,8 @@ class VooNavigationConfig {
         theme: theme ?? this.theme,
         railLabelType: railLabelType ?? this.railLabelType,
         useExtendedRail: useExtendedRail ?? this.useExtendedRail,
-        drawerHeader: drawerHeader ?? this.drawerHeader,
+        drawerSlots: drawerSlots ?? this.drawerSlots,
         headerConfig: headerConfig ?? this.headerConfig,
-        drawerHeaderTrailing: drawerHeaderTrailing ?? this.drawerHeaderTrailing,
-        drawerFooter: drawerFooter ?? this.drawerFooter,
         appBarAlongsideRail: appBarAlongsideRail ?? this.appBarAlongsideRail,
         showAppBar: showAppBar ?? this.showAppBar,
         resizeToAvoidBottomInset:
@@ -509,25 +523,9 @@ class VooNavigationConfig {
         extendBodyBehindAppBar:
             extendBodyBehindAppBar ?? this.extendBodyBehindAppBar,
         bodyPadding: bodyPadding ?? this.bodyPadding,
-        useBodyCard: useBodyCard ?? this.useBodyCard,
-        bodyCardElevation: bodyCardElevation ?? this.bodyCardElevation,
-        bodyCardBorderRadius: bodyCardBorderRadius ?? this.bodyCardBorderRadius,
-        bodyCardColor: bodyCardColor ?? this.bodyCardColor,
-        floatingActionButton: floatingActionButton ?? this.floatingActionButton,
-        floatingActionButtonLocation:
-            floatingActionButtonLocation ?? this.floatingActionButtonLocation,
-        floatingActionButtonAnimator:
-            floatingActionButtonAnimator ?? this.floatingActionButtonAnimator,
-        showFloatingActionButton:
-            showFloatingActionButton ?? this.showFloatingActionButton,
+        bodyCard: bodyCard ?? this.bodyCard,
+        fab: fab ?? this.fab,
         backgroundColor: backgroundColor ?? this.backgroundColor,
-        navigationBackgroundColor:
-            navigationBackgroundColor ?? this.navigationBackgroundColor,
-        selectedItemColor: selectedItemColor ?? this.selectedItemColor,
-        unselectedItemColor: unselectedItemColor ?? this.unselectedItemColor,
-        indicatorColor: indicatorColor ?? this.indicatorColor,
-        indicatorShape: indicatorShape ?? this.indicatorShape,
-        elevation: elevation ?? this.elevation,
         showNavigationRailDivider:
             showNavigationRailDivider ?? this.showNavigationRailDivider,
         navigationRailWidth: navigationRailWidth ?? this.navigationRailWidth,
@@ -535,10 +533,8 @@ class VooNavigationConfig {
             extendedNavigationRailWidth ?? this.extendedNavigationRailWidth,
         navigationDrawerWidth:
             navigationDrawerWidth ?? this.navigationDrawerWidth,
-        animationDuration: animationDuration ?? this.animationDuration,
-        animationCurve: animationCurve ?? this.animationCurve,
+        animation: animation ?? this.animation,
         enableHapticFeedback: enableHapticFeedback ?? this.enableHapticFeedback,
-        enableAnimations: enableAnimations ?? this.enableAnimations,
         transitionBuilder: transitionBuilder ?? this.transitionBuilder,
         onNavigationItemSelected:
             onNavigationItemSelected ?? this.onNavigationItemSelected,
@@ -548,8 +544,6 @@ class VooNavigationConfig {
             drawerScrollController ?? this.drawerScrollController,
         showNotificationBadges:
             showNotificationBadges ?? this.showNotificationBadges,
-        badgeAnimationDuration:
-            badgeAnimationDuration ?? this.badgeAnimationDuration,
         groupItemsBySections: groupItemsBySections ?? this.groupItemsBySections,
         sections: sections ?? this.sections,
         footerItems: footerItems ?? this.footerItems,
@@ -571,11 +565,7 @@ class VooNavigationConfig {
         navigationTheme: navigationTheme ?? this.navigationTheme,
         navigationRailMargin: navigationRailMargin ?? this.navigationRailMargin,
         drawerMargin: drawerMargin ?? this.drawerMargin,
-        contentAreaMargin: contentAreaMargin ?? this.contentAreaMargin,
-        contentAreaBorderRadius:
-            contentAreaBorderRadius ?? this.contentAreaBorderRadius,
-        contentAreaBackgroundColor:
-            contentAreaBackgroundColor ?? this.contentAreaBackgroundColor,
+        contentArea: contentArea ?? this.contentArea,
         organizationSwitcher: organizationSwitcher ?? this.organizationSwitcher,
         organizationSwitcherPosition:
             organizationSwitcherPosition ?? this.organizationSwitcherPosition,

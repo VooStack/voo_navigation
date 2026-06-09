@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 
 /// A styled search input field with keyboard shortcut support
 class VooSearchField extends StatefulWidget {
@@ -187,29 +189,22 @@ class _VooSearchFieldState extends State<VooSearchField> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    // Use neutral gray colors instead of tinted surface colors
-    final neutralBg = theme.brightness == Brightness.light
-        ? const Color(0xFFF5F5F5)  // Light neutral gray
-        : const Color(0xFF2A2A2A); // Dark neutral gray
-    final neutralBgFocused = theme.brightness == Brightness.light
-        ? const Color(0xFFFFFFFF)  // White when focused
-        : const Color(0xFF3A3A3A); // Slightly lighter dark
+    final m = context.vooMinimal;
 
     final effectiveBgColor = _hasFocus
-        ? (widget.focusedBackgroundColor ?? widget.backgroundColor ?? neutralBgFocused)
-        : (widget.backgroundColor ?? neutralBg);
+        ? (widget.focusedBackgroundColor ?? widget.backgroundColor ?? m.surfaceElevated)
+        : (widget.backgroundColor ?? m.surface);
 
     final effectiveBorderColor = _hasFocus
-        ? (widget.focusedBorderColor ?? widget.borderColor ?? colorScheme.primary)
-        : (widget.borderColor ?? colorScheme.outline.withValues(alpha: 0.3));
+        ? (widget.focusedBorderColor ?? widget.borderColor ?? m.accent)
+        : (widget.borderColor ?? m.border);
 
-    final effectiveBorderRadius = widget.borderRadius ?? BorderRadius.circular(8);
-    final effectiveHeight = widget.height ?? 36;
+    final effectiveBorderRadius = widget.borderRadius ?? VooMinimal.brSm;
+    final effectiveHeight = widget.height ?? VooMinimal.controlHeight;
 
-    Widget searchField = Container(
+    Widget searchField = AnimatedContainer(
+      duration: VooMinimal.motionFast,
+      curve: VooMinimal.motionCurve,
       width: widget.expanded ? double.infinity : widget.width,
       height: effectiveHeight,
       decoration: BoxDecoration(
@@ -217,7 +212,7 @@ class _VooSearchFieldState extends State<VooSearchField> {
         borderRadius: effectiveBorderRadius,
         border: Border.all(
           color: effectiveBorderColor,
-          width: _hasFocus ? 2 : 1,
+          width: _hasFocus ? 1.5 : VooMinimal.strokeWidth,
         ),
       ),
       child: Row(
@@ -233,10 +228,8 @@ class _VooSearchFieldState extends State<VooSearchField> {
               padding: const EdgeInsets.only(left: 10),
               child: Icon(
                 Icons.search,
-                size: 18,
-                color: _hasFocus
-                    ? colorScheme.primary
-                    : colorScheme.onSurfaceVariant,
+                size: VooMinimal.iconSize,
+                color: _hasFocus ? m.textPrimary : m.textTertiary,
               ),
             ),
 
@@ -248,13 +241,18 @@ class _VooSearchFieldState extends State<VooSearchField> {
               readOnly: widget.readOnly,
               enabled: widget.enabled,
               autofocus: widget.autofocus,
-              style: widget.textStyle ?? theme.textTheme.bodySmall,
+              cursorWidth: 1.0,
+              cursorColor: m.textPrimary,
+              style: widget.textStyle ??
+                  TextStyle(fontSize: VooMinimal.fontSizeMd, color: m.textPrimary),
               decoration: InputDecoration(
                 hintText: widget.hintText ?? 'Search...',
-                hintStyle: widget.hintStyle ?? theme.textTheme.bodySmall?.copyWith(
-                  color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
-                ),
+                hintStyle: widget.hintStyle ??
+                    TextStyle(fontSize: VooMinimal.fontSizeMd, color: m.textTertiary),
                 border: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                filled: false,
                 contentPadding: widget.contentPadding ??
                     const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 isDense: true,
@@ -265,24 +263,24 @@ class _VooSearchFieldState extends State<VooSearchField> {
             ),
           ),
 
-          // Keyboard hint
+          // Keyboard hint — small monospace kbd-like chip
           if (widget.showKeyboardHint && !_hasFocus && !_hasText)
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 6),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(
-                  color: theme.brightness == Brightness.light
-                      ? const Color(0xFFE8E8E8)
-                      : const Color(0xFF3A3A3A),
-                  borderRadius: BorderRadius.circular(4),
+                  color: m.surfaceMuted,
+                  borderRadius: VooMinimal.brXs,
+                  border: Border.all(color: m.border),
                 ),
                 child: Text(
                   _keyboardHint,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+                  style: TextStyle(
+                    color: m.textTertiary,
                     fontWeight: FontWeight.w500,
-                    fontSize: 11,
+                    fontSize: VooMinimal.fontSizeXs,
+                    fontFeatures: const [FontFeature.tabularFigures()],
                   ),
                 ),
               ),
@@ -291,7 +289,7 @@ class _VooSearchFieldState extends State<VooSearchField> {
           // Clear button / Suffix
           if (widget.suffixWidget != null)
             Padding(
-              padding: const EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 6),
               child: widget.suffixWidget,
             )
           else if (widget.showClearButton && _hasText)
@@ -300,17 +298,23 @@ class _VooSearchFieldState extends State<VooSearchField> {
               child: IconButton(
                 icon: Icon(
                   Icons.close,
-                  size: 18,
-                  color: colorScheme.onSurfaceVariant,
+                  size: VooMinimal.iconSize,
+                  color: m.textSecondary,
                 ),
                 onPressed: _handleClear,
-                splashRadius: 16,
+                splashRadius: 14,
+                padding: const EdgeInsets.all(4),
+                constraints: const BoxConstraints(
+                  minWidth: 24,
+                  minHeight: 24,
+                ),
                 tooltip: 'Clear',
               ),
             ),
         ],
       ),
     );
+
 
     // Wrap with keyboard shortcut handler
     if (widget.enableKeyboardShortcut) {

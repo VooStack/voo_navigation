@@ -99,7 +99,9 @@ void main() {
       expect(find.byType(Container), findsOneWidget);
     });
 
-    testWidgets('should have box shadow', (WidgetTester tester) async {
+    testWidgets('should render flat — no glow shadow', (WidgetTester tester) async {
+      // The minimal aesthetic intentionally drops the colored glow that
+      // earlier versions used. The dot is a solid colored circle.
       await tester.pumpWidget(
         createTestApp(
           child: const VooDotBadge(
@@ -114,9 +116,9 @@ void main() {
       final container = tester.widget<Container>(find.byType(Container));
       final decoration = container.decoration as BoxDecoration;
 
-      // Verify it has a box shadow
-      expect(decoration.boxShadow, isNotNull);
-      expect(decoration.boxShadow!.isNotEmpty, true);
+      expect(decoration.boxShadow, isNull);
+      expect(decoration.color, Colors.purple);
+      expect(decoration.shape, BoxShape.circle);
     });
   });
 }

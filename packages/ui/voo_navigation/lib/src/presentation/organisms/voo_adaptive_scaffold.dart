@@ -51,17 +51,10 @@ class VooAdaptiveScaffold extends StatefulWidget {
   /// Padding to apply to the body content
   final EdgeInsetsGeometry? bodyPadding;
 
-  /// Whether to wrap body in a card with elevation
-  final bool useBodyCard;
-
-  /// Elevation for body card (if useBodyCard is true)
-  final double bodyCardElevation;
-
-  /// Border radius for body card (if useBodyCard is true)
-  final BorderRadius? bodyCardBorderRadius;
-
-  /// Color for body card (if useBodyCard is true)
-  final Color? bodyCardColor;
+  /// Optional override for the body card configuration. When null, the
+  /// scaffold uses [VooNavigationConfig.bodyCard]. Pass a struct here only
+  /// to override per-instance.
+  final VooBodyCardConfig? bodyCard;
 
   /// Page-level overrides for the scaffold app bar, FAB, etc. When the
   /// hamburger menu is enabled the mobile app bar reads `additionalActions`,
@@ -87,16 +80,11 @@ class VooAdaptiveScaffold extends StatefulWidget {
     this.persistentFooterButtons,
     this.restorationId,
     this.bodyPadding,
-    bool? useBodyCard,
-    double? bodyCardElevation,
-    this.bodyCardBorderRadius,
-    this.bodyCardColor,
+    this.bodyCard,
     this.pageConfig,
   })  : resizeToAvoidBottomInset = resizeToAvoidBottomInset ?? true,
         extendBody = extendBody ?? false,
-        extendBodyBehindAppBar = extendBodyBehindAppBar ?? false,
-        useBodyCard = useBodyCard ?? false,
-        bodyCardElevation = bodyCardElevation ?? 0;
+        extendBodyBehindAppBar = extendBodyBehindAppBar ?? false;
 
   @override
   State<VooAdaptiveScaffold> createState() => _VooAdaptiveScaffoldState();
@@ -190,10 +178,7 @@ class _VooAdaptiveScaffoldState extends State<VooAdaptiveScaffold> {
             persistentFooterButtons: widget.persistentFooterButtons,
             restorationId: widget.restorationId,
             bodyPadding: widget.bodyPadding ?? widget.config.bodyPadding,
-            useBodyCard: widget.useBodyCard,
-            bodyCardElevation: widget.bodyCardElevation,
-            bodyCardBorderRadius: widget.bodyCardBorderRadius ?? widget.config.bodyCardBorderRadius,
-            bodyCardColor: widget.bodyCardColor ?? widget.config.bodyCardColor,
+            bodyCard: widget.bodyCard ?? widget.config.bodyCard,
             pageConfig: widget.pageConfig,
           );
         },

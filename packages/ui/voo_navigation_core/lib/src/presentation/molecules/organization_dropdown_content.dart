@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_search_field.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/organization_tile.dart';
@@ -77,19 +79,19 @@ class VooOrganizationDropdownContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final m = context.vooMinimal;
+    final radius = style.borderRadius ?? VooMinimal.brMd;
 
     return Material(
-      elevation: 8,
-      borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-      color: style.backgroundColor ?? colorScheme.surface,
+      type: MaterialType.transparency,
       child: Container(
         constraints: BoxConstraints(maxHeight: maxHeight),
         decoration: style.dropdownDecoration ??
             BoxDecoration(
-              borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-              border: Border.all(
-                color: colorScheme.outline.withValues(alpha: 0.2),
-              ),
+              color: style.backgroundColor ?? m.surfaceElevated,
+              borderRadius: radius,
+              border: Border.all(color: m.border),
+              boxShadow: m.dropdownShadow,
             ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

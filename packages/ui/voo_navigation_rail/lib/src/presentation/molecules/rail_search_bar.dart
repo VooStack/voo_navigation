@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_search_bar.dart';
@@ -72,22 +74,19 @@ class VooRailSearchBar extends StatelessWidget {
     showDialog(
       context: context,
       barrierColor: Colors.black54,
-      builder: (context) => Dialog(
-        backgroundColor: Colors.transparent,
-        insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
-        child: Container(
-          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 400),
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
-              ),
-            ],
-          ),
+      builder: (context) {
+        final m = context.vooMinimal;
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500, maxHeight: 400),
+            decoration: BoxDecoration(
+              color: m.surfaceElevated,
+              borderRadius: VooMinimal.brMd,
+              border: Border.all(color: m.border),
+              boxShadow: m.dropdownShadow,
+            ),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: VooSearchBar(
@@ -112,7 +111,8 @@ class VooRailSearchBar extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      );
+      },
     );
   }
 

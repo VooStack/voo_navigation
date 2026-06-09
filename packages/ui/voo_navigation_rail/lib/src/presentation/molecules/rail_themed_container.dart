@@ -112,10 +112,10 @@ class VooRailThemedContainer extends StatelessWidget {
           children: [
             // Header - full when extended, compact with branding when collapsed
             if (extended)
-              config.drawerHeader ??
+              config.drawerSlots?.header ??
                   (config.headerConfig != null ? VooRailDefaultHeader.fromConfig(config: config.headerConfig!, showTitle: true) : const VooRailDefaultHeader(showTitle: true))
             else
-              VooRailCompactHeader(trailing: config.drawerHeaderTrailing, headerConfig: config.headerConfig),
+              VooRailCompactHeader(trailing: config.drawerSlots?.headerTrailing, headerConfig: config.headerConfig),
 
             // Organization switcher in header position
             ?orgSwitcherInHeader,
@@ -167,7 +167,8 @@ class VooRailThemedContainer extends StatelessWidget {
             ),
 
             // Leading widget for FAB or other actions
-            if (config.floatingActionButton != null && config.showFloatingActionButton) Padding(padding: EdgeInsets.all(context.vooSpacing.md), child: config.floatingActionButton),
+            if (config.fab?.widget != null && (config.fab?.visible ?? true))
+              Padding(padding: EdgeInsets.all(context.vooSpacing.md), child: config.fab!.widget),
 
             // Footer items ALWAYS pinned at bottom (both collapsed and expanded)
             if (config.visibleFooterItems.isNotEmpty)
@@ -189,7 +190,7 @@ class VooRailThemedContainer extends StatelessWidget {
             if (config.showUserProfile) VooRailUserProfile(config: config, extended: extended),
 
             // Custom footer if provided
-            if (config.drawerFooter != null) config.drawerFooter!,
+            if (config.drawerSlots?.footer != null) config.drawerSlots!.footer!,
           ],
         ),
       ),

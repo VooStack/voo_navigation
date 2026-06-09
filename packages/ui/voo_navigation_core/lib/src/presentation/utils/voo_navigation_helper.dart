@@ -158,7 +158,7 @@ class VooNavigationHelper {
     VooNavigationType type,
     VooNavigationConfig config,
   ) {
-    if (config.floatingActionButton == null) {
+    if (config.fab?.widget == null) {
       return null;
     }
 

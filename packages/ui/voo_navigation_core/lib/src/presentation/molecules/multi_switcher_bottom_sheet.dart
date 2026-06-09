@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
@@ -92,15 +93,10 @@ class _VooMultiSwitcherBottomSheetState
         maxHeight: MediaQuery.of(context).size.height * 0.75,
       ),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
+        color: context.vooMinimal.surfaceElevated,
         borderRadius: BorderRadius.circular(radius.lg),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withValues(alpha: 0.15),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
-          ),
-        ],
+        border: Border.all(color: context.vooMinimal.border),
+        boxShadow: context.vooMinimal.dropdownShadow,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

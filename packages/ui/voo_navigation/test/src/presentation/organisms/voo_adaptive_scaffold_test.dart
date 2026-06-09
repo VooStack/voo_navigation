@@ -138,9 +138,11 @@ void main() {
       WidgetTester tester,
     ) async {
       final configWithFab = config.copyWith(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
+        fab: VooFabConfig(
+          widget: FloatingActionButton(
+            onPressed: () {},
+            child: const Icon(Icons.add),
+          ),
         ),
       );
 

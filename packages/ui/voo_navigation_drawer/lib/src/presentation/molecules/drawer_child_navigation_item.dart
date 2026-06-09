@@ -45,8 +45,8 @@ class VooDrawerChildNavigationItem extends StatelessWidget {
     final isSelected = item.id == selectedId;
 
     // Resolve colors from config or theme
-    final unselectedColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
-    final selectedColor = config.selectedItemColor ?? theme.colorScheme.primary;
+    final unselectedColor = config.effectiveTheme.unselectedItemColor ?? theme.colorScheme.onSurface;
+    final selectedColor = config.effectiveTheme.selectedItemColor ?? theme.colorScheme.primary;
 
     // Calculate line position to align with parent icon center
     // Parent icon center = itemPaddingHorizontal + iconSizeDefault/2

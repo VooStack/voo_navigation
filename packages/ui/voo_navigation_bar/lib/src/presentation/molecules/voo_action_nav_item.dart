@@ -247,7 +247,7 @@ class _ActionNavModalContent extends StatelessWidget {
       end: Offset.zero,
     ).animate(CurvedAnimation(
       parent: animation,
-      curve: Curves.easeOutBack,
+      curve: Curves.easeOutCubic,
     ));
 
     final scaleAnimation = Tween<double>(
@@ -255,7 +255,7 @@ class _ActionNavModalContent extends StatelessWidget {
       end: 1.0,
     ).animate(CurvedAnimation(
       parent: animation,
-      curve: Curves.easeOutBack,
+      curve: Curves.easeOutCubic,
     ));
 
     final fadeAnimation = Tween<double>(
@@ -276,14 +276,7 @@ class _ActionNavModalContent extends StatelessWidget {
           color: context.expandableNavBorder,
           width: VooNavigationTokens.expandableNavBorderWidth,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: theme.colorScheme.shadow.withValues(alpha: 0.25),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
-            spreadRadius: 0,
-          ),
-        ],
+        boxShadow: context.vooMinimal.dropdownShadow,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),

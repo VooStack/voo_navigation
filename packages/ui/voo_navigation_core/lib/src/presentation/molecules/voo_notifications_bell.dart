@@ -93,7 +93,7 @@ class _VooNotificationsBellState extends State<VooNotificationsBell> with Single
   void initState() {
     super.initState();
     _animationController = AnimationController(duration: const Duration(milliseconds: 200), vsync: this);
-    _scaleAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack);
+    _scaleAnimation = CurvedAnimation(parent: _animationController, curve: Curves.easeOutCubic);
   }
 
   @override

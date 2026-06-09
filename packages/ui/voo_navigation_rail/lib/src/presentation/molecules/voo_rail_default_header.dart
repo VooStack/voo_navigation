@@ -5,7 +5,7 @@ import 'package:voo_tokens/voo_tokens.dart';
 /// Default header widget for navigation rail.
 ///
 /// Shows an icon with optional title in a row layout.
-/// Use [VooNavigationConfig.drawerHeader] to provide a custom header widget,
+/// Use [VooDrawerSlots.header] to provide a custom header widget,
 /// or [VooNavigationConfig.headerConfig] for simpler customization.
 ///
 /// The header is designed to align with the app bar height (kToolbarHeight = 56dp)

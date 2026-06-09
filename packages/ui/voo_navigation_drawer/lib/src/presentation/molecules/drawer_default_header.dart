@@ -3,7 +3,7 @@ import 'package:voo_tokens/voo_tokens.dart';
 
 /// Default header widget for the navigation drawer.
 ///
-/// Shows an icon with title. Use [VooNavigationConfig.drawerHeader] to provide
+/// Shows an icon with title. Use [VooDrawerSlots.header] to provide
 /// a custom header widget instead.
 ///
 /// The header is designed to align with the app bar height (kToolbarHeight = 56dp)

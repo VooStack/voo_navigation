@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_tokens/voo_tokens.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/voo_app_bar_leading.dart';
@@ -116,7 +117,7 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
     // Use theme surface color for proper theming
     final effectiveBackgroundColor =
         backgroundColor ??
-        config?.navigationBackgroundColor ??
+        config?.effectiveTheme.surfaceColor ??
         colorScheme.surface;
 
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSurface;
@@ -128,13 +129,9 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
           topLeft: Radius.circular(context.vooRadius.lg),
           topRight: Radius.circular(context.vooRadius.lg),
         ),
-        boxShadow: [
-          BoxShadow(
-            color: theme.shadowColor.withValues(alpha: 0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        // Minimal: rely on hairline divider (from AppBarTheme.shape) rather
+        // than a blur shadow under the app bar.
+        boxShadow: context.vooMinimal.cardShadow,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.only(

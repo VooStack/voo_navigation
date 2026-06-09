@@ -166,7 +166,7 @@ class VooContextSwitcherStyle {
   static const Duration defaultAnimationDuration = Duration(milliseconds: 300);
 
   /// Default animation curve for the modal (slight overshoot for bouncy feel)
-  static const Curve defaultAnimationCurve = Curves.easeOutBack;
+  static const Curve defaultAnimationCurve = Curves.easeOutCubic;
 
   /// Default maximum height for the modal
   static const double defaultModalMaxHeight = 320;

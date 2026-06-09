@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/notification_item.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/notifications_bell_empty_state.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/notifications_bell_footer.dart';
@@ -89,20 +91,19 @@ class VooNotificationsBellDropdownContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final m = context.vooMinimal;
+    final radius = style.borderRadius ?? VooMinimal.brLg;
 
     return Material(
-      elevation: 8,
-      borderRadius: style.borderRadius ?? BorderRadius.circular(16),
-      color: style.backgroundColor ?? colorScheme.surface,
+      type: MaterialType.transparency,
       child: Container(
         width: width,
         constraints: BoxConstraints(maxHeight: maxHeight),
         decoration: BoxDecoration(
-          borderRadius: style.borderRadius ?? BorderRadius.circular(16),
-          border: Border.all(
-            color: colorScheme.outline.withValues(alpha: 0.2),
-          ),
+          color: style.backgroundColor ?? m.surfaceElevated,
+          borderRadius: radius,
+          border: Border.all(color: m.border),
+          boxShadow: m.dropdownShadow,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

@@ -70,17 +70,8 @@ class VooScaffoldBuilder extends StatelessWidget {
   /// Padding to apply to the body content
   final EdgeInsetsGeometry? bodyPadding;
 
-  /// Whether to wrap body in a card with elevation
-  final bool useBodyCard;
-
-  /// Elevation for body card
-  final double bodyCardElevation;
-
-  /// Border radius for body card
-  final BorderRadius? bodyCardBorderRadius;
-
-  /// Color for body card
-  final Color? bodyCardColor;
+  /// Body card configuration (null = no card wrapper).
+  final VooBodyCardConfig? bodyCard;
 
   /// Page-level configuration overrides
   final VooPageConfig? pageConfig;
@@ -108,10 +99,7 @@ class VooScaffoldBuilder extends StatelessWidget {
     this.persistentFooterButtons,
     this.restorationId,
     this.bodyPadding,
-    required this.useBodyCard,
-    required this.bodyCardElevation,
-    this.bodyCardBorderRadius,
-    this.bodyCardColor,
+    this.bodyCard,
     this.pageConfig,
   });
 
@@ -124,14 +112,16 @@ class VooScaffoldBuilder extends StatelessWidget {
     // Prepare the body - let each scaffold type handle its own padding
     Widget processedBody = body;
 
-    // Wrap in card if requested
-    if (useBodyCard && navigationType != VooNavigationType.bottomNavigation) {
+    // Wrap in card if requested. Bottom navigation skips the card wrapper —
+    // it would clash with the floating pill bar.
+    final card = bodyCard;
+    if (card != null && card.enabled && navigationType != VooNavigationType.bottomNavigation) {
       final tokens = context.vooTokens;
-      final cardColor = bodyCardColor ?? theme.colorScheme.surface;
-      final borderRadius = bodyCardBorderRadius ?? tokens.radius.card;
+      final cardColor = card.color ?? context.vooMinimal.surfaceElevated;
+      final borderRadius = card.borderRadius ?? tokens.radius.card;
 
       processedBody = Material(
-        elevation: bodyCardElevation == 0 ? tokens.elevation.card : bodyCardElevation,
+        elevation: card.elevation == 0 ? tokens.elevation.card : card.elevation,
         borderRadius: borderRadius,
         color: cardColor,
         child: ClipRRect(borderRadius: borderRadius, child: processedBody),

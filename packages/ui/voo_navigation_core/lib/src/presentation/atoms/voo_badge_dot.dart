@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Dot badge indicator widget
+/// Dot badge indicator widget. Flat by default in the minimal aesthetic —
+/// callers can still pass a custom [boxShadow] to opt into a glow.
 class VooBadgeDot extends StatelessWidget {
   /// Background color of the dot
   final Color bgColor;
@@ -11,7 +12,7 @@ class VooBadgeDot extends StatelessWidget {
   /// Optional border
   final BoxBorder? border;
 
-  /// Optional shadow
+  /// Optional shadow (defaults to none).
   final List<BoxShadow>? boxShadow;
 
   const VooBadgeDot({
@@ -31,14 +32,7 @@ class VooBadgeDot extends StatelessWidget {
         color: bgColor,
         shape: BoxShape.circle,
         border: border,
-        boxShadow: boxShadow ??
-            [
-              BoxShadow(
-                color: bgColor.withValues(alpha: 0.4),
-                blurRadius: 4,
-                offset: const Offset(0, 1),
-              ),
-            ],
+        boxShadow: boxShadow,
       ),
     );
   }

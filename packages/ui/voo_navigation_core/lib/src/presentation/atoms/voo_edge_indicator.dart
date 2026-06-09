@@ -40,15 +40,7 @@ class VooEdgeIndicator extends StatelessWidget {
               topRight: Radius.circular(width),
               bottomRight: Radius.circular(width),
             ),
-        boxShadow: isActive
-            ? [
-                BoxShadow(
-                  color: color.withValues(alpha: 0.5),
-                  blurRadius: 8,
-                  offset: const Offset(2, 0),
-                ),
-              ]
-            : null,
+        // Minimal: flat indicator — no glow.
       ),
     );
   }

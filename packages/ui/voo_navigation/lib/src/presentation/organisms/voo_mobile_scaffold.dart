@@ -98,10 +98,11 @@ class VooMobileScaffold extends StatelessWidget {
     );
 
     // Determine FAB visibility and widget based on page config overrides
-    final showFab = pageConfig?.showFloatingActionButton ?? config.showFloatingActionButton;
-    final fabWidget = pageConfig?.floatingActionButton ?? config.floatingActionButton;
-    final fabLocation = pageConfig?.floatingActionButtonLocation ?? config.floatingActionButtonLocation ?? FloatingActionButtonLocation.endFloat;
-    final fabAnimator = pageConfig?.floatingActionButtonAnimator ?? config.floatingActionButtonAnimator;
+    final fab = config.fab;
+    final showFab = pageConfig?.showFloatingActionButton ?? (fab?.visible ?? true);
+    final fabWidget = pageConfig?.floatingActionButton ?? fab?.widget;
+    final fabLocation = pageConfig?.floatingActionButtonLocation ?? fab?.location ?? FloatingActionButtonLocation.endFloat;
+    final fabAnimator = pageConfig?.floatingActionButtonAnimator ?? fab?.animator;
 
     final Widget? mobileDrawer = config.showHamburgerMenu
         ? (config.mobileDrawerBuilder?.call(context) ??

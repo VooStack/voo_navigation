@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_user.dart';
 import 'package:voo_navigation_core/src/domain/entities/organization.dart';
@@ -59,7 +60,7 @@ class VooStackedAvatars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final ring = context.vooMinimal.background;
     final totalWidth = orgAvatarSize + (userAvatarSize * 0.3);
     final totalHeight = orgAvatarSize + (userAvatarSize * 0.3);
 
@@ -82,17 +83,14 @@ class VooStackedAvatars extends StatelessWidget {
               placeholderIcon: Icons.business_rounded,
             ),
           ),
-          // User avatar (foreground, bottom-right)
+          // User avatar (foreground, bottom-right) — hairline ring against parent
           Positioned(
             right: 0,
             bottom: 0,
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: theme.colorScheme.surface,
-                  width: 2,
-                ),
+                border: Border.all(color: ring, width: 1.5),
               ),
               child: VooAvatar(
                 imageUrl: userAvatarUrl,
@@ -101,21 +99,18 @@ class VooStackedAvatars extends StatelessWidget {
               ),
             ),
           ),
-          // Status indicator (on user avatar)
+          // Status indicator — flat dot with hairline ring
           if (showStatus && status != null)
             Positioned(
               right: 0,
               bottom: 0,
               child: Container(
-                width: 10,
-                height: 10,
+                width: 8,
+                height: 8,
                 decoration: BoxDecoration(
                   color: _getStatusColor(status!),
                   shape: BoxShape.circle,
-                  border: Border.all(
-                    color: theme.colorScheme.surface,
-                    width: 2,
-                  ),
+                  border: Border.all(color: ring, width: 1.5),
                 ),
               ),
             ),

@@ -164,7 +164,7 @@ class VooNavigationAnimations {
     required Widget child,
     required bool show,
     Duration? duration,
-    Curve curve = Curves.elasticOut,
+    Curve curve = Curves.easeOutCubic,
   }) => AnimatedScale(
     scale: show ? 1.0 : 0.0,
     duration: duration ?? fastDuration,
@@ -261,7 +261,7 @@ class VooNavigationAnimations {
   static Widget fabEntranceAnimation({
     required Widget child,
     Duration? duration,
-    Curve curve = Curves.elasticOut,
+    Curve curve = Curves.easeOutCubic,
   }) => TweenAnimationBuilder<double>(
     tween: Tween(begin: 0.0, end: 1.0),
     duration: duration ?? slowDuration,

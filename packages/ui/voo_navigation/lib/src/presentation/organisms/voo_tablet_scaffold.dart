@@ -94,10 +94,11 @@ class VooTabletScaffold extends StatelessWidget {
     final navigationRail = VooAdaptiveNavigationRail(config: config, selectedId: selectedId, onNavigationItemSelected: onNavigationItemSelected, extended: extended);
 
     // Determine FAB visibility and widget based on page config overrides
-    final showFab = pageConfig?.showFloatingActionButton ?? config.showFloatingActionButton;
-    final fabWidget = pageConfig?.floatingActionButton ?? config.floatingActionButton;
-    final fabLocation = pageConfig?.floatingActionButtonLocation ?? config.floatingActionButtonLocation;
-    final fabAnimator = pageConfig?.floatingActionButtonAnimator ?? config.floatingActionButtonAnimator;
+    final fab = config.fab;
+    final showFab = pageConfig?.showFloatingActionButton ?? (fab?.visible ?? true);
+    final fabWidget = pageConfig?.floatingActionButton ?? fab?.widget;
+    final fabLocation = pageConfig?.floatingActionButtonLocation ?? fab?.location;
+    final fabAnimator = pageConfig?.floatingActionButtonAnimator ?? fab?.animator;
 
     // When app bar is alongside rail, wrap the content area with its own scaffold
     if (config.appBarAlongsideRail) {
@@ -114,7 +115,7 @@ class VooTabletScaffold extends StatelessWidget {
       final navTheme = config.effectiveTheme;
       final colorScheme = Theme.of(context).colorScheme;
       // Content area background - use base surface for clean content area
-      final effectiveContentBackgroundColor = config.contentAreaBackgroundColor ?? colorScheme.surface;
+      final effectiveContentBackgroundColor = config.contentArea?.backgroundColor ?? colorScheme.surface;
 
       return Scaffold(
         key: scaffoldKey,
@@ -170,7 +171,7 @@ class VooTabletScaffold extends StatelessWidget {
     final navTheme = config.effectiveTheme;
     final colorScheme2 = Theme.of(context).colorScheme;
     // Content area background - use base surface for clean content area
-    final effectiveContentBackgroundColor2 = config.contentAreaBackgroundColor ?? colorScheme2.surface;
+    final effectiveContentBackgroundColor2 = config.contentArea?.backgroundColor ?? colorScheme2.surface;
 
     return Scaffold(
       key: scaffoldKey,

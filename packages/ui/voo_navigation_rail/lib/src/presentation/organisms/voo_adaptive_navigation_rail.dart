@@ -56,7 +56,7 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: widget.config.animationDuration,
+      duration: widget.config.animation.duration,
       vsync: this,
     );
 
@@ -103,12 +103,13 @@ class _VooAdaptiveNavigationRailState extends State<VooAdaptiveNavigationRail>
             ? (widget.config.extendedNavigationRailWidth ?? 256)
             : (widget.config.navigationRailWidth ?? 80));
 
-    // Use theme-aware surface color for proper dark theme support
-    // Use surfaceContainerLow for visual distinction from app bar and content area
+    // Rail shares the scaffold background so there's no tonal seam where the
+    // rail meets the content area. The visual separation comes from a
+    // hairline border in the desktop scaffold, not a different surface tint.
     final effectiveBackgroundColor =
         widget.backgroundColor ??
-        widget.config.navigationBackgroundColor ??
-        theme.colorScheme.surfaceContainerLow;
+        widget.config.effectiveTheme.surfaceColor ??
+        theme.colorScheme.surface;
 
     return AnimatedContainer(
       duration: navTheme.animationDuration,

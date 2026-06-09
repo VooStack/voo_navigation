@@ -49,7 +49,7 @@ class VooDrawerExpandableSection extends StatelessWidget {
     final isHovered = hoveredItems[item.id] == true;
 
     // Use config colors if provided, otherwise fall back to theme
-    final sectionColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
+    final sectionColor = config.effectiveTheme.unselectedItemColor ?? theme.colorScheme.onSurface;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

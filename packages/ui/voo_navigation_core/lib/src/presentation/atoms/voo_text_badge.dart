@@ -46,13 +46,6 @@ class VooTextBadge extends StatelessWidget {
       decoration: BoxDecoration(
         color: badgeColor,
         borderRadius: BorderRadius.circular(size / 2),
-        boxShadow: [
-          BoxShadow(
-            color: badgeColor.withAlpha((0.3 * 255).round()),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       constraints: BoxConstraints(minWidth: size, minHeight: size),
       child: Center(
@@ -78,7 +71,7 @@ class VooTextBadge extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: animationDuration,
-      curve: Curves.easeOutBack,
+      curve: Curves.easeOutCubic,
       builder: (context, value, child) => Transform.scale(
         scale: value,
         child: Opacity(opacity: value.clamp(0.0, 1.0), child: child),

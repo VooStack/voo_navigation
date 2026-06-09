@@ -86,7 +86,7 @@ class VooNavigationBar extends StatelessWidget {
 
     if (items.isEmpty) return const SizedBox.shrink();
 
-    final theme = Theme.of(context);
+    final m = context.vooMinimal;
     final bgColor = backgroundColor ?? context.expandableNavBackground;
     final border = borderColor ?? context.expandableNavBorder;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -101,13 +101,9 @@ class VooNavigationBar extends StatelessWidget {
       VooNavigationTokens.expandableNavBorderRadius,
     );
 
-    final boxShadow = [
-      BoxShadow(
-        color: theme.colorScheme.shadow.withValues(alpha: 0.2),
-        blurRadius: 16,
-        offset: const Offset(0, 4),
-      ),
-    ];
+    // Subtle lift — no halo. The minimal aesthetic relies on contrast +
+    // hairline border, not heavy blur shadows.
+    final boxShadow = m.cardShadow;
 
     final pillContainer = Container(
       height: VooNavigationTokens.expandableNavBarHeight,

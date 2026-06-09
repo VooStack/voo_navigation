@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/navigation_destination.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_navigation_core/src/presentation/atoms/voo_search_field.dart';
@@ -290,20 +292,18 @@ class _VooSearchBarState extends State<VooSearchBar> {
               // Results dropdown
               CompositedTransformFollower(
                 link: _layerLink,
-                offset: Offset(0, size.height + 4),
+                offset: Offset(0, size.height + 6),
                 child: Material(
-                  elevation: 8,
-                  borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-                  color: style.dropdownBackgroundColor ??
-                      theme.colorScheme.surface,
+                  type: MaterialType.transparency,
                   child: Container(
                     width: dropdownWidth,
                     constraints: BoxConstraints(maxHeight: maxHeight),
                     decoration: BoxDecoration(
-                      borderRadius: style.borderRadius ?? BorderRadius.circular(12),
-                      border: Border.all(
-                        color: theme.colorScheme.outline.withValues(alpha: 0.2),
-                      ),
+                      color: style.dropdownBackgroundColor ??
+                          context.vooMinimal.surfaceElevated,
+                      borderRadius: style.borderRadius ?? VooMinimal.brMd,
+                      border: Border.all(color: context.vooMinimal.border),
+                      boxShadow: context.vooMinimal.dropdownShadow,
                     ),
                     child: KeyboardListener(
                       focusNode: FocusNode(),

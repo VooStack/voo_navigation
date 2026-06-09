@@ -68,10 +68,10 @@ class VooDropdownHeader extends StatelessWidget {
                 data: IconThemeData(
                   color: isHighlighted
                       ? (item.selectedIconColor ??
-                            config.selectedItemColor ??
+                            config.effectiveTheme.selectedItemColor ??
                             colorScheme.primary)
                       : (item.iconColor ??
-                            config.unselectedItemColor ??
+                            config.effectiveTheme.unselectedItemColor ??
                             colorScheme.onSurfaceVariant),
                 ),
                 child: isExpanded ? item.effectiveSelectedIcon : item.icon,
@@ -88,13 +88,13 @@ class VooDropdownHeader extends StatelessWidget {
                     ? (item.selectedLabelStyle ??
                           theme.textTheme.bodyLarge!.copyWith(
                             color:
-                                config.selectedItemColor ?? colorScheme.primary,
+                                config.effectiveTheme.selectedItemColor ?? colorScheme.primary,
                             fontWeight: FontWeight.w600,
                           ))
                     : (item.labelStyle ??
                           theme.textTheme.bodyLarge!.copyWith(
                             color:
-                                config.unselectedItemColor ??
+                                config.effectiveTheme.unselectedItemColor ??
                                 colorScheme.onSurfaceVariant,
                           )),
                 child: Text(item.label ?? '', overflow: TextOverflow.ellipsis),
@@ -108,7 +108,7 @@ class VooDropdownHeader extends StatelessWidget {
                 item: item,
                 config: config,
                 size: context.vooSize.iconXSmall,
-                animate: config.enableAnimations,
+                animate: config.animation.enabled,
               ),
             ],
 

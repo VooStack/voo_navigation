@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/breadcrumb_item.dart';
 
 /// A single breadcrumb item widget
@@ -41,7 +42,7 @@ class _VooBreadcrumbItemWidgetState extends State<VooBreadcrumbItemWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final m = context.vooMinimal;
     final item = widget.item;
     final style = widget.style;
 
@@ -49,13 +50,11 @@ class _VooBreadcrumbItemWidgetState extends State<VooBreadcrumbItemWidget> {
 
     final textStyle = item.isCurrentPage
         ? (style.currentItemStyle ?? theme.textTheme.bodyMedium?.copyWith(
-            color: colorScheme.onSurface,
+            color: m.textPrimary,
             fontWeight: FontWeight.w600,
           ))
         : (style.itemStyle ?? theme.textTheme.bodyMedium?.copyWith(
-            color: _isHovered
-                ? colorScheme.primary
-                : colorScheme.onSurfaceVariant,
+            color: _isHovered ? m.textPrimary : m.textSecondary,
           ));
 
     Widget content = Row(
@@ -103,7 +102,7 @@ class _VooBreadcrumbItemWidgetState extends State<VooBreadcrumbItemWidget> {
           child: Container(
             padding: style.itemPadding ?? const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
             decoration: BoxDecoration(
-              color: _isHovered ? (style.hoverColor ?? colorScheme.surfaceContainerHighest) : null,
+              color: _isHovered ? (style.hoverColor ?? m.hoverOverlay) : null,
               borderRadius: BorderRadius.circular(4),
             ),
             child: content,

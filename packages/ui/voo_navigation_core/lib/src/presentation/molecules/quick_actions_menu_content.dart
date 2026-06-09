@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/quick_actions_grid_layout.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/quick_actions_list_layout.dart';
@@ -104,7 +106,6 @@ class VooQuickActionsMenuContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
     final effectiveStyle = style ?? const VooQuickActionsStyle();
     final hasHeader = title != null || showCloseButton;
 
@@ -156,19 +157,20 @@ class VooQuickActionsMenuContent extends StatelessWidget {
       contentWidget = Flexible(child: contentWidget);
     }
 
+    final m = context.vooMinimal;
+    final radius = effectiveStyle.borderRadius ?? VooMinimal.brLg;
+
     return Material(
-      elevation: 8,
-      borderRadius: effectiveStyle.borderRadius ?? BorderRadius.circular(16),
-      color: effectiveStyle.backgroundColor ?? colorScheme.surface,
+      type: MaterialType.transparency,
       child: Container(
         width: width,
         // Only use fixed height when not expanding
         height: shouldExpand ? null : height,
         decoration: BoxDecoration(
-          borderRadius: effectiveStyle.borderRadius ?? BorderRadius.circular(16),
-          border: Border.all(
-            color: colorScheme.outline.withValues(alpha: 0.2),
-          ),
+          color: effectiveStyle.backgroundColor ?? m.surfaceElevated,
+          borderRadius: radius,
+          border: Border.all(color: m.border),
+          boxShadow: m.dropdownShadow,
         ),
         child: Column(
           mainAxisSize: shouldExpand ? MainAxisSize.max : MainAxisSize.min,

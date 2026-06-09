@@ -179,6 +179,62 @@ class VooMultiSwitcherConfig {
   final Widget Function(BuildContext context, VooMultiSwitcherModalData data)?
       userSectionBuilder;
 
+  /// Convenience factory: build a multi-switcher config from a single
+  /// [VooMultiSwitcherUser] struct plus a list of organizations.
+  ///
+  /// This collapses the seven individual user fields (`userName`,
+  /// `userEmail`, `avatarUrl`, `avatarWidget`, `initials`, `status`,
+  /// `selectedUser`) into one object, which is the typical shape that
+  /// consumers already model on their own side.
+  ///
+  /// Example:
+  /// ```dart
+  /// VooMultiSwitcherConfig.fromUser(
+  ///   user: VooMultiSwitcherUser(id: 'me', name: 'John Doe', email: '…', status: VooUserStatus.online),
+  ///   organizations: orgs,
+  ///   selectedOrganization: currentOrg,
+  ///   onOrganizationChanged: (o) => setState(() => currentOrg = o),
+  ///   onSettingsTap: openSettings,
+  ///   onLogout: logout,
+  /// )
+  /// ```
+  factory VooMultiSwitcherConfig.fromUser({
+    required VooMultiSwitcherUser user,
+    required List<VooOrganization> organizations,
+    VooOrganization? selectedOrganization,
+    ValueChanged<VooOrganization>? onOrganizationChanged,
+    VoidCallback? onCreateOrganization,
+    String? createOrganizationLabel,
+    VoidCallback? onSettingsTap,
+    VoidCallback? onLogout,
+    List<VooProfileMenuItem>? menuItems,
+    VooMultiSwitcherStyle? style,
+    bool showSearch = false,
+    String? organizationSectionTitle,
+    String? userSectionTitle,
+  }) {
+    return VooMultiSwitcherConfig(
+      organizations: organizations,
+      selectedOrganization: selectedOrganization,
+      onOrganizationChanged: onOrganizationChanged,
+      onCreateOrganization: onCreateOrganization,
+      createOrganizationLabel: createOrganizationLabel,
+      userName: user.name,
+      userEmail: user.email,
+      avatarUrl: user.avatarUrl,
+      avatarWidget: user.avatarWidget,
+      initials: user.initials,
+      status: user.status,
+      onSettingsTap: onSettingsTap,
+      onLogout: onLogout,
+      menuItems: menuItems,
+      style: style,
+      showSearch: showSearch,
+      organizationSectionTitle: organizationSectionTitle,
+      userSectionTitle: userSectionTitle,
+    );
+  }
+
   const VooMultiSwitcherConfig({
     // Organization data
     this.organizations = const [],

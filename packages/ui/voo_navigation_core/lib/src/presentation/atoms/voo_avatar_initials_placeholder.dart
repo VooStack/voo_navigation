@@ -45,8 +45,10 @@ class VooAvatarInitialsPlaceholder extends StatelessWidget {
               initials!,
               style: TextStyle(
                 color: fgColor,
-                fontSize: size * 0.4,
+                fontSize: size * 0.38,
                 fontWeight: FontWeight.w600,
+                letterSpacing: -0.4,
+                height: 1,
               ),
             )
           : Icon(

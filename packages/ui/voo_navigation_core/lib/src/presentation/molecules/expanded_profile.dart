@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/voo_profile_menu_item.dart';
 import 'package:voo_navigation_core/src/domain/entities/voo_user_status.dart';
 import 'package:voo_navigation_core/src/presentation/molecules/profile_avatar.dart';
@@ -96,15 +98,10 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
       builder: (context) => Container(
         margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: theme.colorScheme.surface,
+          color: context.vooMinimal.surfaceElevated,
           borderRadius: BorderRadius.circular(radius.lg),
-          boxShadow: [
-            BoxShadow(
-              color: theme.shadowColor.withValues(alpha: 0.15),
-              blurRadius: 20,
-              offset: const Offset(0, 8),
-            ),
-          ],
+          border: Border.all(color: context.vooMinimal.border),
+          boxShadow: context.vooMinimal.dropdownShadow,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -147,12 +144,7 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
           : EdgeInsets.zero,
       decoration: widget.showTopBorder
           ? BoxDecoration(
-              border: Border(
-                top: BorderSide(
-                  color: theme.dividerColor.withValues(alpha: 0.1),
-                  width: 1,
-                ),
-              ),
+              border: Border(top: BorderSide(color: context.vooMinimal.border)),
             )
           : null,
       child: MouseRegion(
@@ -162,21 +154,19 @@ class _VooExpandedProfileState extends State<VooExpandedProfile> {
           color: Colors.transparent,
           child: InkWell(
             onTap: widget.onTap ?? () => _showProfileMenu(context),
-            borderRadius: BorderRadius.circular(8),
+            borderRadius: VooMinimal.brSm,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
+              duration: VooMinimal.motionFast,
+              curve: VooMinimal.motionCurve,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               decoration: BoxDecoration(
                 color: _isHovered
-                    ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+                    ? context.vooMinimal.hoverOverlay
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-                border: _isHovered
-                    ? Border.all(
-                        color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                        width: 1,
-                      )
-                    : null,
+                borderRadius: VooMinimal.brSm,
+                border: Border.all(
+                  color: _isHovered ? context.vooMinimal.border : Colors.transparent,
+                ),
               ),
               child: Row(
                 children: [

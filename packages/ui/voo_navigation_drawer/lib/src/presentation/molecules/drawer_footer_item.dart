@@ -39,8 +39,8 @@ class VooDrawerFooterItem extends StatelessWidget {
     final theme = Theme.of(context);
     final isSelected = item.id == selectedId;
 
-    final unselectedColor = config.unselectedItemColor ?? theme.colorScheme.onSurface;
-    final selectedColor = config.selectedItemColor ?? theme.colorScheme.primary;
+    final unselectedColor = config.effectiveTheme.unselectedItemColor ?? theme.colorScheme.onSurface;
+    final selectedColor = config.effectiveTheme.selectedItemColor ?? theme.colorScheme.primary;
 
     final iconColor = isSelected
         ? (item.selectedIconColor ?? selectedColor)

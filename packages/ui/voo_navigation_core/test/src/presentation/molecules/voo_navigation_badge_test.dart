@@ -219,7 +219,7 @@ void main() {
       final config = VooNavigationConfig(
         items: [item],
         onNavigationItemSelected: (id) {},
-        badgeAnimationDuration: const Duration(milliseconds: 300),
+        animation: const VooAnimationConfig(badgeDuration: Duration(milliseconds: 300)),
       );
 
       await tester.pumpWidget(
@@ -250,7 +250,7 @@ void main() {
       final config = VooNavigationConfig(
         items: [item],
         onNavigationItemSelected: (id) {},
-        enableAnimations: false,
+        animation: VooAnimationConfig.disabled,
       );
 
       await tester.pumpWidget(

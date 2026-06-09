@@ -118,7 +118,7 @@ class VooQuickActionsSectionLayout extends StatelessWidget {
 
     return Material(
       color: itemBgColor,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       child: InkWell(
         onTap: action.isEnabled
             ? () {
@@ -127,7 +127,7 @@ class VooQuickActionsSectionLayout extends StatelessWidget {
                 onActionTap(action);
               }
             : null,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
         child: Opacity(
           opacity: action.isEnabled ? 1.0 : 0.5,
           child: Padding(
@@ -140,7 +140,7 @@ class VooQuickActionsSectionLayout extends StatelessWidget {
                   height: 48,
                   decoration: BoxDecoration(
                     color: iconBgColor,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: action.iconWidget ??
                       Icon(

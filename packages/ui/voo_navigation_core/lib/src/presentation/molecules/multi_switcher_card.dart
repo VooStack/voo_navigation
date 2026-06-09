@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal.dart';
+import 'package:voo_navigation_core/src/design/voo_minimal_theme.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_config.dart';
 import 'package:voo_navigation_core/src/domain/entities/multi_switcher_style.dart';
 import 'package:voo_navigation_core/src/domain/tokens/voo_navigation_tokens.dart';
@@ -108,21 +110,22 @@ class _VooMultiSwitcherCardState extends State<VooMultiSwitcherCard> {
           borderRadius: style.cardBorderRadius ??
               BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
           child: AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
+            duration: VooMinimal.motionFast,
+            curve: VooMinimal.motionCurve,
             padding: style.cardPadding ??
                 const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             decoration: style.cardDecoration ??
                 BoxDecoration(
                   color: _isHovered || widget.isExpanded
-                      ? theme.colorScheme.onSurface.withValues(alpha: 0.05)
+                      ? context.vooMinimal.hoverOverlay
                       : Colors.transparent,
                   borderRadius: style.cardBorderRadius ??
                       BorderRadius.circular(VooNavigationTokens.itemBorderRadius),
-                  border: _isHovered || widget.isExpanded
-                      ? Border.all(
-                          color: theme.colorScheme.outline.withValues(alpha: 0.1),
-                        )
-                      : Border.all(color: Colors.transparent),
+                  border: Border.all(
+                    color: _isHovered || widget.isExpanded
+                        ? context.vooMinimal.border
+                        : Colors.transparent,
+                  ),
                 ),
             child: Row(
               children: [
