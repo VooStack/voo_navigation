@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_navigation_core/voo_navigation_core.dart';
@@ -173,39 +175,66 @@ class VooAdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     // When appBarAlongsideRail is true, the app bar is inside the content container
     // so it should be transparent to show the container's background
     final isInsideContentContainer = effectiveConfig?.appBarAlongsideRail ?? true;
+    // When chromeBlur is configured the blurred surface paints the chrome,
+    // so the wrapping container must stay transparent.
+    final chromeBlur = effectiveConfig?.chromeBlur;
+    final hasAppBarBlur = chromeBlur?.hasAppBarBlur ?? false;
     final effectiveBackgroundColor = backgroundColor ??
-        (isInsideContentContainer ? Colors.transparent : colorScheme.surface);
+        (hasAppBarBlur
+            ? Colors.transparent
+            : (isInsideContentContainer ? Colors.transparent : colorScheme.surface));
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSurface;
+
+    final Widget appBarWidget = AppBar(
+      forceMaterialTransparency: true,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      title: Padding(
+        padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.xs),
+        child: effectiveTitle,
+      ),
+      leading: effectiveLeading,
+      leadingWidth: wouldShowLeading ? null : 0,
+      automaticallyImplyLeading: false,
+      actions: effectiveActions?.isNotEmpty == true ? [...effectiveActions!, SizedBox(width: context.vooSpacing.md)] : null,
+      centerTitle: effectiveCenterTitle,
+      backgroundColor: Colors.transparent,
+      foregroundColor: effectiveForegroundColor,
+      elevation: 0,
+      toolbarHeight: (toolbarHeight ?? kToolbarHeight) + context.vooSpacing.sm,
+      titleSpacing: context.vooSpacing.md,
+      titleTextStyle: theme.textTheme.titleLarge?.copyWith(color: effectiveForegroundColor, fontWeight: FontWeight.w600),
+      bottom: _buildBottom(context, theme),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: theme.brightness == Brightness.light ? Brightness.dark : Brightness.light,
+        statusBarBrightness: theme.brightness,
+      ),
+    );
+
+    // Glassmorphic recipe — wrap the bar in a BackdropFilter painted over
+    // the translucent surface. ClipRect bounds the blur to the bar height
+    // so content above/below stays sharp.
+    if (hasAppBarBlur) {
+      return Container(
+        margin: margin,
+        color: effectiveBackgroundColor,
+        child: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: chromeBlur!.appBarSigma, sigmaY: chromeBlur.appBarSigma),
+            child: ColoredBox(
+              color: chromeBlur.appBarSurfaceColor!,
+              child: appBarWidget,
+            ),
+          ),
+        ),
+      );
+    }
 
     return Container(
       margin: margin,
       color: effectiveBackgroundColor,
-      child: AppBar(
-          forceMaterialTransparency: true,
-          scrolledUnderElevation: 0,
-          surfaceTintColor: Colors.transparent,
-          title: Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.xs),
-            child: effectiveTitle,
-          ),
-          leading: effectiveLeading,
-          leadingWidth: wouldShowLeading ? null : 0,
-          automaticallyImplyLeading: false,
-          actions: effectiveActions?.isNotEmpty == true ? [...effectiveActions!, SizedBox(width: context.vooSpacing.md)] : null,
-          centerTitle: effectiveCenterTitle,
-          backgroundColor: Colors.transparent,
-          foregroundColor: effectiveForegroundColor,
-          elevation: 0,
-          toolbarHeight: (toolbarHeight ?? kToolbarHeight) + context.vooSpacing.sm,
-          titleSpacing: context.vooSpacing.md,
-          titleTextStyle: theme.textTheme.titleLarge?.copyWith(color: effectiveForegroundColor, fontWeight: FontWeight.w600),
-          bottom: _buildBottom(context, theme),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: theme.brightness == Brightness.light ? Brightness.dark : Brightness.light,
-            statusBarBrightness: theme.brightness,
-          ),
-        ),
+      child: appBarWidget,
     );
   }
 

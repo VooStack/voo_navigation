@@ -38,6 +38,7 @@ export 'src/domain/entities/page_config.dart';
 export 'src/domain/entities/quick_action.dart';
 export 'src/domain/entities/search_action.dart';
 export 'src/domain/entities/user_profile_config.dart';
+export 'src/domain/entities/voo_chrome_blur.dart';
 export 'src/domain/entities/voo_profile_menu_item.dart';
 export 'src/domain/entities/voo_user_status.dart';
 

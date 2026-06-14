@@ -1,3 +1,14 @@
+## 2.0.1
+
+### Added
+- **Glassmorphic chrome wiring** — when `VooNavigationConfig.chromeBlur` is set (see `voo_navigation_core` 0.4.1), both `VooAdaptiveAppBar` (desktop) and `VooMobileScaffold`'s bottom navigation now wrap their content in a `ClipRect` + `BackdropFilter(ImageFilter.blur(sigmaX/Y: chromeBlur.{appBar,bottomNav}Sigma))` over the configured translucent surface. The wrapping container stays transparent so the blur composites correctly against scrolling body content.
+
+### Dependencies
+- Bumped `voo_navigation_core` constraint to `^0.4.1` to pick up the new `VooChromeBlur` entity and the `chromeBlur` config field.
+
+### Migration
+- None — `chromeBlur` defaults to `null`, which preserves the historical flat opaque chrome bit-for-bit.
+
 ## 2.0.0
 
 ### Breaking

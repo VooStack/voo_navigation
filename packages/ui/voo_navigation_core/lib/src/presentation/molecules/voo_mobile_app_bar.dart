@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:voo_tokens/voo_tokens.dart';
@@ -114,64 +116,80 @@ class VooMobileAppBar extends StatelessWidget implements PreferredSizeWidget {
       effectiveActions = [...?effectiveActions, ...additionalActions!];
     }
 
-    // Use theme surface color for proper theming
+    // When chromeBlur is configured, swap the opaque surface for the
+    // translucent recipe and wrap the bar in a BackdropFilter.
+    final chromeBlur = config?.chromeBlur;
+    final hasAppBarBlur = chromeBlur?.hasAppBarBlur ?? false;
     final effectiveBackgroundColor =
         backgroundColor ??
-        config?.effectiveTheme.surfaceColor ??
-        colorScheme.surface;
+        (hasAppBarBlur
+            ? Colors.transparent
+            : (config?.effectiveTheme.surfaceColor ?? colorScheme.surface));
 
     final effectiveForegroundColor = foregroundColor ?? colorScheme.onSurface;
+
+    final Widget appBarWidget = AppBar(
+      forceMaterialTransparency: true,
+      scrolledUnderElevation: 0,
+      surfaceTintColor: Colors.transparent,
+      title: Padding(
+        padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.xs),
+        child: effectiveTitle,
+      ),
+      leading: effectiveLeading,
+      leadingWidth: wouldShowLeading ? null : 0,
+      automaticallyImplyLeading: false,
+      actions: effectiveActions?.isNotEmpty == true
+          ? [...effectiveActions!, SizedBox(width: context.vooSpacing.md)]
+          : null,
+      centerTitle: effectiveCenterTitle,
+      backgroundColor: Colors.transparent,
+      foregroundColor: effectiveForegroundColor,
+      elevation: 0,
+      toolbarHeight:
+          (toolbarHeight ?? kToolbarHeight) + context.vooSpacing.sm,
+      titleSpacing: context.vooSpacing.md,
+      titleTextStyle: theme.textTheme.titleLarge?.copyWith(
+        color: effectiveForegroundColor,
+        fontWeight: FontWeight.w600,
+      ),
+      bottom: _buildBottom(context, theme),
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: theme.brightness == Brightness.light
+            ? Brightness.dark
+            : Brightness.light,
+        statusBarBrightness: theme.brightness,
+      ),
+    );
+
+    final borderRadius = BorderRadius.only(
+      topLeft: Radius.circular(context.vooRadius.lg),
+      topRight: Radius.circular(context.vooRadius.lg),
+    );
 
     return Container(
       decoration: BoxDecoration(
         color: effectiveBackgroundColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(context.vooRadius.lg),
-          topRight: Radius.circular(context.vooRadius.lg),
-        ),
+        borderRadius: borderRadius,
         // Minimal: rely on hairline divider (from AppBarTheme.shape) rather
         // than a blur shadow under the app bar.
-        boxShadow: context.vooMinimal.cardShadow,
+        boxShadow: hasAppBarBlur ? null : context.vooMinimal.cardShadow,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(context.vooRadius.lg),
-          topRight: Radius.circular(context.vooRadius.lg),
-        ),
-        child: AppBar(
-          forceMaterialTransparency: true,
-          scrolledUnderElevation: 0,
-          surfaceTintColor: Colors.transparent,
-          title: Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.vooSpacing.xs),
-            child: effectiveTitle,
-          ),
-          leading: effectiveLeading,
-          leadingWidth: wouldShowLeading ? null : 0,
-          automaticallyImplyLeading: false,
-          actions: effectiveActions?.isNotEmpty == true
-              ? [...effectiveActions!, SizedBox(width: context.vooSpacing.md)]
-              : null,
-          centerTitle: effectiveCenterTitle,
-          backgroundColor: Colors.transparent,
-          foregroundColor: effectiveForegroundColor,
-          elevation: 0,
-          toolbarHeight:
-              (toolbarHeight ?? kToolbarHeight) + context.vooSpacing.sm,
-          titleSpacing: context.vooSpacing.md,
-          titleTextStyle: theme.textTheme.titleLarge?.copyWith(
-            color: effectiveForegroundColor,
-            fontWeight: FontWeight.w600,
-          ),
-          bottom: _buildBottom(context, theme),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: theme.brightness == Brightness.light
-                ? Brightness.dark
-                : Brightness.light,
-            statusBarBrightness: theme.brightness,
-          ),
-        ),
+        borderRadius: borderRadius,
+        child: hasAppBarBlur
+            ? BackdropFilter(
+                filter: ImageFilter.blur(
+                  sigmaX: chromeBlur!.appBarSigma,
+                  sigmaY: chromeBlur.appBarSigma,
+                ),
+                child: ColoredBox(
+                  color: chromeBlur.appBarSurfaceColor!,
+                  child: appBarWidget,
+                ),
+              )
+            : appBarWidget,
       ),
     );
   }

@@ -1,3 +1,24 @@
+## 0.4.1
+
+### Added
+- **`VooChromeBlur`** — new entity for opting nav chrome into the glassmorphic recipe. Fields:
+  - `appBarSigma` (default `8`) and `bottomNavSigma` (default `14`) — `ImageFilter.blur` sigmas.
+  - `appBarSurfaceColor` / `bottomNavSurfaceColor` — translucent fills painted behind the blur. Pass colors with alpha < 1.0 so scrolling content shows through.
+  - Convenience getters `hasAppBarBlur` / `hasBottomNavBlur` so consuming scaffolds can short-circuit when the field is unset.
+- **`VooNavigationConfig.chromeBlur`** — optional `VooChromeBlur` field (+ matching `copyWith`). Leave `null` for the historical flat opaque chrome; set it to enable the frosted-glass top bar + bottom nav. `VooMobileAppBar` (in this package) now wraps its `AppBar` in a `BackdropFilter` over the configured translucent surface when `chromeBlur?.hasAppBarBlur == true`.
+
+### Migration
+- No migration required — existing call sites compile unchanged. To enable the recipe:
+  ```dart
+  VooNavigationConfig(
+    items: ...,
+    chromeBlur: VooChromeBlur(
+      appBarSurfaceColor: Color.fromRGBO(17, 17, 22, 0.6),
+      bottomNavSurfaceColor: Color.fromRGBO(17, 17, 22, 0.92),
+    ),
+  )
+  ```
+
 ## 0.4.0
 
 ### Breaking

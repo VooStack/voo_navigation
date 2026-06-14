@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:voo_navigation_bar/voo_navigation_bar.dart';
 import 'package:voo_navigation_drawer/voo_navigation_drawer.dart';
@@ -90,12 +92,31 @@ class VooMobileScaffold extends StatelessWidget {
     final selectedItem = config.items.firstWhere((item) => item.id == selectedId, orElse: () => config.items.first);
 
     // Build the bottom navigation
-    final bottomNav = VooNavigationBar(
+    Widget bottomNav = VooNavigationBar(
       config: config,
       selectedId: selectedId,
       onNavigationItemSelected: onNavigationItemSelected,
       actionItem: config.actionItem,
     );
+
+    // Glassmorphic recipe — wrap in a BackdropFilter painted over the
+    // translucent surface configured on [VooNavigationConfig.chromeBlur].
+    // Skip when no blur is configured to keep the legacy flat surface.
+    final chromeBlur = config.chromeBlur;
+    if (chromeBlur?.hasBottomNavBlur ?? false) {
+      bottomNav = ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(
+            sigmaX: chromeBlur!.bottomNavSigma,
+            sigmaY: chromeBlur.bottomNavSigma,
+          ),
+          child: ColoredBox(
+            color: chromeBlur.bottomNavSurfaceColor!,
+            child: bottomNav,
+          ),
+        ),
+      );
+    }
 
     // Determine FAB visibility and widget based on page config overrides
     final fab = config.fab;

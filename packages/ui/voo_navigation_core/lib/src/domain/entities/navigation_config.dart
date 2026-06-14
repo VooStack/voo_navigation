@@ -20,6 +20,7 @@ import 'package:voo_navigation_core/src/domain/entities/organization.dart';
 import 'package:voo_navigation_core/src/domain/entities/quick_action.dart';
 import 'package:voo_navigation_core/src/domain/entities/search_action.dart';
 import 'package:voo_navigation_core/src/domain/entities/user_profile_config.dart';
+import 'package:voo_navigation_core/src/domain/entities/voo_chrome_blur.dart';
 
 /// Configuration for the adaptive navigation system
 class VooNavigationConfig {
@@ -57,6 +58,13 @@ class VooNavigationConfig {
 
   /// Simplified header configuration
   final VooHeaderConfig? headerConfig;
+
+  /// Optional glassmorphic blur applied to the top app bar and mobile bottom
+  /// navigation. When set, the scaffolds wrap those surfaces in a
+  /// `BackdropFilter(blur)` over the configured translucent surfaces.
+  ///
+  /// Leave `null` to render flat opaque chrome (the historical behavior).
+  final VooChromeBlur? chromeBlur;
 
   /// Whether the app bar should be positioned alongside the navigation rail
   final bool appBarAlongsideRail;
@@ -353,6 +361,7 @@ class VooNavigationConfig {
     this.useExtendedRail = true,
     this.drawerSlots,
     this.headerConfig,
+    this.chromeBlur,
     this.appBarAlongsideRail = true,
     this.showAppBar = true,
     this.resizeToAvoidBottomInset = true,
@@ -447,6 +456,7 @@ class VooNavigationConfig {
     bool? useExtendedRail,
     VooDrawerSlots? drawerSlots,
     VooHeaderConfig? headerConfig,
+    VooChromeBlur? chromeBlur,
     bool? appBarAlongsideRail,
     bool? showAppBar,
     bool? resizeToAvoidBottomInset,
@@ -515,6 +525,7 @@ class VooNavigationConfig {
         useExtendedRail: useExtendedRail ?? this.useExtendedRail,
         drawerSlots: drawerSlots ?? this.drawerSlots,
         headerConfig: headerConfig ?? this.headerConfig,
+        chromeBlur: chromeBlur ?? this.chromeBlur,
         appBarAlongsideRail: appBarAlongsideRail ?? this.appBarAlongsideRail,
         showAppBar: showAppBar ?? this.showAppBar,
         resizeToAvoidBottomInset:
