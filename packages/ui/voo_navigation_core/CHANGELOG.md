@@ -1,3 +1,10 @@
+## 0.4.3
+
+### Added
+- **`VooActionModalChrome`** — visual chrome for the modal opened by a `VooActionNavigationItem`, passed through the new `VooActionNavigationItem.modalChrome` field. Carries `borderRadius`, `backgroundColor`, `border`, `boxShadow`, `barrierColor`, `barrierOpacity` and `widthFactor`.
+
+Every field is optional and `null` keeps the navigation bar's own default, so an item that passes no chrome renders exactly as before. Wired through `copyWith`.
+
 ## 0.4.2
 
 ### Added

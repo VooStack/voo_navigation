@@ -1,3 +1,13 @@
+## 2.2.0
+
+### Added
+- **Configurable action-modal chrome.** `VooActionNavigationItem` accepts a `modalChrome` (`VooActionModalChrome`) describing the modal's radius, fill, border, shadow, scrim colour/opacity and width factor. Host apps use it to make the quick-actions modal match their own design system instead of the package's built-in surface treatment.
+
+All fields are optional and default to the previous rendering.
+
+### Dependencies
+- Requires `voo_navigation_core: ^0.4.3` and `voo_navigation_bar: ^0.2.3`.
+
 ## 2.1.0
 
 ### Added

@@ -1,3 +1,14 @@
+## 0.2.3
+
+### Fixed
+- **`VooActionNavItem` modal radius** was written as a literal `16` twice — once on the `BoxDecoration` and once on the `ClipRRect` — so the fill and the clip could drift apart. It is now resolved once and shared.
+
+### Changed
+- **`VooActionNavItem` modal surface, scrim and width** now read from `VooActionNavigationItem.modalChrome` when supplied. The previous hardcoded values (nav border + `m.dropdownShadow`, `Colors.black` at 0.5, `0.9` screen-width factor) remain the defaults, so items without chrome are unchanged.
+- Constraint bump: requires `voo_navigation_core: ^0.4.3`.
+
+---
+
 ## 0.2.2
 
 ### Changed
