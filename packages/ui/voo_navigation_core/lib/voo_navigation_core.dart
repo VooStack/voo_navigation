@@ -13,6 +13,7 @@ export 'src/domain/tokens/voo_navigation_tokens.dart';
 
 // Domain Entities
 export 'src/domain/entities/app_bar_config.dart';
+export 'src/domain/entities/action_modal_chrome.dart';
 export 'src/domain/entities/action_navigation_item.dart';
 export 'src/domain/entities/animation_config.dart';
 export 'src/domain/entities/body_card_config.dart';

@@ -106,9 +106,10 @@ class _VooActionNavItemState extends State<VooActionNavItem>
 
   Widget _buildModalOverlay(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final chrome = widget.actionItem.modalChrome;
 
     // Calculate modal position (centered)
-    final modalWidth = screenSize.width * 0.9;
+    final modalWidth = screenSize.width * (chrome?.widthFactor ?? 0.9);
     final modalLeft = (screenSize.width - modalWidth) / 2;
 
     // Get button position for arrow
@@ -142,10 +143,10 @@ class _VooActionNavItemState extends State<VooActionNavItem>
                 child: GestureDetector(
                   onTap: _closeModal,
                   child: AnimatedOpacity(
-                    opacity: _animationController.value * 0.5,
+                    opacity: _animationController.value * (chrome?.barrierOpacity ?? 0.5),
                     duration: Duration.zero,
                     child: Container(
-                      color: Colors.black,
+                      color: chrome?.barrierColor ?? Colors.black,
                     ),
                   ),
                 ),
@@ -239,7 +240,9 @@ class _ActionNavModalContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bgColor = context.expandableNavBackground;
+    final chrome = actionItem.modalChrome;
+    final bgColor = chrome?.backgroundColor ?? context.expandableNavBackground;
+    final borderRadius = chrome?.borderRadius ?? BorderRadius.circular(16);
 
     // Create curved animations
     final slideAnimation = Tween<Offset>(
@@ -271,15 +274,16 @@ class _ActionNavModalContent extends StatelessWidget {
       // No height constraints - content controls its own sizing
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: context.expandableNavBorder,
-          width: VooNavigationTokens.expandableNavBorderWidth,
-        ),
-        boxShadow: context.vooMinimal.dropdownShadow,
+        borderRadius: borderRadius,
+        border: chrome?.border ??
+            Border.all(
+              color: context.expandableNavBorder,
+              width: VooNavigationTokens.expandableNavBorderWidth,
+            ),
+        boxShadow: chrome?.boxShadow ?? context.vooMinimal.dropdownShadow,
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: borderRadius,
         child: Material(
           color: Colors.transparent,
           child: Theme(

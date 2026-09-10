@@ -5,6 +5,18 @@ All notable changes to the voo_navigation workspace will be documented in this f
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.2.0]
+
+### Added
+- **voo_navigation_core 0.4.3**: `VooActionModalChrome` — optional visual chrome for the modal opened by a `VooActionNavigationItem`. Carries `borderRadius`, `backgroundColor`, `border`, `boxShadow`, `barrierColor`, `barrierOpacity` and `widthFactor`, and is passed via the new `VooActionNavigationItem.modalChrome` field. Every field is optional and `null` keeps the existing default, so items that do not supply chrome render unchanged.
+
+### Fixed
+- **voo_navigation_bar 0.2.3**: The action modal's corner radius was written as a literal `16` twice — once on the `BoxDecoration` and once on the `ClipRRect` — so the fill and the clip could drift apart. It is now resolved once and shared.
+- **voo_navigation_bar 0.2.3**: The modal width factor (`0.9`) and the scrim colour/opacity (`Colors.black` @ 0.5) were hardcoded and could not be overridden by the host app. Both now read from `VooActionModalChrome`.
+
+### Dependencies
+- `voo_navigation` → 2.2.0
+
 ## [1.5.0]
 
 ### Fixed

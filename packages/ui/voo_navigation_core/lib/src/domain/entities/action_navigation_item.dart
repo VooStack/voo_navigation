@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:voo_navigation_core/src/domain/entities/action_modal_chrome.dart';
 
 /// Configuration for an action navigation item that displays a modal when tapped.
 ///
@@ -51,6 +52,11 @@ class VooActionNavigationItem {
   /// If null, falls back to [position] behavior.
   final int? navItemIndex;
 
+  /// Visual chrome for the modal surface and its scrim.
+  ///
+  /// When null, the navigation bar's built-in treatment is used.
+  final VooActionModalChrome? modalChrome;
+
   const VooActionNavigationItem({
     required this.id,
     required this.icon,
@@ -62,6 +68,7 @@ class VooActionNavigationItem {
     this.sortOrder = 0,
     this.position = VooActionItemPosition.center,
     this.navItemIndex,
+    this.modalChrome,
   });
 
   /// Creates a copy of this item with the given fields replaced
@@ -76,6 +83,7 @@ class VooActionNavigationItem {
     int? sortOrder,
     VooActionItemPosition? position,
     int? navItemIndex,
+    VooActionModalChrome? modalChrome,
   }) {
     return VooActionNavigationItem(
       id: id ?? this.id,
@@ -88,6 +96,7 @@ class VooActionNavigationItem {
       sortOrder: sortOrder ?? this.sortOrder,
       position: position ?? this.position,
       navItemIndex: navItemIndex ?? this.navItemIndex,
+      modalChrome: modalChrome ?? this.modalChrome,
     );
   }
 
