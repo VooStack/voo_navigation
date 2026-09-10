@@ -1,3 +1,13 @@
+## 2.1.0
+
+### Added
+- **`VooPage` now honors `VooAppBarConfig.titleSpacing` and `VooAppBarConfig.leadingWidth`.** `VooPage._buildAppBar` previously passed neither to the underlying `AppBar`, so Material's defaults (56px leading slot, 16px title spacing) were the only option and consumers could not align app-bar chrome to their own spacing scale.
+
+Both default to null, which preserves the previous rendering exactly.
+
+### Dependencies
+- Requires `voo_navigation_core: ^0.4.2`.
+
 ## 2.0.1
 
 ### Added

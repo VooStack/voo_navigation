@@ -112,6 +112,8 @@ class VooPage extends StatelessWidget {
       foregroundColor: appBarConfig.foregroundColor,
       elevation: appBarConfig.elevation,
       toolbarHeight: appBarConfig.toolbarHeight,
+      titleSpacing: appBarConfig.titleSpacing,
+      leadingWidth: appBarConfig.leadingWidth,
       bottom: appBarConfig.bottom,
       automaticallyImplyLeading: appBarConfig.showBackButton ?? true,
       titleTextStyle: theme.textTheme.titleLarge?.copyWith(

@@ -1,3 +1,11 @@
+## 0.4.2
+
+### Added
+- **`VooAppBarConfig.titleSpacing`** — horizontal spacing around the title. When null, Material's default (`NavigationToolbar.kMiddleSpacing`, 16) still applies, so existing layouts are unchanged. Set it to align the title with a design system's own spacing scale.
+- **`VooAppBarConfig.leadingWidth`** — width allotted to the leading widget. When null, Material's default (`kToolbarHeight`, 56) still applies. Set it when the leading widget is a visibly bounded control (a filled/bordered icon button) whose *edge* must line up with the page gutter rather than its icon — Material's 56px slot centers a smaller control and leaves its edge short of the gutter.
+
+Both fields are wired through `copyWith`, `hasOverrides`, and the `VooAppBarConfig.hidden()` constructor.
+
 ## 0.4.1
 
 ### Added

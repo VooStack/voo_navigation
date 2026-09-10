@@ -80,6 +80,19 @@ class VooAppBarConfig {
   /// Custom toolbar height.
   final double? toolbarHeight;
 
+  /// Horizontal spacing around the title.
+  ///
+  /// When null, uses Material's default ([NavigationToolbar.kMiddleSpacing]).
+  /// Set this to align the title with a design system's own spacing scale.
+  final double? titleSpacing;
+
+  /// Width allotted to the leading widget.
+  ///
+  /// When null, uses Material's default of [kToolbarHeight]. Set this when the
+  /// leading widget is a visibly bounded control whose edge must line up with
+  /// the page gutter rather than its icon.
+  final double? leadingWidth;
+
   const VooAppBarConfig({
     this.appBar,
     this.show,
@@ -94,6 +107,8 @@ class VooAppBarConfig {
     this.centerTitle,
     this.elevation,
     this.toolbarHeight,
+    this.titleSpacing,
+    this.leadingWidth,
   });
 
   /// Creates a config that hides the app bar.
@@ -110,7 +125,9 @@ class VooAppBarConfig {
         foregroundColor = null,
         centerTitle = null,
         elevation = null,
-        toolbarHeight = null;
+        toolbarHeight = null,
+        titleSpacing = null,
+        leadingWidth = null;
 
   /// Creates a copy of this configuration with the given fields replaced.
   VooAppBarConfig copyWith({
@@ -127,6 +144,8 @@ class VooAppBarConfig {
     bool? centerTitle,
     double? elevation,
     double? toolbarHeight,
+    double? titleSpacing,
+    double? leadingWidth,
   }) {
     return VooAppBarConfig(
       appBar: appBar ?? this.appBar,
@@ -142,6 +161,8 @@ class VooAppBarConfig {
       centerTitle: centerTitle ?? this.centerTitle,
       elevation: elevation ?? this.elevation,
       toolbarHeight: toolbarHeight ?? this.toolbarHeight,
+      titleSpacing: titleSpacing ?? this.titleSpacing,
+      leadingWidth: leadingWidth ?? this.leadingWidth,
     );
   }
 
@@ -159,5 +180,7 @@ class VooAppBarConfig {
       foregroundColor != null ||
       centerTitle != null ||
       elevation != null ||
-      toolbarHeight != null;
+      toolbarHeight != null ||
+      titleSpacing != null ||
+      leadingWidth != null;
 }
