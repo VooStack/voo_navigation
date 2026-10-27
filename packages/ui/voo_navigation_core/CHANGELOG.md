@@ -1,3 +1,8 @@
+## 0.4.4
+
+### Fixed
+- **`VooOrganizationSwitcher`** no longer calls `setState` from `dispose`. Disposing the switcher, for example when an adaptive scaffold switches layouts or a test tears down the widget tree, threw `'_lifecycleState != _ElementLifecycle.defunct': is not true`. Its dropdown overlay is still removed.
+
 ## 0.4.3
 
 ### Added

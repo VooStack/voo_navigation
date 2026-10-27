@@ -98,7 +98,10 @@ class _VooOrganizationSwitcherState extends State<VooOrganizationSwitcher> {
 
   @override
   void dispose() {
-    _removeOverlay();
+    // Not _removeOverlay(): `mounted` is still true here, so its setState would
+    // mark a defunct element dirty and trip the framework's lifecycle assertion.
+    _overlayEntry?.remove();
+    _overlayEntry = null;
     _searchController.dispose();
     _searchFocusNode.dispose();
     _keyboardFocusNode.dispose();
